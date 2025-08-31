@@ -1,0 +1,122 @@
+/* --- Footer Banner Styles --- */
+
+.footer-banner-container {
+  position: relative;
+  padding: 2rem;
+  border-radius: 15px;
+  background-color: #f02d34;
+  color: white;
+  width: 100%;
+  margin-top: 120px;
+  overflow: hidden; /* Prevents content from overflowing */
+  
+  /* NEW: Use flexbox to center content and ensure minimum height */
+  display: flex;
+  align-items: center; /* Vertically center content within the banner */
+  justify-content: center; /* Horizontally center content within the banner */
+  min-height: 350px; /* Give the banner a minimum height for the image */
+}
+
+.banner-desc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Take full width of parent (footer-banner-container) */
+  max-width: 1200px; /* Optional: Constrain the max width of the content inside */
+  margin: 0 auto; /* Center the banner content horizontally */
+}
+
+/* Make the three sections (left, image, right) more evenly distributed */
+.banner-desc .left {
+  flex: 1; /* Allows it to take up available space */
+  padding-right: 20px; /* Add some spacing */
+}
+
+.banner-desc .right {
+  flex: 1; /* Allows it to take up available space */
+  text-align: right;
+  padding-left: 20px; /* Add some spacing */
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  justify-content: center; /* Center image horizontally within this container */
+  align-items: center; /* Center image vertically within this container */
+  flex: 1; /* Allow it to take up available horizontal space */
+  min-height: 250px; /* NEW: Ensure this container has a minimum height for the image */
+  height: 100%; /* Take full height of its parent (.banner-desc flex item) */
+  width: 100%;
+  padding: 0;
+}
+
+.footer-banner-image {
+  /* Next.js Image component handles intrinsic sizing via width/height props.
+     These CSS properties then control how it fits into its parent container. */
+  width: auto !important;   /* Allow image to scale its width naturally */
+  height: auto !important;  /* Allow image to scale its height naturally */
+  
+  /* Ensure the image doesn't overflow its parent container */
+  max-width: 190%;          /* Max width is 100% of its parent (.image-container) */
+  max-height: 176%;         /* Max height is 100% of its parent (.image-container) */
+  
+  /* Scale down to fit fully inside its container, preserving aspect ratio */
+  object-fit: contain !important; 
+  
+  /* Remove transform: scale(). Its effect is now achieved by larger source image
+     and ample container space, leading to a crisper image. */
+  /* transform: none; */ 
+  
+  /* Centering in a non-flex context (redundant but harmless with flex parent) */
+  display: block; 
+  margin: 0 auto; 
+}
+
+/* Enhanced styling for the product name (Aurora Sky Pulse™) */
+.product-name {
+  font-size: 2rem !important; /* Larger text */
+  font-weight: 700 !important; /* Bolder text */
+  margin: 10px 0;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Optional: adds slight shadow for emphasis */
+}
+
+/* --- Responsive adjustments --- */
+@media screen and (max-width: 800px) {
+  .footer-banner-container {
+    min-height: 300px; /* Adjusted minimum height for mobile */
+    padding: 1rem;
+  }
+  .banner-desc {
+    flex-direction: column; /* Stack sections vertically on smaller screens */
+    text-align: center;
+  }
+  
+  .banner-desc .left,
+  .banner-desc .right {
+    text-align: center;
+    flex: none; /* Reset flex-grow */
+    width: 100%;
+    padding: 0; /* Remove horizontal padding on mobile to save space */
+  }
+  
+  .image-container {
+    margin: 20px 0; /* Add vertical margin to separate from text */
+    width: 100%;
+    min-height: 200px; /* Adjusted minimum height for mobile */
+  }
+  
+  /* No specific transform or max-height needed for image on mobile as it scales responsively */
+  .footer-banner-image {
+    /* Styles already cover responsiveness with max-width/height: 100% */
+  }
+  
+  .product-name {
+    font-size: 1.5rem !important; /* Adjust font size for mobile */
+  }
+  .shop-now-btn {
+    width: 100%; /* Make button full width on mobile */
+    max-width: 200px; /* Limit max width */
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,179 @@
+/* NavbarStyles.module.css */
+
+.navbarContainer {
+  display: flex;
+  justify-content: space-between; /* Pushes left and right sections apart */
+  align-items: center;
+  padding: 15px 25px; /* Adjusted padding */
+  position: relative;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  gap: 20px; /* Add gap for overall spacing if needed */
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Prevent logo from shrinking too much */
+  gap: 20px; /* Reduced gap between logo and About Us link */
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Increase gap between auth block and cart */
+}
+
+.logo {
+  font-weight: 800; /* Increased from 700 to 800 */
+  font-size: 20px; /* Increased from 18px to 20px */
+  text-decoration: none;
+  color: #333;
+  white-space: nowrap; /* Prevent logo text wrapping */
+}
+
+/* Styles for Account/Order links (when logged in, placed on RIGHT side now) */
+.navLinks {
+  display: flex;
+  gap: 18px; /* Spacing between Account and Order History if both were present */
+  /* Removed margin-right as it's part of rightSection gap now */
+}
+
+.navLink {
+  font-size: 15px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 0px; /* Reduced padding for simpler look */
+  border-radius: 0px; /* Remove radius for underline effect */
+  border-bottom: 2px solid transparent; /* Underline for hover/active */
+  transition: color 0.2s, border-color 0.2s;
+  background: none; /* Ensure no background for link-like buttons */
+  cursor: pointer;
+}
+
+.navLink:hover {
+  /* background-color: #f5f5f5; */ /* Removed background hover */
+  color: #f02d34; /* Accent color on hover */
+  border-bottom-color: #f02d34; /* Underline hover effect */
+}
+
+/* Removed specific style for leftSection .navLink to improve spacing */
+
+.authSection {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Gap within the auth block itself */
+}
+
+/* Container for user info + sign out button */
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Adjust gap between avatar/name, account button, signout button */
+}
+
+/* Span specifically for name/avatar */
+.userName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  white-space: nowrap; /* Prevent name wrapping */
+}
+
+.userAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0; /* Prevent image shrinking */
+}
+
+.btnSignin {
+  background-color: #24292e; /* GitHub style */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px; /* Slightly more rounded */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btnSignin:hover {
+  background-color: #383e44;
+}
+
+.btnSignout {
+  background-color: #f44336; /* Red */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btnSignout:hover {
+  background-color: #d32f2f;
+}
+
+/* Added style for the Account link/button to match navLink */
+.btnAccount { /* Use this class name if using <button> */
+  font-size: 15px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 0px;
+  border-radius: 0px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  background: none;
+  cursor: pointer;
+}
+
+.loadingText {
+  font-size: 14px;
+  color: #666;
+}
+
+.cartIcon {
+  font-size: 25px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease; /* Faster transition */
+  border: none;
+  background-color: transparent;
+  color: #333;
+  padding: 5px; /* Add padding for easier clicking */
+}
+
+.cartIcon:hover {
+  transform: scale(1.1);
+  color: #f02d34; /* Change color on hover */
+}
+
+.cartItemQty {
+  position: absolute;
+  right: -5px; /* Adjust position */
+  top: -5px;   /* Adjust position */
+  font-size: 11px; /* Slightly smaller */
+  color: white;
+  background-color: #f02d34;
+  width: 18px; /* Slightly smaller */
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* Ensure number is centered vertically */
+  border: 1px solid white; /* Optional white border */
+}

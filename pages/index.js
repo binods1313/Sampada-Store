@@ -1,115 +1,124 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+// pages/index.js
+import React from 'react';
+import { client } from '../lib/client';
+import { Product, FooterBanner, HeroBanner } from '@/components';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export default function Home() {
+const Home = ({ products, bannerData }) => {
+  // Create a custom banner object for the current sale
+  // This merges any data from Sanity with our hardcoded promotional data
+  const customBannerData = {
+    ...bannerData,
+    largeText1: 'PEACE',
+    largeText2: 'SMILE',
+    midText: 'Summer Sale',
+    product: 'Smart Watch',
+    saleTime: '01 Jun to 20 Jun 2025',
+    smallText: 'Aurora Sky Pulse™',
+    desc: 'Beyond Timekeeping: A Smartwatch Designed to Power Your Every Move!',
+    buttonText: bannerData?.buttonText || 'Shop Now',
+    // Preserve the image from Sanity if it exists
+    image: bannerData?.image || null
+  };
+  
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div>
+      <HeroBanner heroBanner={customBannerData} />
+      
+      <div className="products-heading best-selling-heading">
+        <h2>Best Selling Products</h2>
+        <div className="categories-description">
+          <div className="emoji-wrap">🎧🎶 Headphones</div>
+          <div className="emoji-wrap">⌚✨ Watches</div>
+          <div className="emoji-wrap">🚀🌌 Space Suits</div>
+          <div className="emoji-wrap">🕶😎 Sunglasses</div>
+          <p>Now you're all set for style, sound, and intergalactic adventures! 🚀🔥</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="aurora-product-tag">
+          <span>Featured: <span className="aurora-highlight">Aurora Sky Pulse™</span> Collection</span>
+        </div>
+      </div>
+      
+      <div className="products-container">
+        {products?.length > 0 ? (
+          products.map((product) => (
+            <Product key={product._id} product={product} />
+          ))
+        ) : (
+          <p className="no-products-message">No products available at the moment.</p>
+        )}
+      </div>
+      
+      {/* Enhanced Eye-Catching Product Description Section */}
+      <div className="product-description-section">
+        <div className="aurora-brand-container">
+          <div className="aurora-logo-pulse"></div>
+          <h2>Experience Next-Gen Audio with <span className="aurora-highlight">Aurora Sky Pulse™</span></h2>
+        </div>
+        <p>
+          Immerse yourself in crystal-clear 3D sound that brings your music, movies, and games to life. The <span className="aurora-highlight">Aurora Sky Pulse™</span> 
+          headphones represent the pinnacle of audio engineering, featuring 4K sound processing technology and
+          adaptive noise cancellation that adjusts to your environment.
+        </p>
+        <p>
+          Crafted with premium materials for durability and comfort, these headphones are designed for extended wear
+          during your longest gaming sessions or audio adventures.
+        </p>
+        <div className="features">
+          <span className="feature-item">🔊 4K Sound Processing</span>
+          <span className="feature-item">🔋 40-Hour Battery Life</span>
+          <span className="feature-item">🎮 Ultra-Low Latency</span>
+          <span className="feature-item">🌈 Customizable RGB</span>
+          <span className="feature-item">☁️ Cloud Audio Profiles</span>
+        </div>
+        <div className="aurora-brand-badge">
+          <span className="badge-text">AURORA SKY PULSE™</span>
+          <span className="badge-tagline">Beyond Sound. Beyond Limits.</span>
+        </div>
+      </div>
+      
+      <FooterBanner footerBanner={customBannerData} />
     </div>
   );
-}
+};
+
+export const getServerSideProps = async () => {
+  // Define queries with error handling
+  const productQuery = '*[_type == "product"] | order(_createdAt desc)[0...12]';
+  const bannerQuery = '*[_type == "banner"][0]';
+  
+  try {
+    // Fetch data with Promise.all for parallel fetching
+    const [products, bannerData] = await Promise.all([
+      client.fetch(productQuery).catch(error => {
+        console.error('Error fetching products:', error);
+        return [];
+      }),
+      client.fetch(bannerQuery).catch(error => {
+        console.error('Error fetching banner:', error);
+        return {};
+      })
+    ]);
+    
+    // Log for debugging
+    console.log(`Fetched ${products?.length || 0} products`);
+    console.log('Banner data:', bannerData);
+    
+    return {
+      props: {
+        products: products || [],
+        bannerData: bannerData || {}
+      }
+    };
+  } catch (error) {
+    // Global error handler
+    console.error('Data fetch error:', error);
+    return {
+      props: {
+        products: [],
+        bannerData: {}
+      }
+    };
+  }
+};
+ 
+export default Home;

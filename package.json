@@ -1,23 +1,61 @@
 {
-  "name": "abscommerce",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.0",
-    "@eslint/eslintrc": "^3"
-  }
+    "name": "abscommerce",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@babel/core": "^7.17.9",
+        "@next/bundle-analyzer": "^15.3.1",
+        "@portabletext/react": "^3.2.1",
+        "@sanity/client": "^6.29.1",
+        "@sanity/code-input": "^5.1.2",
+        "@sanity/image-url": "^1.1.0",
+        "@sanity/vision": "^3.88.2",
+        "@sendgrid/mail": "^8.1.5",
+        "@stripe/stripe-js": "^1.54.2",
+        "async-sema": "^3.1.1",
+        "canvas-confetti": "^1.9.3",
+        "date-fns": "^4.1.0",
+        "dotenv": "^16.5.0",
+        "framer-motion": "^12.7.4",
+        "groq": "^3.88.3",
+        "micro": "^10.0.1",
+        "next": "^15.2.4",
+        "next-auth": "^4.24.11",
+        "next-auth-sanity": "^1.5.3",
+        "next-sanity": "^9.10.2",
+        "next-sanity-image": "^6.1.1",
+        "postcss-loader": "^8.1.1",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "react-hot-toast": "^2.5.2",
+        "react-icons": "^5.5.0",
+        "react-is": "^19.1.0",
+        "react-rx": "2.0.1",
+        "rxjs": "^7.0.0",
+        "sanity": "^3.88.2",
+        "stripe": "^8.209.0",
+        "styled-components": "^6.1.17",
+        "three": "^0.176.0"
+    },
+    "devDependencies": {
+        "@babel/preset-react": "^7.16.7",
+        "@eslint/eslintrc": "^3",
+        "@tailwindcss/postcss": "^4",
+        "@types/node": "^22.14.1",
+        "@types/react": "^19.1.2",
+        "@types/react-dom": "^19.1.2",
+        "autoprefixer": "^10.4.21",
+        "eslint": "^9",
+        "eslint-config-next": "15.2.4",
+        "postcss": "^8.5.3",
+        "prettier": "^3.5.3",
+        "tailwindcss": "^4.1.6",
+        "typescript": "^5.8.3"
+    }
 }

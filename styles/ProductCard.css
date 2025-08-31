@@ -1,0 +1,189 @@
+/* ProductCard.css - Complete styling for product cards with discounts */
+
+/* Product Card Layout & Base Styles */
+.product-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden; /* Ensures content respects border-radius */
+  text-align: center;
+  margin: 10px;
+  width: 260px; /* Increased width, ensure this matches your grid */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.product-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 15px; /* Provides space for the badge at the top-right */
+  text-decoration: none;
+  color: inherit;
+  position: relative; /* Essential: Badge will be positioned relative to this wrapper */
+}
+
+/* Image Container */
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 240px; /* Matches your desired height */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 8px; /* Added border-radius to the image container itself */
+  margin-bottom: 15px;
+}
+
+/* DISCOUNT BADGE STYLING - Positioned INSIDE the card's top-right corner, outside image visual */
+.sale-badge {
+  position: absolute;
+  top: 8px; /* Positioned relative to .product-content-wrapper's top padding */
+  right: 8px; /* Positioned relative to .product-content-wrapper's right padding */
+  background: linear-gradient(135deg, #ff4757, #ff3742);
+  color: white;
+  padding: 4px 8px; /* MADE SMALLER: Reduced padding for a smaller badge */
+  border-radius: 20px;
+  font-size: 0.7em; /* MADE SMALLER: Reduced font size for a smaller badge */
+  font-weight: bold;
+  z-index: 20; /* High z-index to ensure visibility above everything else in the card */
+  box-shadow: 0 3px 6px rgba(255, 71, 87, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse-badge 2s infinite ease-in-out;
+  border: 2px solid white; /* White border to make it stand out */
+}
+
+/* Badge animation */
+@keyframes pulse-badge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Product Image */
+.product-image-container img {
+  object-fit: contain !important; /* Forces image to fit while preserving aspect ratio */
+  object-position: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover .product-image-container img {
+  transform: scale(1.05);
+}
+
+/* Product Name */
+.product-card-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: #333;
+  line-height: 1.4em;
+  min-height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* DISCOUNT PRICE STYLING */
+.price-container {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.9em;
+}
+
+.discounted-price {
+  color: #ff4757;
+  font-weight: bold;
+  font-size: 1.3em;
+  animation: price-highlight 3s infinite ease-in-out;
+}
+
+/* Discounted price animation */
+@keyframes price-highlight {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.02); }
+  50% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+/* Regular price (no discount) */
+.price {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* Products Grid Container */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-card {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .product-image-container {
+    height: 200px; /* Adjusted height for mobile */
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 15px;
+  }
+  
+  .sale-badge {
+    font-size: 0.65em; /* Even smaller for mobile */
+    padding: 3px 6px;
+    top: 6px; 
+    right: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    margin: 5px;
+  }
+  
+  .product-image-container {
+    height: 180px;
+  }
+  
+  .price-container {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

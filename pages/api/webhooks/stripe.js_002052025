@@ -1,0 +1,150 @@
+// pages/api/webhooks/stripe.js <-- Use this version
+import Stripe from 'stripe';
+import { buffer } from 'micro';
+import { writeClient } from '../../../lib/client'; // Use writeClient
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+export const config = {
+  api: { bodyParser: false }, // Stripe needs the raw body
+};
+
+const handler = async (req, res) => {
+  if (req.method === 'POST') {
+    // --- Webhook Verification ---
+    if (!webhookSecret) { /* ... error handling ... */ }
+    const buf = await buffer(req);
+    const sig = req.headers['stripe-signature'];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(buf.toString(), sig, webhookSecret);
+      console.log(`✅ Stripe Webhook Event Received: ${event.type}`);
+    } catch (err) { /* ... error handling ... */ }
+
+    // --- Handle checkout.session.completed ---
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object; // Use the session directly from the event
+      console.log('🛒 Checkout Session Completed! Session ID:', session.id);
+      console.log('Payment Status:', session.payment_status);
+      // --- Log received details needed for fulfillment ---
+      console.log("--- Details from Webhook Event ---");
+      console.log("session.customer_details:", JSON.stringify(session.customer_details, null, 2));
+      console.log("session.shipping_details:", JSON.stringify(session.shipping_details, null, 2)); // Focus on this for address
+      console.log("session.metadata:", JSON.stringify(session.metadata, null, 2)); // Check if userId is here
+      console.log("--- End Webhook Details ---");
+
+      // --- Fulfillment Logic ---
+      if (session.payment_status === 'paid') {
+        try {
+          // 1. IDEMPOTENCY CHECK
+          console.log(`Checking for existing order with ID: ${session.id}`);
+          const existingOrder = await writeClient.fetch( /* ... */ );
+          if (existingOrder) { /* ... skip ... */ }
+          console.log(`No existing order found for ${session.id}. Proceeding.`);
+
+          // 2. GET LINE ITEMS (Expand product needed for name/metadata fallback)
+          console.log(`Fetching line items for session ${session.id}...`);
+          const lineItems = await stripe.checkout.sessions.listLineItems(
+            session.id,
+            { expand: ['data.price.product'] } // Still need product for fallback
+          );
+          if (!lineItems?.data || lineItems.data.length === 0) { /* ... error ... */ }
+          console.log(`Fetched ${lineItems.data.length} line items.`);
+
+          // 3. PROCESS LINE ITEMS & PREPARE PATCHES (with fallback)
+          const processedOrderItems = [];
+          const patchOperations = [];
+          await Promise.all(
+            lineItems.data.map(async (item) => {
+              const stripeProductId = item.price?.product?.id;
+              const quantity = item.quantity;
+              const pricePerItem = item.price?.unit_amount / 100;
+              const lineItemId = item.id;
+              const stripeProduct = item.price?.product; // Product object from line items
+
+              if (!stripeProductId || !quantity || pricePerItem === undefined) { /* ... skip ... */ return; }
+
+              // Use metadata directly from expanded product if available
+              let sanityProductId = stripeProduct?.metadata?.sanity_id;
+
+              if (!sanityProductId) {
+                console.warn(`Missing 'sanity_id' metadata for Stripe product ${stripeProductId} (${stripeProduct.name}). Attempting fallback...`);
+                try {
+                  const fallbackProduct = await writeClient.fetch(/* ... fallback query ... */);
+                  if (fallbackProduct?._id) {
+                    sanityProductId = fallbackProduct._id;
+                    console.log(`   - Fallback successful: ${sanityProductId}`);
+                  } else { /* ... log warning, skip ... */ return; }
+                } catch (fallbackError) { /* ... log error, skip ... */ return; }
+              } else {
+                console.log(`   - Found metadata. Mapping ${stripeProductId} to ${sanityProductId}`);
+              }
+
+              processedOrderItems.push({ /* ... order item ... */ });
+              patchOperations.push({ id: sanityProductId, quantity: quantity });
+            })
+          ); // End Promise.all
+
+          // 4. VALIDATE PROCESSED ITEMS
+          if (processedOrderItems.length === 0 && lineItems.data.length > 0) { /* ... error ... */ }
+
+
+          // 5. PREPARE FINAL ORDER DATA - Use event session data directly
+          const userSanityId = session.metadata?.userId; // Get userId from EVENT metadata
+          console.log("Sanity User ID from Event Metadata:", userSanityId);
+
+          // Use shipping_details directly from the event session object
+          const shippingAddressData = session.shipping_details?.address ? {
+            _type: 'object',
+            line1: session.shipping_details.address.line1 || '',
+            line2: session.shipping_details.address.line2 || '',
+            city: session.shipping_details.address.city || '',
+            state: session.shipping_details.address.state || '',
+            postal_code: session.shipping_details.address.postal_code || '',
+            country: session.shipping_details.address.country || '',
+          } : null; // Set to null if not present IN THE EVENT DATA
+          console.log("Shipping Address Data Prepared:", shippingAddressData);
+
+          const orderData = {
+            _type: 'order',
+            _id: session.id,
+            stripeSessionId: session.id,
+            ...(userSanityId && userSanityId !== 'guest' && {
+              user: { _type: 'reference', _ref: userSanityId }
+            }),
+            customerName: session.customer_details?.name || 'N/A', // From event data
+            customerEmail: session.customer_details?.email || 'N/A', // From event data
+            shippingAddress: shippingAddressData, // Use prepared address data
+            orderItems: processedOrderItems,
+            totalAmount: session.amount_total / 100, // From event data
+            status: 'paid',
+            paidAt: new Date(session.created * 1000).toISOString(), // From event data
+          };
+          console.log('Prepared Sanity order document:', JSON.stringify(orderData, null, 2));
+
+
+          // 6. CREATE ORDER in Sanity (Unchanged)
+          await writeClient.createOrReplace(orderData);
+          console.log(`✅ Order ${session.id} saved/updated in Sanity.`);
+
+          // 7. EXECUTE INVENTORY DECREMENTS (Unchanged)
+          console.log(`Executing inventory patches for order ${session.id}...`);
+          const patchPromises = patchOperations.map(op => { /* ... patch logic ... */ });
+          await Promise.allSettled(patchPromises); // Use allSettled
+          console.log(`Inventory decrement process complete.`);
+
+          // 8. SEND EMAIL (Placeholder)
+          console.log(`TODO: Send confirmation email to ${orderData.customerEmail}`);
+          console.log('--- Fulfillment Logic Complete ---');
+
+        } catch (fulfillmentError) { console.error(`❌ Error during fulfillment...`, fulfillmentError); }
+      } // end if paid
+    } // end if checkout.session.completed
+    else { /* ... log unhandled event ... */ }
+
+    res.status(200).json({ received: true });
+  } else { /* ... handle non-POST ... */ }
+};
+
+export default handler;

@@ -1,0 +1,20 @@
+[
+    {
+      "_id": "electronics",
+      "_type": "category",
+      "name": "Electronics",
+      "slug": {
+        "_type": "slug",
+        "current": "electronics"
+      }
+    },
+    {
+      "_id": "clothing",
+      "_type": "category",
+      "name": "Clothing",
+      "slug": {
+        "_type": "slug",
+        "current": "clothing"
+      }
+    }
+  ]
