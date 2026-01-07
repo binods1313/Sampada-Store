@@ -1,10 +1,12 @@
 // components/Navbar.jsx - CORRECTED
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { AiOutlineShopping } from 'react-icons/ai';
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useCartContext } from '../context/CartContext';
 import { useUIContext } from '../context/StateContext';
+import NeumorphicToggle from './NeumorphicToggle';
+import LoginModal from './LoginModal';
 import styles from './NavbarStyles.module.css';
 
 const Navbar = () => {
@@ -12,13 +14,14 @@ const Navbar = () => {
   const { totalQuantities = 0 } = useCartContext();
   const { data: session, status } = useSession();
   const loading = status === "loading";
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   return (
     <nav className={styles.navbarContainer}>
       {/* --- Left Section --- */}
       <div className={styles.leftSection}>
         <Link href="/" className={styles.logo}>
-          Binod Tech Ventures
+          Sampada
         </Link>
         {/* About Us Link with proper spacing via CSS */}
         <Link href="/about" className={styles.navLink}>
@@ -28,11 +31,19 @@ const Navbar = () => {
       
       {/* --- Right Section --- */}
       <div className={styles.rightSection}>
+        {/* Neumorphic Dark Mode Toggle - hide when modal is open */}
+        <div className={isLoginModalOpen ? styles.hiddenElement : ""}>
+          <NeumorphicToggle />
+        </div>
+
         {/* Auth Buttons/Info */}
         <div className={styles.authSection}>
           {!session && !loading && (
-            <button onClick={() => signIn('github')} className={styles.btnSignin}>
-              Sign in with GitHub
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className={isLoginModalOpen ? `${styles.btnSignin} ${styles.hiddenElement}` : styles.btnSignin}
+            >
+              Sign in
             </button>
           )}
           {session?.user && (
@@ -62,19 +73,27 @@ const Navbar = () => {
             <span className={styles.loadingText}>Loading...</span>
           )}
         </div>
-        
-        {/* Cart Icon */}
-        <button
-          className={styles.cartIcon}
-          onClick={() => setShowCart(true)}
-          aria-label="Open Cart"
-        >
-          <AiOutlineShopping />
-          <span className={styles.cartItemQty}>{totalQuantities}</span>
-        </button>
+
+        {/* Cart Icon - hide when modal is open */}
+        <div className={isLoginModalOpen ? styles.hiddenElement : ""}>
+          <button
+            className={styles.cartIcon}
+            onClick={() => setShowCart(true)}
+            aria-label="Open Cart"
+          >
+            <AiOutlineShopping />
+            <span className={styles.cartItemQty}>{totalQuantities}</span>
+          </button>
+        </div>
       </div>
-      
+
       {/* REMOVED CartSlider from here - it's already in Layout */}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </nav>
   );
 };

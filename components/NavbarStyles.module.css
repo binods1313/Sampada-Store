@@ -11,6 +11,12 @@
   gap: 20px; /* Add gap for overall spacing if needed */
 }
 
+/* Dark mode for navbar container */
+html.dark .navbarContainer {
+  background-color: #1e293b;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
+}
+
 .leftSection {
   display: flex;
   align-items: center;
@@ -32,6 +38,11 @@
   white-space: nowrap; /* Prevent logo text wrapping */
 }
 
+/* Dark mode for logo */
+html.dark .logo {
+  color: #e0e0e0;
+}
+
 /* Styles for Account/Order links (when logged in, placed on RIGHT side now) */
 .navLinks {
   display: flex;
@@ -44,18 +55,31 @@
   color: #333;
   text-decoration: none;
   font-weight: 500;
-  padding: 8px 0px; /* Reduced padding for simpler look */
-  border-radius: 0px; /* Remove radius for underline effect */
+  padding: 8px 12px; /* Add horizontal padding for better click area */
+  border-radius: 4px; /* Add slight radius for better UX */
   border-bottom: 2px solid transparent; /* Underline for hover/active */
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
   background: none; /* Ensure no background for link-like buttons */
   cursor: pointer;
+  display: inline-block; /* Ensure proper display */
+  position: relative; /* Ensure proper z-index stacking */
+  z-index: 10; /* Ensure link is clickable */
 }
 
 .navLink:hover {
   /* background-color: #f5f5f5; */ /* Removed background hover */
   color: #f02d34; /* Accent color on hover */
   border-bottom-color: #f02d34; /* Underline hover effect */
+}
+
+/* Dark mode for navLink */
+html.dark .navLink {
+  color: #e0e0e0;
+}
+
+html.dark .navLink:hover {
+  color: #f02d34; /* Keep accent color on hover */
+  border-bottom-color: #f02d34;
 }
 
 /* Removed specific style for leftSection .navLink to improve spacing */
@@ -91,7 +115,7 @@
 }
 
 .btnSignin {
-  background-color: #24292e; /* GitHub style */
+  background-color: #3B82F6; /* Medium blue */
   color: white;
   padding: 8px 16px;
   border: none;
@@ -104,7 +128,14 @@
 }
 
 .btnSignin:hover {
-  background-color: #383e44;
+  background-color: #2563eb; /* Darker blue */
+}
+
+/* Hidden element styles */
+.hiddenElement {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 .btnSignout {
@@ -143,6 +174,11 @@
   color: #666;
 }
 
+/* Dark mode for loading text */
+html.dark .loadingText {
+  color: #a0a0a0;
+}
+
 .cartIcon {
   font-size: 25px;
   cursor: pointer;
@@ -157,6 +193,11 @@
 .cartIcon:hover {
   transform: scale(1.1);
   color: #f02d34; /* Change color on hover */
+}
+
+/* Dark mode for cart icon */
+html.dark .cartIcon {
+  color: #e0e0e0;
 }
 
 .cartItemQty {
@@ -176,4 +217,10 @@
   justify-content: center;
   line-height: 1; /* Ensure number is centered vertically */
   border: 1px solid white; /* Optional white border */
+}
+
+/* Dark mode for cart item quantity */
+html.dark .cartItemQty {
+  color: white;
+  background-color: #f02d34;
 }

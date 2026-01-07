@@ -17,36 +17,98 @@ export default async function handler(req, res) {
     console.log('\n--- Stripe API Request Handler Started ---');
     console.time('StripeApiRequest'); // Overall API request timer
     try {
-      const { cartItems, success_url, cancel_url } = req.body;
-      
-      console.log('Received payload:', { cartItems: JSON.stringify(cartItems).substring(0, 500) + '...', success_url, cancel_url }); // Log portion of cartItems
-      
-      // Validate input
+      const { cartItems, success_url, cancel_url, customerEmail, paymentMethodId } = req.body;
+
+      console.log('Received payload:', {
+        cartItems: cartItems ? JSON.stringify(cartItems).substring(0, 500) + '...' : 'Not provided',
+        success_url,
+        cancel_url,
+        customerEmail: customerEmail || 'Not provided',
+        paymentMethodId: paymentMethodId ? paymentMethodId.substring(0, 10) + '...' : 'Not provided'
+      });
+
+      // Handle Google Pay payment method
+      if (paymentMethodId) {
+        // This is a Google Pay payment
+        try {
+          // Transform cart items to include metadata for Printify products for Google Pay
+          const transformedCartItems = req.body.cartItems?.map(item => {
+            // Add metadata to identify Printify products
+            const metadata = {};
+            if (item.isPrintifyProduct) {
+              metadata.isPrintifyProduct = 'true';
+              metadata.printifyProductId = item.printifyProductId || '';
+              metadata.printifyVariantId = item.printifyVariantId || '';
+            }
+
+            return {
+              ...item,
+              metadata: metadata
+            };
+          }) || [];
+
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(req.body.totalPrice * 100),
+            currency: 'usd',
+            payment_method: req.body.paymentMethodId,
+            confirm: true,
+            metadata: {
+              userEmail: req.body.userEmail,
+              orderItems: JSON.stringify(transformedCartItems),
+            },
+          });
+
+          return res.status(200).json({
+            clientSecret: paymentIntent.client_secret
+          });
+        } catch (error) {
+          console.error('Google Pay payment intent error:', error);
+          return res.status(500).json({ error: error.message });
+        }
+      }
+
+      // Validate input for regular checkout
       if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
         console.error('Validation Error: Invalid cart items provided (empty or not an array).');
         return res.status(400).json({ error: 'Invalid cart items provided' });
       }
-      
-      // IMPORTANT: Your client-side `Cart.jsx` already structures `cartItems`
-      // into the exact format Stripe expects for `line_items` (i.e., each item
-      // has `price_data` and `quantity` at its root).
-      // So, we can directly use the received `cartItems` as `line_items`.
-      const lineItemsForStripe = cartItems; 
 
-      console.log('Successfully prepared line items for Stripe.');
+      // Transform cart items to include metadata for Printify products
+      const lineItemsForStripe = cartItems.map(item => {
+        // Add metadata to identify Printify products
+        const metadata = {};
+        if (item.isPrintifyProduct) {
+          metadata.isPrintifyProduct = 'true';
+          metadata.printifyProductId = item.printifyProductId || '';
+          metadata.printifyVariantId = item.printifyVariantId || '';
+        }
+
+        return {
+          ...item,
+          price_data: {
+            ...item.price_data,
+            product_data: {
+              ...item.price_data.product_data,
+              metadata: metadata
+            }
+          }
+        };
+      });
+
+      console.log('Successfully prepared line items for Stripe with Printify metadata.');
 
       // Base URL fallback
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-      
+
       console.log('Attempting to create Stripe Checkout Session...');
       console.time('StripeSessionCreation'); // Timer for the actual Stripe API call
-      
+
       const sessionParams = {
-        payment_method_types: ['card'],
+        payment_method_types: ['card', 'google_pay', 'apple_pay'], // Add Google Pay and Apple Pay support
         billing_address_collection: 'auto',
         shipping_address_collection: {
           allowed_countries: [
-            'US', 'CA', 'GB', 'AU', 'DE', 'FR', 'ES', 'IT', 'NL', 'BE', 
+            'US', 'CA', 'GB', 'AU', 'DE', 'FR', 'ES', 'IT', 'NL', 'BE',
             'AT', 'CH', 'SE', 'DK', 'NO', 'FI', 'PT', 'IE', 'GR', 'PL',
             'CZ', 'SK', 'HU', 'RO', 'BG', 'HR', 'SI', 'LT', 'LV', 'EE',
             'JP', 'CN', 'KR', 'SG', 'IN', 'MY', 'TH', 'ID', 'PH', 'VN',
@@ -58,7 +120,13 @@ export default async function handler(req, res) {
         success_url: success_url || `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: cancel_url || `${baseUrl}/?canceled=true`,
       };
-      
+
+      // Pre-fill customer email if provided (logged-in user)
+      if (customerEmail) {
+        console.log(`Pre-filling customer email: ${customerEmail}`);
+        sessionParams.customer_email = customerEmail;
+      }
+
       // Only add shipping options if shipping rates are configured
       // Ensure these environment variables are correctly set in .env.local/.env
       if (process.env.STRIPE_SHIPPING_RATE_STANDARD && process.env.STRIPE_SHIPPING_RATE_EXPRESS) {
@@ -70,9 +138,9 @@ export default async function handler(req, res) {
       } else {
         console.warn('Stripe shipping rates env vars are not fully set. Shipping options will not be included.');
       }
-      
+
       const session = await stripe.checkout.sessions.create(sessionParams);
-      
+
       console.timeEnd('StripeSessionCreation'); // End timer for Stripe API call
       console.log('Stripe session created successfully (ID:', session.id, ')');
       res.status(200).json({ id: session.id });

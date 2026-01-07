@@ -1,12 +1,16 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 import { v4 as uuidv4 } from 'uuid'
 import { client } from '../../../lib/client' // Adjust path as needed
 
 // Validate environment variables
 if (!process.env.GITHUB_ID || !process.env.GITHUB_SECRET) {
   throw new Error("Missing GitHub OAuth environment variables")
+}
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error("Missing Google OAuth environment variables")
 }
 if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("Missing NEXTAUTH_SECRET")
@@ -17,6 +21,10 @@ export const authOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
 

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BsBagCheckFill } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 // Import Context hooks
 import { useCartContext } from '../context/CartContext';
@@ -10,6 +11,7 @@ import { runFireworks } from '../lib/utils';
 
 const Success = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const { clearCart } = useCartContext();
   const { session_id } = router.query;
   // Add a state flag to track whether cart has been cleared
@@ -26,6 +28,57 @@ const Success = () => {
     // Run confetti effect
     if (runFireworks) {
       runFireworks();
+    }
+    
+    // Create order manually if session_id is present (fallback for webhook failures)
+    if (session_id && !hasCleared) {
+      console.log('Creating order manually for session:', session_id);
+      
+      fetch('/api/orders/create-manual', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionId: session_id }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('✅ Order created manually:', data.orderId);
+        } else {
+          console.error('❌ Failed to create order manually:', data.error);
+        }
+      })
+      .catch(error => {
+        console.error('❌ Error creating manual order:', error);
+      });
+    }
+    
+    // Fix user linking for orders (link orders to current logged-in user)
+    if (session?.user?.email && !hasCleared) {
+      console.log('Fixing user links for orders with email:', session.user.email);
+      
+      // Add a small delay to ensure order is created first
+      setTimeout(() => {
+        fetch('/api/orders/fix-user-link', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userEmail: session.user.email }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log(`✅ Fixed ${data.ordersFixed} order links`);
+          } else {
+            console.error('❌ Failed to fix order links:', data.error);
+          }
+        })
+        .catch(error => {
+          console.error('❌ Error fixing order links:', error);
+        });
+      }, 2000); // 2 second delay
     }
     
     // Redirect to the account page (order history tab) after a delay

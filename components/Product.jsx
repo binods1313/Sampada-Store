@@ -1,82 +1,145 @@
 // components/Product.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { urlFor } from '../lib/client'; // Import from the consolidated client.js
+import { urlFor } from '../lib/client';
+import { useLazyLoading, useImagePreloader } from '../hooks/usePerformance';
+import { ProductCardSkeleton } from './LoadingSkeletons';
+import { WishlistButton } from './WishlistSystem';
 
-const Product = ({ product: { image, name, slug, price, discount } }) => {
+const Product = ({ product: { image, name, slug, price, discount, _id }, isLoading = false }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [ref, isIntersecting] = useLazyLoading(0.1);
+  
+  // Show skeleton while loading
+  if (isLoading) {
+    return <ProductCardSkeleton />;
+  }
+  
   const hasDiscount = discount && discount > 0;
   const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
-      
   const firstImage = image && image[0] ? image[0] : null;
-      
+  
   // Use urlFor to get a higher quality image URL for better visibility
   const imageUrl = firstImage?.asset
-    ? urlFor(firstImage).width(800).url() // Increased from 500px to 800px for better quality
-    : '/asset/placeholder-image.jpg'; // Fallback placeholder
+    ? urlFor(firstImage).width(800).url()
+    : '/asset/placeholder-image.jpg';
+  
+  // Preload image
+  const { isLoaded: imageIsLoaded, hasError: imageHasError } = useImagePreloader(imageUrl);
+  
+  const handleQuickView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Here you can implement quick view modal functionality
+    console.log('Quick view for product:', name);
+    // For now, we'll just navigate to the product page
+    window.open(`/product/${slug?.current}`, '_blank');
+  };
     
   return (
-    <div className="product-card">
+    <div ref={ref} className={`product-card ${!isIntersecting ? 'loading-pulse' : ''}`}>
       <Link href={`/product/${slug?.current}`}>
-        {/* This wrapper ensures the entire card content is clickable */}         
-        {/* product-content-wrapper already has position: relative from your CSS */}
         <div className="product-content-wrapper"> 
           
-          {/* Sale Badge - NOW POSITIONED ABSOLUTELY WITHIN product-content-wrapper */}             
+          {/* Sale Badge */}             
           {hasDiscount && (               
             <div className="sale-badge">                 
                {discount}% OFF               
             </div>             
           )} 
 
-          {/* Image Container: Made larger for better design visibility */}           
+          {/* Wishlist Button */}
+          <div className="wishlist-button-container">
+            <WishlistButton product={{ _id, name, slug, price, discount, image }} size="medium" />
+          </div> 
+
+          {/* Quick View Overlay */}
+          <div className="quick-view-overlay">
+            <button 
+              className="quick-view-btn"
+              onClick={handleQuickView}
+              aria-label={`Quick view ${name}`}
+            >
+              Quick View
+            </button>
+          </div>
+
+          {/* Image Container with Enhanced Loading State */}           
           <div className="product-image-container" style={{ 
-              position: 'relative', // Essential for Next/Image fill prop
+              position: 'relative',
               width: '100%', 
-              height: '240px', // Matches your desired height from CSS
-              overflow: 'hidden', // Ensures image content stays within bounds and rounded corners apply
-              display: 'flex', // Helps center the image visually if it's smaller
+              height: '240px',
+              overflow: 'hidden',
+              display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#f9f9f9' // Matches your CSS
+              backgroundColor: imageLoaded ? 'transparent' : '#f9f9f9'
             }}>
+            
+            {/* Enhanced Loading Skeleton */}
+            {(!imageLoaded || !isIntersecting) && (
+              <div className="product-skeleton skeleton-shimmer" style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '12px'
+              }} />
+            )}
                         
-            {/* Product Image (Next.js Image component) */}              
-            <Image
-              src={imageUrl}
-              alt={name || 'Product Image'}
-              fill // The fill prop makes the image fill its parent container (.product-image-container)
-              sizes="(max-width: 768px) 100vw, 260px" // Adjusted sizes to match new card width
-              className="product-image" // You can keep your class for additional styling
-              priority // Prioritize loading for visible products
-              style={{ 
-                objectFit: 'contain', // THIS IS KEY: Preserve aspect ratio, fit inside the container
-                objectPosition: 'center', // Center the image if it's smaller than the container
-              }}
-              onError={(e) => {
-                console.error('Product card image load failed for:', name, 'from URL:', e.target.src);
-                e.target.src = '/asset/placeholder-image.jpg'; // Fallback image
-              }}
-            />           
+            {/* Product Image with Lazy Loading */}              
+            {isIntersecting && (
+              <Image
+                src={imageUrl}
+                alt={name || 'Product Image'}
+                fill
+                sizes="(max-width: 768px) 100vw, 260px"
+                className="product-image"
+                priority={false}
+                style={{ 
+                  objectFit: 'contain',
+                  objectPosition: 'center',
+                  opacity: imageLoaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease'
+                }}
+                onLoad={() => setImageLoaded(true)}
+                onError={(e) => {
+                  console.error('Product card image load failed for:', name);
+                  e.target.src = '/asset/placeholder-image.jpg';
+                  setImageLoaded(true);
+                }}
+              />
+            )}           
           </div>
                       
-          {/* Product Name */}           
-          <h2 className="product-card-name">{name}</h2>
+          {/* Product Name with Loading State */}           
+          {isIntersecting ? (
+            <h2 className="product-card-name">{name}</h2>
+          ) : (
+            <div className="skeleton-line skeleton-shimmer" style={{ width: '80%', height: '20px', marginTop: '12px' }}></div>
+          )}
                       
-          {/* Price Display */}           
-          {hasDiscount ? (             
-            <div className="price-container">               
-              <p className="original-price">                 
-                ${price?.toFixed(2)}               
-              </p>               
-              <p className="discounted-price">                 
-                ${discountedPrice?.toFixed(2)}               
-              </p>             
-            </div>           
-          ) : (             
-            <p className="price">               
-              ${price?.toFixed(2)}             
-            </p>           
+          {/* Price Display with Loading State */}           
+          {isIntersecting ? (
+            hasDiscount ? (             
+              <div className="price-container">               
+                <p className="original-price">                 
+                  ${price?.toFixed(2)}               
+                </p>               
+                <p className="discounted-price">                 
+                  ${discountedPrice?.toFixed(2)}               
+                </p>             
+              </div>           
+            ) : (             
+              <p className="price">               
+                ${price?.toFixed(2)}             
+              </p>           
+            )
+          ) : (
+            <div className="skeleton-line skeleton-shimmer" style={{ width: '60%', height: '16px', marginTop: '8px' }}></div>
           )}         
         </div>
       </Link>

@@ -1,7 +1,7 @@
 // pages/api/user/orders.js
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
-import { writeClient } from '../../../lib/client'; // Correctly importing writeClient
+import { authenticatedClient, writeClient } from '../../../lib/client'; // Import authenticatedClient
 
 // Helper function for delay
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -9,8 +9,8 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 // Helper to get Sanity user document from auth provider ID
 async function getSanityUser(authUserId) {
   try {
-    // Use writeClient here too for immediate consistency in finding the user
-    return await writeClient.fetch(
+    // Use authenticatedClient for fetching user data
+    return await authenticatedClient.fetch(
       `*[_type == "user" && providerId == $authUserId][0]`,
       { authUserId }
     );
@@ -38,42 +38,6 @@ export default async function handler(req, res) {
 
   // Get matching Sanity user document
   const sanityUser = await getSanityUser(session.user.id);
-  if (!sanityUser?._id) {
-    // For a missing user profile, you might want to return an empty array instead of 404
-    // to avoid an error state for a valid user who just hasn't created a Sanity profile yet.
-    console.warn(`[API] User profile not found for auth ID: ${session.user.id}. Returning empty orders.`);
-    return res.status(200).json({ orders: [] }); // Return empty array if user profile not found
-  }
-
-  // Updated query to fetch new variant fields
-  const ordersQuery = `*[
-    _type == "order" &&
-    user._ref == $userRef
-  ] | order(paidAt desc){
-    _id,
-    paidAt,
-    totalAmount,
-    status,
-    orderItems[]{
-      _key,
-      quantity,
-      pricePerItem, // Fetch the price per item paid (should be variant price if applicable)
-      variantColorName, // Fetch new field
-      variantSize,    // Fetch new field
-      variantKey,     // Fetch new field
-      variantImage{ // Fetch image asset details for the variant
-        asset->{
-          _id,
-          url
-        }
-      },
-      product->{ // Fetch base product details for fallback display
-        name, // Use 'name' from product schema
-        price, // Base price from product schema
-        image // Default images array from product schema
-      }
-    }
-  }`;
 
   // Retry configuration (kept as per your original code)
   const maxRetries = 5;
@@ -84,9 +48,81 @@ export default async function handler(req, res) {
 
   while (attempt < maxRetries) {
     try {
-      orders = await writeClient.fetch(ordersQuery, {
-         userRef: sanityUser._id
-       });
+      if (sanityUser?._id) {
+        // Fetch orders using both user reference and email
+        const ordersQuery = `*[
+          _type == "order" &&
+          (
+            user._ref == $userRef ||
+            customerEmail == $userEmail
+          )
+        ] | order(paidAt desc){
+          _id,
+          paidAt,
+          totalAmount,
+          status,
+          customerEmail,
+          orderItems[]{
+            _key,
+            quantity,
+            pricePerItem, // Fetch the price per item paid (should be variant price if applicable)
+            variantColorName, // Fetch new field
+            variantSize,    // Fetch new field
+            variantKey,     // Fetch new field
+            variantImage{ // Fetch image asset details for the variant
+              asset->{
+                _id,
+                url
+              }
+            },
+            product->{ // Fetch base product details for fallback display
+              name, // Use 'name' from product schema
+              price, // Base price from product schema
+              image // Default images array from product schema
+            }
+          }
+        }`;
+
+        orders = await authenticatedClient.fetch(ordersQuery, {
+          userRef: sanityUser._id,
+          userEmail: session.user.email // Add email fallback
+        });
+      } else {
+        // If no Sanity user found, fetch only by email
+        const emailOnlyQuery = `*[
+          _type == "order" &&
+          customerEmail == $userEmail
+        ] | order(paidAt desc){
+          _id,
+          paidAt,
+          totalAmount,
+          status,
+          customerEmail,
+          orderItems[]{
+            _key,
+            quantity,
+            pricePerItem,
+            variantColorName,
+            variantSize,
+            variantKey,
+            variantImage{
+              asset->{
+                _id,
+                url
+              }
+            },
+            product->{
+              name,
+              price,
+              image
+            }
+          }
+        }`;
+
+        orders = await authenticatedClient.fetch(emailOnlyQuery, {
+          userEmail: session.user.email
+        });
+      }
 
        console.log(`[API] Fetched ${orders.length} orders for ${sanityUser._id} (Attempt ${attempt + 1})`);
 
@@ -99,7 +135,7 @@ export default async function handler(req, res) {
 
        if (attempt === maxRetries - 1) {
          console.log('[API] Final attempt - checking system for recent orders...');
-         const recentOrders = await writeClient.fetch(
+         const recentOrders = await authenticatedClient.fetch(
            `*[_type == "order" && dateTime(paidAt) > dateTime(now()) - 60*60*24]|
            order(paidAt desc){_id, user->{_id, providerId}, paidAt}`
          );

@@ -1,0 +1,80 @@
+/* styles/VenturesFooter.module.css */
+.ventures-footer {
+  background: #0a0e1a;
+  color: #ffffff;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 32px; /* Add spacing above the footer */
+  border-radius: 16px; /* Curve the container edges */
+}
+
+.ventures-footer h4 {
+  margin-bottom: 16px;
+  color: #00d9ff;
+}
+
+.ventures-footer a {
+  color: #ffffff;
+  text-decoration: none;
+  display: block; /* Make links block-level for better click area */
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+}
+
+.ventures-footer a:hover {
+  color: #00d9ff;
+}
+
+.ventures-footer .social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.ventures-footer .social-icon {
+  color: #ffffff;
+  font-size: 24px;
+  transition: color 0.2s ease;
+}
+
+.ventures-footer .social-icon:hover {
+  color: #00d9ff;
+}
+
+.ventures-footer .copyright {
+  grid-column: 1 / -1; /* Span all columns */
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+  color: #888888;
+}
+
+.ventures-footer .copyright a {
+  display: inline; /* Keep copyright links inline */
+  margin: 0 5px;
+  color: #00d9ff;
+}
+
+.ventures-footer .copyright a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ventures-footer {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .ventures-footer {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+    text-align: center;
+  }
+
+  .ventures-footer .social-icons {
+    justify-content: center;
+  }
+}

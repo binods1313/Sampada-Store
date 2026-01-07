@@ -1,21 +1,74 @@
 // components/Cart.jsx
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineLeft, AiOutlineShopping } from 'react-icons/ai';
 import { TiDeleteOutline } from 'react-icons/ti';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
 import { useCartContext } from '../context/CartContext';
 import { urlFor } from '../lib/client';
 import { useUIContext } from '../context/StateContext';
 
 // Import your Stripe utility function
 import getStripe from '../lib/getStripe';
+import GooglePayButton from './GooglePayButton';
 
 const Cart = () => {
   const cartRef = useRef();
+  const { data: session } = useSession();
   const { cartItems, totalPrice, removeFromCart, totalQuantities, updateCartItemQuantity, calculateItemPrice } = useCartContext();
   const { setShowCart } = useUIContext();
+
+  // State for Google Pay availability
+  const [isGooglePayAvailable, setIsGooglePayAvailable] = useState(false);
+
+  // Check Google Pay availability on component mount
+  useEffect(() => {
+    const checkGooglePay = async () => {
+      console.log('Checking Google Pay availability, totalPrice:', totalPrice);
+
+      // Load Stripe directly instead of using getStripe to avoid redirect method conflicts
+      const stripe = await (await import('@stripe/stripe-js')).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+      if (!stripe) {
+        console.error('Could not load Stripe for Google Pay check');
+        return;
+      }
+
+      const paymentRequest = stripe.paymentRequest({
+        country: 'US',
+        currency: 'usd',
+        total: {
+          label: 'Total',
+          amount: Math.round(totalPrice * 100),
+        },
+        requestPayerName: true,
+        requestPayerEmail: true,
+      });
+
+      const result = await paymentRequest.canMakePayment();
+      console.log('Google Pay canMakePayment result:', result);
+
+      // Handle different response formats from canMakePayment
+      // Google Pay may return null if not available or if served over HTTP instead of HTTPS
+      let googlePayAvailable = false;
+      if (result) {
+        // Check for Google Pay specifically
+        googlePayAvailable = result.googlePay || result.applePay || result.methodName === 'google.com/pay';
+      }
+      // Note: If result is null, googlePayAvailable remains false which is the correct behavior
+      // Google Pay is only shown if it's actually available via canMakePayment
+
+      console.log('Google Pay availability determined:', googlePayAvailable);
+      setIsGooglePayAvailable(googlePayAvailable);
+    };
+
+    if (totalPrice > 0) {
+      checkGooglePay();
+    } else {
+      setIsGooglePayAvailable(false); // Don't show if cart is empty
+    }
+  }, [totalPrice]);
 
   // Helper function to handle item quantity updates
   const toggleCartItemQuantity = (cartUniqueId, action) => {
@@ -102,7 +155,7 @@ const Cart = () => {
 
       console.log('Sending line items to API:', lineItems);
 
-      // Call API with properly structured data
+      // Call API with properly structured data and user email
       const response = await fetch('/api/stripe', {
         method: 'POST',
         headers: {
@@ -110,6 +163,7 @@ const Cart = () => {
         },
         body: JSON.stringify({
           cartItems: lineItems,
+          customerEmail: session?.user?.email || null, // Pass logged-in user's email
           success_url: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${window.location.origin}/?canceled=true`
         }),
@@ -135,13 +189,13 @@ const Cart = () => {
         throw new Error(errorMessage);
       }
 
-      const session = await response.json();
+      const sessionData = await response.json();
 
-      if (!session || !session.id) {
+      if (!sessionData || !sessionData.id) {
         throw new Error('Invalid session data received from server.');
       }
 
-      console.log(`Redirecting to checkout: ${session.id}`);
+      console.log(`Redirecting to checkout: ${sessionData.id}`);
       
       // Dismiss the loading toast BEFORE attempting redirect
       toast.dismiss(loadingToast);
@@ -150,7 +204,7 @@ const Cart = () => {
       // --- CORRECTED: Call redirectToCheckout with proper error handling ---
       console.log('Attempting Stripe redirect...');
       const result = await stripe.redirectToCheckout({
-        sessionId: session.id
+        sessionId: sessionData.id
       });
 
       console.log('stripe.redirectToCheckout returned:', result);
@@ -316,6 +370,15 @@ const Cart = () => {
               >
                 Pay with Stripe
               </button>
+
+              {/* Google Pay button */}
+              {isGooglePayAvailable && (
+                <GooglePayButton
+                  cartItems={cartItems}
+                  totalPrice={totalPrice}
+                  userEmail={session?.user?.email}
+                />
+              )}
             </div>
           </div>
         )}
@@ -494,6 +557,39 @@ const Cart = () => {
 
         .remove-item:hover {
           color: #d02030;
+        }
+
+        /* Google Pay Button Styles */
+        .btn-container {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .google-pay-button-container {
+          width: 100%;
+        }
+
+        .google-pay-button {
+          background-color: #000;
+          color: #fff;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 4px;
+          font-size: 16px;
+          cursor: pointer;
+          width: 100%;
+          margin-top: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .google-pay-button:hover {
+          opacity: 0.9;
+          transform: scale(1.01);
+          transition: all 0.2s ease;
         }
 
         /* Responsive adjustments */

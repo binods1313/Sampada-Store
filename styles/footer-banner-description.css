@@ -1,41 +1,49 @@
 /* --- Footer Banner Styles --- */
 
 .footer-banner-container {
-  position: relative;
-  padding: 2rem;
-  border-radius: 15px;
-  background-color: #f02d34;
-  color: white;
-  width: 100%;
-  margin-top: 120px;
-  overflow: hidden; /* Prevents content from overflowing */
+  position: relative !important;
+  padding: 2rem !important;
+  border-radius: 15px !important;
+  background-color: #f02d34 !important;
+  color: white !important;
+  width: 100% !important;
+  margin-top: 120px !important;
+  overflow: hidden !important;
   
   /* NEW: Use flexbox to center content and ensure minimum height */
-  display: flex;
-  align-items: center; /* Vertically center content within the banner */
-  justify-content: center; /* Horizontally center content within the banner */
-  min-height: 350px; /* Give the banner a minimum height for the image */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 400px !important; /* Adjusted height for better containment */
+  max-height: 450px !important; /* Added max-height to control overall size */
 }
 
 .banner-desc {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%; /* Take full width of parent (footer-banner-container) */
-  max-width: 1200px; /* Optional: Constrain the max width of the content inside */
-  margin: 0 auto; /* Center the banner content horizontally */
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  z-index: 3 !important; /* Keep content above the image */
+  padding: 0 2rem !important;
 }
 
 /* Make the three sections (left, image, right) more evenly distributed */
 .banner-desc .left {
   flex: 1; /* Allows it to take up available space */
   padding-right: 20px; /* Add some spacing */
+  position: relative;
+  z-index: 3; /* Ensure text stays above the enlarged image */
 }
 
 .banner-desc .right {
   flex: 1; /* Allows it to take up available space */
   text-align: right;
   padding-left: 20px; /* Add some spacing */
+  position: relative;
+  z-index: 3; /* Ensure text stays above the enlarged image */
 }
 
 .image-container {
@@ -44,32 +52,33 @@
   justify-content: center; /* Center image horizontally within this container */
   align-items: center; /* Center image vertically within this container */
   flex: 1; /* Allow it to take up available horizontal space */
-  min-height: 250px; /* NEW: Ensure this container has a minimum height for the image */
+  min-height: 280px; /* Slightly increased height for better image accommodation */
   height: 100%; /* Take full height of its parent (.banner-desc flex item) */
   width: 100%;
-  padding: 0;
+  padding: 10px; /* Add padding to prevent overlap with text */
+  z-index: 1; /* Ensure proper layering */
 }
 
 .footer-banner-image {
-  /* Next.js Image component handles intrinsic sizing via width/height props.
-     These CSS properties then control how it fits into its parent container. */
-  width: auto !important;   /* Allow image to scale its width naturally */
-  height: auto !important;  /* Allow image to scale its height naturally */
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   
-  /* Ensure the image doesn't overflow its parent container */
-  max-width: 190%;          /* Max width is 100% of its parent (.image-container) */
-  max-height: 176%;         /* Max height is 100% of its parent (.image-container) */
+  /* Controlled sizing */
+  width: auto !important;
+  height: auto !important;
+  max-width: 450px !important; /* Fixed maximum width */
+  max-height: 450px !important; /* Fixed maximum height */
   
-  /* Scale down to fit fully inside its container, preserving aspect ratio */
-  object-fit: contain !important; 
+  /* Image display properties */
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+  z-index: 2 !important;
   
-  /* Remove transform: scale(). Its effect is now achieved by larger source image
-     and ample container space, leading to a crisper image. */
-  /* transform: none; */ 
-  
-  /* Centering in a non-flex context (redundant but harmless with flex parent) */
-  display: block; 
-  margin: 0 auto; 
+  /* Optional: Add a subtle shadow for depth */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) !important;
 }
 
 /* Enhanced styling for the product name (Aurora Sky Pulse™) */
@@ -84,7 +93,7 @@
 /* --- Responsive adjustments --- */
 @media screen and (max-width: 800px) {
   .footer-banner-container {
-    min-height: 300px; /* Adjusted minimum height for mobile */
+    min-height: 300px; /* Back to original mobile height */
     padding: 1rem;
   }
   .banner-desc {
@@ -103,12 +112,15 @@
   .image-container {
     margin: 20px 0; /* Add vertical margin to separate from text */
     width: 100%;
-    min-height: 200px; /* Adjusted minimum height for mobile */
+    min-height: 220px; /* Increased height for mobile to accommodate larger image */
+    padding: 10px; /* Maintain padding on mobile */
   }
   
-  /* No specific transform or max-height needed for image on mobile as it scales responsively */
+  /* Adjust image scaling for mobile */
   .footer-banner-image {
-    /* Styles already cover responsiveness with max-width/height: 100% */
+    transform: translate(-50%, -50%) scale(1.2); /* Perfect centering with moderate scaling on mobile */
+    max-width: 700%; /* Increased max-width on mobile for larger image */
+    max-height: 600%; /* Increased max-height on mobile for larger image */
   }
   
   .product-name {

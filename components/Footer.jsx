@@ -7,16 +7,16 @@ import { AiFillFacebook } from 'react-icons/ai'; // Selective import
 const Footer = () => {
   return (
     <div className="footer-container">
-    <p>2025 Lumina Headphones All Rights Reserverd</p>
-    <p className="icons">
-      <AiFillInstagram />
-      <AiOutlineTwitter />
-      <AiFillFacebook />
-      <AiFillYoutube />
-      
-    </p>
-  </div>
-)
+      <p>© 2026 Sampada. Powered by Printify & Stripe</p>
+      <p className="icons">
+        <AiFillInstagram />
+        <AiOutlineTwitter />
+        <AiFillFacebook />
+        <AiFillYoutube />
+
+      </p>
+    </div>
+  )
 }
 
 export default Footer

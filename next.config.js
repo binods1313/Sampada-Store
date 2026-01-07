@@ -8,6 +8,22 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfigCore = {
   reactStrictMode: true,
+  
+  // Fix workspace root detection warning
+  outputFileTracingRoot: path.join(__dirname, './'),
+  
+  // ISR and build optimizations
+  experimental: {
+    // Disabled optimizeCss due to hardcoded critters dependency in Next.js
+    // optimizeCss: true,
+    scrollRestoration: true,
+  },
+  
+  // Improve dev experience
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
   images: {
     remotePatterns: [
       {
@@ -33,10 +49,25 @@ const nextConfigCore = {
     };
     if (!config.resolve.fallback) { config.resolve.fallback = {}; }
     config.resolve.fallback['rxjs/operators'] = path.resolve(__dirname, './node_modules/rxjs/operators/index.js');
+    
     if (dev && !isServer) {
-      config.watchOptions = { ...config.watchOptions, poll: 500, ignored: /node_modules/, };
+      config.watchOptions = { 
+        ...config.watchOptions, 
+        poll: 500, 
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+      };
       config.optimization.moduleIds = 'named';
+      
+      // Conservative webpack optimization for stability
+      config.stats = 'errors-warnings';
+      config.performance = {
+        hints: false
+      };
     }
+    
+
+    
     return config;
   },
 

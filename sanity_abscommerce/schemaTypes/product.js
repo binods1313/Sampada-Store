@@ -252,6 +252,43 @@ export default defineType({
       initialValue: 0,
       validation: Rule => Rule.integer().min(0).error('Must be non-negative')
     }),
+    // Printify Integration Fields
+    defineField({
+      name: 'printifyIntegration',
+      title: 'Printify Integration',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'isPrintifyProduct',
+          title: 'Is Printify Product',
+          type: 'boolean',
+          description: 'Check this if this product is handled by Printify for fulfillment',
+          initialValue: false
+        }),
+        defineField({
+          name: 'printifyProductId',
+          title: 'Printify Product ID',
+          type: 'string',
+          description: 'The product ID from your Printify store',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printifyBlueprintId',
+          title: 'Printify Blueprint ID',
+          type: 'number',
+          description: 'The blueprint ID from Printify catalog',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printProviderName',
+          title: 'Print Provider',
+          type: 'string',
+          description: 'Name of the print provider (e.g., Gooten, Printful)',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        })
+      ]
+    }),
+
     defineField({
       name: 'status',
       title: 'Status',

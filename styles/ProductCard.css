@@ -1,51 +1,127 @@
-/* ProductCard.css - Complete styling for product cards with discounts */
+/* ProductCard.css - Enhanced styling for product cards with modern effects */
 
 /* Product Card Layout & Base Styles */
 .product-card {
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 12px;
-  overflow: hidden; /* Ensures content respects border-radius */
+  border-radius: 16px;
+  overflow: hidden;
   text-align: center;
   margin: 10px;
-  width: 260px; /* Increased width, ensure this matches your grid */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  width: 260px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.9);
+  border-color: rgba(240, 45, 52, 0.3);
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(240, 45, 52, 0.02), rgba(255, 71, 87, 0.02));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+.product-card:hover::before {
+  opacity: 1;
 }
 
 .product-content-wrapper {
   display: flex;
   flex-direction: column;
-  padding: 15px; /* Provides space for the badge at the top-right */
+  padding: 20px;
   text-decoration: none;
   color: inherit;
-  position: relative; /* Essential: Badge will be positioned relative to this wrapper */
+  position: relative;
+  height: 100%;
+  transition: all 0.3s ease;
 }
 
-/* Image Container */
+.product-card:hover .product-content-wrapper {
+  transform: translateZ(0);
+}
+
+/* Quick View Overlay - Hidden by default */
+.quick-view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(240, 45, 52, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  z-index: 10;
+}
+
+.product-card:hover .quick-view-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quick-view-btn {
+  background: white;
+  color: #f02d34;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.quick-view-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Image Container with Enhanced Effects */
 .product-image-container {
   position: relative;
   width: 100%;
-  height: 240px; /* Matches your desired height */
+  height: 240px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f9f9f9;
-  border-radius: 8px; /* Added border-radius to the image container itself */
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
   margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-image-container {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
 /* DISCOUNT BADGE STYLING - Positioned INSIDE the card's top-right corner, outside image visual */
 .sale-badge {
   position: absolute;
-  top: 8px; /* Positioned relative to .product-content-wrapper's top padding */
+  top: -6px; /* Moved 0.5cm (14px) higher: 8px - 14px = -6px */
   right: 8px; /* Positioned relative to .product-content-wrapper's right padding */
   background: linear-gradient(135deg, #ff4757, #ff3742);
   color: white;
@@ -68,20 +144,34 @@
   100% { transform: scale(1); }
 }
 
-/* Product Image */
+/* Product Image with Enhanced Hover Effects */
 .product-image-container img {
-  object-fit: contain !important; /* Forces image to fit while preserving aspect ratio */
+  object-fit: contain !important;
   object-position: center !important;
   width: 100% !important;
   height: 100% !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
-  transition: transform 0.3s ease-in-out;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(1) contrast(1);
 }
 
 .product-card:hover .product-image-container img {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* Loading Skeleton Styles */
+.product-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Product Name */
@@ -94,6 +184,7 @@
   min-height: 2.8em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2; /* Standard property for cross-browser compatibility */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -168,7 +259,7 @@
   .sale-badge {
     font-size: 0.65em; /* Even smaller for mobile */
     padding: 3px 6px;
-    top: 6px; 
+    top: -8px; /* Moved 0.5cm (14px) higher: 6px - 14px = -8px */
     right: 6px;
   }
 }
@@ -186,4 +277,9 @@
     flex-direction: column;
     gap: 5px;
   }
+}
+
+html.dark .product-card {
+  background-color: #1f2937;
+  color: #e2e8f0;
 }

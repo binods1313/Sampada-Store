@@ -8,40 +8,35 @@ import { client, urlFor } from '../../lib/client';
 import { useCartContext } from '../../context/CartContext';
 import { useUIContext } from '../../context/StateContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
 import ErrorPage from 'next/error';
+import Head from 'next/head';
+import { ReviewSystem, WishlistButton } from '../../components';
 
-const ProductDetails = ({ product, products }) => {
-  if (!product) {
-    return <ErrorPage statusCode={404} title="Product not found" />;
-  }
-
-  // Destructure specifications from product
-  const { _id, name, details, specialty, pros, cons, bestUseCases, variants, sizeChart, image, price, discount, inventory, specifications } = product;
-  const basePrice = price || 0;
-  const baseDiscount = discount || 0;
-
+const ProductDetails = ({ product, products, slug }) => {
+  // All hooks must be called before any early returns
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showSizeChartModal, setShowSizeChartModal] = useState(false);
 
   const { decQty, incQty, qty, onAdd, resetQty } = useCartContext();
   const { setShowCart } = useUIContext();
 
-  const [showSizeChartModal, setShowSizeChartModal] = useState(false);
-
   // --- Initial selection of variants ---
   useEffect(() => {
+    if (!product) return; // Guard clause
+
     resetQty();
 
-    if (variants && variants.length > 0) {
-      const uniqueColors = Array.from(new Set(variants.map(v => v.colorName))).filter(Boolean);
+    if (product.variants && product.variants.length > 0) {
+      const uniqueColors = Array.from(new Set(product.variants.map(v => v.colorName))).filter(Boolean);
 
       if (uniqueColors.length > 0) {
         setSelectedColor(uniqueColors[0]);
-        const variantsForFirstColor = variants.filter(v => v.colorName === uniqueColors[0]);
+        const variantsForFirstColor = product.variants.filter(v => v.colorName === uniqueColors[0]);
         const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '6XL'];
         const sortedSizes = variantsForFirstColor.map(v => v.size).sort((a, b) => {
           return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
@@ -55,12 +50,14 @@ const ProductDetails = ({ product, products }) => {
       setSelectedColor(null);
       setSelectedSize(null);
     }
-  }, [product._id, variants, resetQty]); // Added resetQty to dependency array
+  }, [product, resetQty]); // Updated dependencies
 
   // --- Update selectedVariant whenever selectedColor or selectedSize changes ---
   useEffect(() => {
-    if (selectedColor && selectedSize && variants) {
-      const foundVariant = variants.find(
+    if (!product) return; // Guard clause
+
+    if (selectedColor && selectedSize && product.variants) {
+      const foundVariant = product.variants.find(
         v => v.colorName === selectedColor && v.size === selectedSize
       );
       setSelectedVariant(foundVariant);
@@ -76,30 +73,42 @@ const ProductDetails = ({ product, products }) => {
       // Optionally reset image index when no variant is fully selected
       // setCurrentImageIndex(0);
     }
-  }, [selectedColor, selectedSize, variants]);
+  }, [selectedColor, selectedSize, product]);
+
+  // --- Handlers for variant selection ---
+  const handleColorSelect = useCallback((colorName) => {
+    if (!product) return;
+
+    setSelectedColor(colorName);
+    const variantsForColor = (product.variants || []).filter(v => v.colorName === colorName);
+    const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '6XL'];
+    const sortedSizes = variantsForColor.map(v => v.size).sort((a, b) => {
+      return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
+    });
+    setSelectedSize(sortedSizes.length > 0 ? sortedSizes[0] : null);
+  }, [product]);
+
+  const handleSizeSelect = useCallback((size) => {
+    setSelectedSize(size);
+  }, []);
+
+  // Early return after all hooks are called
+  if (!product) {
+    return <ErrorPage statusCode={404} title="Product not found" />;
+  }
+
+  // Destructure specifications from product
+  const { _id, name, details, specialty, pros, cons, bestUseCases, variants, sizeChart, image, price, discount, inventory, specifications } = product;
+  const basePrice = price || 0;
+  const baseDiscount = discount || 0;
 
   const currentPrice = selectedVariant?.variantPrice ?? basePrice;
   const currentDiscount = selectedVariant?.variantDiscount ?? baseDiscount;
   const displayPrice = currentPrice * (1 - (currentDiscount / 100));
 
   const currentStock = variants && variants.length > 0
-                       ? (selectedVariant?.variantStock ?? 0)
-                       : (inventory ?? 0);
-
-  // --- Handlers for variant selection ---
-  const handleColorSelect = useCallback((colorName) => {
-    setSelectedColor(colorName);
-    const variantsForColor = (variants || []).filter(v => v.colorName === colorName);
-    const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '6XL'];
-    const sortedSizes = variantsForColor.map(v => v.size).sort((a, b) => {
-        return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
-    });
-    setSelectedSize(sortedSizes.length > 0 ? sortedSizes[0] : null);
-  }, [variants]);
-
-  const handleSizeSelect = useCallback((size) => {
-    setSelectedSize(size);
-  }, []);
+    ? (selectedVariant?.variantStock ?? 0)
+    : (inventory ?? 0);
 
   const uniqueColors = Array.from(new Map(
     (variants || []).map(v => [v.colorName, { colorName: v.colorName, colorHex: v.colorHex, variantImage: v.variantImage }])
@@ -107,18 +116,18 @@ const ProductDetails = ({ product, products }) => {
 
   const availableSizesForSelectedColor = selectedColor
     ? (variants || []).filter(v => v.colorName === selectedColor)
-             .map(v => ({ size: v.size, stock: v.variantStock }))
-             .sort((a, b) => {
-                const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '6XL'];
-                return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
-              })
+      .map(v => ({ size: v.size, stock: v.variantStock }))
+      .sort((a, b) => {
+        const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '6XL'];
+        return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
+      })
     : [];
 
   const mainProductImageSource = selectedVariant?.variantImage?.asset
-                               ? urlFor(selectedVariant.variantImage).width(600).url()
-                               : (image?.[currentImageIndex]?.asset
-                                 ? urlFor(image[currentImageIndex]).width(600).url()
-                                 : '/asset/placeholder-image.jpg');
+    ? urlFor(selectedVariant.variantImage).width(600).url()
+    : (image?.[currentImageIndex]?.asset
+      ? urlFor(image[currentImageIndex]).width(600).url()
+      : '/asset/placeholder-image.jpg');
 
   const getItemDetailsForCart = () => {
     if (variants && variants.length > 0) {
@@ -278,6 +287,10 @@ const ProductDetails = ({ product, products }) => {
 
   return (
     <div className="product-page-container">
+      <Head>
+        <title>{name} – Sampada Custom Print</title>
+        <meta name="description" content={`Shop Sampada custom ${name}. Premium print-on-demand with prosperity-inspired designs. Ships via Printify | Stripe Secure Checkout.`} />
+      </Head>
       {/* Main product container */}
       <div className="product-detail-container" style={{
         display: 'flex',
@@ -304,10 +317,12 @@ const ProductDetails = ({ product, products }) => {
             height: '500px', // Fixed height for main image
             position: 'relative'
           }}>
-            <img
+            <Image
               src={mainProductImageSource}
               className="product-detail-image"
               alt={name || 'Product Image'}
+              width={600}
+              height={500}
               style={{
                 maxWidth: '100%',
                 maxHeight: '100%',
@@ -319,12 +334,6 @@ const ProductDetails = ({ product, products }) => {
               onError={(e) => {
                 console.error('Product details main image load failed for:', name, 'from URL:', e.target.src);
                 e.target.src = '/asset/placeholder-image.jpg';
-                // Ensure placeholder styles are consistent
-                e.target.style.maxWidth = '100%';
-                e.target.style.maxHeight = '100%';
-                e.target.style.width = 'auto';
-                e.target.style.height = 'auto';
-                e.target.style.objectFit = 'contain';
               }}
             />
           </div>
@@ -337,104 +346,102 @@ const ProductDetails = ({ product, products }) => {
             marginBottom: '20px' // Added margin for spacing
           }}>
             {variants && variants.length > 0 && uniqueColors.length > 0 ? (
-                // Thumbnails for color variants (using variantImage if available)
-                <Fragment>
-                    {uniqueColors.map((colorItem) => (
-                        <div
-                            key={colorItem.colorName}
-                            className={`color-option ${selectedColor === colorItem.colorName ? 'selected' : ''}`}
-                            onClick={() => handleColorSelect(colorItem.colorName)}
-                            style={{
-                                width: '60px',
-                                height: '60px',
-                                cursor: 'pointer',
-                                border: selectedColor === colorItem.colorName ? '2px solid #f02d34' : '1px solid #d0d0d0',
-                                overflow: 'hidden',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'border-color 0.3s ease, background-color 0.3s ease',
-                                backgroundColor: colorItem.colorHex || '#f1f1f1', // Use hex for background if no image
-                                boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none' // Example focus style
-                            }}
-                        >
-                            {colorItem.variantImage && colorItem.variantImage.asset ? (
-                                <img
-                                    src={urlFor(colorItem.variantImage).width(60).height(60).url()}
-                                    alt={colorItem.colorName}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    onError={(e) => {
-                                      console.error('Variant thumbnail load failed for:', colorItem.colorName, 'from URL:', e.target.src);
-                                      e.target.src = '/asset/placeholder-image.jpg';
-                                      e.target.style.width = '100%';
-                                      e.target.style.height = '100%';
-                                      e.target.style.objectFit = 'contain'; // Changed to contain for placeholder
-                                    }}
-                                />
-                            ) : (
-                                // Fallback if no variant image, show color name or just hex background
-                                <span style={{ color: selectedColor === colorItem.colorName ? 'white' : '#333', fontSize: '0.7em', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
-                                    {colorItem.colorName}
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                </Fragment>
-              ) : (
-                // Thumbnails for default product images
-                <Fragment>
-                    {image?.map((item, i) => (
-                        <div
-                            key={item._key || i} // Ensure unique key
-                            style={{
-                                width: '60px',
-                                height: '60px',
-                                cursor: 'pointer',
-                                backgroundColor: i === currentImageIndex ? '#f02d34' : '#f1f1f1', // Highlight active image
-                                borderRadius: '0px', // Consistent with main image container
-                                overflow: 'hidden',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'background-color 0.3s ease',
-                                border: i === currentImageIndex ? '2px solid #f02d34' : '2px solid transparent' // Border for active
-                            }}
-                            onMouseEnter={() => setCurrentImageIndex(i)} // Change main image on hover/click
-                            className="thumbnail-image" // For potential global styling
-                            // Optional: hover effect for non-active thumbnails
-                            onMouseOver={(e) => {
-                                if (i !== currentImageIndex) {
-                                    e.currentTarget.style.backgroundColor = '#ff8a85'; // Lighter red for hover
-                                }
-                            }}
-                            onMouseOut={(e) => {
-                                if (i !== currentImageIndex) {
-                                    e.currentTarget.style.backgroundColor = '#f1f1f1'; // Revert to default
-                                }
-                            }}
-                        >
-                            <img
-                                src={item.asset ? urlFor(item).width(60).url() : '/asset/placeholder-image.jpg'}
-                                style={{
-                                    maxWidth: '100%',
-                                    maxHeight: '100%',
-                                    width: 'auto',
-                                    height: 'auto',
-                                    objectFit: 'contain'
-                                }}
-                                alt={`${name || 'Product'} - view ${i+1}`}
-                                onError={(e) => {
-                                    console.error('Product thumbnail load failed for:', name, 'from URL:', e.target.src);
-                                    e.target.src = '/asset/placeholder-image.jpg';
-                                    e.target.style.width = '100%';
-                                    e.target.style.height = '100%';
-                                    e.target.style.objectFit = 'contain';
-                                }}
-                            />
-                        </div>
-                    ))}
-                </Fragment>
-              )}
+              // Thumbnails for color variants (using variantImage if available)
+              <Fragment>
+                {uniqueColors.map((colorItem) => (
+                  <div
+                    key={colorItem.colorName}
+                    className={`color-option ${selectedColor === colorItem.colorName ? 'selected' : ''}`}
+                    onClick={() => handleColorSelect(colorItem.colorName)}
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      cursor: 'pointer',
+                      border: selectedColor === colorItem.colorName ? '2px solid #f02d34' : '1px solid #d0d0d0',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'border-color 0.3s ease, background-color 0.3s ease',
+                      backgroundColor: colorItem.colorHex || '#f1f1f1', // Use hex for background if no image
+                      boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none' // Example focus style
+                    }}
+                  >
+                    {colorItem.variantImage && colorItem.variantImage.asset ? (
+                      <Image
+                        src={urlFor(colorItem.variantImage).width(60).height(60).url()}
+                        alt={colorItem.colorName}
+                        width={60}
+                        height={60}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => {
+                          console.error('Variant thumbnail load failed for:', colorItem.colorName, 'from URL:', e.target.src);
+                          e.target.src = '/asset/placeholder-image.jpg';
+                        }}
+                      />
+                    ) : (
+                      // Fallback if no variant image, show color name or just hex background
+                      <span style={{ color: selectedColor === colorItem.colorName ? 'white' : '#333', fontSize: '0.7em', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
+                        {colorItem.colorName}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </Fragment>
+            ) : (
+              // Thumbnails for default product images
+              <Fragment>
+                {image?.map((item, i) => (
+                  <div
+                    key={item._key || i} // Ensure unique key
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      cursor: 'pointer',
+                      backgroundColor: i === currentImageIndex ? '#f02d34' : '#f1f1f1', // Highlight active image
+                      borderRadius: '0px', // Consistent with main image container
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'background-color 0.3s ease',
+                      border: i === currentImageIndex ? '2px solid #f02d34' : '2px solid transparent' // Border for active
+                    }}
+                    onMouseEnter={() => setCurrentImageIndex(i)} // Change main image on hover/click
+                    className="thumbnail-image" // For potential global styling
+                    // Optional: hover effect for non-active thumbnails
+                    onMouseOver={(e) => {
+                      if (i !== currentImageIndex) {
+                        e.currentTarget.style.backgroundColor = '#ff8a85'; // Lighter red for hover
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      if (i !== currentImageIndex) {
+                        e.currentTarget.style.backgroundColor = '#f1f1f1'; // Revert to default
+                      }
+                    }}
+                  >
+                    <Image
+                      src={item.asset ? urlFor(item).width(60).url() : '/asset/placeholder-image.jpg'}
+                      alt={`${name || 'Product'} - view ${i + 1}`}
+                      width={60}
+                      height={60}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        objectFit: 'contain'
+                      }}
+                      onError={(e) => {
+                        console.error('Product thumbnail load failed for:', name, 'from URL:', e.target.src);
+                        e.target.src = '/asset/placeholder-image.jpg';
+                      }}
+                    />
+                  </div>
+                ))}
+              </Fragment>
+            )}
           </div>
         </div>
 
@@ -473,13 +480,13 @@ const ProductDetails = ({ product, products }) => {
 
           {/* Price Section - Moved before Specifications */}
           <p className="price" style={{
-             fontSize: '1.75rem',
-             fontWeight: 'bold',
-             color: '#f02d34',
-             marginBottom: '20px',
-             display: 'flex',
-             alignItems: 'baseline',
-             flexWrap: 'wrap' // Allow wrapping for smaller screens
+            fontSize: '1.75rem',
+            fontWeight: 'bold',
+            color: '#f02d34',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'baseline',
+            flexWrap: 'wrap' // Allow wrapping for smaller screens
           }}>
             ${displayPrice.toFixed(2)}
             {currentDiscount > 0 && (
@@ -505,6 +512,23 @@ const ProductDetails = ({ product, products }) => {
               </>
             )}
           </p>
+
+          {/* Printify/Stripe Trust Badge */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '20px',
+            padding: '10px 15px',
+            backgroundColor: '#f0fdf4',
+            border: '1px solid #bbf7d0',
+            borderRadius: '8px',
+            fontSize: '0.9rem',
+            color: '#166534'
+          }}>
+            <span style={{ fontSize: '1.2rem' }}>📦</span>
+            <span><strong>Ships via Printify</strong> | <strong>Stripe Secure Checkout</strong></span>
+          </div>
 
           {/* Product Variants (Colors & Sizes) */}
           {variants && variants.length > 0 && (
@@ -536,25 +560,24 @@ const ProductDetails = ({ product, products }) => {
                         boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none' // Inner shadow for selection
                       }}
                     >
-                        {colorItem.variantImage && colorItem.variantImage.asset ? (
-                            <img
-                                src={urlFor(colorItem.variantImage).width(50).height(50).url()}
-                                alt={colorItem.colorName}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                onError={(e) => {
-                                  console.error('Variant color swatch image load failed for:', colorItem.colorName, 'from URL:', e.target.src);
-                                  e.target.src = '/asset/placeholder-image.jpg';
-                                  e.target.style.width = '100%';
-                                  e.target.style.height = '100%';
-                                  e.target.style.objectFit = 'contain';
-                                }}
-                            />
-                        ) : (
-                            // Fallback text if no image, ensure good contrast with hex background
-                            <span style={{ color: selectedColor === colorItem.colorName ? 'white' : '#333', fontSize: '0.7em', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
-                                {colorItem.colorName}
-                            </span>
-                        )}
+                      {colorItem.variantImage && colorItem.variantImage.asset ? (
+                        <Image
+                          src={urlFor(colorItem.variantImage).width(50).height(50).url()}
+                          alt={colorItem.colorName}
+                          width={50}
+                          height={50}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            console.error('Variant color swatch image load failed for:', colorItem.colorName, 'from URL:', e.target.src);
+                            e.target.src = '/asset/placeholder-image.jpg';
+                          }}
+                        />
+                      ) : (
+                        // Fallback text if no image, ensure good contrast with hex background
+                        <span style={{ color: selectedColor === colorItem.colorName ? 'white' : '#333', fontSize: '0.7em', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
+                          {colorItem.colorName}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -715,7 +738,7 @@ const ProductDetails = ({ product, products }) => {
                   borderRadius: '8px',
                   transition: 'all 0.3s ease',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}                onMouseEnter={(e) => {
+                }} onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
                     e.currentTarget.style.transform = 'translateY(-2px)';
                     e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
@@ -746,7 +769,7 @@ const ProductDetails = ({ product, products }) => {
                 border: '1px solid #e0e0e0'
               }}>
                 {qty}
-              </span>              <button                onClick={() => incQty(currentStock)}
+              </span>              <button onClick={() => incQty(currentStock)}
                 type="button"
                 disabled={currentStock === 0}
                 aria-label="Increase quantity"
@@ -762,7 +785,7 @@ const ProductDetails = ({ product, products }) => {
                   color: currentStock === 0 ? '#8aa98e' : '#2e7d32',
                   border: 'none',
                   borderRadius: '8px',
-                  transition: 'all 0.3s ease',                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  transition: 'all 0.3s ease', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
@@ -790,7 +813,8 @@ const ProductDetails = ({ product, products }) => {
             gap: '20px',
             marginBottom: '40px',
             flexWrap: 'wrap',
-            marginTop: '30px'
+            marginTop: '30px',
+            alignItems: 'center'
           }}>
             <button
               type="button"
@@ -872,15 +896,23 @@ const ProductDetails = ({ product, products }) => {
             >
               Buy Now
             </button>
+
+            {/* Wishlist Button */}
+            <div style={{ marginLeft: '10px' }}>
+              <WishlistButton
+                product={{ _id, name, slug: { current: slug }, price, discount, image }}
+                size="large"
+              />
+            </div>
           </div>
 
           {/* --- MOVED: Product Specifications Section --- */}
           {specifications && specifications.length > 0 && (
-            <div className="specifications-section" style={{ 
-                marginBottom: '25px', // Space before Product Insights
-                borderTop: '1px solid #e0e0e0', 
-                paddingTop: '20px' // Space after border
-                // marginTop is implicitly handled by buttons' marginBottom
+            <div className="specifications-section" style={{
+              marginBottom: '25px', // Space before Product Insights
+              borderTop: '1px solid #e0e0e0',
+              paddingTop: '20px' // Space after border
+              // marginTop is implicitly handled by buttons' marginBottom
             }}>
               <h4 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '15px', color: '#333' }}>
                 Product Specifications
@@ -1023,6 +1055,27 @@ const ProductDetails = ({ product, products }) => {
         </div>
       </div>
 
+      {/* Product Reviews Section */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '60px auto 0',
+        padding: '0 20px'
+      }}>
+        <ReviewSystem
+          productId={_id}
+          reviews={[]} // You can fetch actual reviews from your CMS
+          onAddReview={async (reviewData) => {
+            // Handle review submission - integrate with your backend
+            console.log('Review submitted:', reviewData);
+            toast.success('Review submitted successfully!');
+          }}
+          onUpdateReview={async (reviewId, updateData) => {
+            // Handle review updates (helpful votes, replies)
+            console.log('Review updated:', reviewId, updateData);
+          }}
+        />
+      </div>
+
       {/* Related Products Section with fixed product cards */}
       {products && products.length > 0 && (
         <div className="maylike-products-wrapper" style={{
@@ -1071,19 +1124,19 @@ const ProductDetails = ({ product, products }) => {
                       transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                       overflow: 'hidden' // Clip content if it overflows
                     }}
-                    // Hover effects
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-5px)';
-                      e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.15)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
-                    }}>
+                      // Hover effects
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-5px)';
+                        e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.15)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                      }}>
                       {item.discount > 0 && (
                         <div style={{
                           position: 'absolute',
-                          top: '10px',
+                          top: '-4px', /* Moved 0.5cm (14px) higher: 10px - 14px = -4px */
                           right: '10px',
                           backgroundColor: '#e53935', // Red for discount
                           color: 'white',
@@ -1108,13 +1161,15 @@ const ProductDetails = ({ product, products }) => {
                         backgroundColor: '#f9f9f9', // Light background for image area
                         borderRadius: '4px' // Rounded corners for image area
                       }}>
-                        <img
+                        <Image
                           src={
                             item.image && item.image[0] && item.image[0].asset
                               ? urlFor(item.image[0]).width(200).url() // Optimized image size
                               : '/asset/placeholder-image.jpg'
                           }
                           alt={item.name || 'Product Image'}
+                          width={200}
+                          height={180}
                           style={{
                             maxWidth: '100%',
                             maxHeight: '100%',
@@ -1126,12 +1181,6 @@ const ProductDetails = ({ product, products }) => {
                           onError={(e) => {
                             console.error('Related product image load failed for:', item.name, 'from URL:', e.target.src);
                             e.target.src = '/asset/placeholder-image.jpg';
-                            // Ensure placeholder styles are consistent
-                            e.target.style.maxWidth = '100%';
-                            e.target.style.maxHeight = '100%';
-                            e.target.style.width = 'auto';
-                            e.target.style.height = 'auto';
-                            e.target.style.objectFit = 'contain';
                           }}
                         />
                       </div>
@@ -1257,15 +1306,15 @@ const ProductDetails = ({ product, products }) => {
               <IoClose />
             </button>
             <h3 style={{ marginBottom: '15px', color: '#333', textAlign: 'center' }}>Size Chart</h3>
-            <img
+            <Image
               src={urlFor(sizeChart).url()}
               alt={`${name || 'Product'} Size Chart`}
+              width={800}
+              height={600}
               style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }} // Center image
               onError={(e) => {
                 console.error('Size chart image load failed for:', name, 'from URL:', e.target.src);
                 e.target.src = '/asset/placeholder-size-chart.jpg'; // Fallback placeholder
-                e.target.style.maxWidth = '100%';
-                e.target.style.height = 'auto';
               }}
             />
           </div>
@@ -1349,7 +1398,8 @@ export const getStaticProps = async ({ params: { slug } }) => {
     return {
       props: {
         product: fetchedProduct,
-        products: fetchedProducts.filter(p => p._id !== fetchedProduct._id) || [] // Exclude current product from related
+        products: fetchedProducts.filter(p => p._id !== fetchedProduct._id) || [], // Exclude current product from related
+        slug // Pass the slug parameter to component
       },
       revalidate: 60 // Increased revalidate time
     };

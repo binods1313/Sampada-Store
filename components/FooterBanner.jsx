@@ -74,7 +74,7 @@ const FooterBanner = ({ footerBanner }) => {
           <h3>{largeText2}</h3>
           <p>{saleTime}</p>
         </div>
-        
+
         <div className="image-container">
           <Image
             src={imageProps.src}
@@ -87,7 +87,7 @@ const FooterBanner = ({ footerBanner }) => {
               console.error('Banner image load failed');
               e.target.src = '/asset/placeholder-image.jpg';
               // Fallback image styling to ensure it fits well
-              e.target.style.width = 'auto'; 
+              e.target.style.width = 'auto';
               e.target.style.height = 'auto';
               e.target.style.maxWidth = '100%';
               e.target.style.maxHeight = '100%';
@@ -95,24 +95,26 @@ const FooterBanner = ({ footerBanner }) => {
             }}
           />
         </div>
-        
+
         <div className="right">
           <p>{smallText}</p>
           {/* Enhanced styling for Aurora Sky Pulse text */}
           <h3 className="product-name">{midText}</h3>
           <p>{desc}</p>
-          {shouldRenderLink ? (
-            <Link href={`/product/${product}`}>
-              <button type="button" className="shop-now-btn hover-effect">
-                {buttonText}
-              </button>
-            </Link>
-          ) : (
-            <button type="button" className="shop-now-btn hover-effect" disabled>
+        </div>
+      </div>
+      <div className="footer-cta">
+        {shouldRenderLink ? (
+          <Link href={`/product/${product}`}>
+            <button type="button" className="shop-now-btn hover-effect">
               {buttonText}
             </button>
-          )}
-        </div>
+          </Link>
+        ) : (
+          <button type="button" className="shop-now-btn hover-effect" disabled>
+            {buttonText}
+          </button>
+        )}
       </div>
     </div>
   );
