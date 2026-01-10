@@ -3,7 +3,7 @@ import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
 import { v4 as uuidv4 } from 'uuid'
-import { client } from '../../../lib/client' // Adjust path as needed
+import { client, writeClient } from '../../../lib/client' // Adjust path as needed
 
 // Validate environment variables
 if (!process.env.GITHUB_ID || !process.env.GITHUB_SECRET) {
@@ -74,7 +74,7 @@ export const authOptions = {
         }
 
         // Create the user
-        await client.create(sanityUser)
+        await writeClient.create(sanityUser)
 
         return true
       } catch (error) {
