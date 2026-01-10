@@ -61,7 +61,7 @@ export const authOptions = {
         if (existingUser) {
           return true;
         }
-        
+
         // Create new user in Sanity
         const sanityUser = {
           _id: `user.${uuidv4()}`,
@@ -75,7 +75,7 @@ export const authOptions = {
 
         // Create the user
         await client.create(sanityUser)
-        
+
         return true
       } catch (error) {
         console.error('Error creating Sanity user:', error)
@@ -83,6 +83,13 @@ export const authOptions = {
         // This allows authentication to succeed even if Sanity operations fail
         return true
       }
+    },
+
+    async redirect({ url, baseUrl }) {
+      // Allow relative paths and URLs that start with the base URL
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      else if (url.startsWith(baseUrl)) return url;
+      return baseUrl;
     }
   },
 
