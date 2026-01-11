@@ -7,8 +7,9 @@ import { client } from '../lib/client';
 import { Product, FooterBanner, HeroBanner, ProductFilters, LoadingFallback, EmptyStateFallback } from '@/components';
 import { ProductsGridSkeleton } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '../hooks/usePerformance';
-import auroraStyles from '../styles/AuroraFeature.module.css';
+
 import venturesStyles from '../styles/VenturesFooter.module.css';
+import ColorFilter from '../components/ColorFilter';
 
 const Home = ({ products, bannerData }) => {
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -109,6 +110,31 @@ const Home = ({ products, bannerData }) => {
     }, 300); // Small delay to show loading state
   }, [products, setLoading]);
 
+  const handleColorFilter = async (color) => {
+    setLoading(true);
+    if (!color) {
+      setFilteredProducts(products); // Reset
+      setLoading(false);
+      return;
+    }
+
+    // Fetch products matching color
+    try {
+      const res = await fetch(`/api/products/search-by-color?hex=${encodeURIComponent(color.hex)}`);
+      const data = await res.json();
+      if (data.success) {
+        // We got matching product IDs/Slugs (assuming endpoint returns full object or we match ID)
+        // The search-by-color endpoint returns "matches" which are product objects
+        // We can replace the filtered list directly
+        setFilteredProducts(data.matches);
+      }
+    } catch (e) {
+      console.error("Color filter failed", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFilterChange = useCallback((filters) => {
     setActiveFilters(filters);
     applyFilters(filters);
@@ -118,21 +144,7 @@ const Home = ({ products, bannerData }) => {
     setActiveFilters({});
     setFilteredProducts(products);
   }, [products]);
-  // Create a custom banner object for the current sale
-  // This merges any data from Sanity with our hardcoded promotional data
-  const customBannerData = {
-    ...bannerData,
-    largeText1: 'REIMAGINE',
-    largeText2: 'PROSPERITY',
-    midText: 'Sampada Summer Sale',
-    product: 'Smart Watch',
-    saleTime: '01 Sep to 30 sep 2025',
-    smallText: 'Aurora Sky Pulse™',
-    desc: 'Beyond Timekeeping: A Smartwatch Designed to Power Your Every Move!',
-    buttonText: bannerData?.buttonText || 'Shop Now',
-    // Preserve the image from Sanity if it exists
-    image: bannerData?.image || null
-  };
+
 
   return (
     <div>
@@ -142,19 +154,43 @@ const Home = ({ products, bannerData }) => {
         <meta property="og:title" content="Sampada – Custom Print-on-Demand" />
         <meta property="og:description" content="Complete Wealth in Every Print – Ashta Sampada. Shop custom T-shirts, mugs, blankets." />
       </Head>
-      <HeroBanner heroBanner={customBannerData} />
+      <HeroBanner heroBanner={bannerData} />
 
       <div className="products-heading best-selling-heading">
         <h2>Best Selling Products</h2>
-        <div className="categories-description">
-          <div className="emoji-wrap">🎧🎶 Headphones</div>
-          <div className="emoji-wrap">⌚✨ Watches</div>
-          <div className="emoji-wrap">🚀🌌 Space Suits</div>
-          <div className="emoji-wrap">🕶😎 Sunglasses</div>
-          <p>Complete Wealth in Every Print – Ashta Sampada 🌸✨</p>
-        </div>
-        <div className="aurora-product-tag">
-          <span>Featured: <span className="aurora-highlight">Aurora Sky Pulse™</span> Collection</span>
+        <div className="category-nav-wrapper">
+          {/* Category Navigation */}
+          <div className="category-nav">
+            <Link href="/collections/mens-tshirts" className="category-link">
+              <span className="emoji">👕</span>
+              <span className="text">Men's T-Shirts</span>
+            </Link>
+
+            <Link href="/collections/womens-tshirts" className="category-link">
+              <span className="emoji">👚</span>
+              <span className="text">Women's T-Shirts</span>
+            </Link>
+
+            <Link href="/collections/new-arrivals" className="category-link featured">
+              <span className="emoji">✨</span>
+              <span className="text">New Arrivals</span>
+            </Link>
+
+            <Link href="/collections/bestsellers" className="category-link">
+              <span className="emoji">🔥</span>
+              <span className="text">Bestsellers</span>
+            </Link>
+
+            <Link href="/collections/sale" className="category-link sale">
+              <span className="emoji">💰</span>
+              <span className="text">Sale</span>
+            </Link>
+          </div>
+
+          {/* Tagline */}
+          <div className="tagline">
+            <p>✨ Express Yourself – Premium T-Shirts for Every Style ✨</p>
+          </div>
         </div>
       </div>
 
@@ -165,6 +201,13 @@ const Home = ({ products, bannerData }) => {
         activeFilters={activeFilters}
         onClearFilters={handleClearFilters}
       />
+
+      {/* Smart Color Filter */}
+      {process.env.NEXT_PUBLIC_FEATURE_COLOR_EXTRACTION === 'true' && (
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <ColorFilter onColorSelect={handleColorFilter} />
+        </div>
+      )}
 
       {/* Products Container with Loading State */}
       {isLoading ? (
@@ -198,30 +241,65 @@ const Home = ({ products, bannerData }) => {
         </div>
       )}
 
-      <section className={auroraStyles['aurora-feature-section']}>
-        <h2>Experience Next-Gen Audio with <span className={auroraStyles.highlight}>Aurora Sky Pulse™</span></h2>
+      <section className="tshirt-collection-promo">
+        <div className="container">
+          <div className="promo-content">
+            <h2>Discover Your Perfect Tee</h2>
+            <p className="subtitle">Premium quality t-shirts that blend comfort, style, and self-expression</p>
 
-        <p>Immerse yourself in revolutionary 3D spatial audio that transforms your reality. The <strong>Aurora Sky Pulse™</strong> represents a quantum leap in audio technology, featuring AI-powered sound adaptation and neural processing.</p>
+            <div className="collection-grid">
+              {/* Men's Collection */}
+              <div className="collection-card mens">
+                <div className="card-icon">👕</div>
+                <h3>Men's Collection</h3>
+                <p>Bold graphics, minimalist designs, and everything in between</p>
+                <ul className="features">
+                  <li>✓ 100% Premium Cotton</li>
+                  <li>✓ Graphic & Minimal Styles</li>
+                  <li>✓ Regular & Oversized Fits</li>
+                  <li>✓ Sizes: S to 3XL</li>
+                </ul>
+                <Link href="/collections/mens-tshirts" className="cta-btn">
+                  Shop Men's
+                </Link>
+              </div>
 
-        <div className="grid-3">
-          <div className={auroraStyles['neumorphic-card']}>🔊 8K Audio Processing</div>
-          <div className={auroraStyles['neumorphic-card']}>🔋 60-Hour Battery</div>
-          <div className={auroraStyles['neumorphic-card']}>🎮 Zero Latency Gaming</div>
-          <div className={auroraStyles['neumorphic-card']}>🌈 Dynamic RGB Ecosystem</div>
-          <div className={auroraStyles['neumorphic-card']}>🧠 AI Sound Profiles</div>
-          <div className={auroraStyles['neumorphic-card']}>🌐 Metaverse Ready</div>
-        </div>
+              {/* Women's Collection */}
+              <div className="collection-card womens">
+                <div className="card-icon">👚</div>
+                <h3>Women's Collection</h3>
+                <p>Stylish, comfortable tees designed for the modern woman</p>
+                <ul className="features">
+                  <li>✓ Soft Breathable Fabric</li>
+                  <li>✓ Trendy Prints & Solids</li>
+                  <li>✓ Fitted & Relaxed Cuts</li>
+                  <li>✓ Sizes: XS to XXL</li>
+                </ul>
+                <Link href="/collections/womens-tshirts" className="cta-btn">
+                  Shop Women's
+                </Link>
+              </div>
+            </div>
 
-        <div className={auroraStyles['aurora-tagline']}>AURORA SKY PULSE™ Transcend Reality. Amplify Life.</div>
-
-        <div className={auroraStyles['aurora-badges']}>
-          <span className={auroraStyles['badge-item']}>🏆 Award Winning</span>
-          <span className={auroraStyles['badge-item']}>🔥 Trending #1</span>
-          <span className={auroraStyles['badge-item']}>⭐ 4.9/5 Rating</span>
+            <div className="value-props">
+              <div className="prop">
+                <span className="icon">🚚</span>
+                <span className="text">Free Shipping Above ₹999</span>
+              </div>
+              <div className="prop">
+                <span className="icon">↩️</span>
+                <span className="text">7-Day Easy Returns</span>
+              </div>
+              <div className="prop">
+                <span className="icon">⭐</span>
+                <span className="text">4.8/5 Rating</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <FooterBanner footerBanner={customBannerData} />
+      <FooterBanner footerBanner={bannerData} />
 
       {/* New Ventures Footer */}
       <footer className={venturesStyles['ventures-footer']}>

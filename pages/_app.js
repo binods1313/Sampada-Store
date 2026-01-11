@@ -13,6 +13,13 @@ import { SessionProvider } from 'next-auth/react';
 import { UIProvider } from '../context/StateContext';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../components/WishlistSystem';
+import dynamic from 'next/dynamic';
+
+// Dynamically import SampadaVoiceButton to avoid SSR issues with Web Speech API
+const SampadaVoiceButton = dynamic(
+  () => import('../components/VoiceAssistant/SampadaVoiceButton'),
+  { ssr: false }
+);
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
@@ -23,7 +30,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             <WishlistProvider>
               <OfflineWrapper>
                 <Layout>
-                  <Toaster 
+                  <Toaster
                     position="bottom-center"
                     toastOptions={{
                       style: {
@@ -33,6 +40,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                     }}
                   />
                   <Component {...pageProps} />
+                  {/* Sampada AI Voice Assistant */}
+                  <SampadaVoiceButton />
                   {/* Error Monitor for Development */}
                   <ErrorMonitorDemo />
                   {/* Test Suite Navigator for Development */}

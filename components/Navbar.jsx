@@ -7,6 +7,7 @@ import { useCartContext } from '../context/CartContext';
 import { useUIContext } from '../context/StateContext';
 import NeumorphicToggle from './NeumorphicToggle';
 import LoginModal from './LoginModal';
+import VisualSearch from './VisualSearch';
 import styles from './NavbarStyles.module.css';
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  
+
   return (
     <nav className={styles.navbarContainer}>
       {/* --- Left Section --- */}
@@ -28,13 +29,18 @@ const Navbar = () => {
           About Us
         </Link>
       </div>
-      
+
       {/* --- Right Section --- */}
       <div className={styles.rightSection}>
         {/* Neumorphic Dark Mode Toggle - hide when modal is open */}
         <div className={isLoginModalOpen ? styles.hiddenElement : ""}>
           <NeumorphicToggle />
         </div>
+
+        {/* Visual Search */}
+        {process.env.NEXT_PUBLIC_FEATURE_VISUAL_SEARCH === 'true' && (
+          <VisualSearch />
+        )}
 
         {/* Auth Buttons/Info */}
         <div className={styles.authSection}>

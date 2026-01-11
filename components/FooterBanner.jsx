@@ -48,7 +48,7 @@ const FooterBanner = ({ footerBanner }) => {
         height: sanityImageFetchHeight,
         alt: 'footer banner'
       });
-      
+
       // Use the dimensions returned by getImageProps directly for Next/Image
       if (props && props.src && props.width && props.height) {
         imageProps = {
@@ -70,7 +70,19 @@ const FooterBanner = ({ footerBanner }) => {
       <div className="banner-desc">
         <div className="left">
           <p>{discount}</p>
-          <h3>{largeText1}</h3>
+          {/* Split largeText1: "WEAR YOUR" on line 1, "LEGACY" on line 2 */}
+          {largeText1 && (() => {
+            const words = largeText1.split(' ');
+            const lastWord = words.pop(); // Get "LEGACY"
+            const firstPart = words.join(' '); // Get "WEAR YOUR"
+            return (
+              <>
+                <h3>{firstPart}</h3>
+                <h3>{lastWord}</h3>
+              </>
+            );
+          })()}
+          {/* largeText2 on line 3 */}
           <h3>{largeText2}</h3>
           <p>{saleTime}</p>
         </div>

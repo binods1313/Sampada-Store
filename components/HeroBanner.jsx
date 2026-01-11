@@ -8,7 +8,7 @@ const HeroBanner = ({ heroBanner }) => {
   if (!heroBanner) {
     return null;
   }
-  
+
   // 2. Safe default values
   const {
     smallText = '',
@@ -17,25 +17,39 @@ const HeroBanner = ({ heroBanner }) => {
     largeText2 = '',
     product = '',
     buttonText = 'Shop Now',
-    image = null
+    image = null,
+    desc = ''
   } = heroBanner;
-  
+
   return (
     <div className="hero-banner-container">
       <div className="hero-banner-content">
         <div className="flex flex-col items-center justify-center text-center py-10 w-full">
-          <div className="rounded-xl text-center border-4 mx-auto mb-10 hover-effect-intense" style={{marginTop: '-1cm', marginLeft: '12.5cm', maxWidth: 'fit-content', padding: '1rem 1.5rem', backgroundColor: '#FFFACD', borderColor: '#ff0000', boxShadow: '0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000', borderRadius: '1rem'}}>
-            <p className="text-xl font-bold text-gray-900 leading-snug" style={{fontWeight: 'bold'}}>
-              Beyond Timekeeping:<br />
-              A Smartwatch designed to power your every move!
-            </p>
-          </div>
+          {desc && (
+            <div className="rounded-xl text-center border-4 mx-auto mb-10 hover-effect-intense" style={{ marginTop: '-1cm', marginLeft: 'auto', marginRight: 'auto', maxWidth: 'fit-content', padding: '1rem 1.5rem', backgroundColor: '#FFFACD', borderColor: '#d97706', boxShadow: '0 0 10px #d97706', borderRadius: '1rem' }}>
+              <p className="text-xl text-gray-900 leading-snug" style={{ fontWeight: 700 }}>
+                {desc}
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl mx-auto">
             <div className="hero-banner-text">
               <p className="beats-solo hover-effect">{smallText}</p>
               <h3 className="hover-effect">{midText}</h3>
-              <h1 className="hover-effect">{largeText1}</h1>
+              {/* Split largeText1: "WEAR YOUR" on line 1, "LEGACY" on line 2 */}
+              {largeText1 && (() => {
+                const words = largeText1.split(' ');
+                const lastWord = words.pop(); // Get "LEGACY"
+                const firstPart = words.join(' '); // Get "WEAR YOUR"
+                return (
+                  <>
+                    <h1 className="hover-effect">{firstPart}</h1>
+                    <h1 className="hover-effect">{lastWord}</h1>
+                  </>
+                );
+              })()}
+              {/* largeText2 on line 3 */}
               <h1 className="large-text-2 hover-effect">{largeText2}</h1>
             </div>
 
