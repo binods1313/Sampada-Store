@@ -1,0 +1,396 @@
+/* components/VoiceAssistant/SampadaVoice.module.css */
+
+.sampadaVoiceButton {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+}
+
+.voiceTrigger {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.voiceTrigger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+}
+
+.sampadaIcon {
+    font-size: 32px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.closeIcon {
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.pulseRing {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #667eea;
+    animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.voicePanel {
+    position: absolute;
+    bottom: 90px;
+    right: 0;
+    width: 380px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.voiceHeader {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+}
+
+.sampadaAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid white;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarEmoji {
+    font-size: 28px;
+}
+
+.headerText h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.headerText p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.voiceContent {
+    padding: 25px;
+}
+
+.statusIndicator {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.idleText {
+    font-size: 16px;
+    color: #4a5568;
+    text-align: center;
+}
+
+.listeningAnimation {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.listeningAnimation p,
+.speakingAnimation p {
+    font-size: 14px;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.wave {
+    display: inline-block;
+    width: 8px;
+    height: 30px;
+    margin: 0 3px;
+    background: linear-gradient(to top, #667eea, #764ba2);
+    border-radius: 4px;
+    animation: wave 1.2s ease-in-out infinite;
+}
+
+.listeningAnimation .wave:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.listeningAnimation .wave:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes wave {
+
+    0%,
+    100% {
+        height: 30px;
+    }
+
+    50% {
+        height: 50px;
+    }
+}
+
+.speakingAnimation {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.soundWave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 50px;
+}
+
+.soundWave span {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to top, #667eea, #764ba2);
+    border-radius: 2px;
+    animation: soundWave 0.8s ease-in-out infinite;
+}
+
+.soundWave span:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.soundWave span:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.soundWave span:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.soundWave span:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+@keyframes soundWave {
+
+    0%,
+    100% {
+        height: 20px;
+    }
+
+    50% {
+        height: 40px;
+    }
+}
+
+.voiceControlBtn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+}
+
+.voiceControlBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.voiceControlBtn.listening {
+    background: #ff6b6b;
+    animation: pulseBtn 1.5s infinite;
+}
+
+@keyframes pulseBtn {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
+    }
+}
+
+.voiceControlBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.micIcon {
+    font-size: 24px;
+}
+
+.micIcon.active {
+    animation: bounce 0.5s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.transcript,
+.response {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.response {
+    background: #e8f0fe;
+}
+
+.transcript strong,
+.response strong {
+    color: #667eea;
+}
+
+.quickActions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.quickActions>p {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.suggestionChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestionChips button {
+    padding: 8px 14px;
+    background: white;
+    border: 1px solid #667eea;
+    color: #667eea;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.suggestionChips button:hover {
+    background: #667eea;
+    color: white;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .voicePanel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .sampadaVoiceButton {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .voiceTrigger {
+        width: 60px;
+        height: 60px;
+    }
+
+    .sampadaIcon {
+        font-size: 28px;
+    }
+}

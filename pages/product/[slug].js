@@ -13,6 +13,8 @@ import toast from 'react-hot-toast';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
 import { ReviewSystem, WishlistButton } from '../../components';
+import EnhancedTryOn from '../../components/EnhancedTryOn';
+
 
 const ProductDetails = ({ product, products, slug }) => {
   // All hooks must be called before any early returns
@@ -905,6 +907,17 @@ const ProductDetails = ({ product, products, slug }) => {
               />
             </div>
           </div>
+
+          {/* Enhanced Virtual Try-On */}
+          {process.env.NEXT_PUBLIC_FEATURE_ENHANCED_TRYON === 'true' && (
+            <div style={{ marginBottom: '30px' }}>
+              <EnhancedTryOn
+                productId={_id}
+                color={selectedColor}
+                size={selectedSize}
+              />
+            </div>
+          )}
 
           {/* --- MOVED: Product Specifications Section --- */}
           {specifications && specifications.length > 0 && (
