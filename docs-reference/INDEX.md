@@ -4,6 +4,21 @@ Welcome to the Sampada documentation reference! This folder contains all supplem
 
 ---
 
+## 🔥 NEW: Phase 1 Hydration Fixes (February 16, 2026)
+
+**Critical fixes to stop reload loop and theme flash - START HERE!**
+
+- **[PHASE1_COMPLETE.md](./PHASE1_COMPLETE.md)** ⭐ Quick start guide (READ THIS FIRST!)
+- **[PHASE1_SUMMARY.md](./PHASE1_SUMMARY.md)** - Complete implementation summary
+- **[PHASE1_CODE_CHANGES.md](./PHASE1_CODE_CHANGES.md)** - Visual diff of exact changes
+- **[HYDRATION_FIXES.md](./HYDRATION_FIXES.md)** - Technical documentation with testing checklist
+- **[REACT_REFACTORING_GUIDE.md](./REACT_REFACTORING_GUIDE.md)** - Full refactoring plan (Phase 2+)
+- **[NAVBAR_REFACTOR_EXAMPLE.md](./NAVBAR_REFACTOR_EXAMPLE.md)** - Compound component example
+
+**Test Script**: `../test-hydration-fix.js` (run with `node test-hydration-fix.js`)
+
+---
+
 ## 📖 How to Use This Index
 
 Each document below is categorized by topic with:
@@ -14,6 +29,9 @@ Each document below is categorized by topic with:
 ---
 
 ## 🎯 Quick Navigation
+
+### Fixing the Reload Loop?
+→ Start with [PHASE1_COMPLETE.md](#phase1_completemd) ⭐
 
 ### New to Kiro?
 → Start with [README_KIRO.md](#readme_kiromd) and [KIRO_QUICK_REFERENCE.md](#kiro_quick_referencemd)
