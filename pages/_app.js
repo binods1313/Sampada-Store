@@ -6,7 +6,7 @@ import '../styles/footer-banner-description.css';
 import '../styles/About.module.css';
 import '../styles/product-variant.css';
 import '../styles/ProductCard.css';
-import { Layout, ErrorMonitorDemo, TestSuiteNavigator, EnhancedErrorHandlerNavigator, ErrorBoundaryWithFallback, ImageOptimizerTestNavigator } from '../components';
+import { Layout, ErrorBoundaryWithFallback } from '../components';
 import { OfflineWrapper } from '../components';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
@@ -19,6 +19,27 @@ import dynamic from 'next/dynamic';
 // Dynamically import SampadaVoiceButton to avoid SSR issues with Web Speech API
 const SampadaVoiceButton = dynamic(
   () => import('../components/VoiceAssistant/SampadaVoiceButton'),
+  { ssr: false }
+);
+
+// Dynamically import development tools to avoid hydration mismatches
+const ErrorMonitorDemo = dynamic(
+  () => import('../components/ErrorMonitorDemo'),
+  { ssr: false }
+);
+
+const TestSuiteNavigator = dynamic(
+  () => import('../components/TestSuiteNavigator'),
+  { ssr: false }
+);
+
+const EnhancedErrorHandlerNavigator = dynamic(
+  () => import('../components/EnhancedErrorHandlerNavigator'),
+  { ssr: false }
+);
+
+const ImageOptimizerTestNavigator = dynamic(
+  () => import('../components/ImageOptimizerTestNavigator'),
   { ssr: false }
 );
 
@@ -44,15 +65,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                     <Component {...pageProps} />
                     {/* Sampada AI Voice Assistant */}
                     <SampadaVoiceButton />
-                    {/* Development Tools - Only in dev mode */}
-                    {process.env.NODE_ENV === 'development' && (
-                      <>
-                        <ErrorMonitorDemo />
-                        <TestSuiteNavigator />
-                        <EnhancedErrorHandlerNavigator />
-                        <ImageOptimizerTestNavigator />
-                      </>
-                    )}
+                    {/* Development Tools - Dynamically loaded to prevent hydration issues */}
+                    <ErrorMonitorDemo />
+                    <TestSuiteNavigator />
+                    <EnhancedErrorHandlerNavigator />
+                    <ImageOptimizerTestNavigator />
                   </Layout>
                 </DesignerProvider>
               </OfflineWrapper>
