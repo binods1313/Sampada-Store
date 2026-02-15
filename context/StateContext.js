@@ -1,5 +1,5 @@
 // context/StateContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 
 const UIContext = createContext();
 
@@ -38,24 +38,29 @@ export const UIProvider = ({ children }) => {
     }
   }, [theme]);
 
-  const toggleCartVisibility = () => {
-    setShowCart((prev) => !prev);
-  };
+  // PERFORMANCE: Use functional updates to prevent stale closures
+  const toggleCartVisibility = useCallback(() => {
+    setShowCart(prev => !prev);
+  }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
+  }, []);
+
+  // PERFORMANCE: Memoize context value to prevent unnecessary re-renders
+  // Only recreate when dependencies change
+  const contextValue = useMemo(() => ({
+    showCart,
+    toggleCartVisibility,
+    setShowCart,
+    theme,
+    toggleTheme,
+    isDarkMode: mounted ? theme === 'dark' : false,
+    isClient: mounted
+  }), [showCart, theme, mounted, toggleCartVisibility, toggleTheme]);
 
   return (
-    <UIContext.Provider value={{
-      showCart,
-      toggleCartVisibility,
-      setShowCart,
-      theme,
-      toggleTheme,
-      isDarkMode: mounted ? theme === 'dark' : false,
-      isClient: mounted
-    }}>
+    <UIContext.Provider value={contextValue}>
       {children}
     </UIContext.Provider>
   );

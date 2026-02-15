@@ -1,5 +1,5 @@
 // context/CartContext.js
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 
 const CartContext = createContext();
@@ -111,23 +111,38 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   }, []);
 
+  // PERFORMANCE: Memoize context value to prevent unnecessary re-renders
+  // Only recreate when dependencies change
+  const contextValue = useMemo(() => ({
+    cartItems,
+    totalPrice,
+    totalQuantities,
+    qty,
+    incQty,
+    decQty,
+    resetQty,
+    onAdd,
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
+    calculateItemPrice
+  }), [
+    cartItems,
+    totalPrice,
+    totalQuantities,
+    qty,
+    incQty,
+    decQty,
+    resetQty,
+    onAdd,
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
+    calculateItemPrice
+  ]);
+
   return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        totalPrice,
-        totalQuantities,
-        qty,
-        incQty,
-        decQty,
-        resetQty,
-        onAdd,
-        updateCartItemQuantity,
-        removeFromCart,
-        clearCart,
-        calculateItemPrice
-      }}
-    >
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );

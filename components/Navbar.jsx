@@ -8,68 +8,19 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useCartContext } from '../context/CartContext';
 import { useUIContext } from '../context/StateContext';
 import NeumorphicToggle from './NeumorphicToggle';
-import LoginModal from './LoginModal';
+import { navData } from './Navbar/navData';
 import styles from './NavbarStyles.module.css';
 
-// Dynamic import for VisualSearch to improve bundle size and prevent SSR issues
+// PERFORMANCE: Dynamic imports for heavy components
+// These components are not needed on initial page load
 const VisualSearch = dynamic(() => import('./VisualSearch'), {
   ssr: false,
   loading: () => <div style={{ width: '40px', height: '40px', opacity: 0.5 }} />
 });
 
-const navData = [
-  {
-    title: "Men's Clothing",
-    link: "/collections/mens-clothing",
-    subcategories: [
-      { name: "Sweatshirts", link: "/collections/mens-sweatshirts" },
-      { name: "Hoodies", link: "/collections/mens-hoodies" },
-      { name: "T-Shirts", link: "/collections/mens-tshirts" },
-      { name: "Long Sleeves", link: "/collections/mens-long-sleeves" },
-      { name: "Outerwear", link: "/collections/mens-outerwear" },
-    ]
-  },
-  {
-    title: "Women's Clothing",
-    link: "/collections/womens-clothing",
-    subcategories: [
-      { name: "Sweatshirts", link: "/collections/womens-sweatshirts" },
-      { name: "Hoodies", link: "/collections/womens-hoodies" },
-      { name: "T-Shirts", link: "/collections/womens-tshirts" },
-      { name: "Skirts & Dresses", link: "/collections/womens-dresses" },
-      { name: "Outerwear", link: "/collections/womens-outerwear" },
-    ]
-  },
-  {
-    title: "His & Hers",
-    link: "/collections/his-hers",
-    subcategories: [
-      { name: "Casuals - Fixed Designs", link: "/collections/his-hers-casuals" },
-      { name: "Customized - Personalized", link: "/collections/his-hers-customized" },
-    ]
-  },
-  {
-    title: "Home & Living",
-    link: "/collections/home-living",
-    subcategories: [
-      { name: "Mugs", link: "/collections/mugs" },
-      { name: "Candles", link: "/collections/candles" },
-      { name: "Decor", link: "/collections/home-decor" },
-      { name: "Pillows", link: "/collections/pillows" },
-      { name: "Bedding", link: "/collections/bedding" },
-    ]
-  },
-  {
-    title: "Sampada Stories",
-    link: "/stories",
-    subcategories: [
-      { name: "Fashion", link: "/stories/fashion" },
-      { name: "Trends", link: "/stories/trends" },
-      { name: "Behind-the-Scenes", link: "/stories/behind-the-scenes" },
-      { name: "Product Stories", link: "/stories/product-stories" },
-    ]
-  }
-];
+const LoginModal = dynamic(() => import('./LoginModal'), {
+  ssr: false
+});
 
 const Navbar = () => {
   const { showCart, setShowCart } = useUIContext();

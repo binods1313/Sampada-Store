@@ -7,8 +7,11 @@ import Navbar from './Navbar.jsx';
 import Footer from './Footer';
 import { useUIContext } from '../context/StateContext';
 
-// Dynamically import CartSlider
-const CartSlider = dynamic(() => import('./CartSlider'), { ssr: false });
+// PERFORMANCE: Dynamically import CartSlider - not needed on initial load
+const CartSlider = dynamic(() => import('./CartSlider'), { 
+  ssr: false,
+  loading: () => <div>Loading cart...</div>
+});
 
 const Layout = ({ children }) => {
   const { showCart } = useUIContext();
