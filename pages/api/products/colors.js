@@ -1,4 +1,4 @@
-const { client } = require('../../lib/client');
+const { client } = require('../../../lib/client');
 
 export default async function handler(req, res) {
     try {

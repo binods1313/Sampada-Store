@@ -5,34 +5,85 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
 const ImageOptimizerTestNavigator = () => {
+  // CRITICAL: All hooks must be called unconditionally at the top
+  // This ensures consistent hook order across all renders
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentPage, setCurrentPage] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
-  // Only show in development mode
-  if (process.env.NODE_ENV === 'production') {
-    return null;
-  }
+  // Track if component is mounted (client-side only)
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Track current page
   useEffect(() => {
-    setCurrentPage(router.pathname);
-  }, [router.pathname]);
-
-  // Persist expansion state
-  useEffect(() => {
-    const saved = localStorage.getItem('imageOptimizer-nav-expanded');
-    if (saved) {
-      setIsExpanded(JSON.parse(saved));
+    if (isMounted) {
+      setCurrentPage(router.pathname);
     }
-  }, []);
+  }, [router.pathname, isMounted]);
+
+  // Persist expansion state (client-side only)
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      const saved = localStorage.getItem('imageOptimizer-nav-expanded');
+      if (saved) {
+        setIsExpanded(JSON.parse(saved));
+      }
+    }
+  }, [isMounted]);
 
   const toggleExpanded = useCallback(() => {
     const newState = !isExpanded;
     setIsExpanded(newState);
-    localStorage.setItem('imageOptimizer-nav-expanded', JSON.stringify(newState));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('imageOptimizer-nav-expanded', JSON.stringify(newState));
+    }
   }, [isExpanded]);
 
+  const navigateToPage = useCallback((url, newTab = false) => {
+    if (newTab) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      router.push(url);
+    }
+  }, [router]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const handleKeyPress = (e) => {
+      // Ignore if typing in an input field
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case 'i':
+          case 'I':
+            e.preventDefault();
+            toggleExpanded();
+            break;
+          case '1':
+            e.preventDefault();
+            navigateToPage('/image-optimizer-test');
+            break;
+          case '2':
+            e.preventDefault();
+            navigateToPage('/image-optimizer-examples');
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [toggleExpanded, navigateToPage, isMounted]);
+
+  // Define test pages data
   const testPages = [
     {
       id: 'demo',
@@ -60,44 +111,16 @@ const ImageOptimizerTestNavigator = () => {
     }
   ];
 
-  const navigateToPage = useCallback((url, newTab = false) => {
-    if (newTab) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    } else {
-      router.push(url);
-    }
-  }, [router]);
+  // IMPORTANT: All conditional returns must come AFTER all hooks
+  // Only show in development mode
+  if (process.env.NODE_ENV === 'production') {
+    return null;
+  }
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      // Ignore if typing in an input field
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        return;
-      }
-      
-      if (e.ctrlKey || e.metaKey) {
-        switch (e.key) {
-          case 'i':
-          case 'I':
-            e.preventDefault();
-            toggleExpanded();
-            break;
-          case '1':
-            e.preventDefault();
-            navigateToPage('/image-optimizer-test');
-            break;
-          case '2':
-            e.preventDefault();
-            navigateToPage('/image-optimizer-examples');
-            break;
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [toggleExpanded, navigateToPage]);
+  // Don't render until mounted to avoid hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
 
   const getPageStatus = (page) => {
     if (page.status === 'coming-soon') return '🚧';
@@ -170,10 +193,10 @@ const ImageOptimizerTestNavigator = () => {
       border: `1px solid ${isActive ? 'rgba(16, 185, 129, 0.6)' : 'rgba(16, 185, 129, 0.3)'}`,
       borderRadius: '8px',
       padding: '12px',
-      background: isComingSoon 
-        ? 'rgba(64, 64, 64, 0.3)' 
-        : isActive 
-          ? 'rgba(16, 185, 129, 0.2)' 
+      background: isComingSoon
+        ? 'rgba(64, 64, 64, 0.3)'
+        : isActive
+          ? 'rgba(16, 185, 129, 0.2)'
           : 'rgba(16, 185, 129, 0.1)',
       transition: 'all 0.2s ease',
       opacity: isComingSoon ? 0.6 : 1,
@@ -252,7 +275,7 @@ const ImageOptimizerTestNavigator = () => {
     <div style={styles.container}>
       {/* Collapsed state */}
       {!isExpanded && (
-        <div 
+        <div
           onClick={toggleExpanded}
           style={styles.header}
           onMouseEnter={(e) => {
@@ -268,7 +291,7 @@ const ImageOptimizerTestNavigator = () => {
           🖼️
         </div>
       )}
-      
+
       {/* Expanded state */}
       {isExpanded && (
         <div style={styles.panel}>
@@ -287,10 +310,10 @@ const ImageOptimizerTestNavigator = () => {
               ➖
             </button>
           </div>
-          
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ 
-              fontSize: '11px', 
+            <div style={{
+              fontSize: '11px',
               opacity: '0.9',
               marginBottom: '5px',
               color: '#94a3b8',
@@ -298,31 +321,31 @@ const ImageOptimizerTestNavigator = () => {
             }}>
               Test Environments:
             </div>
-            
+
             {testPages.map((page) => {
               const isActive = isCurrentPage(page.url);
               const isComingSoon = page.status === 'coming-soon';
               const status = getPageStatus(page);
-              
+
               return (
-                <div 
+                <div
                   key={page.id}
                   style={styles.pageCard(isActive, isComingSoon)}
                   onMouseEnter={(e) => {
                     if (!isComingSoon) {
-                      e.currentTarget.style.background = isActive 
-                        ? 'rgba(16, 185, 129, 0.3)' 
+                      e.currentTarget.style.background = isActive
+                        ? 'rgba(16, 185, 129, 0.3)'
                         : 'rgba(16, 185, 129, 0.2)';
                       e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.5)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isComingSoon) {
-                      e.currentTarget.style.background = isActive 
-                        ? 'rgba(16, 185, 129, 0.2)' 
+                      e.currentTarget.style.background = isActive
+                        ? 'rgba(16, 185, 129, 0.2)'
                         : 'rgba(16, 185, 129, 0.1)';
-                      e.currentTarget.style.borderColor = isActive 
-                        ? 'rgba(16, 185, 129, 0.6)' 
+                      e.currentTarget.style.borderColor = isActive
+                        ? 'rgba(16, 185, 129, 0.6)'
                         : 'rgba(16, 185, 129, 0.3)';
                     }
                   }}
@@ -335,11 +358,11 @@ const ImageOptimizerTestNavigator = () => {
                       {page.url}
                     </div>
                   </div>
-                  
+
                   <div style={styles.pageDescription}>
                     {page.description}
                   </div>
-                  
+
                   {!isComingSoon && (
                     <div style={styles.buttonGroup}>
                       <button
@@ -367,7 +390,7 @@ const ImageOptimizerTestNavigator = () => {
                       >
                         {isActive ? '📍 Current' : '🚀 Go'}
                       </button>
-                      
+
                       <button
                         onClick={() => navigateToPage(page.url, true)}
                         style={{
@@ -388,7 +411,7 @@ const ImageOptimizerTestNavigator = () => {
                       </button>
                     </div>
                   )}
-                  
+
                   {isComingSoon && (
                     <div style={{
                       padding: '6px',
@@ -404,7 +427,7 @@ const ImageOptimizerTestNavigator = () => {
                 </div>
               );
             })}
-            
+
             <div style={styles.shortcutsSection}>
               <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#10b981' }}>
                 ⌨️ Keyboard Shortcuts:

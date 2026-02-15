@@ -26,8 +26,8 @@ const HeroBanner = ({ heroBanner }) => {
       <div className="hero-banner-content">
         <div className="flex flex-col items-center justify-center text-center py-10 w-full">
           {desc && (
-            <div className="rounded-xl text-center border-4 mx-auto mb-10 hover-effect-intense" style={{ marginTop: '-1cm', marginLeft: 'auto', marginRight: 'auto', maxWidth: 'fit-content', padding: '1rem 1.5rem', backgroundColor: '#FFFACD', borderColor: '#d97706', boxShadow: '0 0 10px #d97706', borderRadius: '1rem' }}>
-              <p className="text-xl text-gray-900 leading-snug" style={{ fontWeight: 700 }}>
+            <div className="text-center mx-auto mb-12" style={{ marginTop: '0', marginLeft: 'auto', marginRight: 'auto', maxWidth: '750px', zIndex: 10, position: 'relative' }}>
+              <p className="text-white leading-snug" style={{ fontFamily: '"Italiana", serif', fontWeight: 'bold', fontSize: '30px', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', transform: 'translateX(-2cm) translateY(-1cm)', color: 'white' }}>
                 {desc}
               </p>
             </div>

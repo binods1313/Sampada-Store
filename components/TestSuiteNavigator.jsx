@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 const TestSuiteNavigator = () => {
+  // CRITICAL: All hooks must be called unconditionally at the top
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
 
@@ -41,6 +42,7 @@ const TestSuiteNavigator = () => {
     window.open(url, '_blank');
   };
 
+  // IMPORTANT: Conditional return must come AFTER all hooks
   // Only show in development
   if (process.env.NODE_ENV !== 'development') {
     return null;

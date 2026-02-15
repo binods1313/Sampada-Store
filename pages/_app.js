@@ -13,6 +13,7 @@ import { SessionProvider } from 'next-auth/react';
 import { UIProvider } from '../context/StateContext';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../components/WishlistSystem';
+import { DesignerProvider } from '../context/DesignerContext';
 import dynamic from 'next/dynamic';
 
 // Dynamically import SampadaVoiceButton to avoid SSR issues with Web Speech API
@@ -29,28 +30,31 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
           <CartProvider>
             <WishlistProvider>
               <OfflineWrapper>
-                <Layout>
-                  <Toaster
-                    position="bottom-center"
-                    toastOptions={{
-                      style: {
-                        background: '#333',
-                        color: '#fff',
-                      }
-                    }}
-                  />
-                  <Component {...pageProps} />
-                  {/* Sampada AI Voice Assistant */}
-                  <SampadaVoiceButton />
-                  {/* Error Monitor for Development */}
-                  <ErrorMonitorDemo />
-                  {/* Test Suite Navigator for Development */}
-                  <TestSuiteNavigator />
-                  {/* Enhanced Error Handler Navigator for Development */}
-                  <EnhancedErrorHandlerNavigator />
-                  {/* Image Optimizer Test Navigator for Development */}
-                  <ImageOptimizerTestNavigator />
-                </Layout>
+                <DesignerProvider>
+                  <Layout>
+                    <Toaster
+                      position="bottom-center"
+                      toastOptions={{
+                        style: {
+                          background: '#333',
+                          color: '#fff',
+                        }
+                      }}
+                    />
+                    <Component {...pageProps} />
+                    {/* Sampada AI Voice Assistant */}
+                    <SampadaVoiceButton />
+                    {/* Development Tools - Only in dev mode */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <>
+                        <ErrorMonitorDemo />
+                        <TestSuiteNavigator />
+                        <EnhancedErrorHandlerNavigator />
+                        <ImageOptimizerTestNavigator />
+                      </>
+                    )}
+                  </Layout>
+                </DesignerProvider>
               </OfflineWrapper>
             </WishlistProvider>
           </CartProvider>

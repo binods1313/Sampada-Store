@@ -17,13 +17,17 @@
   "dependencies": {
     "@sanity/cli": "^3.87.1",
     "@sanity/code-input": "^5.1.2",
+    "@sanity/document-internationalization": "^4.1.1",
     "@sanity/icons": "^3.7.0",
     "@sanity/image-url": "^1.1.0",
+    "@sanity/scheduled-publishing": "^0.1.14",
+    "@sanity/table": "^2.0.1",
     "@sanity/vision": "^4.22.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
     "sanity": "^4.22.0",
+    "sanity-plugin-media": "^4.1.1",
     "styled-components": "^6.1.15"
   },
   "devDependencies": {

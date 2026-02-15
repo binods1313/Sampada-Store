@@ -18,24 +18,39 @@ const CollectionPage = ({ products }) => {
             // In a real app, this would query Sanity with specific filters
             let filtered = products;
 
-            if (slug === 'mens-tshirts') {
+            if (slug === 'mens-tshirts' || slug === 'mens-clothing') {
                 filtered = products.filter(p =>
                     p.name.toLowerCase().includes('men') ||
                     p.details?.toLowerCase().includes('men') ||
                     p.category?.includes('men')
                 );
-            } else if (slug === 'womens-tshirts') {
+            } else if (slug === 'womens-tshirts' || slug === 'womens-clothing') {
                 filtered = products.filter(p =>
                     p.name.toLowerCase().includes('women') ||
                     p.details?.toLowerCase().includes('women') ||
                     p.category?.includes('women')
                 );
+            } else if (slug === 'his-hers') {
+                // Show products tagged as couples/matching items
+                filtered = products.filter(p =>
+                    p.name.toLowerCase().includes('couple') ||
+                    p.name.toLowerCase().includes('matching') ||
+                    p.details?.toLowerCase().includes('his') ||
+                    p.details?.toLowerCase().includes('hers') ||
+                    p.category?.includes('his-hers')
+                );
+            } else if (slug === 'home-living') {
+                // Filter for home & living items
+                filtered = products.filter(p =>
+                    p.name.toLowerCase().includes('mug') ||
+                    p.name.toLowerCase().includes('blanket') ||
+                    p.name.toLowerCase().includes('pillow') ||
+                    p.name.toLowerCase().includes('canvas') ||
+                    p.category?.includes('home')
+                );
             }
 
-            // If filtering resulted in empty (because data might be sparse), just show all for demo
-            // or show empty state.
-            // For now, let's just show all products if filter is too aggressive, or keep it empty to be realistic.
-            // Actually, better to show *something* so user sees the page works.
+            // If filtering resulted in empty, show all products
             setFilteredProducts(filtered.length > 0 ? filtered : products);
         }
     }, [slug, products]);

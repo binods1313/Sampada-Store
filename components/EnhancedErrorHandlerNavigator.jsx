@@ -5,9 +5,11 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 const EnhancedErrorHandlerNavigator = () => {
+  // CRITICAL: All hooks must be called unconditionally at the top
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
 
+  // IMPORTANT: Conditional return must come AFTER all hooks
   // Only show in development mode
   if (process.env.NODE_ENV === 'production') {
     return null;

@@ -5,33 +5,33 @@ import { FaStar, FaUser, FaThumbsUp, FaThumbsDown, FaReply } from 'react-icons/f
 // Star Rating Component
 export const StarRating = ({ rating = 0, onRatingChange, readonly = false, size = 'medium' }) => {
   const [hoverRating, setHoverRating] = useState(0);
-  
+
   const sizeClasses = {
     small: 'text-sm',
     medium: 'text-lg',
     large: 'text-xl'
   };
-  
+
   const handleStarClick = (starRating) => {
     if (!readonly && onRatingChange) {
       onRatingChange(starRating);
     }
   };
-  
+
   const handleMouseEnter = (starRating) => {
     if (!readonly) {
       setHoverRating(starRating);
     }
   };
-  
+
   const handleMouseLeave = () => {
     if (!readonly) {
       setHoverRating(0);
     }
   };
-  
+
   const displayRating = hoverRating || rating;
-  
+
   return (
     <div className={`star-rating ${sizeClasses[size]} ${readonly ? 'readonly' : 'interactive'}`}>
       {[1, 2, 3, 4, 5].map((star) => (
@@ -58,16 +58,16 @@ export const StarRating = ({ rating = 0, onRatingChange, readonly = false, size 
 // Rating Summary Component
 export const RatingSummary = ({ reviews = [] }) => {
   const totalReviews = reviews.length;
-  const averageRating = totalReviews > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews 
+  const averageRating = totalReviews > 0
+    ? reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
     : 0;
-  
+
   const ratingDistribution = [5, 4, 3, 2, 1].map(rating => {
     const count = reviews.filter(review => review.rating === rating).length;
     const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
     return { rating, count, percentage };
   });
-  
+
   return (
     <div className="rating-summary">
       <div className="rating-overview">
@@ -77,14 +77,14 @@ export const RatingSummary = ({ reviews = [] }) => {
           <span className="total-reviews">{totalReviews} review{totalReviews !== 1 ? 's' : ''}</span>
         </div>
       </div>
-      
+
       <div className="rating-distribution">
         {ratingDistribution.map(({ rating, count, percentage }) => (
           <div key={rating} className="rating-bar">
             <span className="rating-label">{rating} star</span>
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
@@ -100,7 +100,7 @@ export const RatingSummary = ({ reviews = [] }) => {
 export const ReviewCard = ({ review, onHelpful, onReply }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState('');
-  
+
   const handleReplySubmit = (e) => {
     e.preventDefault();
     if (replyText.trim() && onReply) {
@@ -109,7 +109,7 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
       setShowReplyForm(false);
     }
   };
-  
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -117,7 +117,7 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
       day: 'numeric'
     });
   };
-  
+
   return (
     <div className="review-card">
       <div className="review-header">
@@ -136,11 +136,11 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
         </div>
         <StarRating rating={review.rating} readonly size="small" />
       </div>
-      
+
       <div className="review-content">
         <h5 className="review-title">{review.title}</h5>
         <p className="review-text">{review.comment}</p>
-        
+
         {review.images && review.images.length > 0 && (
           <div className="review-images">
             {review.images.map((image, index) => (
@@ -149,23 +149,23 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
           </div>
         )}
       </div>
-      
+
       <div className="review-actions">
-        <button 
+        <button
           className="helpful-btn"
           onClick={() => onHelpful && onHelpful(review._id, true)}
         >
           <FaThumbsUp /> Helpful ({review.helpfulCount || 0})
         </button>
-        
-        <button 
+
+        <button
           className="reply-btn"
           onClick={() => setShowReplyForm(!showReplyForm)}
         >
           <FaReply /> Reply
         </button>
       </div>
-      
+
       {showReplyForm && (
         <form className="reply-form" onSubmit={handleReplySubmit}>
           <textarea
@@ -177,8 +177,8 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
           />
           <div className="reply-actions">
             <button type="submit" className="submit-reply">Post Reply</button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="cancel-reply"
               onClick={() => setShowReplyForm(false)}
             >
@@ -187,7 +187,7 @@ export const ReviewCard = ({ review, onHelpful, onReply }) => {
           </div>
         </form>
       )}
-      
+
       {review.replies && review.replies.length > 0 && (
         <div className="review-replies">
           {review.replies.map((reply, index) => (
@@ -214,14 +214,14 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
     images: []
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.rating === 0) {
       alert('Please provide a rating');
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit({
@@ -237,7 +237,7 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     // In a real app, you'd upload these to a cloud service
@@ -248,20 +248,20 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
       images: [...prev.images, ...imageUrls]
     }));
   };
-  
+
   return (
     <form className="review-form" onSubmit={handleSubmit}>
       <h3>Write a Review</h3>
-      
+
       <div className="form-group">
         <label>Rating *</label>
-        <StarRating 
+        <StarRating
           rating={formData.rating}
           onRatingChange={(rating) => setFormData(prev => ({ ...prev, rating }))}
           size="large"
         />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="review-title">Title</label>
         <input
@@ -273,7 +273,7 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
           maxLength={100}
         />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="review-comment">Review *</label>
         <textarea
@@ -285,7 +285,7 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
           required
         />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="review-images">Add Photos (Optional)</label>
         <input
@@ -303,17 +303,17 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
           </div>
         )}
       </div>
-      
+
       <div className="form-actions">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="submit-review"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Submit Review'}
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="cancel-review"
           onClick={onCancel}
         >
@@ -328,26 +328,26 @@ export const ReviewForm = ({ productId, onSubmit, onCancel }) => {
 export const ReviewSystem = ({ productId, reviews = [], onAddReview, onUpdateReview }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
-  
+
   const handleAddReview = async (reviewData) => {
     if (onAddReview) {
       await onAddReview(reviewData);
       setShowReviewForm(false);
     }
   };
-  
+
   const handleHelpful = async (reviewId, isHelpful) => {
     if (onUpdateReview) {
       await onUpdateReview(reviewId, { helpful: isHelpful });
     }
   };
-  
+
   const handleReply = async (reviewId, replyText) => {
     if (onUpdateReview) {
       await onUpdateReview(reviewId, { reply: replyText });
     }
   };
-  
+
   const sortedReviews = [...reviews].sort((a, b) => {
     switch (sortBy) {
       case 'oldest':
@@ -361,25 +361,25 @@ export const ReviewSystem = ({ productId, reviews = [], onAddReview, onUpdateRev
         return new Date(b.createdAt) - new Date(a.createdAt);
     }
   });
-  
+
   return (
     <div className="review-system">
       <div className="review-header">
         <h3>Customer Reviews</h3>
-        <button 
+        <button
           className="write-review-btn"
           onClick={() => setShowReviewForm(true)}
         >
           Write a Review
         </button>
       </div>
-      
+
       <RatingSummary reviews={reviews} />
-      
+
       {showReviewForm && (
         <div className="review-form-overlay">
           <div className="review-form-container">
-            <ReviewForm 
+            <ReviewForm
               productId={productId}
               onSubmit={handleAddReview}
               onCancel={() => setShowReviewForm(false)}
@@ -387,7 +387,7 @@ export const ReviewSystem = ({ productId, reviews = [], onAddReview, onUpdateRev
           </div>
         </div>
       )}
-      
+
       <div className="reviews-controls">
         <div className="sort-controls">
           <label>Sort by:</label>
@@ -399,11 +399,11 @@ export const ReviewSystem = ({ productId, reviews = [], onAddReview, onUpdateRev
           </select>
         </div>
       </div>
-      
+
       <div className="reviews-list">
         {sortedReviews.length > 0 ? (
           sortedReviews.map((review) => (
-            <ReviewCard 
+            <ReviewCard
               key={review._id}
               review={review}
               onHelpful={handleHelpful}
@@ -420,10 +420,4 @@ export const ReviewSystem = ({ productId, reviews = [], onAddReview, onUpdateRev
   );
 };
 
-export default {
-  ReviewSystem,
-  StarRating,
-  RatingSummary,
-  ReviewCard,
-  ReviewForm
-};
+// No default export to avoid Fast Refresh issues

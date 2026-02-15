@@ -192,13 +192,10 @@ span.text-red {
   border-radius: 15px;
   position: relative;
   min-height: 520px;
-  /* Changed from fixed height to min-height */
   height: auto;
-  /* Allow content to determine height */
   line-height: 1;
   width: 100%;
   overflow: visible;
-  /* Allow text to render fully */
 }
 
 .hero-banner-container .beats-solo {
@@ -234,7 +231,6 @@ span.text-red {
 .hero-banner-container h1 {
   color: white;
   font-size: clamp(3rem, 8vw, 6rem);
-  /* Responsive font size */
   margin-left: -10px;
   text-transform: uppercase;
   line-height: 1;
@@ -317,16 +313,17 @@ span.text-red {
   position: relative;
   padding: 40px;
   color: white;
-  /* This should set most text to white */
   overflow: hidden;
-  margin-top: 0;
-  /* Clean spacing from section above */
+  margin: 0 auto;
+  max-width: 1200px;
+  /* Match footer width */
+  width: calc(100% - 80px);
+  /* Account for side padding */
 }
 
 .footer-cta {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  position: relative;
+  margin-top: 20px;
 }
 
 .footer-cta .shop-now-btn {
@@ -374,14 +371,20 @@ span.text-red {
 
 .banner-desc .left h3 {
   font-weight: 900;
-  font-size: clamp(2rem, 6vw, 4rem);
-  /* Responsive font size */
+  font-size: clamp(1.4rem, 4vw, 2.8rem);
+  /* Reduced by 15% for better spacing */
   margin-left: 25px;
+  margin-right: 40px;
+  /* Add spacing from logo */
   line-height: 1.1;
+  text-align: left;
+  white-space: nowrap;
+  /* Prevent text from breaking */
 }
 
 .banner-desc .left p {
   margin: 18px;
+  margin-left: 25px;
 }
 
 /* .footer-banner-image {
@@ -393,8 +396,8 @@ span.text-red {
 } */
 .footer-banner-image {
   position: absolute;
-  left: calc(50% + 1.5cm);
-  /* Moved 1.5cm to the right */
+  left: calc(50% + 2.5cm);
+  /* Moved 2.5cm to the right (was 1.5cm, added 1cm) */
   top: 50%;
   transform: translate(-50%, -50%);
   max-width: 30%;
@@ -403,6 +406,7 @@ span.text-red {
   transition: transform 0.3s ease-in-out;
   height: auto;
 }
+
 
 .banner-desc .right {
   line-height: 1.4;
@@ -445,24 +449,13 @@ span.text-red {
 
 }
 
+/* Old footer-container - deprecated, use .site-footer instead */
 .footer-container {
-  color: #324d67;
-  text-align: center;
-  margin-top: 20px;
-  padding: 30px 10px;
-  font-weight: 700;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-
+  display: none !important;
 }
 
 .footer-container .icons {
-  font-size: 30px;
-  display: flex;
-  gap: 10px;
+  display: none !important;
 }
 
 .cart-heading {
@@ -2155,5 +2148,171 @@ img {
   .tagline p {
     font-size: 13px;
     padding: 0 15px;
+  }
+}
+
+/* ============================
+   Site Footer Styles
+============================ */
+
+.site-footer {
+  background-color: #0a1628;
+  color: #ffffff;
+  margin: 10px auto 0;
+  max-width: 1200px;
+  width: calc(100% - 80px);
+  border-radius: 15px;
+}
+
+.footer-main {
+  padding: 40px 40px 30px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-brand {
+  max-width: 250px;
+}
+
+.footer-heading {
+  color: #00bcd4;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-tagline {
+  color: #a0aec0;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 21px;
+  transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+  background-color: #00bcd4;
+  transform: translateY(-3px);
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-links li a {
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.footer-links li a:hover {
+  color: #00bcd4;
+  text-decoration: underline;
+}
+
+/* Legal Section */
+.footer-legal-section {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-legal-heading {
+  color: #00bcd4;
+}
+
+.footer-legal-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-legal-links li a {
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.footer-legal-links li a:hover {
+  color: #00bcd4;
+  text-decoration: underline;
+}
+
+/* Copyright Bar */
+.footer-bottom {
+  background-color: #060d18;
+  padding: 15px 20px;
+  text-align: center;
+  border-radius: 0 0 15px 15px;
+}
+
+.footer-bottom p {
+  color: #a0aec0;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .footer-main {
+    padding: 40px 20px 30px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-brand {
+    max-width: 100%;
+  }
+
+  .footer-legal-links {
+    flex-direction: column;
+    gap: 12px;
   }
 }

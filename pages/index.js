@@ -4,11 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Head from 'next/head';
 import { client } from '../lib/client';
-import { Product, FooterBanner, HeroBanner, ProductFilters, LoadingFallback, EmptyStateFallback } from '@/components';
+import { Product, FooterBanner, HeroBanner, ProductFilters, LoadingFallback, EmptyStateFallback, MainCategories } from '@/components';
 import { ProductsGridSkeleton } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '../hooks/usePerformance';
 
-import venturesStyles from '../styles/VenturesFooter.module.css';
 import ColorFilter from '../components/ColorFilter';
 
 const Home = ({ products, bannerData }) => {
@@ -156,41 +155,13 @@ const Home = ({ products, bannerData }) => {
       </Head>
       <HeroBanner heroBanner={bannerData} />
 
+      {/* New Main Categories Section */}
+      <MainCategories />
+
       <div className="products-heading best-selling-heading">
-        <h2>Best Selling Products</h2>
-        <div className="category-nav-wrapper">
-          {/* Category Navigation */}
-          <div className="category-nav">
-            <Link href="/collections/mens-tshirts" className="category-link">
-              <span className="emoji">👕</span>
-              <span className="text">Men's T-Shirts</span>
-            </Link>
-
-            <Link href="/collections/womens-tshirts" className="category-link">
-              <span className="emoji">👚</span>
-              <span className="text">Women's T-Shirts</span>
-            </Link>
-
-            <Link href="/collections/new-arrivals" className="category-link featured">
-              <span className="emoji">✨</span>
-              <span className="text">New Arrivals</span>
-            </Link>
-
-            <Link href="/collections/bestsellers" className="category-link">
-              <span className="emoji">🔥</span>
-              <span className="text">Bestsellers</span>
-            </Link>
-
-            <Link href="/collections/sale" className="category-link sale">
-              <span className="emoji">💰</span>
-              <span className="text">Sale</span>
-            </Link>
-          </div>
-
-          {/* Tagline */}
-          <div className="tagline">
-            <p>✨ Express Yourself – Premium T-Shirts for Every Style ✨</p>
-          </div>
+        <h2>Featured Products</h2>
+        <div className="tagline">
+          <p>✨ Express Yourself – Premium items for every style ✨</p>
         </div>
       </div>
 
@@ -241,106 +212,9 @@ const Home = ({ products, bannerData }) => {
         </div>
       )}
 
-      <section className="tshirt-collection-promo">
-        <div className="container">
-          <div className="promo-content">
-            <h2>Discover Your Perfect Tee</h2>
-            <p className="subtitle">Premium quality t-shirts that blend comfort, style, and self-expression</p>
 
-            <div className="collection-grid">
-              {/* Men's Collection */}
-              <div className="collection-card mens">
-                <div className="card-icon">👕</div>
-                <h3>Men's Collection</h3>
-                <p>Bold graphics, minimalist designs, and everything in between</p>
-                <ul className="features">
-                  <li>✓ 100% Premium Cotton</li>
-                  <li>✓ Graphic & Minimal Styles</li>
-                  <li>✓ Regular & Oversized Fits</li>
-                  <li>✓ Sizes: S to 3XL</li>
-                </ul>
-                <Link href="/collections/mens-tshirts" className="cta-btn">
-                  Shop Men's
-                </Link>
-              </div>
-
-              {/* Women's Collection */}
-              <div className="collection-card womens">
-                <div className="card-icon">👚</div>
-                <h3>Women's Collection</h3>
-                <p>Stylish, comfortable tees designed for the modern woman</p>
-                <ul className="features">
-                  <li>✓ Soft Breathable Fabric</li>
-                  <li>✓ Trendy Prints & Solids</li>
-                  <li>✓ Fitted & Relaxed Cuts</li>
-                  <li>✓ Sizes: XS to XXL</li>
-                </ul>
-                <Link href="/collections/womens-tshirts" className="cta-btn">
-                  Shop Women's
-                </Link>
-              </div>
-            </div>
-
-            <div className="value-props">
-              <div className="prop">
-                <span className="icon">🚚</span>
-                <span className="text">Free Shipping Above ₹999</span>
-              </div>
-              <div className="prop">
-                <span className="icon">↩️</span>
-                <span className="text">7-Day Easy Returns</span>
-              </div>
-              <div className="prop">
-                <span className="icon">⭐</span>
-                <span className="text">4.8/5 Rating</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <FooterBanner footerBanner={bannerData} />
-
-      {/* New Ventures Footer */}
-      <footer className={venturesStyles['ventures-footer']}>
-        <div className={venturesStyles['footer-column']}>
-          <h4>Sampada</h4>
-          <p>Prosperity in Every Print – Custom T-shirts, Mugs & Blankets</p>
-        </div>
-
-        <div className={venturesStyles['footer-column']}>
-          <h4>Product</h4>
-          <Link href="/features">Features</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/use-cases">Use Cases</Link>
-          <Link href="/roadmap">Roadmap</Link>
-        </div>
-
-        <div className={venturesStyles['footer-column']}>
-          <h4>Company</h4>
-          <Link href="/about">About</Link>
-          <Link href="/blog">Blog</Link>
-          <Link href="/careers">Careers</Link>
-          <Link href="/contact">Contact</Link>
-        </div>
-
-        <div className={venturesStyles['footer-column']}>
-          <h4>Support</h4>
-          <Link href="/documentation">Documentation</Link>
-          <Link href="/api-reference">API Reference</Link>
-          <Link href="/community">Community</Link>
-          <Link href="/status">Status</Link>
-        </div>
-
-        <div className={venturesStyles['footer-column']}>
-          <h4>Legal</h4>
-          <Link href="/privacy-policy">Privacy Policy</Link>
-          <Link href="/terms-of-service">Terms of Service</Link>
-          <Link href="/cookie-policy">Cookie Policy</Link>
-        </div>
-
-
-      </footer>
     </div>
   );
 };

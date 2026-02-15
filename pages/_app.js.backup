@@ -1,0 +1,63 @@
+// 2. Update your _app.js file to wrap your application with both providers:
+// pages/_app.js
+import '../styles/globals.css';
+import '../styles/product-description.css';
+import '../styles/footer-banner-description.css';
+import '../styles/About.module.css';
+import '../styles/product-variant.css';
+import '../styles/ProductCard.css';
+import { Layout, ErrorBoundaryWithFallback } from '../components';
+import { OfflineWrapper } from '../components';
+import { Toaster } from 'react-hot-toast';
+import { SessionProvider } from 'next-auth/react';
+import { UIProvider } from '../context/StateContext';
+import { CartProvider } from '../context/CartContext';
+import { WishlistProvider } from '../components/WishlistSystem';
+import { DesignerProvider } from '../context/DesignerContext';
+// import dynamic from 'next/dynamic';
+
+// TEMPORARILY DISABLED - Voice Assistant causing issues
+// const SampadaVoiceButton = dynamic(
+//   () => import('../components/VoiceAssistant/SampadaVoiceButton'),
+//   { ssr: false }
+// );
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  return (
+    <ErrorBoundaryWithFallback>
+      <SessionProvider session={session}>
+        <UIProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <OfflineWrapper>
+                <DesignerProvider>
+                  <Layout>
+                    <Toaster
+                      position="bottom-center"
+                      toastOptions={{
+                        style: {
+                          background: '#333',
+                          color: '#fff',
+                        }
+                      }}
+                    />
+                    <Component {...pageProps} />
+                    {/* TEMPORARILY DISABLED - Re-enable after fixing loading issue:
+                    <SampadaVoiceButton />
+                    <ErrorMonitorDemo />
+                    <TestSuiteNavigator />
+                    <EnhancedErrorHandlerNavigator />
+                    <ImageOptimizerTestNavigator />
+                    */}
+                  </Layout>
+                </DesignerProvider>
+              </OfflineWrapper>
+            </WishlistProvider>
+          </CartProvider>
+        </UIProvider>
+      </SessionProvider>
+    </ErrorBoundaryWithFallback>
+  );
+}
+
+export default MyApp;

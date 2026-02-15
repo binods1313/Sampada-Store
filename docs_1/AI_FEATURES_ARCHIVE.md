@@ -1,3 +1,166 @@
+Feature Request: AI-Powered Visual Search & Virtual Try-On for Product Detail Page
+Overview
+Implement two AI-powered features on the product detail page:
+
+Search by Image - Allow users to upload an image to find similar products
+Virtual Try-On - Enable users to upload their photo and visualize themselves wearing the selected product
+
+Technical Stack
+
+Image Analysis: Google Gemini Vision API
+Virtual Try-On: Nano Banana Pro API (user has Pro subscription)
+
+Feature 1: Search by Image
+UI Requirements
+
+Add a camera/image icon button near the product images (top-left or top-right of main product image)
+Label: "Search by Image" or camera icon with tooltip
+On click, open file upload dialog or show upload modal
+
+Functionality
+
+User uploads an image (supports JPG, PNG, WebP)
+Send image to Gemini Vision API to:
+
+Extract product features (color, style, pattern, garment type)
+Generate search embeddings
+
+
+Query product database for similar items based on:
+
+Visual similarity
+Category match
+Color/pattern similarity
+
+
+Display results in a modal or redirect to search results page
+Show confidence scores or "similarity percentage" for each result
+
+API Integration
+javascript// Pseudo-code structure
+async function searchByImage(imageFile) {
+  // 1. Upload to Gemini Vision
+  const analysis = await geminiVision.analyze(imageFile, {
+    features: ['OBJECT_DETECTION', 'IMAGE_PROPERTIES', 'LABEL_DETECTION']
+  });
+  
+  // 2. Extract product attributes
+  const attributes = extractAttributes(analysis);
+  
+  // 3. Search product catalog
+  const similarProducts = await searchProducts(attributes);
+  
+  return similarProducts;
+}
+Feature 2: Virtual Try-On
+UI Requirements
+
+Add prominent "Try On" button below or near "Add to Cart" button
+Icon: Mirror/person icon + "Virtual Try-On" text
+Display badge indicating "Pro Feature" if applicable
+
+Functionality
+
+Check user's Pro subscription status
+On click, open upload modal with:
+
+File upload option
+Camera capture option (mobile)
+Guidelines for best results (well-lit, front-facing, full upper body)
+
+
+User uploads photo
+Send both user photo and product image to Nano Banana Pro API
+API returns image with product virtually placed on user
+Display result in interactive viewer with:
+
+Zoom controls
+Download option
+Share option
+"Add to Cart" quick action
+
+
+
+API Integration
+javascript// Pseudo-code structure
+async function virtualTryOn(userPhoto, productImage) {
+  // Verify Pro subscription
+  if (!user.isPro) {
+    showUpgradeModal();
+    return;
+  }
+  
+  // Call Nano Banana Pro API
+  const result = await nanoBananaPro.tryOn({
+    userImage: userPhoto,
+    garmentImage: productImage,
+    garmentType: 'tunic', // from product data
+    selectedSize: 'XS', // from current selection
+    selectedColor: 'Pale Peach'
+  });
+  
+  return result.virtualTryOnImage;
+}
+UI/UX Specifications
+Button Placement
+
+Search by Image: Top-right corner of product image gallery, floating icon
+Virtual Try-On: Between "Add to Cart" and "Buy Now" buttons, OR as a separate prominent button above quantity selector
+
+Loading States
+
+Show spinner/loading animation during processing
+Display progress text: "Analyzing image..." or "Creating your virtual try-on..."
+Estimated time: 3-5 seconds
+
+Error Handling
+
+Invalid image format → "Please upload JPG, PNG, or WebP format"
+Poor image quality → "Please upload a clearer, well-lit photo"
+API failure → "Service temporarily unavailable. Please try again."
+Non-Pro user accessing Try-On → Show upgrade modal with feature benefits
+
+Mobile Responsiveness
+
+Optimize upload flow for mobile devices
+Enable direct camera access on mobile
+Ensure buttons are touch-friendly (min 44x44px)
+
+Data Privacy & Storage
+
+Don't store user-uploaded photos without explicit consent
+Add privacy notice in upload modal
+Option to delete uploaded images immediately after processing
+Comply with GDPR/data protection regulations
+
+Performance Optimization
+
+Compress images before sending to API (max 2MB)
+Cache search results for 24 hours
+Lazy load try-on feature to reduce initial page load
+
+Analytics Tracking
+Track the following events:
+
+search_by_image_clicked
+search_by_image_completed
+virtual_tryon_clicked
+virtual_tryon_completed
+virtual_tryon_shared
+conversion_after_tryon
+
+Acceptance Criteria
+
+ Both features visible on product detail page
+ Image upload works smoothly with validation
+ API integrations functional with proper error handling
+ Results display correctly in appropriate UI
+ Mobile responsive and camera-enabled
+ Pro user verification for Try-On feature
+ Loading states and error messages implemented
+ Privacy notices and data handling compliant
+ Analytics events firing correctly
+
 Google Cloud Vision API Integration - Development Prompt for Coder
 Project Overview
 Integrate Google Cloud Vision API to add 5 powerful features to the e-commerce platform. This will enhance user experience, automate workflows, and provide competitive advantages. All existing functionalities must remain intact.

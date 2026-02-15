@@ -1,0 +1,171 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 12px;
+    min-width: 280px;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: white;
+    font-weight: 600;
+}
+
+.type {
+    background: rgba(102, 126, 234, 0.2);
+    color: #a5b4fc;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+}
+
+.empty {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    padding: 3rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+.sections {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.section {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.section h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+}
+
+.field label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.field input[type="number"],
+.field input[type="text"],
+.field select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.5rem;
+    color: white;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.field input[type="number"]:focus,
+.field input[type="text"]:focus,
+.field select:focus {
+    outline: none;
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.field input[type="range"] {
+    width: 100%;
+    accent-color: #667eea;
+}
+
+.field input[type="color"] {
+    width: 40px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.field span {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: right;
+}
+
+.colorPicker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.presetColor {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.presetColor:hover {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.alignButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.alignButtons button {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.alignButtons button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.alignButtons button.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+}

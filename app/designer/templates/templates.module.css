@@ -1,0 +1,224 @@
+.container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.5rem 0;
+}
+
+.header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.categoryBtn {
+    padding: 0.6rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.categoryBtn:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+}
+
+.categoryBtn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.thumbnail {
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #1a1a3e 0%, #0f0f23 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholderImage {
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+.cardContent {
+    padding: 1.25rem;
+}
+
+.cardContent h3 {
+    margin: 0 0 0.5rem 0;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.cardContent p {
+    margin: 0 0 0.75rem 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.category {
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.15);
+    color: #a5b4fc;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+}
+
+.useBtn {
+    width: 100%;
+    padding: 0.875rem;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: #667eea;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.useBtn:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.empty {
+    text-align: center;
+    padding: 4rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.startFresh {
+    text-align: center;
+    margin-top: 4rem;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.startFresh h3 {
+    margin: 0 0 0.5rem 0;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.startFresh p {
+    margin: 0 0 1.5rem 0;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.createBtn {
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.createBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.75rem;
+    }
+
+    .categories {
+        gap: 0.5rem;
+    }
+
+    .categoryBtn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}

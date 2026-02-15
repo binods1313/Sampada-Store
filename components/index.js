@@ -16,18 +16,42 @@ export { default as TestSuiteNavigator } from './TestSuiteNavigator';
 export { default as EnhancedErrorHandlerNavigator } from './EnhancedErrorHandlerNavigator';
 export { default as ErrorHandlingTestSuite } from './ErrorHandlingTestSuite';
 export { default as ImageOptimizerTestNavigator } from './ImageOptimizerTestNavigator';
-export { 
-  LoadingFallback, 
-  NetworkErrorFallback, 
-  EmptyStateFallback, 
-  MaintenanceFallback, 
-  OfflineFallback 
+export {
+  LoadingFallback,
+  NetworkErrorFallback,
+  EmptyStateFallback,
+  MaintenanceFallback,
+  OfflineFallback
 } from './FallbackUI';
 export { default as FallbackShowcase } from './FallbackUI';
 export { OfflineWrapper } from './FallbackUI-Examples';
-export * from './LoadingSkeletons';
-export * from './ReviewSystem';
-export * from './WishlistSystem';
+export {
+  ProductCardSkeleton,
+  ProductsGridSkeleton,
+  HeroBannerSkeleton,
+  FilterSkeleton,
+  PageLoadingSkeleton,
+  TextSkeleton,
+  ImageSkeleton,
+  ButtonSkeleton
+} from './LoadingSkeletons';
+export {
+  ReviewSystem,
+  StarRating,
+  RatingSummary,
+  ReviewCard,
+  ReviewForm
+} from './ReviewSystem';
+export {
+  WishlistProvider,
+  useWishlist,
+  WishlistButton,
+  WishlistIcon,
+  WishlistItem,
+  WishlistPage,
+  WishlistSummary
+} from './WishlistSystem';
+
 
 // Newly added components
 export { default as AnimatedCounter } from './AnimatedCounter';
@@ -38,3 +62,4 @@ export { default as NewsletterSignup } from './NewsletterSignup';
 export { default as LazyImage } from './LazyImage';
 
 export { default as ImageOptimizerTest } from './ImageOptimizerTest';
+export { default as MainCategories } from './MainCategories';

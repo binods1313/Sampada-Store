@@ -7,6 +7,7 @@ import user from './user'
 import banner from './banner'
 import aboutUs from './aboutUs'
 import contactMessage from './contactMessage'
+import post from './post'
 
 export const schemaTypes = [
   product,
@@ -16,5 +17,6 @@ export const schemaTypes = [
   user,
   aboutUs,
   banner,
-  contactMessage
+  contactMessage,
+  post
 ]

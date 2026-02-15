@@ -1,0 +1,110 @@
+{
+    "displayName": "Sampada Production Overview",
+    "gridLayout": {
+        "columns": "2",
+        "widgets": [
+            {
+                "title": "Cloud Run Request Count",
+                "xyChart": {
+                    "dataSets": [
+                        {
+                            "timeSeriesQuery": {
+                                "timeSeriesFilter": {
+                                    "filter": "resource.type=\"cloud_run_revision\" metric.type=\"run.googleapis.com/request_count\" resource.label.service_name=\"sampada\"",
+                                    "aggregation": {
+                                        "perSeriesAligner": "ALIGN_RATE",
+                                        "crossSeriesReducer": "REDUCE_SUM",
+                                        "alignmentPeriod": "60s"
+                                    }
+                                },
+                                "unitOverride": "1"
+                            },
+                            "plotType": "LINE",
+                            "minAlignmentPeriod": "60s"
+                        }
+                    ]
+                }
+            },
+            {
+                "title": "Cloud Run Latency (p95)",
+                "xyChart": {
+                    "dataSets": [
+                        {
+                            "timeSeriesQuery": {
+                                "timeSeriesFilter": {
+                                    "filter": "resource.type=\"cloud_run_revision\" metric.type=\"run.googleapis.com/request_latencies\" resource.label.service_name=\"sampada\"",
+                                    "aggregation": {
+                                        "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                                        "crossSeriesReducer": "REDUCE_NONE",
+                                        "alignmentPeriod": "60s"
+                                    }
+                                }
+                            },
+                            "plotType": "LINE"
+                        }
+                    ]
+                }
+            },
+            {
+                "title": "Active Instances",
+                "xyChart": {
+                    "dataSets": [
+                        {
+                            "timeSeriesQuery": {
+                                "timeSeriesFilter": {
+                                    "filter": "resource.type=\"cloud_run_revision\" metric.type=\"run.googleapis.com/container/instance_count\" resource.label.service_name=\"sampada\"",
+                                    "aggregation": {
+                                        "perSeriesAligner": "ALIGN_MAX",
+                                        "crossSeriesReducer": "REDUCE_SUM",
+                                        "alignmentPeriod": "60s"
+                                    }
+                                }
+                            },
+                            "plotType": "STACKED_AREA"
+                        }
+                    ]
+                }
+            },
+            {
+                "title": "Container Memory Utilization",
+                "xyChart": {
+                    "dataSets": [
+                        {
+                            "timeSeriesQuery": {
+                                "timeSeriesFilter": {
+                                    "filter": "resource.type=\"cloud_run_revision\" metric.type=\"run.googleapis.com/container/memory/utilizations\" resource.label.service_name=\"sampada\"",
+                                    "aggregation": {
+                                        "perSeriesAligner": "ALIGN_MAX",
+                                        "crossSeriesReducer": "REDUCE_MEAN",
+                                        "alignmentPeriod": "60s"
+                                    }
+                                }
+                            },
+                            "plotType": "LINE"
+                        }
+                    ]
+                }
+            },
+            {
+                "title": "Application Errors (Logs)",
+                "xyChart": {
+                    "dataSets": [
+                        {
+                            "timeSeriesQuery": {
+                                "timeSeriesFilter": {
+                                    "filter": "resource.type=\"cloud_run_revision\" metric.type=\"logging.googleapis.com/user/error_count\" resource.label.service_name=\"sampada\"",
+                                    "aggregation": {
+                                        "perSeriesAligner": "ALIGN_RATE",
+                                        "crossSeriesReducer": "REDUCE_SUM",
+                                        "alignmentPeriod": "60s"
+                                    }
+                                }
+                            },
+                            "plotType": "LINE"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

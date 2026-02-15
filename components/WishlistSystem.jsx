@@ -100,7 +100,7 @@ export const WishlistButton = ({ product, className = '', size = 'medium' }) => 
   const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (inWishlist) {
       removeFromWishlist(product._id);
     } else {
@@ -140,11 +140,11 @@ export const WishlistIcon = ({ className = '' }) => {
 // Wishlist Item Component
 export const WishlistItem = ({ item }) => {
   const { removeFromWishlist } = useWishlist();
-  
+
   const hasDiscount = item.discount && item.discount > 0;
   const discountedPrice = hasDiscount ? item.price * (1 - (item.discount / 100)) : item.price;
   const firstImage = item.image && item.image[0] ? item.image[0] : null;
-  
+
   const imageUrl = firstImage?.asset
     ? urlFor(firstImage).width(300).url()
     : '/asset/placeholder-image.jpg';
@@ -172,12 +172,12 @@ export const WishlistItem = ({ item }) => {
           )}
         </div>
       </Link>
-      
+
       <div className="wishlist-item-info">
         <Link href={`/product/${item.slug?.current}`}>
           <h3 className="wishlist-item-name">{item.name}</h3>
         </Link>
-        
+
         <div className="wishlist-item-price">
           {hasDiscount ? (
             <>
@@ -188,17 +188,17 @@ export const WishlistItem = ({ item }) => {
             <span className="price">${item.price?.toFixed(2)}</span>
           )}
         </div>
-        
+
         <p className="added-date">Added {formatDate(item.addedAt)}</p>
-        
+
         <div className="wishlist-item-actions">
           <Link href={`/product/${item.slug?.current}`}>
             <button className="add-to-cart-btn">
               <FaShoppingCart /> Add to Cart
             </button>
           </Link>
-          
-          <button 
+
+          <button
             className="remove-btn"
             onClick={() => removeFromWishlist(item._id)}
             aria-label="Remove from wishlist"
@@ -239,21 +239,21 @@ export const WishlistPage = () => {
           <h1>My Wishlist</h1>
           <span className="item-count">({wishlistCount} item{wishlistCount !== 1 ? 's' : ''})</span>
         </div>
-        
-        <button 
+
+        <button
           className="clear-wishlist-btn"
           onClick={clearWishlist}
         >
           Clear All
         </button>
       </div>
-      
+
       <div className="wishlist-grid">
         {wishlistItems.map(item => (
           <WishlistItem key={item._id} item={item} />
         ))}
       </div>
-      
+
       <div className="wishlist-actions">
         <Link href="/">
           <button className="continue-shopping-btn">
@@ -268,23 +268,23 @@ export const WishlistPage = () => {
 // Wishlist Summary Component (for other pages)
 export const WishlistSummary = ({ maxItems = 3 }) => {
   const { wishlistItems, wishlistCount } = useWishlist();
-  
+
   if (wishlistCount === 0) return null;
-  
+
   const displayItems = wishlistItems.slice(0, maxItems);
   const remainingCount = wishlistCount - maxItems;
 
   return (
     <div className="wishlist-summary">
       <h3>Your Wishlist ({wishlistCount})</h3>
-      
+
       <div className="wishlist-preview">
         {displayItems.map(item => {
           const firstImage = item.image && item.image[0] ? item.image[0] : null;
           const imageUrl = firstImage?.asset
             ? urlFor(firstImage).width(60).url()
             : '/asset/placeholder-image.jpg';
-            
+
           return (
             <Link key={item._id} href={`/product/${item.slug?.current}`}>
               <div className="wishlist-preview-item">
@@ -299,12 +299,12 @@ export const WishlistSummary = ({ maxItems = 3 }) => {
             </Link>
           );
         })}
-        
+
         {remainingCount > 0 && (
           <div className="remaining-count">+{remainingCount}</div>
         )}
       </div>
-      
+
       <Link href="/wishlist">
         <button className="view-all-btn">View All</button>
       </Link>
@@ -312,12 +312,4 @@ export const WishlistSummary = ({ maxItems = 3 }) => {
   );
 };
 
-export default {
-  WishlistProvider,
-  useWishlist,
-  WishlistButton,
-  WishlistIcon,
-  WishlistItem,
-  WishlistPage,
-  WishlistSummary
-};
+// No default export to avoid Fast Refresh issues

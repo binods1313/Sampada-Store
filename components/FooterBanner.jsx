@@ -70,7 +70,7 @@ const FooterBanner = ({ footerBanner }) => {
       <div className="banner-desc">
         <div className="left">
           <p>{discount}</p>
-          {/* Split largeText1: "WEAR YOUR" on line 1, "LEGACY" on line 2 */}
+          {/* Display text in 4 lines - dynamically split from CMS data */}
           {largeText1 && (() => {
             const words = largeText1.split(' ');
             const lastWord = words.pop(); // Get "LEGACY"
@@ -82,8 +82,17 @@ const FooterBanner = ({ footerBanner }) => {
               </>
             );
           })()}
-          {/* largeText2 on line 3 */}
-          <h3>{largeText2}</h3>
+          {largeText2 && (() => {
+            const words = largeText2.split(' ');
+            const lastWord = words.pop(); // Get "STYLE"
+            const firstPart = words.join(' '); // Get "PROSPER IN"
+            return (
+              <>
+                <h3>{firstPart}</h3>
+                <h3>{lastWord}</h3>
+              </>
+            );
+          })()}
           <p>{saleTime}</p>
         </div>
 
@@ -113,20 +122,20 @@ const FooterBanner = ({ footerBanner }) => {
           {/* Enhanced styling for Aurora Sky Pulse text */}
           <h3 className="product-name">{midText}</h3>
           <p>{desc}</p>
+          <div className="footer-cta">
+            {shouldRenderLink ? (
+              <Link href={`/product/${product}`}>
+                <button type="button" className="shop-now-btn hover-effect">
+                  {buttonText}
+                </button>
+              </Link>
+            ) : (
+              <button type="button" className="shop-now-btn hover-effect" disabled>
+                {buttonText}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="footer-cta">
-        {shouldRenderLink ? (
-          <Link href={`/product/${product}`}>
-            <button type="button" className="shop-now-btn hover-effect">
-              {buttonText}
-            </button>
-          </Link>
-        ) : (
-          <button type="button" className="shop-now-btn hover-effect" disabled>
-            {buttonText}
-          </button>
-        )}
       </div>
     </div>
   );

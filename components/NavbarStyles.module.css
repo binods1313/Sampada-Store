@@ -2,16 +2,16 @@
 
 .navbarContainer {
   display: flex;
-  justify-content: space-between; /* Pushes left and right sections apart */
+  justify-content: space-between;
   align-items: center;
-  padding: 15px 25px; /* Adjusted padding */
+  padding: 15px 25px;
   position: relative;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  gap: 20px; /* Add gap for overall spacing if needed */
+  gap: 20px;
+  z-index: 1000;
 }
 
-/* Dark mode for navbar container */
 html.dark .navbarContainer {
   background-color: #1e293b;
   box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
@@ -20,34 +20,42 @@ html.dark .navbarContainer {
 .leftSection {
   display: flex;
   align-items: center;
-  flex-shrink: 0; /* Prevent logo from shrinking too much */
-  gap: 20px; /* Reduced gap between logo and About Us link */
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.centerSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  justify-content: center;
 }
 
 .rightSection {
   display: flex;
   align-items: center;
-  gap: 25px; /* Increase gap between auth block and cart */
+  gap: 25px;
+  flex-shrink: 0;
 }
 
 .logo {
-  font-weight: 800; /* Increased from 700 to 800 */
-  font-size: 20px; /* Increased from 18px to 20px */
+  font-weight: 800;
+  font-size: 24px;
   text-decoration: none;
   color: #333;
-  white-space: nowrap; /* Prevent logo text wrapping */
+  white-space: nowrap;
 }
 
-/* Dark mode for logo */
 html.dark .logo {
   color: #e0e0e0;
 }
 
-/* Styles for Account/Order links (when logged in, placed on RIGHT side now) */
-.navLinks {
+.navItem {
+  position: relative;
   display: flex;
-  gap: 18px; /* Spacing between Account and Order History if both were present */
-  /* Removed margin-right as it's part of rightSection gap now */
+  align-items: center;
+  height: 100%;
 }
 
 .navLink {
@@ -55,55 +63,204 @@ html.dark .logo {
   color: #333;
   text-decoration: none;
   font-weight: 500;
-  padding: 8px 12px; /* Add horizontal padding for better click area */
-  border-radius: 4px; /* Add slight radius for better UX */
-  border-bottom: 2px solid transparent; /* Underline for hover/active */
-  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
-  background: none; /* Ensure no background for link-like buttons */
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: color 0.2s;
   cursor: pointer;
-  display: inline-block; /* Ensure proper display */
-  position: relative; /* Ensure proper z-index stacking */
-  z-index: 10; /* Ensure link is clickable */
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .navLink:hover {
-  /* background-color: #f5f5f5; */ /* Removed background hover */
-  color: #f02d34; /* Accent color on hover */
-  border-bottom-color: #f02d34; /* Underline hover effect */
+  color: #f02d34;
 }
 
-/* Dark mode for navLink */
 html.dark .navLink {
   color: #e0e0e0;
 }
 
 html.dark .navLink:hover {
-  color: #f02d34; /* Keep accent color on hover */
-  border-bottom-color: #f02d34;
+  color: #f02d34;
 }
 
-/* Removed specific style for leftSection .navLink to improve spacing */
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 10px 0;
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+  animation: fadeIn 0.15s ease-out;
+}
 
+html.dark .dropdown {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+.navItem:hover .dropdown {
+  display: flex;
+}
+
+.dropdownItem {
+  padding: 10px 20px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.dropdownItem:hover {
+  background: #f3f4f6;
+  color: #f02d34;
+}
+
+html.dark .dropdownItem {
+  color: #cbd5e1;
+}
+
+html.dark .dropdownItem:hover {
+  background: #334155;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Menu Button */
+.mobileMenuBtn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+html.dark .mobileMenuBtn {
+  color: #e0e0e0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .centerSection {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    align-items: flex-start;
+  }
+
+  html.dark .centerSection {
+    background: #1e293b;
+    border-top: 1px solid #334155;
+  }
+
+  .centerSection.mobileNavOpen {
+    display: flex;
+  }
+
+  .navItem {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  html.dark .navItem {
+    border-bottom: 1px solid #334155;
+  }
+
+  .navLink {
+    width: 100%;
+    justify-content: space-between;
+    /* Move chevron to right */
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  /* Make dropdown static in mobile (always show or collapsible via JS - keeping simple hover/focus for now or always visible) 
+     For better mobile UX, we should use JS state, but using hover logic for mobile is tricky.
+     Let's make them always visible or rely on click if we had JS. 
+     Given the constraint, making them always visible in mobile or collapsible is preferred.
+     Let's make them visible on hover/active for now or just display: flex always under parent
+  */
+
+  .dropdown {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding-left: 20px;
+    display: none;
+    /* Collapsed by default */
+    background: transparent;
+    width: 100%;
+  }
+
+  .navItem:hover .dropdown {
+    display: flex;
+  }
+
+  .mobileMenuBtn {
+    display: block;
+  }
+
+  .leftSection {
+    margin-right: auto;
+    margin-left: 10px;
+  }
+
+  .navbarContainer {
+    justify-content: flex-start;
+  }
+
+  .rightSection {
+    margin-left: auto;
+  }
+}
+
+/* ... Existing Auth Styles ... */
 .authSection {
   display: flex;
   align-items: center;
-  gap: 15px; /* Gap within the auth block itself */
+  gap: 15px;
 }
 
-/* Container for user info + sign out button */
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 15px; /* Adjust gap between avatar/name, account button, signout button */
+  gap: 15px;
 }
 
-/* Span specifically for name/avatar */
 .userName {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  white-space: nowrap; /* Prevent name wrapping */
+  white-space: nowrap;
 }
 
 .userAvatar {
@@ -111,15 +268,15 @@ html.dark .navLink:hover {
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0; /* Prevent image shrinking */
+  flex-shrink: 0;
 }
 
 .btnSignin {
-  background-color: #3B82F6; /* Medium blue */
+  background-color: #3B82F6;
   color: white;
   padding: 8px 16px;
   border: none;
-  border-radius: 6px; /* Slightly more rounded */
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -128,10 +285,9 @@ html.dark .navLink:hover {
 }
 
 .btnSignin:hover {
-  background-color: #2563eb; /* Darker blue */
+  background-color: #2563eb;
 }
 
-/* Hidden element styles */
 .hiddenElement {
   opacity: 0 !important;
   pointer-events: none !important;
@@ -139,7 +295,7 @@ html.dark .navLink:hover {
 }
 
 .btnSignout {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
   color: white;
   padding: 8px 15px;
   border: none;
@@ -155,26 +311,11 @@ html.dark .navLink:hover {
   background-color: #d32f2f;
 }
 
-/* Added style for the Account link/button to match navLink */
-.btnAccount { /* Use this class name if using <button> */
-  font-size: 15px;
-  color: #333;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 8px 0px;
-  border-radius: 0px;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-  background: none;
-  cursor: pointer;
-}
-
 .loadingText {
   font-size: 14px;
   color: #666;
 }
 
-/* Dark mode for loading text */
 html.dark .loadingText {
   color: #a0a0a0;
 }
@@ -183,31 +324,30 @@ html.dark .loadingText {
   font-size: 25px;
   cursor: pointer;
   position: relative;
-  transition: transform 0.2s ease; /* Faster transition */
+  transition: transform 0.2s ease;
   border: none;
   background-color: transparent;
   color: #333;
-  padding: 5px; /* Add padding for easier clicking */
+  padding: 5px;
 }
 
 .cartIcon:hover {
   transform: scale(1.1);
-  color: #f02d34; /* Change color on hover */
+  color: #f02d34;
 }
 
-/* Dark mode for cart icon */
 html.dark .cartIcon {
   color: #e0e0e0;
 }
 
 .cartItemQty {
   position: absolute;
-  right: -5px; /* Adjust position */
-  top: -5px;   /* Adjust position */
-  font-size: 11px; /* Slightly smaller */
+  right: -5px;
+  top: -5px;
+  font-size: 11px;
   color: white;
   background-color: #f02d34;
-  width: 18px; /* Slightly smaller */
+  width: 18px;
   height: 18px;
   border-radius: 50%;
   text-align: center;
@@ -215,11 +355,10 @@ html.dark .cartIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* Ensure number is centered vertically */
-  border: 1px solid white; /* Optional white border */
+  line-height: 1;
+  border: 1px solid white;
 }
 
-/* Dark mode for cart item quantity */
 html.dark .cartItemQty {
   color: white;
   background-color: #f02d34;

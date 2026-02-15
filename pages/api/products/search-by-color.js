@@ -1,4 +1,4 @@
-const { searchByColor } = require('../../services/colorSearchService');
+const { searchByColor } = require('../../../services/colorSearchService');
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {

@@ -1,7 +1,7 @@
 // components/FallbackUI.jsx
 // Comprehensive fallback UI components for different error scenarios
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
+import {
   AiOutlineReload as RefreshCw,
   AiOutlineHome as Home,
   AiOutlineShopping as ShoppingBag,
@@ -24,20 +24,20 @@ const useOnlineStatus = () => {
     // Set client-side flag and actual online status
     setIsClient(true);
     setIsOnline(navigator.onLine);
-    
+
     const updateOnlineStatus = () => setIsOnline(navigator.onLine);
-    
+
     // Detect connection speed if available
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if (connection) {
       setConnectionSpeed(connection.effectiveType || 'unknown');
-      
+
       const updateConnection = () => {
         setConnectionSpeed(connection.effectiveType || 'unknown');
       };
-      
+
       connection.addEventListener('change', updateConnection);
-      
+
       return () => {
         connection.removeEventListener('change', updateConnection);
         window.removeEventListener('online', updateOnlineStatus);
@@ -67,7 +67,7 @@ const useRetryLogic = (onRetry, maxAttempts = 3) => {
     if (retryCount >= maxAttempts || !onRetry) return;
 
     setIsRetrying(true);
-    
+
     try {
       await onRetry();
       // Reset on success
@@ -76,11 +76,11 @@ const useRetryLogic = (onRetry, maxAttempts = 3) => {
     } catch (error) {
       const newRetryCount = retryCount + 1;
       setRetryCount(newRetryCount);
-      
+
       // Exponential backoff: 1s, 2s, 4s
       const delay = Math.min(1000 * Math.pow(2, newRetryCount - 1), 8000);
       setNextRetryDelay(delay);
-      
+
       console.warn(`Retry attempt ${newRetryCount} failed:`, error);
     } finally {
       setIsRetrying(false);
@@ -88,7 +88,7 @@ const useRetryLogic = (onRetry, maxAttempts = 3) => {
   }, [onRetry, retryCount, maxAttempts]);
 
   const canRetry = retryCount < maxAttempts;
-  
+
   return {
     handleRetry,
     isRetrying,
@@ -102,8 +102,8 @@ const useRetryLogic = (onRetry, maxAttempts = 3) => {
 /**
  * Enhanced Loading fallback with progress indication and timeout
  */
-export const LoadingFallback = ({ 
-  message = "Loading...", 
+export const LoadingFallback = ({
+  message = "Loading...",
   size = "medium",
   showSpinner = true,
   className = "",
@@ -113,21 +113,21 @@ export const LoadingFallback = ({
   details = null // Additional loading details
 }) => {
   const [timeoutReached, setTimeoutReached] = useState(false);
-  
+
   useEffect(() => {
     if (timeout && onTimeout) {
       const timer = setTimeout(() => {
         setTimeoutReached(true);
         onTimeout();
       }, timeout);
-      
+
       return () => clearTimeout(timer);
     }
   }, [timeout, onTimeout]);
 
   const sizeClasses = {
     small: "h-20",
-    medium: "h-40", 
+    medium: "h-40",
     large: "h-60",
     full: "h-screen"
   };
@@ -148,19 +148,19 @@ export const LoadingFallback = ({
       <div className="loading-content text-center text-gray-600">
         {showSpinner && (
           <div className="loading-spinner mb-3">
-            <Loader2 
-              size={size === 'small' ? 24 : size === 'large' ? 48 : 32} 
+            <Loader2
+              size={size === 'small' ? 24 : size === 'large' ? 48 : 32}
               className="animate-spin mx-auto"
               style={{ animation: 'spin 1s linear infinite' }}
             />
           </div>
         )}
         <p className="loading-message text-sm font-medium mb-2">{message}</p>
-        
+
         {progress !== null && (
           <div className="progress-container w-48 mx-auto mb-2">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
               ></div>
@@ -168,7 +168,7 @@ export const LoadingFallback = ({
             <span className="text-xs text-gray-500 mt-1 block">{Math.round(progress)}%</span>
           </div>
         )}
-        
+
         {details && (
           <p className="loading-details text-xs text-gray-500">{details}</p>
         )}
@@ -180,8 +180,8 @@ export const LoadingFallback = ({
 /**
  * Enhanced Network error fallback with better diagnostics
  */
-export const NetworkErrorFallback = ({ 
-  onRetry, 
+export const NetworkErrorFallback = ({
+  onRetry,
   message = "Unable to connect to the internet",
   showHomeButton = true,
   showDiagnostics = true,
@@ -212,10 +212,10 @@ export const NetworkErrorFallback = ({
         <div className="error-icon text-red-600 mb-4">
           <WifiOff size={48} />
         </div>
-        
+
         <h3 className="text-xl font-semibold text-gray-900 mb-2">Connection Problem</h3>
         <p className="error-message text-gray-600 mb-4 leading-relaxed">{message}</p>
-        
+
         {showDiagnostics && (
           <div className="diagnostics bg-white/70 rounded-lg p-3 mb-6 text-sm">
             <div className="flex items-center justify-between mb-2">
@@ -227,30 +227,30 @@ export const NetworkErrorFallback = ({
                 </span>
               </div>
             </div>
-            
+
             {connectionSpeed !== 'unknown' && (
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Connection:</span>
                 <span className="text-gray-800 capitalize">{connectionSpeed}</span>
               </div>
             )}
-            
+
             {errorCode && (
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Error Code:</span>
                 <span className="text-gray-800">{errorCode}</span>
               </div>
             )}
-            
+
             <div className="text-blue-600 text-xs mt-2">
               {getConnectionAdvice()}
             </div>
           </div>
         )}
-        
+
         <div className="error-actions flex gap-3 justify-center flex-wrap">
-          <button 
-            onClick={handleRetry} 
+          <button
+            onClick={handleRetry}
             disabled={isRetrying || !canRetry}
             className="btn-retry flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 hover:transform hover:-translate-y-0.5"
           >
@@ -261,10 +261,10 @@ export const NetworkErrorFallback = ({
             )}
             {isRetrying ? 'Retrying...' : canRetry ? `Try Again ${retryCount > 0 ? `(${maxRetryAttempts - retryCount} left)` : ''}` : 'Max Retries Reached'}
           </button>
-          
+
           {showHomeButton && (
-            <button 
-              onClick={handleGoHome} 
+            <button
+              onClick={handleGoHome}
               className="btn-home flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 border border-gray-300 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200 hover:transform hover:-translate-y-0.5"
             >
               <Home size={16} />
@@ -280,7 +280,7 @@ export const NetworkErrorFallback = ({
 /**
  * Enhanced Empty state with better actions and customization
  */
-export const EmptyStateFallback = ({ 
+export const EmptyStateFallback = ({
   title = "No items found",
   message = "There are no items to display at the moment.",
   actionLabel = "Browse Products",
@@ -327,7 +327,7 @@ export const EmptyStateFallback = ({
     <div className={`empty-state-fallback flex items-center justify-center min-h-64 p-10 bg-gray-50 border border-dashed border-gray-300 rounded-xl m-5 ${className}`}>
       <div className="empty-content text-center max-w-md">
         {showBackButton && (
-          <button 
+          <button
             onClick={handleBack}
             className="back-button flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4 mx-auto transition-colors"
           >
@@ -335,27 +335,27 @@ export const EmptyStateFallback = ({
             Back
           </button>
         )}
-        
+
         <div className="empty-icon text-gray-400 mb-4">
           {illustration || icons[icon] || icons.shopping}
         </div>
-        
+
         <h3 className="text-lg font-semibold text-gray-700 mb-2">{title}</h3>
         <p className="empty-message text-gray-600 mb-6 leading-relaxed">{message}</p>
-        
+
         <div className="actions flex gap-3 justify-center flex-wrap">
           {actionLabel && (
-            <button 
-              onClick={handleAction} 
+            <button
+              onClick={handleAction}
               className="btn-action px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all duration-200 hover:transform hover:-translate-y-0.5"
             >
               {actionLabel}
             </button>
           )}
-          
+
           {secondaryActionLabel && (
-            <button 
-              onClick={handleSecondaryAction} 
+            <button
+              onClick={handleSecondaryAction}
               className="btn-secondary px-6 py-2.5 bg-gray-100 text-gray-700 border border-gray-300 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200 hover:transform hover:-translate-y-0.5"
             >
               {secondaryActionLabel}
@@ -370,7 +370,7 @@ export const EmptyStateFallback = ({
 /**
  * Enhanced Maintenance fallback with better information display
  */
-export const MaintenanceFallback = ({ 
+export const MaintenanceFallback = ({
   title = "Under Maintenance",
   message = "We're currently performing scheduled maintenance to improve your experience. We'll be back shortly!",
   estimatedTime,
@@ -397,10 +397,10 @@ export const MaintenanceFallback = ({
         <div className="maintenance-icon text-yellow-600 mb-6">
           <CloudOff size={64} />
         </div>
-        
+
         <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
         <p className="maintenance-message text-lg text-gray-700 mb-5 leading-relaxed">{message}</p>
-        
+
         {showProgress && (
           <div className="progress-section bg-white/70 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -409,7 +409,7 @@ export const MaintenanceFallback = ({
             </div>
           </div>
         )}
-        
+
         <div className="info-grid grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {estimatedTime && (
             <div className="estimated-time bg-white/70 rounded-lg p-4">
@@ -417,12 +417,12 @@ export const MaintenanceFallback = ({
               <span className="text-gray-700">{estimatedTime}</span>
             </div>
           )}
-          
+
           <div className="current-time bg-white/70 rounded-lg p-4">
             <strong className="block text-gray-800">Current time:</strong>
             <span className="text-gray-700">{currentTime.toLocaleTimeString()}</span>
           </div>
-          
+
           {maintenanceId && (
             <div className="maintenance-id bg-white/70 rounded-lg p-4 md:col-span-2">
               <strong className="block text-gray-800">Maintenance ID:</strong>
@@ -430,33 +430,33 @@ export const MaintenanceFallback = ({
             </div>
           )}
         </div>
-        
+
         <div className="maintenance-actions flex gap-4 justify-center flex-wrap mb-6">
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="btn-refresh flex items-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 transition-all duration-200 hover:transform hover:-translate-y-0.5"
           >
             <RefreshCw size={20} />
             Refresh Page
           </button>
-          
-          <a 
-            href={`mailto:${contactEmail}`} 
+
+          <a
+            href={`mailto:${contactEmail}`}
             className="btn-contact flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 border border-gray-300 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 hover:transform hover:-translate-y-0.5 no-underline"
           >
             Contact Support
           </a>
-          
+
           {alternateUrl && (
-            <a 
-              href={alternateUrl} 
+            <a
+              href={alternateUrl}
               className="btn-alternate flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 hover:transform hover:-translate-y-0.5 no-underline"
             >
               Visit Mobile Site
             </a>
           )}
         </div>
-        
+
         {socialLinks && (
           <div className="social-links">
             <p className="text-gray-700 mb-3">Follow us for updates:</p>
@@ -486,7 +486,7 @@ export const MaintenanceFallback = ({
 export const OfflineFallback = ({ onRetry, showCacheStatus = false }) => {
   const { isOnline, connectionSpeed } = useOnlineStatus();
   const [cacheSize, setCacheSize] = useState(null);
-  
+
   useEffect(() => {
     // Check cache size if supported
     if ('storage' in navigator && showCacheStatus) {
@@ -518,15 +518,15 @@ export const OfflineFallback = ({ onRetry, showCacheStatus = false }) => {
         <div className="offline-icon text-gray-600 mb-4">
           <WifiOff size={48} />
         </div>
-        
+
         <h3 className="text-xl font-semibold text-gray-900 mb-2">You're Offline</h3>
         <p className="offline-message text-gray-600 mb-4 leading-relaxed">
-          {isOnline 
+          {isOnline
             ? "Connection restored! You can try again now."
             : "Please check your internet connection and try again."
           }
         </p>
-        
+
         <div className="connection-status bg-white/70 rounded-lg p-4 mb-5">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
@@ -534,23 +534,23 @@ export const OfflineFallback = ({ onRetry, showCacheStatus = false }) => {
               {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
-          
+
           {isOnline && connectionSpeed !== 'unknown' && (
             <div className="text-sm text-gray-600">
               Connection: <span className="capitalize font-medium">{connectionSpeed}</span>
             </div>
           )}
-          
+
           {showCacheStatus && cacheSize !== null && (
             <div className="text-xs text-gray-500 mt-2">
               Cache: {formatBytes(cacheSize)}
             </div>
           )}
         </div>
-        
+
         {isOnline && onRetry && (
-          <button 
-            onClick={handleRetry} 
+          <button
+            onClick={handleRetry}
             className="btn-retry flex items-center gap-2 px-6 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all duration-200 hover:transform hover:-translate-y-0.5 mx-auto"
           >
             <RefreshCw size={16} />
@@ -563,99 +563,8 @@ export const OfflineFallback = ({ onRetry, showCacheStatus = false }) => {
 };
 
 // Example usage component showing all enhanced fallbacks
-const FallbackShowcase = () => {
-  const [activeDemo, setActiveDemo] = useState('loading');
-  const [progress, setProgress] = useState(0);
+// Redundant component removed, using the one with FallbackStyles at the end
 
-  useEffect(() => {
-    if (activeDemo === 'loading') {
-      const interval = setInterval(() => {
-        setProgress(prev => (prev >= 100 ? 0 : prev + 10));
-      }, 500);
-      return () => clearInterval(interval);
-    }
-  }, [activeDemo]);
-
-  const handleRetry = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log('Retry completed');
-  };
-
-  const demos = {
-    loading: (
-      <LoadingFallback 
-        message="Loading your content..."
-        progress={progress}
-        details="Fetching latest data"
-        timeout={10000}
-        onTimeout={() => console.log('Loading timeout!')}
-      />
-    ),
-    network: (
-      <NetworkErrorFallback 
-        onRetry={handleRetry}
-        message="Connection failed while loading content"
-        errorCode={503}
-        showDiagnostics={true}
-      />
-    ),
-    empty: (
-      <EmptyStateFallback 
-        title="No products found"
-        message="Try adjusting your search filters or browse our featured collections."
-        actionLabel="Browse All Products"
-        secondaryActionLabel="Clear Filters"
-        showBackButton={true}
-      />
-    ),
-    maintenance: (
-      <MaintenanceFallback 
-        estimatedTime="2 hours"
-        maintenanceId="MAINT-2025-001"
-        showProgress={true}
-        progressMessage="Upgrading database systems..."
-        socialLinks={[
-          { label: 'Twitter', url: '#' },
-          { label: 'Status Page', url: '#' }
-        ]}
-      />
-    ),
-    offline: (
-      <OfflineFallback 
-        onRetry={handleRetry}
-        showCacheStatus={true}
-      />
-    )
-  };
-
-  return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Enhanced Fallback UI Components</h1>
-      
-      <div className="demo-controls mb-6">
-        <div className="flex gap-2 flex-wrap">
-          {Object.keys(demos).map(demo => (
-            <button
-              key={demo}
-              onClick={() => setActiveDemo(demo)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeDemo === demo 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {demo.charAt(0).toUpperCase() + demo.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="demo-container">
-        {demos[activeDemo]}
-      </div>
-    </div>
-  );
-};
 
 // Basic CSS styles for fallback components
 const fallbackStyles = `
@@ -805,12 +714,109 @@ const fallbackStyles = `
   }
 `;
 
-// Inject styles if not already present
-if (typeof document !== 'undefined' && !document.getElementById('fallback-styles')) {
-  const styleElement = document.createElement('style');
-  styleElement.id = 'fallback-styles';
-  styleElement.textContent = fallbackStyles;
-  document.head.appendChild(styleElement);
-}
+// Style component for fallback UI
+export const FallbackStyles = () => {
+  return (
+    <style
+      id="fallback-styles"
+      dangerouslySetInnerHTML={{ __html: fallbackStyles }}
+    />
+  );
+};
+
+// Example usage component showing all enhanced fallbacks
+const FallbackShowcase = () => {
+  const [activeDemo, setActiveDemo] = useState('loading');
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (activeDemo === 'loading') {
+      const interval = setInterval(() => {
+        setProgress(prev => (prev >= 100 ? 0 : prev + 10));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [activeDemo]);
+
+  const handleRetry = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log('Retry completed');
+  };
+
+  const demos = {
+    loading: (
+      <LoadingFallback
+        message="Loading your content..."
+        progress={progress}
+        details="Fetching latest data"
+        timeout={10000}
+        onTimeout={() => console.log('Loading timeout!')}
+      />
+    ),
+    network: (
+      <NetworkErrorFallback
+        onRetry={handleRetry}
+        message="Connection failed while loading content"
+        errorCode={503}
+        showDiagnostics={true}
+      />
+    ),
+    empty: (
+      <EmptyStateFallback
+        title="No products found"
+        message="Try adjusting your search filters or browse our featured collections."
+        actionLabel="Browse All Products"
+        secondaryActionLabel="Clear Filters"
+        showBackButton={true}
+      />
+    ),
+    maintenance: (
+      <MaintenanceFallback
+        estimatedTime="2 hours"
+        maintenanceId="MAINT-2025-001"
+        showProgress={true}
+        progressMessage="Upgrading database systems..."
+        socialLinks={[
+          { label: 'Twitter', url: '#' },
+          { label: 'Status Page', url: '#' }
+        ]}
+      />
+    ),
+    offline: (
+      <OfflineFallback
+        onRetry={handleRetry}
+        showCacheStatus={true}
+      />
+    )
+  };
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto">
+      <FallbackStyles />
+      <h1 className="text-2xl font-bold mb-6">Enhanced Fallback UI Components</h1>
+
+      <div className="demo-controls mb-6">
+        <div className="flex gap-2 flex-wrap">
+          {Object.keys(demos).map(demo => (
+            <button
+              key={demo}
+              onClick={() => setActiveDemo(demo)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeDemo === demo
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+            >
+              {demo.charAt(0).toUpperCase() + demo.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="demo-container">
+        {demos[activeDemo]}
+      </div>
+    </div>
+  );
+};
 
 export default FallbackShowcase;

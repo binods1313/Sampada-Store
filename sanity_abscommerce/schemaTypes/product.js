@@ -56,7 +56,7 @@ export default defineType({
       type: 'text', // Changed to 'text' for potentially longer descriptions
       rows: 5, // Gives a larger input area in Sanity Studio
     }),
-    
+
     // --- NEW: Product Specifications Field ---
     defineField({
       name: 'specifications',
@@ -96,7 +96,7 @@ export default defineType({
       ],
     }),
     // --- END NEW: Product Specifications Field ---
-    
+
     // --- NEW: Product Variant Field ---
     defineField({
       name: 'variants',
@@ -177,21 +177,21 @@ export default defineType({
               // Safely determine price and discount, falling back to 0 if undefined/null
               const actualPrice = (variantPrice !== undefined && variantPrice !== null) ? variantPrice : (basePrice || 0);
               const actualDiscount = (variantDiscount !== undefined && variantDiscount !== null) ? variantDiscount : (baseDiscount || 0);
-              
+
               const displayPrice = actualPrice * (1 - (actualDiscount / 100));
               const displayStock = (variantStock !== undefined && variantStock !== null) ? variantStock : 'N/A'; // Handle missing stock
 
               let subtitleParts = [];
               if (typeof displayPrice === 'number' && !isNaN(displayPrice)) { // Check if it's a valid number
-                  subtitleParts.push(`$${displayPrice.toFixed(2)}`);
+                subtitleParts.push(`$${displayPrice.toFixed(2)}`);
               } else {
-                  subtitleParts.push('Price: N/A'); // Fallback if price is invalid
+                subtitleParts.push('Price: N/A'); // Fallback if price is invalid
               }
               if (actualDiscount > 0) {
-                  subtitleParts.push(`${actualDiscount}% OFF`);
+                subtitleParts.push(`${actualDiscount}% OFF`);
               }
               subtitleParts.push(`Stock: ${displayStock}`);
-              
+
               return {
                 title: `${colorName || 'No Color'} / ${size || 'No Size'}`,
                 subtitle: subtitleParts.filter(Boolean).join(' | '),
@@ -216,6 +216,15 @@ export default defineType({
       },
     }),
     // --- END NEW: Size Chart Field ---
+
+    // --- NEW: Technical Specifications Table ---
+    defineField({
+      name: 'technicalSpecs',
+      title: 'Technical Specifications Table',
+      type: 'table',
+      description: 'Detailed product specifications in table format (e.g., Battery Life, Connectivity, Weight, etc.)',
+    }),
+    // --- END NEW: Technical Specifications Table ---
 
     // Keep "insight" fields if you use them (already present, no changes needed)
     defineField({
@@ -289,6 +298,88 @@ export default defineType({
       ]
     }),
 
+    // --- NEW: SEO Fields ---
+    defineField({
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'object',
+      description: 'Search Engine Optimization settings for this product',
+      fields: [
+        defineField({
+          name: 'metaTitle',
+          title: 'Meta Title',
+          type: 'string',
+          description: 'SEO title (50-60 characters recommended)',
+          validation: Rule => Rule.max(60).warning('Meta title should be 50-60 characters for best SEO')
+        }),
+        defineField({
+          name: 'metaDescription',
+          title: 'Meta Description',
+          type: 'text',
+          rows: 3,
+          description: 'SEO description (150-160 characters recommended)',
+          validation: Rule => Rule.max(160).warning('Meta description should be 150-160 characters')
+        }),
+        defineField({
+          name: 'keywords',
+          title: 'SEO Keywords',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'Keywords for search engines (e.g., "cotton t-shirt", "summer wear")',
+          options: {
+            layout: 'tags'
+          }
+        }),
+        defineField({
+          name: 'ogImage',
+          title: 'Social Media Image (OG Image)',
+          type: 'image',
+          description: 'Image for social media sharing (1200x630px recommended)',
+          options: {
+            hotspot: true
+          }
+        }),
+      ],
+      options: {
+        collapsible: true,
+        collapsed: false
+      }
+    }),
+    // --- END NEW: SEO Fields ---
+
+    // --- NEW: Additional Metadata ---
+    defineField({
+      name: 'tags',
+      title: 'Product Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Tags for filtering and categorization (e.g., "bestseller", "new arrival", "eco-friendly")',
+      options: {
+        layout: 'tags'
+      }
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Product',
+      type: 'boolean',
+      description: 'Mark this product as featured to display on homepage',
+      initialValue: false
+    }),
+    defineField({
+      name: 'trending',
+      title: 'Trending Product',
+      type: 'boolean',
+      description: 'Mark this product as trending',
+      initialValue: false
+    }),
+    defineField({
+      name: 'launchDate',
+      title: 'Launch Date',
+      type: 'datetime',
+      description: 'When this product was/will be launched'
+    }),
+    // --- END NEW: Additional Metadata ---
+
     defineField({
       name: 'status',
       title: 'Status',
@@ -319,7 +410,7 @@ export default defineType({
     },
     prepare({ title, media, price, discount, inventory, categoryName, status, variants }) {
       let subtitles = [];
-      
+
       // If variants are present, show a summary
       if (Array.isArray(variants) && variants.length > 0) { // Added Array.isArray check for robustness
         const uniqueColors = new Set(variants.map(v => v.colorName).filter(Boolean)).size; // Filter Boolean
@@ -333,7 +424,7 @@ export default defineType({
         if (discount !== undefined && discount !== null && discount > 0) subtitles.push(`${discount}% OFF`); // Safer check
         if (inventory !== undefined && inventory !== null) subtitles.push(`${inventory} in stock`); // Safer check
       }
-      
+
       if (categoryName) subtitles.push(categoryName);
       if (status) subtitles.push(`Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`);
 

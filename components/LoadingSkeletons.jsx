@@ -73,7 +73,7 @@ export const TextSkeleton = ({ lines = 3, width = '100%' }) => {
   return (
     <div className="text-skeleton">
       {Array.from({ length: lines }).map((_, index) => (
-        <div 
+        <div
           key={index}
           className={`skeleton-line skeleton-shimmer text-skeleton-line-${index === lines - 1 ? 'last' : 'normal'}`}
         ></div>
@@ -85,7 +85,7 @@ export const TextSkeleton = ({ lines = 3, width = '100%' }) => {
 // Image Skeleton
 export const ImageSkeleton = ({ width = '100%', height = '200px', className = '' }) => {
   return (
-    <div 
+    <div
       className={`image-skeleton skeleton-shimmer ${className}`}
     ></div>
   );
@@ -94,19 +94,10 @@ export const ImageSkeleton = ({ width = '100%', height = '200px', className = ''
 // Button Skeleton
 export const ButtonSkeleton = ({ width = '120px', height = '40px' }) => {
   return (
-    <div 
+    <div
       className="button-skeleton skeleton-shimmer"
     ></div>
   );
 };
 
-export default {
-  ProductCardSkeleton,
-  ProductsGridSkeleton,
-  HeroBannerSkeleton,
-  FilterSkeleton,
-  PageLoadingSkeleton,
-  TextSkeleton,
-  ImageSkeleton,
-  ButtonSkeleton
-};
+// No default export to avoid Fast Refresh issues
