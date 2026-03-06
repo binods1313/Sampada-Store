@@ -101,6 +101,7 @@ debug*.log
 # Documentation (optional - include if you want)
 docs/
 docs_1/
+docs-reference/
 *.md
 
 # Scripts (deployment scripts should stay local)
