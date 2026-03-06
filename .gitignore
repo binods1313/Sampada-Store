@@ -1,71 +1,116 @@
-# .gitignore
-# ===========
-
-# Environment Variables
-.env*.local
-.env.development
-.env.production
-.env.test
-.env
-
-# Dependency Directories
-/node_modules/
+# Dependencies
+node_modules/
 /.pnp
 .pnp.js
-.yarn-integrity
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
 
-# Build Artifacts
-/.next/
+# Testing
+/coverage
+
+# Production
+.next/
 /out/
-/dist/
-/build/
-.sanity/
+/build
 
-# Log Files
+# Environment variables (CRITICAL - Never commit these!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production
+.env.production.local
+.env.database.example
+
+# Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+lerna-debug.log*
 
-# System Files
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-System Volume Information
-$RECYCLE.BIN
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Editor/IDE
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Directory for instrumented libs
+lib-cov
 
-# Security
-*.pem
-*.key
-*.cert
-*.crt
-*.pgp
-
-# Sanity Studio Specific
-.sanity/
-sanity.json
-static/admin/
-
-# Test Coverage
-/coverage/
+# Coverage directory
+coverage/
 .nyc_output/
 
-# Optional
+# Cache directories
 .cache/
-.tmp/
+.parcel-cache/
+.eslintcache
+
+# Build output
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+tmp/
 temp/
+
+# GCP
+.gcloudignore
+gcs-key.json
+*.key
+*.pem
+
+# Secrets
+*.secret
+secrets/
+
+# Database
+*.sqlite
+*.sqlite3
+prisma/migrations/
+
+# Planning (keep local)
+.planning/
+
+# Test files
+test-*.js
+test-*.ts
+test-*.tsx
+
+# Debug files
+debug.log
+debug*.log
+
+# Backups
+*.bak
+*.backup
+*~
+
+# Documentation (optional - include if you want)
+docs/
+docs_1/
+*.md
+
+# Scripts (deployment scripts should stay local)
+scripts/deploy-*.sh
+scripts/migrate-*.ts
+
+# Analysis
+analyze/
+
+# Misc
+.qodo/
+.kiro/
+.gemini/

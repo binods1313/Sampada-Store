@@ -253,9 +253,9 @@ export const getServerSideProps = async () => {
       })
     ]);
 
-    // Log for debugging
-    console.log(`Fetched ${products?.length || 0} products`);
-    console.log('Banner data:', bannerData);
+    // Removed console.logs to prevent Fast Refresh reload loop
+    // console.log(`Fetched ${products?.length || 0} products`);
+    // console.log('Banner data:', bannerData);
 
     return {
       props: {

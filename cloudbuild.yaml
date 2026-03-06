@@ -1,0 +1,85 @@
+# Cloud Build configuration for Sampada
+# Builds Docker image and deploys to Cloud Run
+
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/sampada'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SANITY_PROJECT_ID=7lh35oho'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SANITY_DATASET=production'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SANITY_API_VERSION=2024-05-18'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_STRIPE_DESIGNER_KEY=pk_test_51RHrYGQsiLOyjINSHkBeq8XbTtFn1X6732loExPujNcAkP35LR3Pw2hcbWfvnR6zjUEAf7MuHxEM3EgVx141Feal00cJ7TzcaR'
+      - '.'
+
+  # Step 2: Push image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push'
+    args: ['push', 'gcr.io/$PROJECT_ID/sampada']
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'sampada'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/sampada'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--concurrency'
+      - '80'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'NODE_ENV=production,NEXTAUTH_SECRET=PFBN0MFKQrQ17xjMbNVi1GXqPzixPFrfgElWdXYx4ZPU9WRDkbspKgT5eRA9qf3YZig712gRwZO'
+      - '--add-cloudsql-instances'
+      - '$PROJECT_ID:us-central1:sampada-production'
+      - '--set-secrets'
+      - 'DATABASE_URL=DATABASE_URL:latest'
+      - '--set-secrets'
+      - 'STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest'
+      - '--set-secrets'
+      - 'STRIPE_PUBLISHABLE_KEY=STRIPE_PUBLISHABLE_KEY:latest'
+      - '--set-secrets'
+      - 'STRIPE_DESIGNER_PRO_PRICE_ID=STRIPE_DESIGNER_PRO_PRICE_ID:latest'
+      - '--set-secrets'
+      - 'STRIPE_DESIGNER_ULTRA_PRICE_ID=STRIPE_DESIGNER_ULTRA_PRICE_ID:latest'
+      - '--set-secrets'
+      - 'STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest'
+
+  # Step 4: Get Cloud Run URL
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'get-url'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Deployment complete!"
+        echo "Service URL:"
+        gcloud run services describe sampada --region us-central1 --format 'value(status.url)'
+
+images:
+  - 'gcr.io/$PROJECT_ID/sampada'
+
+# Timeout for entire build
+timeout: '1200s'
+
+# Logging configuration
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -19,7 +19,8 @@ export function DesignerProvider({ children }) {
             fetchDesigns();
             fetchDesignerStatus();
         }
-    }, [session?.user?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session?.user?.id]); // Only re-run when user ID changes
 
     async function fetchDesigns() {
         try {

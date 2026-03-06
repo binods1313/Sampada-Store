@@ -17,8 +17,9 @@ const handle = app.getRequestHandler();
 
 async function startServer() {
   try {
-    // Initialize Kiro runtime before starting the server
-    console.log('Initializing Kiro runtime...');
+    // Initialize Kiro runtime before starting the server (only log in production)
+    const shouldLog = process.env.NODE_ENV === 'production' || process.env.DEBUG_KIRO === 'true';
+    if (shouldLog) console.log('Initializing Kiro runtime...');
     await initializeRuntime();
 
     // Prepare Next.js
