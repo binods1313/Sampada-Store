@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(cmd //c \"rmdir /s /q abscommerce\")",
+      "Bash(powershell -Command \"Remove-Item -Path 'abscommerce' -Recurse -Force -ErrorAction SilentlyContinue\")",
+      "Bash(git clean:*)",
+      "Bash(mkdir:*)"
+    ]
+  }
+}
