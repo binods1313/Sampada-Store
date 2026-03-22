@@ -121,22 +121,33 @@
   margin-top: 8px;
 }
 
-/* Right emblem */
-.emblemWrapper {
+/* Right emblem/image wrapper */
+.imageWrapper {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 400px;
+  height: 400px;
 }
 
-.emblemSvg {
-  filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.5));
-  animation: emblemFloat 6s ease-in-out infinite;
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
-@keyframes emblemFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
 }
 
 /* Shop Now button */
@@ -180,9 +191,9 @@
     justify-content: center;
     padding: 0 32px;
   }
-  .emblemSvg {
-    width: 220px;
-    height: 220px;
+  .imageWrapper {
+    width: 300px;
+    height: 300px;
   }
 }
 
@@ -196,8 +207,8 @@
   .shopNowLink {
     padding: 0 20px;
   }
-  .emblemSvg {
-    width: 180px;
-    height: 180px;
+  .imageWrapper {
+    width: 250px;
+    height: 250px;
   }
 }
