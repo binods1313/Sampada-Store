@@ -1,0 +1,203 @@
+/* HomeHeroBanner.module.css */
+
+.hero {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 60%, #f0f0f0 100%);
+  color: #1a1a2e;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0 0 28px 0;
+}
+
+/* Subtle decorative gradient blobs */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 57, 43, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Announcement / desc bar */
+.announcementBar {
+  background: rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 40px;
+  text-align: center;
+}
+
+.announcementBar p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Main hero inner layout */
+.heroInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 60px 32px;
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Left text */
+.heroText {
+  flex: 1;
+  max-width: 640px;
+}
+
+.smallLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c9a227;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+
+.winterDrop {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.5px;
+}
+
+.heroHeading {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  line-height: 0.95;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.heroLine1 {
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #1a1a2e;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.heroLine2 {
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #1a1a2e;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.heroLine3 {
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: #c9a227;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+/* Right emblem */
+.emblemWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emblemSvg {
+  filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.5));
+  animation: emblemFloat 6s ease-in-out infinite;
+}
+
+@keyframes emblemFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Shop Now button */
+.shopNowLink {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.shopNowBtn {
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 20px rgba(192, 57, 43, 0.4);
+}
+
+.shopNowBtn:hover {
+  background: #a93226;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(192, 57, 43, 0.55);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .heroInner {
+    flex-direction: column;
+    padding: 36px 32px 24px;
+    text-align: center;
+    gap: 28px;
+  }
+  .shopNowLink {
+    justify-content: center;
+    padding: 0 32px;
+  }
+  .emblemSvg {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroInner {
+    padding: 24px 20px 16px;
+  }
+  .announcementBar {
+    padding: 8px 16px;
+  }
+  .shopNowLink {
+    padding: 0 20px;
+  }
+  .emblemSvg {
+    width: 180px;
+    height: 180px;
+  }
+}
