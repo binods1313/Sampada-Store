@@ -32,12 +32,11 @@ import {
   Gift,
   Smartphone,
   Baby,
-  Pet,
+  Dog,
   Car,
   Plane,
   BookOpen,
   Coffee,
-  Music,
   Gamepad2,
 } from "lucide-react";
 
@@ -155,7 +154,7 @@ const CATEGORIES = [
 // Icon mapping for Accessories subcategories
 const ACCESSORY_ICONS = {
   "Baby Accessories": Baby,
-  Pets: Pet,
+  Pets: Dog,
   "Car Accessories": Car,
   "Travel Accessories": Plane,
   "Stationery Accessories": BookOpen,
