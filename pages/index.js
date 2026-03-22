@@ -3,13 +3,13 @@ import React from 'react';
 import Head from 'next/head';
 import { client } from '../lib/client';
 
-// TEMP: Comment out MegaNavbar to isolate the issue
+// TEMP: Comment out ALL components to isolate the issue
 // import MegaNavbar from '../components/HomePage/MegaNavbar';
-import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
-import CollectionsSection from '../components/HomePage/CollectionsSection';
-import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
-import PromoBanner from '../components/HomePage/PromoBanner';
-import SampadaFooter from '../components/HomePage/SampadaFooter';
+// import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
+// import CollectionsSection from '../components/HomePage/CollectionsSection';
+// import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
+// import PromoBanner from '../components/HomePage/PromoBanner';
+// import SampadaFooter from '../components/HomePage/SampadaFooter';
 
 const Home = ({ products, bannerData }) => {
   return (
@@ -27,30 +27,16 @@ const Home = ({ products, bannerData }) => {
         />
       </Head>
 
-      {/* ── 1. Navigation ── */}
-      {/* TEMP: Using placeholder instead of MegaNavbar */}
-      <nav className="border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-center">
-            <p className="text-muted-foreground">Navbar Placeholder - Debugging</p>
-          </div>
+      {/* ── DEBUG: Minimal page ── */}
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Debug Mode</h1>
+          <p className="text-muted-foreground">All components commented out</p>
+          <p className="text-sm text-muted-foreground mt-4">
+            Products: {products?.length || 0} | Banner: {bannerData ? 'Yes' : 'No'}
+          </p>
         </div>
-      </nav>
-
-      {/* ── 2. Hero Banner ── */}
-      <HomeHeroBanner heroBanner={bannerData} />
-
-      {/* ── 3. Collections ── */}
-      <CollectionsSection />
-
-      {/* ── 4. Featured Products ── */}
-      <FeaturedProductsSection products={products} />
-
-      {/* ── 5. Promo Banner ── */}
-      <PromoBanner />
-
-      {/* ── 6. Footer ── */}
-      <SampadaFooter />
+      </div>
     </>
   );
 };
