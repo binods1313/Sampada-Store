@@ -13,13 +13,8 @@ const nextConfigCore = {
   outputFileTracingRoot: path.join(__dirname, './'),
 
   // Turbopack config (required for Next.js 16+)
-  turbopack: {
-    // Resolve aliases for Turbopack
-    resolveAlias: {
-      'rxjs': path.join(__dirname, './node_modules/rxjs'),
-      'rxjs/operators': path.join(__dirname, './node_modules/rxjs/operators'),
-    },
-  },
+  // Using empty config to silence warning - rxjs aliases handled by webpack only
+  turbopack: {},
 
   // ISR and build optimizations
   experimental: {
