@@ -281,18 +281,18 @@ const MegaNavbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between gap-4">
+      <nav className="sticky top-0 z-50 w-full bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 text-xl font-bold">
+            <Link href="/" className="flex-shrink-0 text-2xl font-bold text-gray-900">
               Sampada
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+            {/* Desktop Navigation - Horizontal Center */}
+            <div className="hidden lg:flex flex-1 justify-center">
               <NavigationMenu>
-                <NavigationMenuList>
+                <NavigationMenuList className="flex flex-row gap-1">
                   {/* Static Links */}
                   <NavigationMenuItem>
                     <Link href="/" legacyBehavior passHref>
@@ -307,7 +307,7 @@ const MegaNavbar = () => {
                   {/* Category Dropdowns */}
                   {CATEGORIES.map((category) => (
                     <NavigationMenuItem key={category.label}>
-                      <NavigationMenuTrigger className="text-sm">
+                      <NavigationMenuTrigger className="text-sm font-medium">
                         {category.label}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
