@@ -39,16 +39,29 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
   };
     
   return (
-    <div ref={ref} className={`product-card ${!isIntersecting ? 'loading-pulse' : ''}`}>
+    <div ref={ref} className={`product-card ${!isIntersecting ? 'loading-pulse' : ''}`} style={{ position: 'relative' }}>
       <Link href={`/product/${slug?.current}`}>
-        <div className="product-content-wrapper"> 
-          
-          {/* Sale Badge */}             
-          {hasDiscount && (               
-            <div className="sale-badge">                 
-               {discount}% OFF               
-            </div>             
-          )} 
+        <div className="product-content-wrapper">
+
+          {/* % OFF Badge */}
+          {hasDiscount && (
+            <div style={{
+              position: 'absolute',
+              top: '8px',
+              left: '8px',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              fontSize: '11px',
+              fontWeight: '700',
+              padding: '3px 8px',
+              borderRadius: '999px',
+              zIndex: 10,
+              textAlign: 'center',
+              whiteSpace: 'nowrap'
+            }}>
+              {discount}% OFF
+            </div>
+          )}
 
           {/* Wishlist Button */}
           <div className="wishlist-button-container">

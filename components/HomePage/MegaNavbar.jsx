@@ -18,47 +18,37 @@ export default function MegaNavbar() {
 
   return (
     <>
-      <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex flex-row items-center justify-between">
+      <header className="w-full bg-white border-b border-gray-200
+                         sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16
+                        flex flex-row items-center justify-between">
+
           {/* Logo */}
-          <Link href="/" className="font-bold text-xl text-black">
+          <Link href="/"
+                className="font-extrabold text-2xl text-black tracking-tight shrink-0">
             Sampada
           </Link>
 
-          {/* Nav Links - horizontal */}
-          <nav className="hidden md:flex flex-row items-center gap-6">
-            <Link href="/" className="text-sm text-gray-700 hover:text-gray-900">
-              Home
-            </Link>
-            <Link href="/collections/mens-tshirts" className="text-sm text-gray-700 hover:text-gray-900">
-              Men's Clothing
-            </Link>
-            <Link href="/collections/womens-tshirts" className="text-sm text-gray-700 hover:text-gray-900">
-              Women's Clothing
-            </Link>
-            <Link href="/collections/his-hers" className="text-sm text-gray-700 hover:text-gray-900">
-              His & Hers
-            </Link>
-            <Link href="/category/accessories" className="text-sm text-gray-700 hover:text-gray-900">
-              Accessories
-            </Link>
-            <Link href="/collections/home-living" className="text-sm text-gray-700 hover:text-gray-900">
-              Home & Living
-            </Link>
-            <Link href="/stories" className="text-sm text-gray-700 hover:text-gray-900">
-              Sampada Stories
-            </Link>
-            <Link href="/contact" className="text-sm text-gray-700 hover:text-gray-900">
-              Contact
-            </Link>
+          {/* Nav Links */}
+          <nav className="hidden md:flex flex-row items-center gap-5
+                          text-sm font-semibold text-gray-700">
+            <Link href="/" className="hover:text-black whitespace-nowrap">Home</Link>
+            <Link href="/collections/mens-tshirts" className="hover:text-black whitespace-nowrap">Men's Clothing</Link>
+            <Link href="/collections/womens-tshirts" className="hover:text-black whitespace-nowrap">Women's Clothing</Link>
+            <Link href="/collections/his-hers" className="hover:text-black whitespace-nowrap">His & Hers</Link>
+            <Link href="/category/accessories" className="hover:text-black whitespace-nowrap">Accessories</Link>
+            <Link href="/collections/home-living" className="hover:text-black whitespace-nowrap">Home & Living</Link>
+            <Link href="/stories" className="hover:text-black whitespace-nowrap">Sampada Stories</Link>
+            <Link href="/contact" className="hover:text-black whitespace-nowrap">Contact</Link>
           </nav>
 
-          {/* Right actions */}
-          <div className="flex flex-row items-center gap-4">
+          {/* Right Actions */}
+          <div className="flex flex-row items-center gap-3 shrink-0">
             {!session && !loading && (
               <button
                 onClick={() => setIsLoginModalOpen(true)}
-                className="text-sm text-gray-700 hover:text-gray-900"
+                className="bg-red-600 text-white px-4 py-2 rounded-md
+                           text-sm font-semibold hover:bg-red-700 whitespace-nowrap"
               >
                 Sign In
               </button>
@@ -66,7 +56,7 @@ export default function MegaNavbar() {
             {session?.user && (
               <Link
                 href="/account"
-                className="text-sm text-gray-700 hover:text-gray-900"
+                className="text-sm font-semibold text-gray-700 hover:text-black whitespace-nowrap"
               >
                 {session.user.name || "Account"}
               </Link>
@@ -74,10 +64,10 @@ export default function MegaNavbar() {
 
             <button
               onClick={() => setShowCart(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-full"
+              className="relative text-xl p-2 hover:bg-gray-100 rounded-full"
               aria-label="Open Cart"
             >
-              <AiOutlineShopping className="h-5 w-5" />
+              <AiOutlineShopping />
               {totalQuantities > 0 && (
                 <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
                   {totalQuantities}
