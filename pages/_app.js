@@ -1,7 +1,13 @@
-// pages/_app.js - DEBUG: Adding back ALL original providers
+// pages/_app.js - DEBUG: Direct imports instead of barrel
 import '../styles/globals.css';
-import { Layout, ErrorMonitorDemo, TestSuiteNavigator, EnhancedErrorHandlerNavigator, ErrorBoundaryWithFallback, ImageOptimizerTestNavigator } from '../components';
-import { OfflineWrapper } from '../components';
+// Direct imports to avoid barrel file issues
+import Layout from '../components/Layout';
+import ErrorBoundaryWithFallback from '../components/ErrorBoundaryWithFallback';
+import ErrorMonitorDemo from '../components/ErrorMonitorDemo';
+import TestSuiteNavigator from '../components/TestSuiteNavigator';
+import EnhancedErrorHandlerNavigator from '../components/EnhancedErrorHandlerNavigator';
+import ImageOptimizerTestNavigator from '../components/ImageOptimizerTestNavigator';
+import { OfflineWrapper } from '../components/FallbackUI-Examples';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
 import { UIProvider } from '../context/StateContext';
