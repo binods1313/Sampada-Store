@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { client } from '../lib/client';
 
 // Using direct imports instead of barrel file
+import MegaNavbar from '../components/HomePage/MegaNavbar';
 import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
 import CollectionsSection from '../components/HomePage/CollectionsSection';
 import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
@@ -27,13 +28,7 @@ const Home = ({ products, bannerData }) => {
       </Head>
 
       {/* ── 1. Navigation ── */}
-      <nav className="border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-center">
-            <p className="text-muted-foreground">Navbar Placeholder</p>
-          </div>
-        </div>
-      </nav>
+      <MegaNavbar />
 
       {/* ── 2. Hero Banner ── */}
       <HomeHeroBanner heroBanner={bannerData} />
