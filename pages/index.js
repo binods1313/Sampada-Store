@@ -3,7 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import { client } from '../lib/client';
 
-import HomeNavbar from '../components/HomePage/HomeNavbar';
+import MegaNavbar from '../components/HomePage/MegaNavbar';
 import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
 import CollectionsSection from '../components/HomePage/CollectionsSection';
 import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
@@ -27,7 +27,7 @@ const Home = ({ products, bannerData }) => {
       </Head>
 
       {/* ── 1. Navigation ── */}
-      <HomeNavbar />
+      <MegaNavbar />
 
       {/* ── 2. Hero Banner ── */}
       <HomeHeroBanner heroBanner={bannerData} />
