@@ -66,4 +66,6 @@ static/admin/
 # Optional
 .cache/
 .tmp/
-temp/
+temp/"notebooklm-py/"  
+"ui-ux-pro-max-skill/"  
+"ui/"  
