@@ -50,7 +50,6 @@ function VisualSearch() {
             >
                 📷
             </button>
-
             {/* Modal/Dropdown */}
             {isOpen && (
                 <div className="visual-search-modal" style={{
@@ -135,7 +134,10 @@ function VisualSearch() {
                                     <div className="products-grid" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                         <h3 style={{ fontSize: '1rem', margin: '0' }}>Found {results.total_matches} similar items:</h3>
                                         {results.matching_products && results.matching_products.length > 0 ? results.matching_products.map(product => (
-                                            <Link href={`/product/${product.slug?.current || product.product_id}`} key={product.product_id} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Link
+                                                href={`/product/${product.slug?.current || product.product_id}`}
+                                                key={product.product_id}
+                                                style={{ textDecoration: 'none', color: 'inherit' }}>
                                                 <div className="product-card" style={{ display: 'flex', gap: '10px', border: '1px solid #eee', padding: '10px', borderRadius: '4px' }}>
                                                     <img src={product.image_url} alt={product.name} style={{ width: '60px', height: '60px', objectFit: 'cover' }} />
                                                     <div>
