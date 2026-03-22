@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js build output
+.next
+
+# Sanity Studio
+sanity_abscommerce/node_modules
+sanity_abscommerce/.next
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Documentation
+*.md
+!README.md
+
+# Local env files
+.env*.local
+
+# Test files
+__tests__
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+coverage
+
+# Build artifacts
+dist
+build
+out
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker
+
+# Cloud
+.gcloudignore

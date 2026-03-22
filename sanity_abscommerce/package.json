@@ -15,13 +15,15 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/cli": "^3.87.1",
+    "@sanity/cli": "^6.1.5",
     "@sanity/code-input": "^5.1.2",
     "@sanity/icons": "^3.7.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^4.22.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "glob": "^13.0.6",
+    "prismjs": "^1.30.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-icons": "^5.5.0",
     "sanity": "^4.22.0",
     "styled-components": "^6.1.15"
@@ -44,5 +46,11 @@
     "bracketSpacing": false,
     "type": "module",
     "singleQuote": true
+  },
+  "resolutions": {
+    "js-yaml": "^4.1.0",
+    "prismjs": "^1.30.0",
+    "refractor": "^4.8.0",
+    "react-refractor": "^2.3.0"
   }
 }

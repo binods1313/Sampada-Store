@@ -2,6 +2,7 @@
 import React from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 import Navbar from './Navbar.jsx';
 import Footer from './Footer';
@@ -10,24 +11,36 @@ import { useUIContext } from '../context/StateContext';
 // Dynamically import CartSlider
 const CartSlider = dynamic(() => import('./CartSlider'), { ssr: false });
 
+// Pages where the global Navbar and Footer are hidden
+// (these pages provide their own nav/footer)
+const PAGES_WITHOUT_LAYOUT = ['/'];
+
 const Layout = ({ children }) => {
   const { showCart } = useUIContext();
+  const router = useRouter();
+  const hideLayout = PAGES_WITHOUT_LAYOUT.includes(router.pathname);
 
   return (
     <div className="layout">
       <Head>
-        <title>Lumina Store</title>
+        <title>Sampada Store</title>
       </Head>
-      <header>
-        <Navbar />
-      </header>
-      <main className="main-container">
+      {/* Only show global Navbar on non-homepage pages */}
+      {!hideLayout && (
+        <header>
+          <Navbar />
+        </header>
+      )}
+      <main className={hideLayout ? '' : 'main-container'}>
         {children}
       </main>
-      <footer>
-        <Footer />
-      </footer>
-      {/* Dynamically render CartSlider if needed */}
+      {/* Only show global Footer on non-homepage pages */}
+      {!hideLayout && (
+        <footer>
+          <Footer />
+        </footer>
+      )}
+      {/* CartSlider is always available globally */}
       {showCart && <CartSlider isOpen={showCart} />}
     </div>
   );

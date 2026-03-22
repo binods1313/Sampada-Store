@@ -8,15 +8,18 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfigCore = {
   reactStrictMode: true,
-  
-  // Fix workspace root detection warning
+
+  // Fix slow filesystem warning on Windows/network drives
+  // Redirects build output tracing to a faster path
   outputFileTracingRoot: path.join(__dirname, './'),
   
-  // ISR and build optimizations
+  // Disable slow filesystem detection for dev on network drives
   experimental: {
     // Disabled optimizeCss due to hardcoded critters dependency in Next.js
     // optimizeCss: true,
     scrollRestoration: true,
+    // Suppress slow filesystem warning
+    disableStartWatcher: false,
   },
   
   // Improve dev experience

@@ -1,0 +1,136 @@
+/* CollectionsSection.module.css */
+
+.section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.heading {
+  text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 40px 0;
+  letter-spacing: -0.5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 320px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.35s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Big decorative emoji in background */
+.cardEmoji {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -68%);
+  font-size: 110px;
+  opacity: 0.12;
+  pointer-events: none;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  user-select: none;
+  line-height: 1;
+}
+
+.card:hover .cardEmoji {
+  transform: translate(-50%, -72%) scale(1.1);
+  opacity: 0.18;
+}
+
+/* Dark overlay */
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+
+.card:hover .cardOverlay {
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Content sits at bottom */
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+}
+
+.cardLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.cardBtn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  width: fit-content;
+}
+
+.cardBtn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .section {
+    padding: 40px 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    min-height: 220px;
+  }
+  .section {
+    padding: 32px 16px;
+  }
+}
