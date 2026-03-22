@@ -10,22 +10,22 @@ const nextConfigCore = {
   reactStrictMode: true,
 
   // Fix slow filesystem warning on Windows/network drives
-  // Redirects build output tracing to a faster path
   outputFileTracingRoot: path.join(__dirname, './'),
-  
-  // Disable slow filesystem detection for dev on network drives
+
+  // Turbopack config (required for Next.js 16+)
+  turbopack: {
+    // Resolve aliases for Turbopack
+    resolveAlias: {
+      'rxjs': path.join(__dirname, './node_modules/rxjs'),
+      'rxjs/operators': path.join(__dirname, './node_modules/rxjs/operators'),
+    },
+  },
+
+  // ISR and build optimizations
   experimental: {
     // Disabled optimizeCss due to hardcoded critters dependency in Next.js
     // optimizeCss: true,
     scrollRestoration: true,
-    // Suppress slow filesystem warning
-    disableStartWatcher: false,
-  },
-  
-  // Improve dev experience
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
   },
   images: {
     remotePatterns: [
