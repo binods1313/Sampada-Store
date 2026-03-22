@@ -18,7 +18,6 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -393,100 +392,118 @@ const MegaNavbar = () => {
               </Button>
 
               {/* Mobile Menu Trigger */}
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="lg:hidden"
-                    aria-label="Toggle menu"
-                  >
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                  <ScrollArea className="h-full py-6">
-                    <div className="flex flex-col gap-4">
-                      {/* Logo in mobile menu */}
-                      <Link
-                        href="/"
-                        className="text-xl font-bold mb-4"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Sampada
-                      </Link>
-                      <Separator />
-
-                      {/* Static Links */}
-                      {staticLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          className="text-sm font-medium py-2 hover:text-primary transition-colors"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-
-                      <Separator />
-
-                      {/* Category Links with Subcategories */}
-                      {CATEGORIES.map((category) => (
-                        <div key={category.label} className="space-y-2">
-                          <Link
-                            href={category.href}
-                            className="text-base font-semibold py-2 block"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {category.label}
-                          </Link>
-                          <div className="pl-4 space-y-1 border-l-2 border-muted">
-                            {category.subcategories.map((sub) => (
-                              <Link
-                                key={sub}
-                                href={`/category/${toSlug(sub)}`}
-                                className="text-sm text-muted-foreground py-1 block hover:text-foreground transition-colors"
-                                onClick={() => setMobileMenuOpen(false)}
-                              >
-                                {sub}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-
-                      <Separator />
-
-                      {/* Auth in mobile */}
-                      {!session && (
-                        <Button
-                          variant="default"
-                          onClick={() => {
-                            setMobileMenuOpen(false);
-                            setIsLoginModalOpen(true);
-                          }}
-                          className="w-full"
-                        >
-                          Sign In
-                        </Button>
-                      )}
-                      {session?.user && (
-                        <Link
-                          href="/account"
-                          className="text-sm font-medium py-2 text-muted-foreground"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {session.user.name || "Account"}
-                        </Link>
-                      )}
-                    </div>
-                  </ScrollArea>
-                </SheetContent>
-              </Sheet>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            {/* Slide-out menu */}
+            <div className="fixed right-0 top-0 bottom-0 w-[300px] sm:w-[400px] bg-background z-50 lg:hidden shadow-lg">
+              <ScrollArea className="h-full py-6 px-4">
+                <div className="flex flex-col gap-4">
+                  {/* Close button */}
+                  <div className="flex justify-between items-center mb-4">
+                    <Link
+                      href="/"
+                      className="text-xl font-bold"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Sampada
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Menu className="h-5 w-5 rotate-45" />
+                    </Button>
+                  </div>
+                  <Separator />
+
+                  {/* Static Links */}
+                  {staticLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="text-sm font-medium py-2 hover:text-primary transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+
+                  <Separator />
+
+                  {/* Category Links with Subcategories */}
+                  {CATEGORIES.map((category) => (
+                    <div key={category.label} className="space-y-2">
+                      <Link
+                        href={category.href}
+                        className="text-base font-semibold py-2 block"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {category.label}
+                      </Link>
+                      <div className="pl-4 space-y-1 border-l-2 border-muted">
+                        {category.subcategories.map((sub) => (
+                          <Link
+                            key={sub}
+                            href={`/category/${toSlug(sub)}`}
+                            className="text-sm text-muted-foreground py-1 block hover:text-foreground transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {sub}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <Separator />
+
+                  {/* Auth in mobile */}
+                  {!session && (
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setIsLoginModalOpen(true);
+                      }}
+                      className="w-full"
+                    >
+                      Sign In
+                    </Button>
+                  )}
+                  {session?.user && (
+                    <Link
+                      href="/account"
+                      className="text-sm font-medium py-2 text-muted-foreground"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {session.user.name || "Account"}
+                    </Link>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </>
+        )}
       </nav>
 
       <LoginModal
