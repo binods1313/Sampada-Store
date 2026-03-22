@@ -17,7 +17,6 @@ import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -38,6 +37,21 @@ import {
   Coffee,
   Gamepad2,
 } from "lucide-react";
+
+// DEBUG: Log all imports to find undefined
+if (typeof window !== 'undefined') {
+  console.log('=== MEGA NAVBAR DEBUG ===', {
+    NavigationMenu: typeof NavigationMenu,
+    NavigationMenuList: typeof NavigationMenuList,
+    NavigationMenuItem: typeof NavigationMenuItem,
+    NavigationMenuTrigger: typeof NavigationMenuTrigger,
+    NavigationMenuContent: typeof NavigationMenuContent,
+    NavigationMenuLink: typeof NavigationMenuLink,
+    Button: typeof Button,
+    ScrollArea: typeof ScrollArea,
+    Separator: typeof Separator,
+  });
+}
 
 // Helper to generate slug from label
 const toSlug = (label) =>
@@ -181,38 +195,34 @@ const LeftPanel = ({ category }) => {
       {/* New Arrivals Card */}
       <Link href="/new-arrivals" passHref legacyBehavior>
         <NavigationMenuLink asChild>
-          <Card className="hover:bg-accent/50 transition-colors cursor-pointer border-0 shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold">New Arrivals</p>
-                <p className="text-xs text-muted-foreground">
-                  Latest products
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="hover:bg-accent/50 transition-colors cursor-pointer rounded-lg p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">New Arrivals</p>
+              <p className="text-xs text-muted-foreground">
+                Latest products
+              </p>
+            </div>
+          </div>
         </NavigationMenuLink>
       </Link>
 
       {/* Bestsellers Card */}
       <Link href="/bestsellers" passHref legacyBehavior>
         <NavigationMenuLink asChild>
-          <Card className="hover:bg-accent/50 transition-colors cursor-pointer border-0 shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                <Star className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold">Bestsellers</p>
-                <p className="text-xs text-muted-foreground">
-                  Customer favorites
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="hover:bg-accent/50 transition-colors cursor-pointer rounded-lg p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <Star className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Bestsellers</p>
+              <p className="text-xs text-muted-foreground">
+                Customer favorites
+              </p>
+            </div>
+          </div>
         </NavigationMenuLink>
       </Link>
     </div>
