@@ -3,7 +3,8 @@ import React from 'react';
 import Head from 'next/head';
 import { client } from '../lib/client';
 
-import MegaNavbar from '../components/HomePage/MegaNavbar';
+// TEMP: Comment out MegaNavbar to isolate the issue
+// import MegaNavbar from '../components/HomePage/MegaNavbar';
 import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
 import CollectionsSection from '../components/HomePage/CollectionsSection';
 import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
@@ -27,7 +28,14 @@ const Home = ({ products, bannerData }) => {
       </Head>
 
       {/* ── 1. Navigation ── */}
-      <MegaNavbar />
+      {/* TEMP: Using placeholder instead of MegaNavbar */}
+      <nav className="border-b bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-center">
+            <p className="text-muted-foreground">Navbar Placeholder - Debugging</p>
+          </div>
+        </div>
+      </nav>
 
       {/* ── 2. Hero Banner ── */}
       <HomeHeroBanner heroBanner={bannerData} />
