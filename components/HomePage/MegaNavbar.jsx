@@ -38,21 +38,6 @@ import {
   Gamepad2,
 } from "lucide-react";
 
-// DEBUG: Log all imports to find undefined
-if (typeof window !== 'undefined') {
-  console.log('=== MEGA NAVBAR DEBUG ===', {
-    NavigationMenu: typeof NavigationMenu,
-    NavigationMenuList: typeof NavigationMenuList,
-    NavigationMenuItem: typeof NavigationMenuItem,
-    NavigationMenuTrigger: typeof NavigationMenuTrigger,
-    NavigationMenuContent: typeof NavigationMenuContent,
-    NavigationMenuLink: typeof NavigationMenuLink,
-    Button: typeof Button,
-    ScrollArea: typeof ScrollArea,
-    Separator: typeof Separator,
-  });
-}
-
 // Helper to generate slug from label
 const toSlug = (label) =>
   label
