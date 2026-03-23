@@ -1,0 +1,174 @@
+/* styles/AdminDashboard.module.css */
+
+/* Core Design Tokens */
+.dashboardContainer {
+    --primary-navy: #1a1a2e;
+    --primary-red: #FF3B3B;
+    --primary-white: #FFFFFF;
+    --bg-light: #F8F9FA;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Header Section */
+.headerGroup {
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+}
+
+/* AI Insights Section (Special) */
+.aiSection {
+    background-color: var(--primary-navy);
+    color: var(--primary-white);
+    padding: 2rem;
+    border-radius: 16px;
+    margin-top: 3rem;
+    box-shadow: var(--shadow-card);
+}
+
+.aiTitle {
+    color: var(--primary-white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.aiGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.aiCard {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Components: Dashboard Card */
+.metricCard {
+    background: var(--primary-white);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.metricCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(26, 26, 46, 0.05);
+}
+
+.cardTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.cardValue {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 0.25rem;
+}
+
+/* Components: Tables & Lists */
+.cardContainer {
+    background: var(--primary-white);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.sectionHeader {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Button Styles */
+.btnRestock {
+    background-color: var(--primary-red);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btnRestock:hover {
+    opacity: 0.9;
+}
+
+/* Status Badges */
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badgeSuccess {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.badgePending {
+    background-color: #fffbeb;
+    color: #d97706;
+}
+
+/* Grid Layouts */
+.mainGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.splitGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .splitGrid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "redirects": [
+        {
+            "source": "/:path*",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "sampadastore.com"
+                }
+            ],
+            "destination": "https://sampada.shop/:path*",
+            "permanent": true
+        },
+        {
+            "source": "/:path*",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.sampadastore.com"
+                }
+            ],
+            "destination": "https://sampada.shop/:path*",
+            "permanent": true
+        },
+        {
+            "source": "/:path*",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.sampada.shop"
+                }
+            ],
+            "destination": "https://sampada.shop/:path*",
+            "permanent": true
+        }
+    ],
+    "headers": [
+        {
+            "source": "/:path*",
+            "headers": [
+                {
+                    "key": "X-Primary-Domain",
+                    "value": "sampada.shop"
+                },
+                {
+                    "key": "Strict-Transport-Security",
+                    "value": "max-age=31536000; includeSubDomains; preload"
+                }
+            ]
+        }
+    ]
+}
