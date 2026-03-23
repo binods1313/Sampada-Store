@@ -57,7 +57,10 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
               borderRadius: '999px',
               zIndex: 10,
               textAlign: 'center',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
               {discount}% OFF
             </div>
