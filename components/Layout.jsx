@@ -4,7 +4,7 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-import Navbar from './Navbar.jsx';
+import MegaNavbar from './HomePage/MegaNavbar';
 import Footer from './Footer';
 import { useUIContext } from '../context/StateContext';
 
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
       {/* Only show global Navbar on non-homepage pages */}
       {!hideLayout && (
         <header>
-          <Navbar />
+          <MegaNavbar />
         </header>
       )}
       <main className={hideLayout ? '' : 'main-container'}>

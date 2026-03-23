@@ -217,7 +217,7 @@ export default function MegaNavbar() {
         }}>
           {/* Desktop Actions */}
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            <Link href="/sign-in" style={{
+            <Link href="/api/auth/signin" style={{
               backgroundColor: '#dc2626',
               color: 'white',
               padding: '8px 16px',
@@ -355,7 +355,7 @@ export default function MegaNavbar() {
             </Link>
 
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <Link href="/sign-in" style={{
+              <Link href="/api/auth/signin" style={{
                 backgroundColor: '#dc2626',
                 color: 'white',
                 padding: '12px 24px',
