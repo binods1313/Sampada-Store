@@ -153,22 +153,29 @@ export default function MegaNavbar() {
                         flexDirection: 'column',
                         gap: '10px'
                       }}>
-                        {items.map(item => (
-                          <li key={item}>
-                            <Link
-                              href={`${data.href}/${item.toLowerCase().replace(/[\s&]/g,'-').replace(/-+/g,'-')}`}
-                              style={{
-                                fontSize: '14px',
-                                color: '#4b5563',
-                                textDecoration: 'none'
-                              }}
-                              onMouseEnter={e => (e.currentTarget.style.color = '#000')}
-                              onMouseLeave={e => (e.currentTarget.style.color = '#4b5563')}
-                            >
-                              {item}
-                            </Link>
-                          </li>
-                        ))}
+                        {items.map(item => {
+                          // Generate proper slug for each item
+                          const itemSlug = item.toLowerCase()
+                            .replace(/[&]/g, 'and')
+                            .replace(/[\s-]+/g, '-');
+                          
+                          return (
+                            <li key={item}>
+                              <Link
+                                href={`${data.href}/${itemSlug}`}
+                                style={{
+                                  fontSize: '14px',
+                                  color: '#4b5563',
+                                  textDecoration: 'none'
+                                }}
+                                onMouseEnter={e => (e.currentTarget.style.color = '#000')}
+                                onMouseLeave={e => (e.currentTarget.style.color = '#4b5563')}
+                              >
+                                {item}
+                              </Link>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}
