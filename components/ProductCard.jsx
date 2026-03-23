@@ -51,21 +51,21 @@ export default function ProductCard({ product }) {
       {hasDiscount && (
         <div style={{
           position: 'absolute',
-          top: '12px',
-          left: '12px',
+          top: '8px',
+          left: '8px',
           backgroundColor: '#ef4444',
           color: 'white',
-          fontSize: '12px',
+          fontSize: '11px',
           fontWeight: '700',
-          padding: '4px 10px',
           borderRadius: '999px',
-          zIndex: 20,
-          textAlign: 'center',
-          whiteSpace: 'nowrap',
+          zIndex: 10,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 2px 4px rgba(239,68,68,0.3)'
+          width: '56px',
+          height: '22px',
+          lineHeight: '1',
+          textAlign: 'center'
         }}>
           {discount}% OFF
         </div>
