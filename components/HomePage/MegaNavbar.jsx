@@ -246,16 +246,17 @@ export default function MegaNavbar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
-              display: 'none',
-              '@media (max-width: 768px)': { display: 'flex' },
+              display: 'flex',
               background: 'none',
               border: 'none',
               padding: '8px',
               cursor: 'pointer',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              marginLeft: 'auto'
             }}
             aria-label="Toggle menu"
+            className="lg:hidden"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
