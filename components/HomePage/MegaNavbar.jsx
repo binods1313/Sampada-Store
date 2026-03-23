@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User, Menu, X } from "lucide-react";
 
 const menuItems = {
   "Men's Clothing": {
@@ -42,6 +42,7 @@ const menuItems = {
 
 export default function MegaNavbar() {
   const [activeMenu, setActiveMenu] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header style={{
@@ -207,32 +208,177 @@ export default function MegaNavbar() {
           gap: '12px',
           flexShrink: 0
         }}>
-          <Link href="/sign-in" style={{
-            backgroundColor: '#dc2626',
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: 600,
-            textDecoration: 'none',
-            whiteSpace: 'nowrap',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}>
-            <User size={16} /> Sign In
-          </Link>
-          <Link href="/cart" style={{
-            color: '#1f2937',
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center'
-          }}>
-            <ShoppingCart size={22} />
-          </Link>
+          {/* Desktop Actions */}
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+            <Link href="/sign-in" style={{
+              backgroundColor: '#dc2626',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: 600,
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <User size={16} /> Sign In
+            </Link>
+            <Link href="/cart" style={{
+              color: '#1f2937',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <ShoppingCart size={22} />
+            </Link>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{
+              display: 'none',
+              '@media (max-width: 768px)': { display: 'flex' },
+              background: 'none',
+              border: 'none',
+              padding: '8px',
+              cursor: 'pointer',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
       </div>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div style={{
+          position: 'fixed',
+          top: '64px',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'white',
+          zIndex: 40,
+          overflowY: 'auto',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
+          }}>
+            <Link href="/" style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              color: '#1f2937',
+              textDecoration: 'none',
+              padding: '12px 0',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              Home
+            </Link>
+
+            {Object.entries(menuItems).map(([label, data]) => (
+              <div key={label} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                <Link href={data.href} style={{
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  color: '#1f2937',
+                  textDecoration: 'none',
+                  padding: '12px 0',
+                  display: 'block'
+                }}>
+                  {label}
+                </Link>
+                <div style={{
+                  paddingLeft: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                  paddingBottom: '12px'
+                }}>
+                  {Object.entries(data.sections).flatMap(([_, items]) => 
+                    items.map(item => (
+                      <Link
+                        key={item}
+                        href={`${data.href}/${item.toLowerCase().replace(/[\s&]/g,'-').replace(/-+/g,'-')}`}
+                        style={{
+                          fontSize: '14px',
+                          color: '#6b7280',
+                          textDecoration: 'none'
+                        }}
+                      >
+                        {item}
+                      </Link>
+                    ))
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <Link href="/stories" style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              color: '#1f2937',
+              textDecoration: 'none',
+              padding: '12px 0',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              Sampada Stories
+            </Link>
+
+            <Link href="/contact" style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              color: '#1f2937',
+              textDecoration: 'none',
+              padding: '12px 0',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              Contact
+            </Link>
+
+            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Link href="/sign-in" style={{
+                backgroundColor: '#dc2626',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                textAlign: 'center'
+              }}>
+                Sign In
+              </Link>
+              <Link href="/cart" style={{
+                backgroundColor: '#f3f4f6',
+                color: '#1f2937',
+                padding: '12px 24px',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
+                <ShoppingCart size={20} /> Cart
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
