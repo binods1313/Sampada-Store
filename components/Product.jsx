@@ -11,24 +11,24 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
   const [ref, isIntersecting] = useLazyLoading(0.1);
-  
+
   // Show skeleton while loading
   if (isLoading) {
     return <ProductCardSkeleton />;
   }
-  
+
   const hasDiscount = discount && discount > 0;
   const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
   const firstImage = image && image[0] ? image[0] : null;
-  
+
   // Use urlFor to get a higher quality image URL for better visibility
   const imageUrl = firstImage?.asset
     ? urlFor(firstImage).width(800).url()
     : '/asset/placeholder-image.jpg';
-  
+
   // Preload image
   const { isLoaded: imageIsLoaded, hasError: imageHasError } = useImagePreloader(imageUrl);
-  
+
   const handleQuickView = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -37,43 +37,27 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
     // For now, we'll just navigate to the product page
     window.open(`/product/${slug?.current}`, '_blank');
   };
-    
+
   return (
-    <div ref={ref} className={`product-card ${!isIntersecting ? 'loading-pulse' : ''}`} style={{ position: 'relative' }}>
+    <div ref={ref} className={`product-card ${!isIntersecting ? 'loading-pulse' : ''}`}>
       <Link href={`/product/${slug?.current}`}>
         <div className="product-content-wrapper">
 
-          {/* % OFF Badge */}
+          {/* Sale Badge - Top Right Corner */}
           {hasDiscount && (
-            <div style={{
-              position: 'absolute',
-              top: '8px',
-              left: '8px',
-              backgroundColor: '#ef4444',
-              color: 'white',
-              fontSize: '11px',
-              fontWeight: '700',
-              padding: '3px 8px',
-              borderRadius: '999px',
-              zIndex: 10,
-              textAlign: 'center',
-              whiteSpace: 'nowrap',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {discount}% OFF
+            <div className="sale-badge">
+               {discount}% OFF
             </div>
           )}
 
-          {/* Wishlist Button */}
+          {/* Wishlist Button - Top Left Corner */}
           <div className="wishlist-button-container">
             <WishlistButton product={{ _id, name, slug, price, discount, image }} size="medium" />
-          </div> 
+          </div>
 
-          {/* Quick View Overlay */}
+          {/* Quick View Overlay - Center, Hidden by Default */}
           <div className="quick-view-overlay">
-            <button 
+            <button
               className="quick-view-btn"
               onClick={handleQuickView}
               aria-label={`Quick view ${name}`}
@@ -82,10 +66,10 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
             </button>
           </div>
 
-          {/* Image Container with Enhanced Loading State */}           
-          <div className="product-image-container" style={{ 
+          {/* Image Container with Enhanced Loading State */}
+          <div className="product-image-container" style={{
               position: 'relative',
-              width: '100%', 
+              width: '100%',
               height: '240px',
               overflow: 'hidden',
               display: 'flex',
@@ -93,7 +77,7 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
               alignItems: 'center',
               backgroundColor: imageLoaded ? 'transparent' : '#f9f9f9'
             }}>
-            
+
             {/* Enhanced Loading Skeleton */}
             {(!imageLoaded || !isIntersecting) && (
               <div className="product-skeleton skeleton-shimmer" style={{
@@ -105,8 +89,8 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
                 borderRadius: '12px'
               }} />
             )}
-                        
-            {/* Product Image with Lazy Loading */}              
+
+            {/* Product Image with Lazy Loading */}
             {isIntersecting && (
               <Image
                 src={imageUrl}
@@ -115,7 +99,7 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
                 sizes="(max-width: 768px) 100vw, 260px"
                 className="product-image"
                 priority={false}
-                style={{ 
+                style={{
                   objectFit: 'contain',
                   objectPosition: 'center',
                   opacity: imageLoaded ? 1 : 0,
@@ -128,35 +112,35 @@ const Product = ({ product: { image, name, slug, price, discount, _id }, isLoadi
                   setImageLoaded(true);
                 }}
               />
-            )}           
+            )}
           </div>
-                      
-          {/* Product Name with Loading State */}           
+
+          {/* Product Name with Loading State */}
           {isIntersecting ? (
             <h2 className="product-card-name">{name}</h2>
           ) : (
             <div className="skeleton-line skeleton-shimmer" style={{ width: '80%', height: '20px', marginTop: '12px' }}></div>
           )}
-                      
-          {/* Price Display with Loading State */}           
+
+          {/* Price Display with Loading State */}
           {isIntersecting ? (
-            hasDiscount ? (             
-              <div className="price-container">               
-                <p className="original-price">                 
-                  ${price?.toFixed(2)}               
-                </p>               
-                <p className="discounted-price">                 
-                  ${discountedPrice?.toFixed(2)}               
-                </p>             
-              </div>           
-            ) : (             
-              <p className="price">               
-                ${price?.toFixed(2)}             
-              </p>           
+            hasDiscount ? (
+              <div className="price-container">
+                <p className="original-price">
+                  ${price?.toFixed(2)}
+                </p>
+                <p className="discounted-price">
+                  ${discountedPrice?.toFixed(2)}
+                </p>
+              </div>
+            ) : (
+              <p className="price">
+                ${price?.toFixed(2)}
+              </p>
             )
           ) : (
             <div className="skeleton-line skeleton-shimmer" style={{ width: '60%', height: '16px', marginTop: '8px' }}></div>
-          )}         
+          )}
         </div>
       </Link>
     </div>

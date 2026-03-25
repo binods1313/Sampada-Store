@@ -1,12 +1,293 @@
+/* ========================================
+   SAMPADA DESIGN SYSTEM
+   Indian Heritage Luxury Streetwear
+   Generated with UI/UX Pro Max
+   ======================================== */
+
+:root {
+  /* ─── COLORS ────────────────────────────────────────────────
+     Heritage luxury palette: Deep Navy + Gold + Off-White
+  */
+  
+  /* Primary Colors - Heritage Feel */
+  --color-primary-navy: #0a1628;      /* Deep Navy - main brand color */
+  --color-primary-black: #0d0d0d;      /* Rich Black - alternative primary */
+  
+  /* Accent Colors - Gold */
+  --color-accent-gold: #B8860B;        /* Dark Goldenrod - heritage accent */
+  --color-accent-gold-light: #DAA520;  /* Lighter gold for hover states */
+  --color-accent-gold-dark: #996515;   /* Darker gold for depth */
+  
+  /* CTA Color - Red (existing brand) */
+  --color-cta-red: #dc2626;            /* Primary CTA */
+  --color-cta-red-hover: #b91c1c;      /* Hover state */
+  --color-cta-red-light: #ef4444;      /* Light variant */
+  
+  /* Background Colors */
+  --color-bg-primary: #fafaf8;         /* Off-white - main background */
+  --color-bg-secondary: #f5f5f0;       /* Light gray-beige */
+  --color-bg-tertiary: #ebebeb;        /* Product card background */
+  --color-bg-white: #ffffff;           /* Pure white */
+  
+  /* Text Colors */
+  --color-text-primary: #0a1628;       /* Deep Navy for headings */
+  --color-text-secondary: #324d67;     /* Muted blue-gray */
+  --color-text-tertiary: #6b7280;      /* Gray for metadata */
+  --color-text-disabled: #9ca3af;      /* Light gray for disabled */
+  
+  /* Semantic Colors */
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #2563eb;
+
+  /* ─── TYPOGRAPHY ────────────────────────────────────────────
+     Font pairing: Serif (heritage) + Sans-serif (modern)
+  */
+  
+  /* Font Families */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Font Sizes - Based on 1.25 scale */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.25rem;    /* 20px */
+  --text-xl: 1.5rem;     /* 24px */
+  --text-2xl: 1.875rem;  /* 30px */
+  --text-3xl: 2.25rem;   /* 36px */
+  --text-4xl: 3rem;      /* 48px */
+  --text-5xl: 3.75rem;   /* 60px */
+  
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* ─── SPACING ───────────────────────────────────────────────
+     4px base unit scale
+  */
+  
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ─── BORDER RADIUS ─────────────────────────────────────────
+     4px cards, 999px badges, 6px buttons
+  */
+  
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 15px;
+  --radius-full: 9999px;
+
+  /* ─── SHADOWS ───────────────────────────────────────────────
+     3 levels: subtle, medium, strong
+  */
+  
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.15);
+  
+  /* Special Shadows */
+  --shadow-gold: 0 4px 12px rgba(184, 134, 11, 0.3);
+  --shadow-red: 0 4px 12px rgba(220, 38, 38, 0.3);
+
+  /* ─── TRANSITIONS ─────────────────────────────────────────── */
+  
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms ease;
+
+  /* ─── Z-INDEX ─────────────────────────────────────────────── */
+  
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-popover: 400;
+  --z-tooltip: 500;
+  --z-toast: 600;
+}
+
+/* Dark Mode Variables */
+.dark {
+  --color-bg-primary: #0a1628;
+  --color-bg-secondary: #0f2040;
+  --color-bg-tertiary: #1a2f4d;
+  --color-bg-white: #0d0d0d;
+  
+  --color-text-primary: #fafaf8;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   ACCESSIBILITY - WCAG AA Compliance
+   UI/UX Pro Max: 99 UX Guidelines
+   ======================================== */
+
+/* Focus States - Visible on keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--color-accent-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--color-accent-gold);
+  outline-offset: 3px;
+}
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: var(--space-4);
+  background: var(--color-primary-navy);
+  color: white;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  z-index: var(--z-toast);
+  transition: top var(--transition-fast);
+}
+
+.skip-to-content:focus {
+  top: var(--space-4);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-text-secondary: #1a1a1a;
+    --color-accent-gold: #B8860B;
+  }
+  
+  .dark {
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #e0e0e0;
+  }
+}
+
+/* Minimum Font Size - WCAG AA: 14px for body */
+body,
+p,
+span,
+label,
+input,
+textarea,
+select {
+  font-size: var(--text-sm);
+}
+
+/* Touch Targets - Minimum 44x44px */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Color Contrast - WCAG AA: 4.5:1 for normal text, 3:1 for large text */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+/* Ensure all text on colored backgrounds meets contrast requirements */
+.footer-banner-container,
+.hero-banner-container {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Link Underlines for Accessibility */
+a:not([class]) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:not([class]):hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Fade In Animation for Quick View */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 html,
 body,
 * {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--font-sans);
   box-sizing: border-box;
-
 }
 
 ::-webkit-scrollbar {
@@ -402,6 +683,10 @@ span.text-red {
   z-index: 1;
   transition: transform 0.3s ease-in-out;
   height: auto;
+  
+  /* Rotation animation for the स logo */
+  animation: rotateLogo 20s linear infinite !important;
+  will-change: transform;
 }
 
 .banner-desc .right {
@@ -937,7 +1222,9 @@ span.text-red {
     width: 77%;
     left: 30%;
     top: 6%;
-    height: 56%
+    height: 56%;
+    animation: rotateLogo 20s linear infinite;
+    will-change: transform;
   }
 
   .left {
@@ -2157,3 +2444,15 @@ img {
     padding: 0 15px;
   }
 }
+
+/* Footer Banner Logo Rotation Animation */
+@keyframes rotateLogo {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Product Card Styles */
+@import './ProductCard.css';
+
+/* Footer Banner Description Styles */
+@import './footer-banner-description.css';

@@ -41,6 +41,31 @@
   opacity: 1;
 }
 
+/* Wishlist Button Container - Top Left, Hidden by Default */
+.wishlist-button-container {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.95);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.product-card:hover .wishlist-button-container {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.wishlist-button-container .wishlist-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
 .product-content-wrapper {
   display: flex;
   flex-direction: column;
@@ -118,23 +143,24 @@
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* DISCOUNT BADGE STYLING - Positioned INSIDE the card's top-right corner, outside image visual */
+/* DISCOUNT BADGE STYLING - Positioned INSIDE the card's top-right corner, ALWAYS VISIBLE */
 .sale-badge {
   position: absolute;
-  top: -6px; /* Moved 0.5cm (14px) higher: 8px - 14px = -6px */
-  right: 8px; /* Positioned relative to .product-content-wrapper's right padding */
+  top: 8px;
+  right: 8px;
   background: linear-gradient(135deg, #ff4757, #ff3742);
   color: white;
-  padding: 4px 8px; /* MADE SMALLER: Reduced padding for a smaller badge */
+  padding: 4px 8px;
   border-radius: 20px;
-  font-size: 0.7em; /* MADE SMALLER: Reduced font size for a smaller badge */
+  font-size: 0.7em;
   font-weight: bold;
-  z-index: 20; /* High z-index to ensure visibility above everything else in the card */
+  z-index: 20;
   box-shadow: 0 3px 6px rgba(255, 71, 87, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  animation: pulse-badge 2s infinite ease-in-out;
-  border: 2px solid white; /* White border to make it stand out */
+  border: 2px solid white;
+  opacity: 1; /* Always visible */
+  pointer-events: auto;
 }
 
 /* Badge animation */
@@ -190,26 +216,28 @@
   text-overflow: ellipsis;
 }
 
-/* DISCOUNT PRICE STYLING */
+/* DISCOUNT PRICE STYLING - Vertical stacking with original above, discounted below */
 .price-container {
   display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: 5px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
   margin-bottom: 5px;
+  gap: 4px;
 }
 
 .original-price {
   text-decoration: line-through;
-  color: #888;
-  font-size: 0.9em;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 2px;
 }
 
 .discounted-price {
-  color: #ff4757;
+  color: #dc2626;
   font-weight: bold;
-  font-size: 1.3em;
+  font-size: 16px;
   animation: price-highlight 3s infinite ease-in-out;
 }
 
@@ -259,8 +287,8 @@
   .sale-badge {
     font-size: 0.65em; /* Even smaller for mobile */
     padding: 3px 6px;
-    top: -8px; /* Moved 0.5cm (14px) higher: 6px - 14px = -8px */
-    right: 6px;
+    top: 8px;
+    right: 8px;
   }
 }
 
