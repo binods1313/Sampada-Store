@@ -78,8 +78,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Ultra-slow, elegant rotation - 180 seconds per rotation */
-  animation: emblemSpin 180s linear infinite;
+  /* Slow, elegant rotation - 60 seconds per rotation (visible but not distracting) */
+  animation: emblemSpin 60s linear infinite;
   transform-origin: center;
   /* Hardware acceleration for smooth GPU-rendered rotation */
   will-change: transform;
