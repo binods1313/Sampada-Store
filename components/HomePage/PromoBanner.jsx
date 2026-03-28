@@ -61,12 +61,6 @@ const PromoBanner = ({ bannerData }) => {
                 className={styles.emblemSvg}
                 aria-hidden="true"
                 focusable="false"
-                style={{
-                  // Fallback inline styles to force rotation
-                  animation: 'emblemSpin 60s linear infinite',
-                  transformOrigin: 'center',
-                  willChange: 'transform'
-                }}
               >
                 <circle cx="150" cy="150" r="148" fill="none" stroke="#c9a227" strokeWidth="2.5" />
                 <circle cx="150" cy="150" r="140" fill="none" stroke="#c9a227" strokeWidth="1" opacity="0.5" />
