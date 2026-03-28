@@ -1,22 +1,24 @@
-import React from 'react'
-import { AiFillInstagram } from 'react-icons/ai'; // Selective import
-import { AiOutlineTwitter } from 'react-icons/ai'; // Selective import
-import { AiFillYoutube } from 'react-icons/ai'; // Selective import
-import { AiFillFacebook } from 'react-icons/ai'; // Selective import
+// components/Footer.jsx
+// Wrapper component that imports the new SampadaFooter with Sanity integration
+import React, { useEffect, useState } from 'react';
+import SampadaFooter, { getFooterData, get_default_footer_data } from './HomePage/SampadaFooter';
 
 const Footer = () => {
-  return (
-    <div className="footer-container">
-      <p>© 2026 Sampada. Powered by Printify & Stripe</p>
-      <p className="icons">
-        <AiFillInstagram />
-        <AiOutlineTwitter />
-        <AiFillFacebook />
-        <AiFillYoutube />
+  const [footerData, setFooterData] = useState(null);
 
-      </p>
-    </div>
-  )
-}
+  useEffect(() => {
+    // Show default data immediately, then fetch from Sanity
+    setFooterData(get_default_footer_data());
+    
+    // Fetch footer data from Sanity in background
+    getFooterData().then(data => {
+      if (data) {
+        setFooterData(data);
+      }
+    });
+  }, []);
 
-export default Footer
+  return <SampadaFooter footerData={footerData} />;
+};
+
+export default Footer;

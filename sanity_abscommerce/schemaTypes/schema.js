@@ -1,21 +1,25 @@
 // schemaTypes/schema.js
-import product from './product';         // Your updated product schema
+import product from './product';
 import banner from './banner';
 import order from './order';
-import user from './user';             // For NextAuth JWT
-import category from './category';       // Your new category schema
-// Optional: Keep if product descriptions or other fields use it
-// import blockContent from './blockContent';
+import user from './user';
+import category from './category';
+import aboutUs from './aboutUs';
+import contactMessage from './contactMessage';
+import footerSettings from './footerSettings';
+import newsletterSubscriber from './newsletterSubscriber';
 
 export default {
   name: 'default',
   types: [
-    // Add 'category' to the list
     product,
-    category, // Add category here
+    category,
     banner,
     order,
     user,
-    // blockContent, // Add back if needed
+    aboutUs,
+    contactMessage,
+    footerSettings,
+    newsletterSubscriber,  // Newsletter subscribers schema
   ],
 };

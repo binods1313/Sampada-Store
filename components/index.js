@@ -16,12 +16,12 @@ export { default as TestSuiteNavigator } from './TestSuiteNavigator';
 export { default as EnhancedErrorHandlerNavigator } from './EnhancedErrorHandlerNavigator';
 export { default as ErrorHandlingTestSuite } from './ErrorHandlingTestSuite';
 export { default as ImageOptimizerTestNavigator } from './ImageOptimizerTestNavigator';
-export { 
-  LoadingFallback, 
-  NetworkErrorFallback, 
-  EmptyStateFallback, 
-  MaintenanceFallback, 
-  OfflineFallback 
+export {
+  LoadingFallback,
+  NetworkErrorFallback,
+  EmptyStateFallback,
+  MaintenanceFallback,
+  OfflineFallback
 } from './FallbackUI';
 export { default as FallbackShowcase } from './FallbackUI';
 export { OfflineWrapper } from './FallbackUI-Examples';
@@ -36,5 +36,9 @@ export { default as QuickPreview } from './QuickPreview';
 export { default as ProductCarousel } from './ProductCarousel';
 export { default as NewsletterSignup } from './NewsletterSignup';
 export { default as LazyImage } from './LazyImage';
+export { default as FilterBar } from './FilterBar';
+export { default as ActiveFilters } from './ActiveFilters';
+export { default as ProductFilterSection } from './ProductFilterSection';
+export { default as NewsletterSection } from './NewsletterSection';
 
 export { default as ImageOptimizerTest } from './ImageOptimizerTest';

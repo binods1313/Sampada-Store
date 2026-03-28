@@ -22,51 +22,67 @@
   gap: 20px;
 }
 
+/* Card Link - Full card is clickable */
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .card {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
   min-height: 320px;
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              box-shadow 0.35s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  background: #f3f4f6;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Big decorative emoji in background */
-.cardEmoji {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -68%);
-  font-size: 110px;
-  opacity: 0.12;
-  pointer-events: none;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-  user-select: none;
-  line-height: 1;
+/* Image Container */
+.cardImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
 }
 
-.card:hover .cardEmoji {
-  transform: translate(-50%, -72%) scale(1.1);
-  opacity: 0.18;
+.cardImage {
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Dark overlay */
+.card:hover .cardImage {
+  transform: scale(1.08);
+}
+
+/* Gradient Overlay - Darkens image for text readability */
 .cardOverlay {
   position: absolute;
   inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    transparent 100%
+  );
   pointer-events: none;
-  transition: background 0.35s ease;
+  transition: background 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .card:hover .cardOverlay {
-  background: rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    transparent 100%
+  );
 }
 
 /* Content sits at bottom */
@@ -79,37 +95,55 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  z-index: 1;
 }
 
 .cardLabel {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
   margin: 0;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.02em;
 }
 
 .cardBtn {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #ffffff;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  border-radius: 8px;
-  padding: 9px 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 10px 22px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   letter-spacing: 0.3px;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: all 200ms cubic-bezier(0.23, 1, 0.32, 1);
   width: fit-content;
+  text-align: center;
 }
 
-.cardBtn:hover {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: #ffffff;
-  transform: translateY(-2px);
+/* Hover only on devices that support it */
+@media (hover: hover) and (pointer: fine) {
+  .cardBtn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: #ffffff;
+    transform: translateY(-2px);
+  }
+}
+
+/* Active state for touch devices */
+.cardBtn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Focus state for accessibility */
+.cardLink:focus-visible {
+  outline: 3px solid rgba(102, 126, 234, 0.5);
+  outline-offset: 3px;
+  border-radius: 16px;
 }
 
 /* Responsive */
@@ -132,5 +166,23 @@
   }
   .section {
     padding: 32px 16px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardImage,
+  .cardOverlay,
+  .cardBtn {
+    transition: none;
+  }
+  
+  .card:hover {
+    transform: none;
+  }
+  
+  .card:hover .cardImage {
+    transform: none;
   }
 }

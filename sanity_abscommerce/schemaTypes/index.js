@@ -7,6 +7,8 @@ import user from './user'
 import banner from './banner'
 import aboutUs from './aboutUs'
 import contactMessage from './contactMessage'
+import footerSettings from './footerSettings'
+import newsletterSubscriber from './newsletterSubscriber'
 
 export const schemaTypes = [
   product,
@@ -16,5 +18,7 @@ export const schemaTypes = [
   user,
   aboutUs,
   banner,
-  contactMessage
+  contactMessage,
+  footerSettings,
+  newsletterSubscriber
 ]

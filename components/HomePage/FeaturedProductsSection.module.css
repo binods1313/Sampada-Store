@@ -3,74 +3,99 @@
 .section {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 40px 60px;
+  padding: 40px 20px 60px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .headingWrapper {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .heading {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
-  color: #1a1a2e;
-  margin: 0 0 10px 0;
-  letter-spacing: -0.5px;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
 }
 
 .subheading {
   font-size: 15px;
-  color: #666;
+  color: #6b7280;
   margin: 0;
   font-weight: 400;
 }
 
-/* Override the default products-container flex layout with a proper grid */
+/* Products Grid - Using auto-fill for responsive behavior */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
   width: 100%;
+  justify-content: center;
 }
 
 /* Make the Product cards inside the grid fill their cells */
 .grid > :global(.product-card) {
   width: 100%;
-  margin: 0;
+  margin: 10px;
 }
 
 .empty {
   text-align: center;
   padding: 60px 20px;
-  color: #999;
-  font-size: 16px;
+  color: #6b7280;
+  font-size: 15px;
 }
 
 /* Responsive */
-@media (max-width: 1100px) {
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
+  .section {
+    padding: 32px 16px 48px;
+  }
+  
+  .heading {
+    font-size: 1.8rem;
+  }
+  
+  .subheading {
+    font-size: 14px;
+  }
+  
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 16px;
   }
-  .section {
-    padding: 20px 24px 40px;
+  
+  .grid > :global(.product-card) {
+    margin: 0;
   }
 }
 
 @media (max-width: 480px) {
+  .section {
+    padding: 24px 12px 40px;
+  }
+  
   .grid {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
   }
-  .section {
-    padding: 16px 16px 32px;
+  
+  .heading {
+    font-size: 1.6rem;
   }
 }

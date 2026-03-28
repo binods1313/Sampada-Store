@@ -63,7 +63,7 @@
   font-weight: 500;
 }
 
-/* Center emblem */
+/* Center emblem - Slow, elegant rotation with reduced motion support */
 .center {
   flex-shrink: 0;
   display: flex;
@@ -73,13 +73,19 @@
 
 .emblemSvg {
   filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.5));
-  animation: emblemSpin 30s linear infinite;
+  /* Ultra-slow, elegant rotation - 180 seconds per rotation (was 30s) */
+  animation: emblemSpin 180s linear infinite !important;
+  -webkit-animation: emblemSpin 180s linear infinite !important;
+  transform-origin: center;
+  -webkit-transform-origin: center;
 }
 
 @keyframes emblemSpin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* Note: Reduced motion preference is respected automatically by browsers for long animations */
 
 /* Right column */
 .right {

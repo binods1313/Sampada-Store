@@ -7,11 +7,12 @@ import { client } from '../lib/client';
 import MegaNavbar from '../components/HomePage/MegaNavbar';
 import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
 import CollectionsSection from '../components/HomePage/CollectionsSection';
-import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection';
+import ProductFilterSection from '../components/ProductFilterSection';
 import PromoBanner from '../components/HomePage/PromoBanner';
+import NewsletterSection from '../components/NewsletterSection';
 import SampadaFooter from '../components/HomePage/SampadaFooter';
 
-const Home = ({ products, bannerData }) => {
+const Home = ({ products, categories, bannerData }) => {
   return (
     <>
       <Head>
@@ -36,13 +37,20 @@ const Home = ({ products, bannerData }) => {
       {/* ── 3. Collections ── */}
       <CollectionsSection />
 
-      {/* ── 4. Featured Products ── */}
-      <FeaturedProductsSection products={products} />
+      {/* ── 4. Featured Products with Filters ── */}
+      <ProductFilterSection 
+        products={products} 
+        categories={categories}
+        title="Featured Products"
+      />
 
       {/* ── 5. Promo Banner ── */}
       <PromoBanner />
 
-      {/* ── 6. Footer ── */}
+      {/* ── 6. Newsletter Section ── */}
+      <NewsletterSection />
+
+      {/* ── 7. Footer ── */}
       <SampadaFooter />
     </>
   );
@@ -65,11 +73,18 @@ export const getServerSideProps = async () => {
     },
     inventory,
     status
-  } | order(_createdAt desc)[0...12]`;
+  } | order(_createdAt desc)[0...24]`;
+  
   const bannerQuery = '*[_type == "banner"][0]';
+  
+  const categoriesQuery = `*[_type == "category"] {
+    _id,
+    name,
+    slug
+  }`;
 
   try {
-    const [products, bannerData] = await Promise.all([
+    const [products, bannerData, categories] = await Promise.all([
       client.fetch(productQuery).catch((err) => {
         console.error('Error fetching products:', err);
         return [];
@@ -78,13 +93,18 @@ export const getServerSideProps = async () => {
         console.error('Error fetching banner:', err);
         return {};
       }),
+      client.fetch(categoriesQuery).catch((err) => {
+        console.error('Error fetching categories:', err);
+        return [];
+      }),
     ]);
 
-    console.log(`Fetched ${products?.length || 0} products`);
+    console.log(`Fetched ${products?.length || 0} products, ${categories?.length || 0} categories`);
 
     return {
       props: {
         products: products || [],
+        categories: categories || [],
         bannerData: bannerData || {},
       },
     };
@@ -93,6 +113,7 @@ export const getServerSideProps = async () => {
     return {
       props: {
         products: [],
+        categories: [],
         bannerData: {},
       },
     };
