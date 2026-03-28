@@ -78,12 +78,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Slow, elegant rotation - 60 seconds per rotation (visible but not distracting) */
-  animation: emblemSpin 60s linear infinite;
-  transform-origin: center;
   /* Hardware acceleration for smooth GPU-rendered rotation */
   will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Apply rotation only when user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .logoRotator {
+    /* Slow, elegant rotation - 60 seconds per rotation (visible but not distracting) */
+    animation: emblemSpin 60s linear infinite;
+    transform-origin: center;
+  }
 }
 
 /* Logo image styling (uploaded from Sanity) */
@@ -109,13 +115,6 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-/* Reduced motion support - disable rotation for users who prefer less motion */
-@media (prefers-reduced-motion: reduce) {
-  .logoRotator {
-    animation: none;
   }
 }
 
