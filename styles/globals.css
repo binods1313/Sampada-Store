@@ -1,3 +1,6 @@
+/* Import Product Card Styles */
+@import './ProductCard.css';
+
 html,
 body,
 * {
@@ -2082,10 +2085,17 @@ img {
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+/* Sale badge - subtle pulse, only on devices that support hover */
 .category-link.sale {
   background: #ff6b6b;
   color: white;
-  animation: pulse 2s infinite;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .category-link.sale {
+    /* Subtle pulse animation for sale badge */
+    animation: pulse 3s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+  }
 }
 
 @keyframes pulse {
@@ -2096,7 +2106,18 @@ img {
   }
 
   50% {
-    transform: scale(1.05);
+    transform: scale(1.03);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .category-link.sale {
+    animation: none;
+  }
+  
+  .category-link.featured:hover {
+    transform: none;
   }
 }
 

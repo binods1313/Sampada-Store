@@ -2,8 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { ShoppingCart, User, Menu, X, MoreVertical } from "lucide-react";
 
 const menuItems = {
   "Men's Clothing": {
@@ -39,6 +39,190 @@ const menuItems = {
     }
   }
 };
+
+// MoreDropdown component for Contact and About Us links
+function MoreDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div 
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center'
+      }}
+      ref={dropdownRef}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+      onKeyDown={handleKeyDown}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        aria-label="More options"
+        style={{
+          padding: '20px 12px',
+          fontSize: '14px',
+          fontWeight: 700,
+          color: '#1f2937',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px'
+        }}
+      >
+        More <MoreVertical size={14} />
+      </button>
+
+      {isOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          right: 0,
+          backgroundColor: 'white',
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+          borderRadius: '6px',
+          padding: '8px 0',
+          display: 'flex',
+          flexDirection: 'column',
+          zIndex: 100,
+          minWidth: '150px'
+        }}>
+          <Link
+            href="/about"
+            onClick={() => setIsOpen(false)}
+            style={{
+              padding: '10px 16px',
+              fontSize: '14px',
+              color: '#4b5563',
+              textDecoration: 'none',
+              display: 'block',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            About Us
+          </Link>
+          <Link
+            href="/contact"
+            onClick={() => setIsOpen(false)}
+            style={{
+              padding: '10px 16px',
+              fontSize: '14px',
+              color: '#4b5563',
+              textDecoration: 'none',
+              display: 'block',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            Contact
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Mobile MoreDropdown component (tap to expand)
+function MoreDropdownMobile() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div style={{ borderBottom: '1px solid #e5e7eb' }}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        aria-label="More options"
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '12px 0',
+          fontSize: '16px',
+          fontWeight: 700,
+          color: '#1f2937',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left'
+        }}
+      >
+        More
+        <span style={{
+          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s',
+          fontSize: '12px'
+        }}>
+          ▼
+        </span>
+      </button>
+      
+      {isOpen && (
+        <div style={{
+          paddingLeft: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          paddingBottom: '12px'
+        }}>
+          <Link
+            href="/about"
+            onClick={() => setIsOpen(false)}
+            style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              textDecoration: 'none',
+              padding: '4px 0'
+            }}
+          >
+            About Us
+          </Link>
+          <Link
+            href="/contact"
+            onClick={() => setIsOpen(false)}
+            style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              textDecoration: 'none',
+              padding: '4px 0'
+            }}
+          >
+            Contact
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function MegaNavbar() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -195,16 +379,7 @@ export default function MegaNavbar() {
             Sampada Stories
           </Link>
 
-          <Link href="/contact" style={{
-            padding: '20px 12px',
-            fontSize: '14px',
-            fontWeight: 700,
-            color: '#1f2937',
-            textDecoration: 'none',
-            whiteSpace: 'nowrap'
-          }}>
-            Contact
-          </Link>
+          <MoreDropdown />
         </nav>
 
         {/* RIGHT — Actions */}
@@ -343,16 +518,8 @@ export default function MegaNavbar() {
               Sampada Stories
             </Link>
 
-            <Link href="/contact" style={{
-              fontSize: '16px',
-              fontWeight: 700,
-              color: '#1f2937',
-              textDecoration: 'none',
-              padding: '12px 0',
-              borderBottom: '1px solid #e5e7eb'
-            }}>
-              Contact
-            </Link>
+            {/* Mobile More Dropdown */}
+            <MoreDropdownMobile />
 
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <Link href="/api/auth/signin" style={{

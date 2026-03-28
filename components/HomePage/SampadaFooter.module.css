@@ -49,14 +49,22 @@
 .socialIcons a {
   color: #9ca3af;
   font-size: 22px;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
   align-items: center;
 }
 
-.socialIcons a:hover {
-  color: #c0392b;
-  transform: translateY(-3px);
+/* Hover only on devices that support it */
+@media (hover: hover) and (pointer: fine) {
+  .socialIcons a:hover {
+    color: #c0392b;
+    transform: translateY(-2px);
+  }
+}
+
+/* Active state for touch devices */
+.socialIcons a:active {
+  transform: translateY(0) scale(0.95);
 }
 
 /* Link columns */
