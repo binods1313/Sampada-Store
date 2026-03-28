@@ -14,6 +14,10 @@ const PromoBanner = ({ bannerData }) => {
     ? urlFor(logoImage).width(200).height(200).url()
     : null;
 
+  // Debug: Log banner data
+  console.log('PromoBanner - bannerData:', bannerData);
+  console.log('PromoBanner - logoUrl:', logoUrl);
+
   return (
     <section className={styles.banner} aria-label="Promotional banner">
       <div className={styles.inner}>
@@ -33,6 +37,13 @@ const PromoBanner = ({ bannerData }) => {
             className={styles.logoRotator}
             role="img"
             aria-label={logoUrl ? "Sampada brand logo" : "Sampada emblem logo"}
+            // Force animation with inline style for debugging
+            style={{
+              animation: 'emblemSpin 60s linear infinite',
+              transformOrigin: 'center',
+              willChange: 'transform',
+              backfaceVisibility: 'hidden'
+            }}
           >
             {logoUrl ? (
               /* Uploaded Logo from Sanity */
