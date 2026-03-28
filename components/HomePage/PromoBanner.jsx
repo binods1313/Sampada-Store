@@ -16,7 +16,9 @@ const PromoBanner = ({ bannerData }) => {
 
   // Debug: Log banner data
   console.log('PromoBanner - bannerData:', bannerData);
+  console.log('PromoBanner - logoImage:', logoImage);
   console.log('PromoBanner - logoUrl:', logoUrl);
+  console.log('PromoBanner - Will render:', logoUrl ? 'UPLOADED LOGO' : 'DEFAULT SVG EMBLEM');
 
   return (
     <section className={styles.banner} aria-label="Promotional banner">
@@ -37,13 +39,6 @@ const PromoBanner = ({ bannerData }) => {
             className={styles.logoRotator}
             role="img"
             aria-label={logoUrl ? "Sampada brand logo" : "Sampada emblem logo"}
-            // Force animation with inline style for debugging
-            style={{
-              animation: 'emblemSpin 60s linear infinite',
-              transformOrigin: 'center',
-              willChange: 'transform',
-              backfaceVisibility: 'hidden'
-            }}
           >
             {logoUrl ? (
               /* Uploaded Logo from Sanity */
@@ -54,9 +49,10 @@ const PromoBanner = ({ bannerData }) => {
                 height={200}
                 className={styles.logoImage}
                 priority
+                quality={85}
               />
             ) : (
-              /* Default SVG Emblem Fallback */
+              /* Default SVG Emblem Fallback - SHOULD ROTATE */}
               <svg
                 width="200"
                 height="200"
@@ -65,6 +61,12 @@ const PromoBanner = ({ bannerData }) => {
                 className={styles.emblemSvg}
                 aria-hidden="true"
                 focusable="false"
+                style={{
+                  // Fallback inline styles to force rotation
+                  animation: 'emblemSpin 60s linear infinite',
+                  transformOrigin: 'center',
+                  willChange: 'transform'
+                }}
               >
                 <circle cx="150" cy="150" r="148" fill="none" stroke="#c9a227" strokeWidth="2.5" />
                 <circle cx="150" cy="150" r="140" fill="none" stroke="#c9a227" strokeWidth="1" opacity="0.5" />

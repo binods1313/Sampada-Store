@@ -37,6 +37,8 @@ const nextConfigCore = {
         pathname: '/**',
       }
     ],
+    // Add quality options to support 85 quality
+    qualities: [25, 50, 75, 85, 100],
   },
   webpack: (config, { isServer, dev }) => {
     // Your existing webpack customizations for rxjs and HMR
