@@ -8,7 +8,7 @@ import styles from './PromoBanner.module.css';
 const PromoBanner = ({ bannerData }) => {
   // Get logo from banner data
   const logoImage = bannerData?.logo;
-  
+
   // Generate logo URL from Sanity
   const logoUrl = logoImage?.asset
     ? urlFor(logoImage).width(200).height(200).url()
@@ -26,14 +26,16 @@ const PromoBanner = ({ bannerData }) => {
           <p className={styles.sale}>31 Feb to 31 Mar 2026</p>
         </div>
 
-        {/* Center: Logo Image (rotating) */}
+        {/* Center: Rotating Logo (uploaded image or default emblem) */}
         <div className={styles.center}>
-          {logoUrl ? (
-            <div
-              className={styles.logoWrapper}
-              role="img"
-              aria-label="Sampada logo"
-            >
+          {/* Logo wrapper - rotation applied here for consistency */}
+          <div
+            className={styles.logoRotator}
+            role="img"
+            aria-label={logoUrl ? "Sampada brand logo" : "Sampada emblem logo"}
+          >
+            {logoUrl ? (
+              /* Uploaded Logo from Sanity */
               <Image
                 src={logoUrl}
                 alt="Sampada brand logo"
@@ -42,14 +44,8 @@ const PromoBanner = ({ bannerData }) => {
                 className={styles.logoImage}
                 priority
               />
-            </div>
-          ) : (
-            /* Fallback to SVG emblem if no logo uploaded */
-            <div
-              className={styles.logoWrapper}
-              role="img"
-              aria-label="Sampada emblem logo"
-            >
+            ) : (
+              /* Default SVG Emblem Fallback */
               <svg
                 width="200"
                 height="200"
@@ -57,6 +53,7 @@ const PromoBanner = ({ bannerData }) => {
                 xmlns="http://www.w3.org/2000/svg"
                 className={styles.emblemSvg}
                 aria-hidden="true"
+                focusable="false"
               >
                 <circle cx="150" cy="150" r="148" fill="none" stroke="#c9a227" strokeWidth="2.5" />
                 <circle cx="150" cy="150" r="140" fill="none" stroke="#c9a227" strokeWidth="1" opacity="0.5" />
@@ -81,8 +78,8 @@ const PromoBanner = ({ bannerData }) => {
                 <circle cx="20" cy="150" r="4" fill="#c9a227" />
                 <circle cx="280" cy="150" r="4" fill="#c9a227" />
               </svg>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Right: Product info + CTA */}
