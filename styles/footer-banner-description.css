@@ -64,21 +64,30 @@
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  
+
   /* Controlled sizing */
   width: auto !important;
   height: auto !important;
   max-width: 450px !important; /* Fixed maximum width */
   max-height: 450px !important; /* Fixed maximum height */
-  
+
   /* Image display properties */
   object-fit: contain !important;
   display: block !important;
   margin: 0 auto !important;
   z-index: 2 !important;
-  
+
   /* Optional: Add a subtle shadow for depth */
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) !important;
+
+  /* Rotation animation for the स logo */
+  animation: rotateLogo 20s linear infinite !important;
+  will-change: transform;
+}
+
+@keyframes rotateLogo {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* Enhanced styling for the product name (Aurora Sky Pulse™) */
@@ -121,6 +130,8 @@
     transform: translate(-50%, -50%) scale(1.2); /* Perfect centering with moderate scaling on mobile */
     max-width: 700%; /* Increased max-width on mobile for larger image */
     max-height: 600%; /* Increased max-height on mobile for larger image */
+    animation: rotateLogo 20s linear infinite; /* Preserve rotation on mobile */
+    will-change: transform;
   }
   
   .product-name {
