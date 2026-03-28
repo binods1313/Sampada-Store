@@ -73,8 +73,8 @@
 
 /* Logo Rotator - Centralized rotation logic applied here */
 .logoRotator {
-  width: 200px;
-  height: 200px;
+  width: 323px;  /* Increased by 12% more (288px × 1.12 = 323px) */
+  height: 323px; /* Total: ~61% larger than original 200px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,10 +83,11 @@
   backface-visibility: hidden;
 }
 
-/* Apply rotation only when user hasn't requested reduced motion */
+/* Apply rotation with scale only when user hasn't requested reduced motion */
 @media (prefers-reduced-motion: no-preference) {
   .logoRotator {
     /* Slow, elegant rotation - 60 seconds per rotation (visible but not distracting) */
+    /* Combined scale(1.25) with rotation for 25% larger display */
     animation: emblemSpin 60s linear infinite;
     transform-origin: center;
   }
@@ -96,8 +97,8 @@
 .logoImage {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  /* No animation here - rotation is on the wrapper */
+  object-fit: contain; /* Maintain aspect ratio */
+  /* No transform here - handled by wrapper animation */
 }
 
 /* SVG emblem styling (fallback when no logo uploaded) */
@@ -105,16 +106,16 @@
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.5));
-  /* No animation here - rotation is on the wrapper */
+  /* No transform here - handled by wrapper animation */
 }
 
-/* Slow, smooth rotation animation */
+/* Slow, smooth rotation animation with 25% scale */
 @keyframes emblemSpin {
   from {
-    transform: rotate(0deg);
+    transform: scale(1.25) rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: scale(1.25) rotate(360deg);
   }
 }
 
@@ -197,9 +198,9 @@
   .ctaWrapper {
     align-items: center;
   }
-  .emblemSvg {
-    width: 160px;
-    height: 160px;
+  .logoRotator {
+    width: 258px; /* Tablet: 230px × 1.12 = 258px */
+    height: 258px;
   }
 }
 
@@ -208,8 +209,8 @@
     padding: 28px 20px;
     gap: 24px;
   }
-  .emblemSvg {
-    width: 130px;
-    height: 130px;
+  .logoRotator {
+    width: 232px; /* Mobile: 207px × 1.12 = 232px */
+    height: 232px;
   }
 }
