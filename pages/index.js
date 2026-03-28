@@ -45,7 +45,7 @@ const Home = ({ products, categories, bannerData }) => {
       />
 
       {/* ── 5. Promo Banner ── */}
-      <PromoBanner />
+      <PromoBanner bannerData={bannerData} />
 
       {/* ── 6. Newsletter Section ── */}
       <NewsletterSection />
@@ -75,7 +75,20 @@ export const getServerSideProps = async () => {
     status
   } | order(_createdAt desc)[0...24]`;
   
-  const bannerQuery = '*[_type == "banner"][0]';
+  const bannerQuery = `*[_type == "banner"][0]{
+    _id,
+    image,
+    logo,
+    buttonText,
+    product,
+    desc,
+    smallText,
+    midText,
+    largeText1,
+    largeText2,
+    discount,
+    saleTime
+  }`;
   
   const categoriesQuery = `*[_type == "category"] {
     _id,

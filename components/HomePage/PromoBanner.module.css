@@ -63,7 +63,7 @@
   font-weight: 500;
 }
 
-/* Center emblem - Slow, elegant rotation with reduced motion support */
+/* Center emblem/logo - Slow, elegant rotation with reduced motion support */
 .center {
   flex-shrink: 0;
   display: flex;
@@ -71,21 +71,58 @@
   justify-content: center;
 }
 
-.emblemSvg {
-  filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.5));
-  /* Ultra-slow, elegant rotation - 180 seconds per rotation (was 30s) */
-  animation: emblemSpin 180s linear infinite !important;
-  -webkit-animation: emblemSpin 180s linear infinite !important;
+/* Logo wrapper for Image component */
+.logoWrapper {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo image styling */
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Ultra-slow, elegant rotation - 180 seconds per rotation */
+  animation: emblemSpin 180s linear infinite;
   transform-origin: center;
-  -webkit-transform-origin: center;
+  /* Hardware acceleration */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
+/* SVG emblem styling (fallback) */
+.emblemSvg {
+  width: 200px;
+  height: 200px;
+  filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.5));
+  /* Ultra-slow, elegant rotation - 180 seconds per rotation */
+  animation: emblemSpin 180s linear infinite;
+  transform-origin: center;
+  /* Hardware acceleration */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Slow, smooth rotation animation */
 @keyframes emblemSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Note: Reduced motion preference is respected automatically by browsers for long animations */
+/* Reduced motion support - disable rotation for users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .logoImage,
+  .emblemSvg {
+    animation: none;
+  }
+}
 
 /* Right column */
 .right {

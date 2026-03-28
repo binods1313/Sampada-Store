@@ -6,10 +6,17 @@ export default {
     fields: [
       {
         name: 'image',
-        title: 'Image',
+        title: 'Banner Image',
         type: 'image',
         options: { hotspot: true },
         validation: Rule => Rule.required()
+      },
+      {
+        name: 'logo',
+        title: 'Logo Image',
+        type: 'image',
+        options: { hotspot: true },
+        description: 'Optional logo for footer banner (defaults to Sampada emblem if not provided)'
       },
       {
         name: 'buttonText',
