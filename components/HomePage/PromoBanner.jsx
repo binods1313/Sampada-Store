@@ -52,7 +52,7 @@ const PromoBanner = ({ bannerData }) => {
                 quality={85}
               />
             ) : (
-              /* Default SVG Emblem Fallback - SHOULD ROTATE */}
+              /* Default SVG Emblem Fallback - SHOULD ROTATE */
               <svg
                 width="200"
                 height="200"
