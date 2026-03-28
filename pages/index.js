@@ -112,7 +112,11 @@ export const getServerSideProps = async () => {
       }),
     ]);
 
-    console.log(`Fetched ${products?.length || 0} products, ${categories?.length || 0} categories`);
+    // Debug: Log banner data
+    console.log('=== BANNER DATA DEBUG ===');
+    console.log('bannerData:', bannerData);
+    console.log('bannerData.logo:', bannerData?.logo);
+    console.log('========================');
 
     return {
       props: {
