@@ -21,6 +21,260 @@
 
 ---
 
+## ⏳ Pending Tasks - To Do Later
+
+### 🔥 High Priority
+
+#### 1. **Footer Banner Logo Size Fix** 🖼️
+- **Issue:** Logo not appearing 10% bigger after CSS changes
+- **Status:** CSS updated but visual change not visible
+- **Files:** `components/FooterBanner.jsx`, `styles/footer-banner-description.css`
+- **Next Step:** Debug browser cache or inspect element to verify CSS is applied
+- **Solution Applied:** Added `transform: scale(1.1)` to CSS with `!important`
+
+#### 2. **AI Integration in Product Admin** 🎯
+- **Status:** Not started
+- **Goal:** Add AI description generator to product add/edit forms
+- **Files to Create:** `components/admin/ProductForm.jsx`
+- **Files to Modify:** `pages/admin/products/add.jsx`, `pages/admin/products/edit/[id].jsx`
+- **Hook:** `useProductDescription()` from `hooks/useAI.ts`
+
+#### 3. **Customer Support Chatbot Widget** 💬
+- **Status:** Not started
+- **Goal:** Add floating chat widget to all pages
+- **Files to Create:** `components/SupportChatWidget.jsx`
+- **Files to Modify:** `components/Layout.jsx`
+- **Hook:** `useSupportChat()` from `hooks/useAI.ts`
+
+#### 4. **Bulk SEO Generator** 📈
+- **Status:** Not started
+- **Goal:** Generate meta descriptions for all products in bulk
+- **Files to Create:** `pages/admin/seo/bulk-generate.jsx`
+- **API:** POST `/api/products/bulk-update`
+- **Hook:** `useAIGeneration({ tier: 2 })` for speed
+
+---
+
+### 📊 Medium Priority
+
+#### 5. **Multi-Language Product Support** 🌍
+- **Status:** Not started
+- **Goal:** Translate products to Hindi, Spanish, French
+- **Files to Create:** `components/ProductTranslation.jsx`
+- **Hook:** `useAIGeneration('translate', ...)`
+- **Database:** Add `translations` field to product schema
+
+#### 6. **Review Response Automation** ⭐
+- **Status:** Not started
+- **Goal:** Auto-generate responses to customer reviews
+- **Files to Create:** `components/ReviewResponseGenerator.jsx`
+- **Files to Modify:** `pages/admin/reviews/index.jsx`
+- **Hook:** `useAIGeneration('chat', ...)`
+
+#### 7. **Social Media Content Generator** 📱
+- **Status:** Not started
+- **Goal:** Generate Instagram captions, Facebook ad copy
+- **Files to Create:** `components/SocialMediaGenerator.jsx`
+- **Hook:** `useAIGeneration('seo', ...)`
+- **Use Case:** New product launches, promotions
+
+#### 8. **Email Campaign Assistant** 📧
+- **Status:** Not started
+- **Goal:** Draft marketing emails, promotional content
+- **Files to Create:** `components/EmailCampaignGenerator.jsx`
+- **Integration:** SendGrid API
+- **Hook:** `useAIGeneration('seo', ...)`
+
+---
+
+### 🔧 Low Priority / Nice to Have
+
+#### 9. **AI-Powered Search** 🔍
+- **Status:** Not started
+- **Goal:** Semantic search for products (not just keyword matching)
+- **Files to Create:** `lib/ai-search.js`, `pages/api/search.js`
+- **Complexity:** High - requires vector embeddings
+
+#### 10. **Product Recommendation Engine** 💡
+- **Status:** Not started
+- **Goal:** "You might also like" based on AI analysis
+- **Files to Create:** `lib/recommendations.js`
+- **Integration:** Product page, cart page
+- **Complexity:** High - requires user behavior tracking
+
+#### 11. **Voice Search Integration** 🎤
+- **Status:** Partially implemented (VoiceAssistant exists)
+- **Goal:** Allow customers to search by voice
+- **Files to Modify:** `components/VoiceAssistant/`
+- **Integration:** Web Speech API + AI processing
+
+#### 12. **Automated Blog Posts** ✍️
+- **Status:** Not started
+- **Goal:** Generate blog posts about products, trends
+- **Files to Create:** `components/BlogGenerator.jsx`
+- **Hook:** `useAIGeneration('seo', ...)`
+- **Integration:** Sanity blog schema
+
+---
+
+### 🧹 Technical Debt / Maintenance
+
+#### 13. **Image Optimization Audit** 🖼️
+- **Status:** Pending
+- **Issue:** Some images still loading slowly
+- **Action:** Audit all collection images, convert to WebP
+- **Files:** `public/images/collections/`
+
+#### 14. **Mobile Responsiveness Testing** 📱
+- **Status:** Pending
+- **Goal:** Test all new pages on mobile devices
+- **Pages:** Contact, Stories, AI Demo
+- **Fix:** Adjust CSS for small screens
+
+#### 15. **Performance Optimization** ⚡
+- **Status:** Pending
+- **Goal:** Improve Lighthouse scores
+- **Actions:**
+  - Lazy load AI demo component
+  - Optimize bundle size
+  - Add service worker for offline support
+
+#### 16. **Accessibility Audit** ♿
+- **Status:** Pending
+- **Goal:** WCAG 2.1 AA compliance
+- **Tools:** axe DevTools, WAVE
+- **Focus:** New components (AI demo, contact form, stories)
+
+#### 17. **Error Monitoring Setup** 🐛
+- **Status:** Partially implemented (ErrorBoundary exists)
+- **Goal:** Add Sentry or similar for production monitoring
+- **Files to Create:** `lib/sentry.js`, `pages/_error.jsx`
+
+#### 18. **Analytics Integration** 📊
+- **Status:** Not started
+- **Goal:** Track AI feature usage, conversion rates
+- **Options:** Google Analytics, Plausible, Fathom
+- **Files to Modify:** `pages/_app.jsx`
+
+---
+
+### 🧪 Testing & Quality
+
+#### 19. **Unit Tests for AI Hooks** 🧪
+- **Status:** Not started
+- **Files to Create:** `hooks/__tests__/useAI.test.ts`
+- **Framework:** Jest, React Testing Library
+- **Coverage:** All AI hooks, error handling
+
+#### 20. **E2E Tests for Critical Flows** 🎭
+- **Status:** Not started
+- **Flows to Test:**
+  - Product search → Add to cart → Checkout
+  - Contact form submission
+  - AI description generation
+- **Framework:** Playwright or Cypress
+
+#### 21. **API Endpoint Tests** 🔌
+- **Status:** Not started
+- **Files to Create:** `pages/api/__tests__/`
+- **Endpoints:** `/api/ai`, `/api/contact`, `/api/stories`
+- **Framework:** Jest, Supertest
+
+---
+
+### 📚 Documentation
+
+#### 22. **API Documentation** 📖
+- **Status:** Partially done (OPENROUTER_INTEGRATION.md exists)
+- **Goal:** Document all API endpoints
+- **Tool:** Swagger/OpenAPI or Markdown
+- **Location:** `docs/API.md`
+
+#### 23. **Admin User Guide** 📘
+- **Status:** Not started
+- **Goal:** Guide for non-technical admins
+- **Topics:**
+  - How to add products
+  - How to use AI features
+  - How to manage orders
+- **Location:** `docs/ADMIN_GUIDE.md`
+
+#### 24. **Deployment Guide** 🚀
+- **Status:** Not started
+- **Goal:** Document deployment process
+- **Topics:**
+  - Vercel deployment
+  - Environment variables
+  - Database migrations
+- **Location:** `docs/DEPLOYMENT.md`
+
+---
+
+### 🎨 UI/UX Improvements
+
+#### 25. **Dark Mode for AI Demo** 🌙
+- **Status:** Partially implemented
+- **Goal:** Full dark mode support
+- **Files to Modify:** `components/ai-demo.tsx`
+- **Integration:** Existing dark mode toggle
+
+#### 26. **Loading Skeletons for AI Responses** ⏳
+- **Status:** Not started
+- **Goal:** Better UX while waiting for AI
+- **Files to Create:** `components/AILoadingSkeleton.jsx`
+- **Usage:** All AI generation components
+
+#### 27. **Toast Notifications for AI Actions** 🔔
+- **Status:** Not started
+- **Goal:** Show success/error toasts
+- **Integration:** `react-hot-toast` (already installed)
+- **Usage:** All AI generation actions
+
+#### 28. **AI Usage Dashboard** 📊
+- **Status:** Not started
+- **Goal:** Show API usage stats, token consumption
+- **Files to Create:** `pages/admin/ai-usage.jsx`
+- **Data:** Track requests per key, model, user
+
+---
+
+### 🔐 Security & Compliance
+
+#### 29. **Rate Limiting for AI Endpoints** 🛡️
+- **Status:** Not started
+- **Goal:** Prevent abuse of AI features
+- **Files to Create:** `lib/rateLimiter.js`
+- **Integration:** `/api/ai` endpoint
+- **Tool:** `express-rate-limit` (already installed)
+
+#### 30. **Content Moderation** 🚫
+- **Status:** Not started
+- **Goal:** Filter inappropriate AI-generated content
+- **Files to Create:** `lib/contentModeration.js`
+- **Usage:** Before saving AI-generated descriptions
+
+#### 31. **GDPR Compliance for AI** 🇪🇺
+- **Status:** Not started
+- **Goal:** Ensure AI features comply with GDPR
+- **Actions:**
+  - Add disclosure about AI usage
+  - Allow opt-out
+  - Document data processing
+
+---
+
+## 🎯 Quick Start for Next Session
+
+### Recommended Order:
+
+1. **Fix Footer Banner Logo** (if still needed)
+2. **Priority 1: Product Admin AI** - Most impact
+3. **Priority 2: Support Chatbot** - Customer value
+4. **Priority 3: Bulk SEO** - Time saver
+5. **Then pick from Medium Priority list**
+
+---
+
 ## 🤖 AI Integration - Special Features
 
 ### 1. **3 API Keys with Auto-Rotation** ⚡
