@@ -2,7 +2,6 @@
 "use client";
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import styles from './CollectionsSection.module.css';
 
@@ -14,28 +13,28 @@ const collections = [
     btnText: 'Shop Men',
     image: '/images/collections/mens.png',
     alt: "Men's Clothing Collection - Custom T-shirts and apparel for men",
-    objectFit: 'cover', // Match Women's layout
-    objectPosition: 'center 35%', // Focus on face and upper body
+    objectFit: 'cover',
+    objectPosition: 'center 15%', // Show more of the top/head area
   },
   {
     id: 'womens',
     label: "Women's Clothing",
     href: '/collections/womens-tshirts',
     btnText: 'Shop Women',
-    image: '/images/collections/womens.jpeg',
+    image: '/images/collections/womens.png?v=2',
     alt: "Women's Clothing Collection - Custom T-shirts and apparel for women",
-    objectFit: 'cover', // Works perfectly
-    objectPosition: 'center top',
+    objectFit: 'cover',
+    objectPosition: 'center 10%', // Show more of the top/head area
   },
   {
     id: 'his-hers',
     label: 'His & Hers',
     href: '/collections/his-hers',
     btnText: 'Shop His & Hers',
-    image: '/images/collections/his-hers.png',
+    image: '/images/collections/his-hers.png?v=2',
     alt: 'His & Hers Collection - Matching outfits for couples',
-    objectFit: 'cover', // Match Women's layout
-    objectPosition: 'center 30%', // Focus on faces and upper bodies
+    objectFit: 'cover',
+    objectPosition: 'center 10%', // Show more of the top/head area
   },
   {
     id: 'home',
@@ -44,8 +43,8 @@ const collections = [
     btnText: 'Shop Home',
     image: '/images/collections/home-living.png',
     alt: 'Home & Living Collection - Custom mugs, blankets, and home decor',
-    objectFit: 'cover', // Works perfectly
-    objectPosition: 'center center',
+    objectFit: 'cover',
+    objectPosition: 'center 15%', // Show more of the top area
   },
 ];
 
@@ -70,21 +69,19 @@ const CollectionsSection = () => {
             >
               {/* Collection Image */}
               <div className={styles.cardImageContainer}>
-                <Image
-                  src={col.image}
+                <img
+                  src={`${col.image}`}
                   alt={col.alt}
-                  fill
-                  sizes="(max-width: 560px) 100vw, (max-width: 960px) 50vw, 25vw"
-                  priority={false}
-                  loading="lazy"
-                  quality={85}
                   className={styles.cardImage}
                   style={{
                     objectFit: col.objectFit || 'cover',
-                    objectPosition: col.objectPosition || 'center center'
+                    objectPosition: col.objectPosition || 'center center',
+                    width: '100%',
+                    height: '100%',
                   }}
+                  loading="lazy"
                 />
-                
+
                 {/* Gradient Overlay */}
                 <div className={styles.cardOverlay} />
               </div>

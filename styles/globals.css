@@ -400,8 +400,8 @@ span.text-red {
   /* Moved 1.5cm to the right */
   top: 50%;
   transform: translate(-50%, -50%);
-  max-width: 30%;
-  /* Reduce from previous size */
+  max-width: 35%;
+  /* Base size - scaled 10% bigger via component */
   z-index: 1;
   transition: transform 0.3s ease-in-out;
   height: auto;
