@@ -23,6 +23,25 @@ export default {
       validation: Rule => Rule.required()
     },
     {
+      name: 'heroImage',
+      title: 'Hero Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+        storeDimensions: true,
+        metadata: ['blurhash', 'palette']
+      },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Important for accessibility and SEO',
+          validation: Rule => Rule.required().error('Alt text is required'),
+        },
+      ],
+    },
+    {
       name: 'missionTitle',
       title: 'Mission Title',
       type: 'string',
@@ -47,7 +66,25 @@ export default {
           fields: [
             { name: 'name', title: 'Name', type: 'string' },
             { name: 'position', title: 'Position', type: 'string' },
-            { name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }
+            { 
+              name: 'image', 
+              title: 'Image', 
+              type: 'image', 
+              options: { 
+                hotspot: true,
+                storeDimensions: true,
+                metadata: ['blurhash', 'palette']
+              },
+              fields: [
+                {
+                  name: 'alt',
+                  title: 'Alt Text',
+                  type: 'string',
+                  description: 'Important for accessibility and SEO',
+                  validation: Rule => Rule.required().error('Alt text is required'),
+                },
+              ],
+            }
           ]
         }
       ]
@@ -67,7 +104,20 @@ export default {
       name: 'storyImage',
       title: 'Story Image',
       type: 'image',
-      options: { hotspot: true }
+      options: { 
+        hotspot: true,
+        storeDimensions: true,
+        metadata: ['blurhash', 'palette']
+      },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Important for accessibility and SEO',
+          validation: Rule => Rule.required().error('Alt text is required'),
+        },
+      ],
     },
     {
       name: 'statsTitle',
@@ -102,6 +152,29 @@ export default {
       name: 'contactDescription',
       title: 'Contact Description',
       type: 'text',
-    }
+    },
+    {
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'object',
+      icon: '🔍',
+      fields: [
+        {
+          name: 'metaTitle',
+          title: 'Meta Title',
+          type: 'string',
+          description: 'Recommended: 50-60 characters',
+          validation: Rule => Rule.max(60),
+        },
+        {
+          name: 'metaDescription',
+          title: 'Meta Description',
+          type: 'text',
+          rows: 3,
+          description: 'Recommended: 150-160 characters',
+          validation: Rule => Rule.max(160),
+        },
+      ],
+    },
   ]
 }

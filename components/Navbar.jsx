@@ -1,5 +1,5 @@
 // components/Navbar.jsx - CORRECTED
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AiOutlineShopping } from 'react-icons/ai';
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -9,6 +9,7 @@ import NeumorphicToggle from './NeumorphicToggle';
 import LoginModal from './LoginModal';
 import VisualSearch from './VisualSearch';
 import styles from './NavbarStyles.module.css';
+import { client } from '../lib/client';
 
 const Navbar = () => {
   const { showCart, setShowCart } = useUIContext();
@@ -16,6 +17,21 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showStoriesLink, setShowStoriesLink] = useState(false);
+
+  // Fetch published pages to show in navbar
+  useEffect(() => {
+    async function checkPublishedPages() {
+      try {
+        const storiesPage = await client.fetch(`*[_type == "storiesPage"][0]{ _id }`);
+        setShowStoriesLink(!!storiesPage);
+      } catch (error) {
+        console.error('Error checking published pages:', error);
+      }
+    }
+    
+    checkPublishedPages();
+  }, []);
 
   return (
     <nav className={styles.navbarContainer}>
@@ -24,10 +40,16 @@ const Navbar = () => {
         <Link href="/" className={styles.logo}>
           Sampada
         </Link>
-        {/* About Us Link with proper spacing via CSS */}
+        {/* About Us Link */}
         <Link href="/about" className={styles.navLink}>
           About Us
         </Link>
+        {/* Sampada Stories Link - shows when published */}
+        {showStoriesLink && (
+          <Link href="/stories" className={styles.navLink}>
+            Sampada Stories
+          </Link>
+        )}
       </div>
 
       {/* --- Right Section --- */}

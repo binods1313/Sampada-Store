@@ -143,10 +143,12 @@ const SampadaFooter = ({ footerData }) => {
 };
 
 // Fetch footer data from Sanity (client-side compatible)
+// Now includes dynamic links from Company, Support, and Team pages
 export async function getFooterData() {
   try {
     // Use Sanity client if available (server-side)
     if (client && typeof client.fetch === 'function') {
+      // Fetch footer settings
       const footerQuery = `*[_type == "footerSettings"][0]{
         brandName,
         brandTagline,
@@ -158,14 +160,6 @@ export async function getFooterData() {
           label,
           url
         },
-        companyLinks[] {
-          label,
-          url
-        },
-        supportLinks[] {
-          label,
-          url
-        },
         legalLinks[] {
           label,
           url
@@ -174,23 +168,101 @@ export async function getFooterData() {
         poweredByText
       }`;
 
-      const footerData = await client.fetch(footerQuery);
-      return footerData || null;
+      // Fetch Company page for company links
+      const companyQuery = `*[_type == "company"][0]{
+        _id,
+        title,
+        "slug": "company"
+      }`;
+
+      // Fetch Support page for support links
+      const supportQuery = `*[_type == "support"][0]{
+        _id,
+        title,
+        "slug": "support"
+      }`;
+
+      // Fetch Team page for team/careers links
+      const teamQuery = `*[_type == "team"][0]{
+        _id,
+        title,
+        "slug": "team",
+        "hasCareers": defined(careersCTALink)
+      }`;
+
+      // Fetch About Us page
+      const aboutQuery = `*[_type == "aboutUs"][0]{
+        _id,
+        title,
+        "slug": "about"
+      }`;
+
+      // Fetch Stories page
+      const storiesQuery = `*[_type == "storiesPage"][0]{
+        _id,
+        title,
+        "slug": "stories"
+      }`;
+
+      const [footerData, companyPage, supportPage, teamPage, aboutPage, storiesPage] = await Promise.all([
+        client.fetch(footerQuery),
+        client.fetch(companyQuery),
+        client.fetch(supportQuery),
+        client.fetch(teamQuery),
+        client.fetch(aboutQuery),
+        client.fetch(storiesQuery)
+      ]);
+
+      // Build dynamic company links
+      const dynamicCompanyLinks = [];
+      if (aboutPage) {
+        dynamicCompanyLinks.push({ label: 'About Us', url: '/about' });
+      }
+      if (companyPage) {
+        dynamicCompanyLinks.push({ label: 'Company', url: '/company' });
+      }
+      if (teamPage) {
+        dynamicCompanyLinks.push({ label: 'Team', url: '/team' });
+      }
+      // Add Stories link if published
+      if (storiesPage) {
+        dynamicCompanyLinks.push({ label: 'Sampada Stories', url: '/stories' });
+      }
+      // Add blog and careers as static links (or make them dynamic if you have those schemas)
+      dynamicCompanyLinks.push({ label: 'Blog', url: '/blog' });
+      if (teamPage?.hasCareers) {
+        dynamicCompanyLinks.push({ label: 'Careers', url: '/careers' });
+      }
+
+      // Build dynamic support links
+      const dynamicSupportLinks = [];
+      if (supportPage) {
+        dynamicSupportLinks.push({ label: 'Support Center', url: '/support' });
+      }
+      dynamicSupportLinks.push({ label: 'Documentation', url: '/documentation' });
+      dynamicSupportLinks.push({ label: 'Contact Us', url: '/contact' });
+      dynamicSupportLinks.push({ label: 'FAQs', url: '/faq' });
+
+      return {
+        ...(footerData || {}),
+        companyLinks: dynamicCompanyLinks,
+        supportLinks: dynamicSupportLinks
+      };
     }
-    
+
     // Fallback: use fetch API for client-side
     const sanityId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
     const sanityDataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
-    
+
     if (!sanityId) {
       console.warn('Sanity Project ID not configured');
       return get_default_footer_data();
     }
-    
+
     const url = `https://${sanityId}.api.sanity.io/v1/data/query/${sanityDataset}?query=*[_type == "footerSettings"][0]`;
     const response = await fetch(url);
     const json = await response.json();
-    
+
     return json.result || get_default_footer_data();
   } catch (error) {
     console.error('Error fetching footer data:', error);
@@ -215,17 +287,20 @@ export function get_default_footer_data() {
       { label: 'Use Cases', url: '/use-cases' },
       { label: 'Roadmap', url: '/roadmap' }
     ],
+    // Dynamic company links - will be populated when pages are published
     companyLinks: [
-      { label: 'About', url: '/about' },
+      { label: 'About Us', url: '/about' },
+      { label: 'Company', url: '/company' },
+      { label: 'Team', url: '/team' },
       { label: 'Blog', url: '/blog' },
-      { label: 'Careers', url: '/careers' },
-      { label: 'Contact', url: '/contact' }
+      { label: 'Careers', url: '/careers' }
     ],
+    // Dynamic support links - will be populated when support page is published
     supportLinks: [
+      { label: 'Support Center', url: '/support' },
       { label: 'Documentation', url: '/documentation' },
-      { label: 'API Reference', url: '/api-reference' },
-      { label: 'Community', url: '/community' },
-      { label: 'Status', url: '/status' }
+      { label: 'Contact Us', url: '/contact' },
+      { label: 'FAQs', url: '/faq' }
     ],
     legalLinks: [
       { label: 'Privacy Policy', url: '/privacy-policy' },

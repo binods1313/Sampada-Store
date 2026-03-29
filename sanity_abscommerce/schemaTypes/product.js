@@ -1,6 +1,7 @@
 // schemas/product.js
 import { defineField, defineType } from 'sanity'
 import { MdLocalOffer as icon } from 'react-icons/md'
+import { seoFields } from './seoFields'
 
 export default defineType({
   name: 'product',
@@ -22,10 +23,34 @@ export default defineType({
       validation: Rule => Rule.required().error('Required for URLs')
     }),
     defineField({
-      name: 'image', // This remains the 'main' image gallery for the product
+      name: 'image',
       title: 'Default Product Images (for primary display)',
       type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
+      of: [
+        {
+          type: 'image',
+          options: { 
+            hotspot: true,
+            storeDimensions: true,
+            metadata: ['blurhash', 'palette']
+          },
+          fields: [
+            {
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Important for accessibility and SEO',
+              validation: Rule => Rule.required().error('Alt text is required for product images'),
+            },
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+              description: 'Optional caption displayed with the image',
+            },
+          ],
+        },
+      ],
       validation: Rule => Rule.required().min(1).error('At least 1 default image required')
     }),
     defineField({
@@ -304,6 +329,9 @@ export default defineType({
       initialValue: 'draft',
       description: 'Set the current status of this product'
     }),
+    
+    // SEO Fields
+    ...seoFields,
   ],
   // --- FIX APPLIED HERE for main product preview ---
   preview: {

@@ -63,9 +63,9 @@
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  transform: translate(-50%, -50%) scale(1.1) !important; /* 10% larger logo */
 
-  /* Controlled sizing */
+  /* Controlled sizing - base size, scaled via component */
   width: auto !important;
   height: auto !important;
   max-width: 450px !important; /* Fixed maximum width */
@@ -125,11 +125,11 @@
     padding: 10px; /* Maintain padding on mobile */
   }
   
-  /* Adjust image scaling for mobile */
+  /* Adjust image scaling for mobile - preserves base scale */
   .footer-banner-image {
-    transform: translate(-50%, -50%) scale(1.2); /* Perfect centering with moderate scaling on mobile */
-    max-width: 700%; /* Increased max-width on mobile for larger image */
-    max-height: 600%; /* Increased max-height on mobile for larger image */
+    transform: translate(-50%, -50%) scale(1.1) !important; /* Consistent 10% scale on mobile */
+    max-width: 700% !important;
+    max-height: 600% !important;
     animation: rotateLogo 20s linear infinite; /* Preserve rotation on mobile */
     will-change: transform;
   }
