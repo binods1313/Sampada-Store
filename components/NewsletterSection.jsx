@@ -1,4 +1,5 @@
 // components/NewsletterSection.jsx
+// Updated with Sampada brand identity: logo watermark, "Join the Legacy" copy
 "use client";
 
 import React, { useState } from 'react';
@@ -6,13 +7,12 @@ import { Mail, Check, AlertCircle, ArrowRight } from 'lucide-react';
 
 /**
  * NewsletterSection Component
- * Modern e-commerce newsletter signup with trust signals and clear CTA
- * Inspired by Nike, Zara, Uniqlo newsletter designs
+ * Sampada Brand: "Join the Legacy" with logo watermark
  */
 export default function NewsletterSection() {
   const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
   // Validate email format
@@ -48,7 +48,6 @@ export default function NewsletterSection() {
     setStatus('loading');
 
     try {
-      // Replace with your actual API endpoint
       const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,12 +75,33 @@ export default function NewsletterSection() {
     <section
       aria-labelledby="newsletter-heading"
       style={{
-        background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
+        background: `linear-gradient(135deg, #1E1E2E 0%, #1A1A1A 100%)`,
         padding: '80px 24px',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        borderTop: `2px solid rgba(201, 162, 39, 0.3)`
       }}
     >
+      {/* Large "स" Logo Watermark Background */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '400px',
+          fontWeight: '900',
+          color: 'rgba(201, 162, 39, 0.08)',
+          fontFamily: 'system-ui, sans-serif',
+          pointerEvents: 'none',
+          zIndex: 0,
+          lineHeight: 1
+        }}
+      >
+        स
+      </div>
+
       {/* Subtle background pattern */}
       <div
         aria-hidden="true"
@@ -92,8 +112,8 @@ export default function NewsletterSection() {
           right: 0,
           bottom: 0,
           background: `
-            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%)
+            radial-gradient(circle at 20% 50%, rgba(201, 162, 39, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(201, 162, 39, 0.05) 0%, transparent 50%)
           `,
           pointerEvents: 'none'
         }}
@@ -112,25 +132,41 @@ export default function NewsletterSection() {
           <h2
             id="newsletter-heading"
             style={{
-              fontSize: 'clamp(24px, 4vw, 32px)',
+              fontSize: 'clamp(28px, 5vw, 36px)',
               fontWeight: '800',
-              color: '#ffffff',
+              color: '#F5F0E8',
               marginBottom: '12px',
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.02em',
+              textTransform: 'uppercase'
             }}
           >
-            Get 10% Off Your First Order
+            Join the Legacy
           </h2>
           <p
             style={{
-              fontSize: '15px',
-              color: '#9ca3af',
-              lineHeight: 1.6,
-              maxWidth: '480px',
-              margin: '0 auto'
+              fontSize: '16px',
+              color: 'rgba(245, 240, 232, 0.7)',
+              lineHeight: 1.7,
+              maxWidth: '500px',
+              margin: '0 auto 16px'
             }}
           >
-            Subscribe to our newsletter and receive exclusive offers, early access to new collections, and style inspiration.
+            Get 10% off your first drop + early access to new collections
+          </p>
+          {/* Social Proof */}
+          <p
+            style={{
+              fontSize: '13px',
+              color: '#C9A227',
+              fontWeight: '500',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}
+          >
+            <span style={{ color: '#22c55e' }}>●</span>
+            12,000+ members already in
           </p>
         </div>
 
@@ -320,9 +356,9 @@ export default function NewsletterSection() {
                 padding: '16px 24px',
                 fontSize: '15px',
                 fontWeight: '700',
-                color: '#ffffff',
-                background: 'linear-gradient(135deg, #c0392b 0%, #922b21 100%)',
-                border: 'none',
+                color: '#F5F0E8',
+                background: `linear-gradient(135deg, #8B0000 0%, #6B0000 100%)`,
+                border: `2px solid rgba(201, 162, 39, 0.3)`,
                 borderRadius: '10px',
                 cursor: status === 'loading' ? 'not-allowed' : 'pointer',
                 transition: 'all 200ms cubic-bezier(0.23, 1, 0.32, 1)',
@@ -332,18 +368,20 @@ export default function NewsletterSection() {
                 gap: '8px',
                 opacity: status === 'loading' ? 0.7 : 1,
                 transform: status === 'loading' ? 'scale(0.98)' : 'scale(1)',
-                boxShadow: '0 4px 14px rgba(192, 57, 43, 0.4)'
+                boxShadow: '0 4px 14px rgba(139, 0, 0, 0.5)'
               }}
               onMouseEnter={(e) => {
                 if (status !== 'loading') {
                   e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(192, 57, 43, 0.5)';
+                  e.target.style.boxShadow = `0 6px 20px rgba(201, 162, 39, 0.4)`;
+                  e.target.style.borderColor = '#C9A227';
                 }
               }}
               onMouseLeave={(e) => {
                 if (status !== 'loading') {
                   e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 14px rgba(192, 57, 43, 0.4)';
+                  e.target.style.boxShadow = '0 4px 14px rgba(139, 0, 0, 0.5)';
+                  e.target.style.borderColor = 'rgba(201, 162, 39, 0.3)';
                 }
               }}
               onMouseDown={(e) => {
@@ -364,7 +402,7 @@ export default function NewsletterSection() {
                       width: '18px',
                       height: '18px',
                       border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderTopColor: '#ffffff',
+                      borderTopColor: '#F5F0E8',
                       borderRadius: '50%',
                       animation: 'spin 0.8s linear infinite'
                     }}

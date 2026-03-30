@@ -1,12 +1,17 @@
 /* components/VoiceAssistant/SampadaVoice.module.css */
+/* Enhanced with Emil design polish - smooth transitions, calm states, interaction-based animations */
 
 .sampadaVoiceButton {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
+/* Floating Trigger Button */
 .voiceTrigger {
     width: 70px;
     height: 70px;
@@ -44,7 +49,7 @@
 
 .sampadaIcon {
     font-size: 32px;
-    /* No continuous animation - calm idle state */
+    color: white;
     transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -61,14 +66,13 @@
     font-weight: bold;
 }
 
-/* Pulse ring - only shows when listening/speaking (interaction-based) */
+/* Pulse ring - only shows when panel is open (interaction-based) */
 .pulseRing {
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
     border: 3px solid #667eea;
-    /* Only animate when actively listening/speaking */
     animation: pulse 1.5s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
@@ -83,51 +87,17 @@
     }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    .pulseRing {
-        animation: none;
-        opacity: 0.5;
-    }
-    
-    .voiceTrigger {
-        transition: none;
-    }
-}
-
+/* Voice Panel */
 .voicePanel {
-    position: absolute;
-    bottom: 90px;
-    right: 0;
     width: 380px;
     background: white;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    /* Smooth enter animation with proper easing */
-    animation: slideUp 300ms cubic-bezier(0.23, 1, 0.32, 1);
-    transform-origin: bottom right;
+    transform-origin: bottom left;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* Reduced motion support for panel */
-@media (prefers-reduced-motion: reduce) {
-    .voicePanel {
-        animation: none;
-    }
-}
-
+/* Voice Header */
 .voiceHeader {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 20px;
@@ -165,75 +135,133 @@
     opacity: 0.9;
 }
 
+/* Voice Content */
 .voiceContent {
     padding: 25px;
 }
 
+/* Status Indicator */
 .statusIndicator {
-    min-height: 80px;
+    min-height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-.idleText {
-    font-size: 16px;
-    color: #4a5568;
+/* Idle State */
+.idleState {
     text-align: center;
 }
 
+.idleText {
+    font-size: 16px;
+    color: #4a5568;
+    margin: 0 0 5px 0;
+}
+
+.idleSubtext {
+    font-size: 13px;
+    color: #718096;
+    margin: 0;
+}
+
+/* Listening Animation */
 .listeningAnimation {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-.listeningAnimation p,
-.speakingAnimation p {
+.statusText {
     font-size: 14px;
     color: #667eea;
     font-weight: 500;
+    margin: 0;
+}
+
+.waveContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 50px;
 }
 
 .wave {
-    display: inline-block;
-    width: 8px;
+    width: 6px;
     height: 30px;
-    margin: 0 3px;
     background: linear-gradient(to top, #667eea, #764ba2);
-    border-radius: 4px;
-    animation: wave 1.2s ease-in-out infinite;
+    border-radius: 3px;
+    animation: wave 1.2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
-.listeningAnimation .wave:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.listeningAnimation .wave:nth-child(3) {
-    animation-delay: 0.4s;
-}
+.wave:nth-child(1) { animation-delay: 0ms; }
+.wave:nth-child(2) { animation-delay: 100ms; }
+.wave:nth-child(3) { animation-delay: 200ms; }
+.wave:nth-child(4) { animation-delay: 300ms; }
+.wave:nth-child(5) { animation-delay: 400ms; }
 
 @keyframes wave {
-
-    0%,
-    100% {
-        height: 30px;
+    0%, 100% {
+        height: 20px;
+        transform: scaleY(1);
     }
-
     50% {
         height: 50px;
+        transform: scaleY(1.2);
     }
 }
 
+/* Processing Animation */
+.processingAnimation {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.spinner {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.spinnerRing {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+.spinnerRing:nth-child(2) {
+    border-top-color: #764ba2;
+    animation-delay: -0.4s;
+}
+
+.spinnerRing:nth-child(3) {
+    border-top-color: #a855f7;
+    animation-delay: -0.8s;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Speaking Animation */
 .speakingAnimation {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .soundWave {
@@ -242,63 +270,32 @@
     justify-content: center;
     gap: 4px;
     height: 50px;
-    /* Only animate when actively speaking */
 }
 
 .soundWave span {
-    width: 4px;
+    width: 5px;
     height: 20px;
     background: linear-gradient(to top, #667eea, #764ba2);
-    border-radius: 2px;
-    /* Animation only runs when parent has speaking state */
+    border-radius: 3px;
     animation: soundWave 0.8s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
-.soundWave span:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-.soundWave span:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-.soundWave span:nth-child(4) {
-    animation-delay: 0.3s;
-}
-
-.soundWave span:nth-child(5) {
-    animation-delay: 0.4s;
-}
+.soundWave span:nth-child(1) { animation-delay: 0ms; }
+.soundWave span:nth-child(2) { animation-delay: 100ms; }
+.soundWave span:nth-child(3) { animation-delay: 200ms; }
+.soundWave span:nth-child(4) { animation-delay: 300ms; }
+.soundWave span:nth-child(5) { animation-delay: 400ms; }
 
 @keyframes soundWave {
-
-    0%,
-    100% {
-        height: 20px;
+    0%, 100% {
+        height: 15px;
     }
-
     50% {
-        height: 40px;
+        height: 45px;
     }
 }
 
-/* Reduced motion support - stop sound wave animation */
-@media (prefers-reduced-motion: reduce) {
-    .soundWave span {
-        animation: none;
-        height: 20px;
-    }
-    
-    .micIcon.active {
-        animation: none;
-    }
-    
-    .voiceControlBtn.listening {
-        animation: none;
-        box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.3);
-    }
-}
-
+/* Voice Control Button */
 .voiceControlBtn {
     width: 100%;
     padding: 18px;
@@ -330,17 +327,13 @@
 
 .voiceControlBtn.listening {
     background: #ff6b6b;
-    /* Only pulse when actively listening - interaction-based */
     animation: pulseBtn 1.5s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
 @keyframes pulseBtn {
-
-    0%,
-    100% {
+    0%, 100% {
         box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4);
     }
-
     50% {
         box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
     }
@@ -356,23 +349,20 @@
     transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Only animate mic icon when actively listening */
 .micIcon.active {
-    animation: bounce 0.5s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+    animation: micPulse 0.5s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
-@keyframes bounce {
-
-    0%,
-    100% {
+@keyframes micPulse {
+    0%, 100% {
         transform: scale(1);
     }
-
     50% {
-        transform: scale(1.2);
+        transform: scale(1.15);
     }
 }
 
+/* Transcript & Response */
 .transcript,
 .response {
     background: #f8f9fa;
@@ -380,8 +370,8 @@
     border-radius: 12px;
     margin: 10px 0;
     font-size: 14px;
-    line-height: 1.5;
-    max-height: 80px;
+    line-height: 1.6;
+    max-height: 100px;
     overflow-y: auto;
 }
 
@@ -392,15 +382,17 @@
 .transcript strong,
 .response strong {
     color: #667eea;
+    font-weight: 600;
 }
 
+/* Quick Actions */
 .quickActions {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
 
-.quickActions>p {
+.quickActionsTitle {
     font-size: 12px;
     color: #6c757d;
     margin-bottom: 10px;
@@ -412,46 +404,132 @@
     gap: 8px;
 }
 
-.suggestionChips button {
+.suggestionChip {
     padding: 8px 14px;
     background: white;
     border: 1px solid #667eea;
     color: #667eea;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.suggestionChips button:hover {
-    background: #667eea;
-    color: white;
+.chipIcon {
+    width: 14px;
+    height: 14px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .suggestionChip:hover:not(:disabled) {
+        background: #667eea;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+}
+
+.suggestionChip:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+.suggestionChip:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .pulseRing,
+    .wave,
+    .spinnerRing,
+    .soundWave span,
+    .micIcon.active,
+    .voiceControlBtn.listening {
+        animation: none;
+    }
+
+    .voiceTrigger,
+    .voiceControlBtn,
+    .suggestionChip {
+        transition: none;
+    }
+
+    .voicePanel {
+        animation: none;
+    }
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .voicePanel {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        border-radius: 20px 20px 0 0;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-
     .sampadaVoiceButton {
         bottom: 20px;
+        left: 20px;
+    }
+
+    .voicePanel {
+        position: fixed;
+        bottom: 100px;
+        left: 20px;
         right: 20px;
+        width: auto !important;
+        max-height: 70vh;
+        overflow-y: auto;
+        border-radius: 16px;
     }
 
     .voiceTrigger {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
     }
 
-    .sampadaIcon {
+    .sampadaIcon,
+    .closeIcon {
         font-size: 28px;
+    }
+
+    .voiceHeader {
+        padding: 16px;
+    }
+
+    .voiceContent {
+        padding: 20px;
+    }
+
+    .voiceControlBtn {
+        padding: 16px;
+        font-size: 15px;
+    }
+
+    .suggestionChips {
+        gap: 6px;
+    }
+
+    .suggestionChip {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .voicePanel {
+        bottom: 90px;
+        left: 12px;
+        right: 12px;
+    }
+
+    .sampadaVoiceButton {
+        bottom: 12px;
+        left: 12px;
+    }
+
+    .voiceTrigger {
+        width: 56px;
+        height: 56px;
     }
 }

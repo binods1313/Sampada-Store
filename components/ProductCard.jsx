@@ -1,19 +1,22 @@
 // components/ProductCard.jsx
-// Sampada Homepage Design - Match screenshot exactly
+// Sampada Homepage Design - With Urgency & Quick-Add
 // Applied: emil-design-eng, ui-ux-pro-max, vercel-react-best-practices
 
 "use client";
 
-import React, { useState, memo, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { urlFor } from "../lib/client";
-import { Heart } from "lucide-react";
+import React, { useState, memo, useCallback } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { urlFor } from '../lib/client';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useCartContext } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 const ProductCard = memo(function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { onAdd } = useCartContext();
 
   const {
     _id,
@@ -22,12 +25,16 @@ const ProductCard = memo(function ProductCard({ product }) {
     price,
     discount,
     image,
-    category
+    category,
+    inventory,
+    soldCount
   } = product || {};
 
   const hasDiscount = discount && discount > 0;
   const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
   const firstImage = image && image[0] ? image[0] : null;
+  const isLowStock = inventory && inventory < 5;
+  const hasSoldCount = soldCount && soldCount > 0;
 
   const imageUrl = firstImage?.asset
     ? urlFor(firstImage).width(600).url()
@@ -40,6 +47,12 @@ const ProductCard = memo(function ProductCard({ product }) {
     e.stopPropagation();
     setIsWishlisted(prev => !prev);
   }, []);
+
+  const handleAddToCart = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onAdd(product, 1);
+  }, [onAdd, product]);
 
   return (
     <article
@@ -198,7 +211,7 @@ const ProductCard = memo(function ProductCard({ product }) {
       </div>
 
       {/* Product Info */}
-      <div style={{ padding: '12px' }}>
+      <div style={{ padding: '12px', position: 'relative' }}>
         {/* Product Name - Clean, 2-line clamp */}
         <Link
           href={`/product/${productSlug}`}
@@ -227,6 +240,37 @@ const ProductCard = memo(function ProductCard({ product }) {
         >
           {name}
         </Link>
+
+        {/* Social Proof - "X sold this week" */}
+        {hasSoldCount && (
+          <p style={{
+            fontSize: '11px',
+            color: '#6B7280',
+            marginBottom: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span style={{ color: '#22c55e', fontWeight: '600' }}>●</span>
+            {soldCount} sold this week
+          </p>
+        )}
+
+        {/* Low Stock Warning */}
+        {isLowStock && (
+          <p style={{
+            fontSize: '11px',
+            color: '#dc2626',
+            fontWeight: '600',
+            marginBottom: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span style={{ color: '#dc2626', fontWeight: '600' }}>●</span>
+            Only {inventory} left in stock!
+          </p>
+        )}
 
         {/* Price - Original above (struck-through), discounted below (red, bold, centered) */}
         <div style={{
@@ -267,6 +311,43 @@ const ProductCard = memo(function ProductCard({ product }) {
             </span>
           )}
         </div>
+
+        {/* Quick-Add Button - Slides up on hover */}
+        <button
+          onClick={handleAddToCart}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: `linear-gradient(90deg, #8B0000 0%, #6B0000 100%)`,
+            color: '#F5F0E8',
+            border: 'none',
+            padding: '10px 16px',
+            fontSize: '13px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transform: isHovered ? 'translateY(0)' : 'translateY(100%)',
+            opacity: isHovered ? 1 : 0,
+            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            borderTop: `1px solid rgba(201, 162, 39, 0.3)`,
+            zIndex: 10
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = `linear-gradient(90deg, #6B0000 0%, #8B0000 100%)`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = `linear-gradient(90deg, #8B0000 0%, #6B0000 100%)`;
+          }}
+          aria-label={`Add ${name} to cart`}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          Add to Cart
+        </button>
       </div>
     </article>
   );
