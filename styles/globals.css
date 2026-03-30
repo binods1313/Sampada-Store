@@ -14,6 +14,22 @@ body,
 
 ::-webkit-scrollbar {
   width: 0;
+  height: 0;
+}
+
+/* Hide scrollbar for carousel tracks */
+.carousel-track,
+.marquee-track,
+.announcement-track,
+.reviews-grid ~ * {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar,
+.marquee-track::-webkit-scrollbar,
+.announcement-track::-webkit-scrollbar {
+  display: none;
 }
 
 a {

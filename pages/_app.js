@@ -1,12 +1,8 @@
-// pages/_app.js - DEBUG: Direct imports instead of barrel
+// pages/_app.js
 import '../styles/globals.css';
-// Direct imports to avoid barrel file issues
 import Layout from '../components/Layout';
 import ErrorBoundaryWithFallback from '../components/ErrorBoundaryWithFallback';
-import ErrorMonitorDemo from '../components/ErrorMonitorDemo';
-import TestSuiteNavigator from '../components/TestSuiteNavigator';
-import EnhancedErrorHandlerNavigator from '../components/EnhancedErrorHandlerNavigator';
-import ImageOptimizerTestNavigator from '../components/ImageOptimizerTestNavigator';
+import DevToolsPanel from '../components/DevToolsPanel';
 import { OfflineWrapper } from '../components/FallbackUI-Examples';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
@@ -42,14 +38,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                   <Component {...pageProps} />
                   {/* Sampada AI Voice Assistant */}
                   <SampadaVoiceButton />
-                  {/* Error Monitor for Development */}
-                  <ErrorMonitorDemo />
-                  {/* Test Suite Navigator for Development */}
-                  <TestSuiteNavigator />
-                  {/* Enhanced Error Handler Navigator for Development */}
-                  <EnhancedErrorHandlerNavigator />
-                  {/* Image Optimizer Test Navigator for Development */}
-                  <ImageOptimizerTestNavigator />
+                  {/* Dev Tools Panel - Admin/Dev Only */}
+                  <DevToolsPanel />
                 </Layout>
               </OfflineWrapper>
             </WishlistProvider>

@@ -4,7 +4,17 @@
       "Bash(npm run:*)",
       "Bash(taskkill:*)",
       "Bash(/c/Windows/System32/taskkill.exe /PID 11364 /F)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(Get-Process)",
+      "Bash(Where-Object {$_d -eq 11120})",
+      "Bash(Stop-Process -Force)",
+      "Bash(tasklist)",
+      "Bash(findstr 11120)",
+      "Bash(wmic process:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

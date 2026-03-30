@@ -315,11 +315,11 @@ async function makeRequest(
       },
       body: JSON.stringify({
         model,
-        messages: options.system 
+        messages: options.system
           ? [{ role: 'system', content: options.system }, ...messages]
           : messages,
         temperature: options.temperature ?? 0.7,
-        max_tokens: options.maxTokens ?? MODEL_CONFIG[model as FreeModel]?.maxTokens || 1024,
+        max_tokens: (options.maxTokens ?? MODEL_CONFIG[model as FreeModel]?.maxTokens) || 1024,
       }),
     });
 

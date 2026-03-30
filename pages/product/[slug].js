@@ -12,8 +12,10 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
-import { ReviewSystem, WishlistButton } from '../../components';
-import EnhancedTryOn from '../../components/EnhancedTryOn';
+import { ReviewSystem } from '../../components/ReviewSystem';
+import { WishlistButton } from '../../components/WishlistSystem';
+import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
+// Temporarily disabled: import EnhancedTryOn from '../../components/EnhancedTryOn';
 
 
 const ProductDetails = ({ product, products, slug }) => {
@@ -908,8 +910,8 @@ const ProductDetails = ({ product, products, slug }) => {
             </div>
           </div>
 
-          {/* Enhanced Virtual Try-On */}
-          {process.env.NEXT_PUBLIC_FEATURE_ENHANCED_TRYON === 'true' && (
+          {/* Enhanced Virtual Try-On - Temporarily disabled for debugging */}
+          {/* {process.env.NEXT_PUBLIC_FEATURE_ENHANCED_TRYON === 'true' && (
             <div style={{ marginBottom: '30px' }}>
               <EnhancedTryOn
                 productId={_id}
@@ -917,7 +919,7 @@ const ProductDetails = ({ product, products, slug }) => {
                 size={selectedSize}
               />
             </div>
-          )}
+          )} */}
 
           {/* --- MOVED: Product Specifications Section --- */}
           {specifications && specifications.length > 0 && (
@@ -1089,179 +1091,32 @@ const ProductDetails = ({ product, products, slug }) => {
         />
       </div>
 
-      {/* Related Products Section with fixed product cards */}
+      {/* Related Products Section - Auto-scrolling carousel */}
       {products && products.length > 0 && (
-        <div className="maylike-products-wrapper" style={{
+        <div style={{
           margin: '50px 0',
-          padding: '0 20px', // Adjusted padding for smaller screens
+          padding: '0 20px',
           maxWidth: '1200px',
           marginLeft: 'auto',
-          marginRight: 'auto'
+          marginRight: 'auto',
         }}>
           <h2 style={{
             textAlign: 'center',
             fontSize: '1.75rem',
             fontWeight: 'bold',
-            marginBottom: '30px'
-          }}>You may also like</h2>
-          <div className="marquee"> {/* This class name might imply animation, ensure it's handled or static */}
-            <div className="maylike-products-container track" style={{ // 'track' also implies animation
-              display: 'flex',
-              gap: '20px',
-              flexWrap: 'nowrap', // Important for horizontal scrolling
-              overflowX: 'auto', // Enable horizontal scrolling
-              paddingBottom: '15px', // Space for scrollbar
-              paddingLeft: '10px', // Padding for start of scroll
-              paddingRight: '10px', // Padding for end of scroll
-              scrollPadding: '20px', // Ensures items don't snap too close to edges
-              WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
-              scrollbarWidth: 'thin', // For Firefox
-              scrollbarColor: '#ccc transparent' // For Firefox
-            }}>
-              {products.map((item) => (
-                // Ensure item and item.slug exist before creating Link
-                item && item.slug && item.slug.current ? (
-                  <Link href={`/product/${item.slug.current}`} key={item._id || `product-${Math.random()}`}>
-                    <div className="product-card" style={{
-                      flexShrink: 0, // Prevent cards from shrinking
-                      width: '220px', // Fixed width
-                      height: '300px', // Fixed height
-                      padding: '10px',
-                      backgroundColor: '#fff',
-                      borderRadius: '8px',
-                      position: 'relative', // For discount badge
-                      display: 'flex',
-                      flexDirection: 'column',
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                      overflow: 'hidden' // Clip content if it overflows
-                    }}
-                      // Hover effects
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-5px)';
-                        e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.15)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
-                      }}>
-                      {item.discount > 0 && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '-4px', /* Moved 0.5cm (14px) higher: 10px - 14px = -4px */
-                          right: '10px',
-                          backgroundColor: '#e53935', // Red for discount
-                          color: 'white',
-                          padding: '4px 8px',
-                          borderRadius: '5px',
-                          fontSize: '0.75em',
-                          fontWeight: 'bold',
-                          zIndex: 10, // Above image
-                          lineHeight: '1', // Ensure single line
-                          whiteSpace: 'nowrap' // Prevent wrapping
-                        }}>
-                          {item.discount}% OFF
-                        </div>
-                      )}
-                      <div style={{
-                        height: '180px', // Fixed height for image container
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '10px',
-                        overflow: 'hidden', // Ensure image fits
-                        backgroundColor: '#f9f9f9', // Light background for image area
-                        borderRadius: '4px' // Rounded corners for image area
-                      }}>
-                        <Image
-                          src={
-                            item.image && item.image[0] && item.image[0].asset
-                              ? urlFor(item.image[0]).width(200).url() // Optimized image size
-                              : '/asset/placeholder-image.jpg'
-                          }
-                          alt={item.name || 'Product Image'}
-                          width={200}
-                          height={180}
-                          style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            width: 'auto',
-                            height: 'auto',
-                            objectFit: 'contain', // Ensure entire image is visible
-                            objectPosition: 'center'
-                          }}
-                          onError={(e) => {
-                            console.error('Related product image load failed for:', item.name, 'from URL:', e.target.src);
-                            e.target.src = '/asset/placeholder-image.jpg';
-                          }}
-                        />
-                      </div>
-                      <div style={{
-                        padding: '0 5px', // Padding for text content
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flexGrow: 1, // Allow this section to take remaining space
-                        justifyContent: 'space-between', // Pushes price to bottom
-                        minHeight: '90px' // Ensure consistent height for text area
-                      }}>
-                        <p style={{
-                          fontSize: '0.9rem',
-                          fontWeight: 'bold',
-                          color: '#333',
-                          marginBottom: '5px',
-                          textAlign: 'center',
-                          width: '100%',
-                          lineHeight: '1.3em', // Control line height
-                          maxHeight: `calc(1.3em * 2)`, // Limit to 2 lines
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          display: '-webkit-box', // For multi-line ellipsis
-                          WebkitLineClamp: 2, // Number of lines
-                          WebkitBoxOrient: 'vertical',
-                        }}>
-                          {item.name && item.name.includes('Radiant') && <span style={{ marginRight: '5px' }}>⚡</span>}
-                          {item.name && item.name.includes('HyperVision') && <span style={{ marginRight: '5px' }}>🔥</span>}
-                          {item.name && item.name.includes('Titan') && <span style={{ marginRight: '5px' }}>⚡</span>}
-                          {item.name && item.name.includes('Quantum') && <span style={{ marginRight: '5px' }}>🔵</span>}
-                          {item.name && item.name.includes('Nexus') && <span style={{ marginRight: '5px' }}>🔵</span>}
-                          {item.name || 'Product'}
-                        </p>
-                        <p style={{
-                          fontSize: '1rem',
-                          fontWeight: 'bold',
-                          color: '#f02d34', // Red price
-                          textAlign: 'center',
-                          display: 'flex', // For aligning original price and discount
-                          justifyContent: 'center',
-                          alignItems: 'baseline',
-                          flexWrap: 'wrap', // Allow wrapping if needed
-                          gap: '5px' // Space between current and original price
-                        }}>
-                          ${(item.discount > 0 && item.price
-                            ? (item.price * (1 - (item.discount || 0) / 100))
-                            : item.price || 0
-                          ).toFixed(2)}
+            marginBottom: '30px',
+          }}>
+            You may also like
+          </h2>
 
-                          {item.discount > 0 && item.price && (
-                            <span
-                              style={{
-                                fontSize: "0.8rem",
-                                color: "#999",
-                                textDecoration: "line-through",
-                                whiteSpace: 'nowrap' // Prevent breaking
-                              }}
-                            >
-                              ${item.price.toFixed(2)}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ) : null // Return null if item or slug is missing
-              ))}
-            </div>
+          {/* Outer: clips overflow, hides scrollbar */}
+          <div style={{
+            overflow: 'hidden',
+            position: 'relative',
+            width: '100%',
+          }}>
+            {/* Inner: actual scrolling track */}
+            <RelatedProductsCarousel products={products} />
           </div>
         </div>
       )}
@@ -1397,24 +1252,37 @@ export const getStaticProps = async ({ params: { slug } }) => {
       discount,
       image[]{
         _key, asset->{_id, url}
-      }
-    }`; // Filter for products with defined slugs for related items
+      },
+      category
+    }`;
 
     const fetchedProduct = await client.fetch(currentProductQuery);
-    const fetchedProducts = await client.fetch(allProductsQuery);
+    const allFetchedProducts = await client.fetch(allProductsQuery);
 
     if (!fetchedProduct) {
       console.warn('Product not found for slug:', slug);
       return { notFound: true };
     }
 
+    // Filter related products: same category first, then fill with others
+    let relatedProducts = allFetchedProducts
+      .filter(p => p._id !== fetchedProduct._id)
+      .filter(p => p.category && fetchedProduct.category && p.category._ref === fetchedProduct.category._ref);
+
+    // If same category has < 8 products, fill with other products
+    if (relatedProducts.length < 8) {
+      const otherProducts = allFetchedProducts
+        .filter(p => p._id !== fetchedProduct._id && !relatedProducts.find(rp => rp._id === p._id));
+      relatedProducts = [...relatedProducts, ...otherProducts].slice(0, 8);
+    }
+
     return {
       props: {
         product: fetchedProduct,
-        products: fetchedProducts.filter(p => p._id !== fetchedProduct._id) || [], // Exclude current product from related
-        slug // Pass the slug parameter to component
+        products: relatedProducts || [],
+        slug
       },
-      revalidate: 60 // Increased revalidate time
+      revalidate: 60
     };
   } catch (error) {
     console.error('Error fetching product in getStaticProps for slug', slug, ':', error);

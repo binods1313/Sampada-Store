@@ -25,9 +25,9 @@ export {
 } from './FallbackUI';
 export { default as FallbackShowcase } from './FallbackUI';
 export { OfflineWrapper } from './FallbackUI-Examples';
-export * from './LoadingSkeletons';
-export * from './ReviewSystem';
-export * from './WishlistSystem';
+export { LoadingSkeletons, ProductCardSkeleton, ProductsGridSkeleton, HeroBannerSkeleton, FilterSkeleton, PageLoadingSkeleton, TextSkeleton, ImageSkeleton, ButtonSkeleton } from './LoadingSkeletons';
+export { ReviewSystem, StarRating, RatingSummary, ReviewCard, ReviewForm } from './ReviewSystem';
+export { WishlistButton, WishlistProvider, useWishlist, WishlistPage } from './WishlistSystem';
 
 // Newly added components
 export { default as AnimatedCounter } from './AnimatedCounter';
@@ -42,3 +42,4 @@ export { default as ProductFilterSection } from './ProductFilterSection';
 export { default as NewsletterSection } from './NewsletterSection';
 
 export { default as ImageOptimizerTest } from './ImageOptimizerTest';
+export { default as EnhancedTryOn } from './EnhancedTryOn';

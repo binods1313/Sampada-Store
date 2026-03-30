@@ -1,4 +1,4 @@
-// pages/index.js – Sampada Homepage
+// pages/index.js – Sampada Homepage with Revenue Upgrades
 import React from 'react';
 import Head from 'next/head';
 import { client } from '../lib/client';
@@ -11,6 +11,10 @@ import ProductFilterSection from '../components/ProductFilterSection';
 import PromoBanner from '../components/HomePage/PromoBanner';
 import NewsletterSection from '../components/NewsletterSection';
 import SampadaFooter from '../components/HomePage/SampadaFooter';
+
+// NEW: Revenue-boosting components
+import TrustStrip from '../components/TrustStrip';
+import WhySampada from '../components/WhySampada';
 
 const Home = ({ products, categories, bannerData }) => {
   return (
@@ -28,6 +32,9 @@ const Home = ({ products, categories, bannerData }) => {
         />
       </Head>
 
+      {/* ── 0. Trust & Urgency Strip (NEW) ── */}
+      <TrustStrip />
+
       {/* ── 1. Navigation ── */}
       <MegaNavbar />
 
@@ -37,20 +44,23 @@ const Home = ({ products, categories, bannerData }) => {
       {/* ── 3. Collections ── */}
       <CollectionsSection />
 
-      {/* ── 4. Featured Products with Filters ── */}
-      <ProductFilterSection 
-        products={products} 
+      {/* ── 4. Why Sampada Value Props (NEW) ── */}
+      <WhySampada />
+
+      {/* ── 5. Featured Products with Filters ── */}
+      <ProductFilterSection
+        products={products}
         categories={categories}
         title="Featured Products"
       />
 
-      {/* ── 5. Promo Banner ── */}
+      {/* ── 6. Promo Banner ── */}
       <PromoBanner bannerData={bannerData} />
 
-      {/* ── 6. Newsletter Section ── */}
+      {/* ── 7. Newsletter Section ── */}
       <NewsletterSection />
 
-      {/* ── 7. Footer ── */}
+      {/* ── 8. Footer ── */}
       <SampadaFooter />
     </>
   );
