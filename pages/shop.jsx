@@ -11,7 +11,6 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { useQuery } from 'next-query-params';
 import VirtualProductList from '@/components/VirtualProductList';
 import ProductFilterSection from '@/components/ProductFilterSection';
 import { ProductCardSkeleton } from '@/components/LoadingSkeletons';
