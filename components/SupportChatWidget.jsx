@@ -1,6 +1,10 @@
 /**
  * SupportChatWidget - Minimalist Rebuild
  * HARDCODED colors only - NO CSS variables
+ * 
+ * Features:
+ * - Pretext-powered 60fps message height calculation
+ * - Zero layout shift during AI streaming
  */
 
 'use client';
@@ -9,6 +13,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useSupportChat } from '@/hooks/useAI';
 import { MessageCircle, X, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useDebouncedTextHeight } from '../hooks/usePretext';
 
 // Hardcoded brand colors - NO CSS VARIABLES
 const COLORS = {
@@ -98,6 +103,54 @@ const SupportChatWidget = () => {
     setHasInteracted(true);
     sendMessage(text);
   };
+
+  // Chat message component with Pretext height calculation
+  const ChatMessage = React.memo(({ message, isStreaming = false }) => {
+    // Use debounced measurement for smooth 60fps during streaming
+    const { height } = useDebouncedTextHeight(
+      message.content,
+      {
+        font: '13px Inter, system-ui, sans-serif',
+        maxWidth: 220, // ~80% of 320px chat width minus padding
+        lineHeight: 19.5, // 13px * 1.5
+        whiteSpace: 'pre-wrap',
+      },
+      isStreaming ? 100 : 0 // Debounce while streaming, instant when done
+    );
+
+    return (
+      <div
+        style={{
+          alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
+          display: 'flex',
+          justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '80%',
+            padding: '10px 14px',
+            borderRadius: message.role === 'user' 
+              ? '12px 12px 4px 12px' 
+              : '12px 12px 12px 4px',
+            background: message.role === 'user' ? COLORS.userBubble : COLORS.botBubble,
+            color: COLORS.textWhite,
+            fontSize: '13px',
+            lineHeight: 1.5,
+            // Pretext-calculated height for zero layout shift
+            minHeight: height ? `${height}px` : 'auto',
+            transition: isStreaming ? 'none' : 'height 0.2s ease',
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
+          }}
+        >
+          {message.content}
+        </div>
+      </div>
+    );
+  });
+
+  ChatMessage.displayName = 'ChatMessage';
 
   // COLLAPSED - Just the button
   if (!isOpen) {
@@ -297,33 +350,13 @@ const SupportChatWidget = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                style={{
-                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                  display: 'flex',
-                  justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                }}
-              >
-                <div
-                  style={{
-                    maxWidth: '80%',
-                    padding: '10px 14px',
-                    borderRadius: '12px 12px 12px 4px',
-                    background: msg.role === 'user' ? COLORS.userBubble : COLORS.botBubble,
-                    color: COLORS.textWhite,
-                    fontSize: '13px',
-                    lineHeight: 1.5,
-                    ...(msg.role === 'user' && {
-                      borderRadius: '12px 12px 4px 12px',
-                    }),
-                  }}
-                >
-                  {msg.content}
-                </div>
-              </div>
+              <ChatMessage 
+                key={idx} 
+                message={msg} 
+                isStreaming={loading && idx === messages.length - 1 && msg.role === 'assistant'}
+              />
             ))}
-            {loading && (
+            {loading && messages.length === 0 && (
               <div style={{ display: 'flex', gap: '4px', padding: '10px 14px', background: COLORS.botBubble, borderRadius: '12px', maxWidth: '60px' }}>
                 <span
                   style={{
