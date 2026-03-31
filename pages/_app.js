@@ -9,7 +9,17 @@ import { SessionProvider } from 'next-auth/react';
 import { UIProvider } from '../context/StateContext';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../components/WishlistSystem';
+import { useEffect } from 'react';
+import { initializeSampadaFonts } from '../utils/fontLoader';
 import dynamic from 'next/dynamic';
+
+// Preload fonts for accurate text measurement (Pretext)
+function FontLoader() {
+  useEffect(() => {
+    initializeSampadaFonts();
+  }, []);
+  return null;
+}
 
 // Dynamically import SampadaVoiceButton to avoid SSR issues with Web Speech API
 const SampadaVoiceButton = dynamic(
@@ -26,6 +36,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             <WishlistProvider>
               <OfflineWrapper>
                 <Layout>
+                  {/* Font loader for Pretext text measurement */}
+                  <FontLoader />
                   <Toaster
                     position="bottom-center"
                     toastOptions={{
