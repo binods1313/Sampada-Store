@@ -103,9 +103,11 @@ export default function ShopPage() {
 
       {/* Filters */}
       <ProductFilterSection
+        products={filteredProducts}
         categories={categories}
         filters={filters}
         onFilterChange={setFilters}
+        title="Shop All Products"
       />
 
       {/* Virtual Product List */}
