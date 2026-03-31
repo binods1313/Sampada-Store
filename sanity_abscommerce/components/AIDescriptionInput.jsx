@@ -13,10 +13,39 @@ export function AIDescriptionInput(props) {
   const [error, setError] = useState(null);
   const [debugInfo, setDebugInfo] = useState('');
 
+  // Log full props structure to console for debugging
+  useEffect(() => {
+    console.log('[AIDescriptionInput] FULL PROPS:', JSON.stringify(props, null, 2));
+    console.log('[AIDescriptionInput] props.document:', props.document);
+    console.log('[AIDescriptionInput] props.parent:', props.parent);
+    console.log('[AIDescriptionInput] props.value:', props.value);
+    
+    // Try to find the product name in multiple ways
+    const namePaths = [
+      'props.document.displayed.name',
+      'props.document.displayed.title',
+      'props.parent.name',
+      'props.parent.title',
+      'props.value.name',
+      'props.value.title',
+    ];
+    
+    const debugLines = namePaths.map(path => {
+      const val = path.split('.').reduce((obj, key) => obj?.[key], props);
+      return `${path}: ${JSON.stringify(val)}`;
+    });
+    
+    setDebugInfo(debugLines.join('\n'));
+  }, [props]);
+
   // Get product context from parent document - multiple fallback paths
+  // Try both 'name' and 'title' as the field might be called either
   const productName = props.document?.displayed?.name || 
+                      props.document?.displayed?.title ||
                       props.parent?.name || 
-                      props.value?.name || 
+                      props.parent?.title ||
+                      props.value?.name ||
+                      props.value?.title || 
                       '';
   const category = props.document?.displayed?.category?.name || 
                    props.parent?.category?.name || 
@@ -24,20 +53,6 @@ export function AIDescriptionInput(props) {
   const price = props.document?.displayed?.price || 
                 props.parent?.price || 
                 '';
-
-  // Debug logging
-  useEffect(() => {
-    setDebugInfo(`Name: "${productName}", Category: "${category}", Price: "${price}"`);
-    console.log('[AIDescriptionInput] Document context:', {
-      productName,
-      category,
-      price,
-      hasDocument: !!props.document,
-      hasParent: !!props.parent,
-      displayedName: props.document?.displayed?.name,
-      parentName: props.parent?.name,
-    });
-  }, [productName, category, price, props.document, props.parent]);
 
   const generateDescription = useCallback(async () => {
     if (!productName) {
@@ -113,12 +128,18 @@ export function AIDescriptionInput(props) {
         }}
       />
       
-      {/* Debug info (remove in production) */}
-      {debugInfo && (
-        <Text size={1} muted style={{ fontFamily: 'monospace', fontSize: '10px' }}>
+      {/* Debug info - shows all name paths being checked */}
+      <Box padding={2} radius={2} style={{ background: '#f5f5f5', fontFamily: 'monospace', fontSize: '11px' }}>
+        <Text size={1} weight={500}>🔍 Debug - Checking these paths:</Text>
+        <pre style={{ margin: '8px 0', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
           {debugInfo}
+        </pre>
+        <Text size={1} tone={productName ? 'positive' : 'critical'}>
+          {productName 
+            ? `✅ Detected: "${productName}"` 
+            : `❌ No product name detected - button disabled`}
         </Text>
-      )}
+      </Box>
       
       {/* Helper text when button is disabled */}
       {!productName && (
