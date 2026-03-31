@@ -35,6 +35,12 @@ const nextConfigCore = {
         hostname: 'avatars.githubusercontent.com',
         port: '',
         pathname: '/**',
+      },
+      { // Add Unsplash for demo product images
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
       }
     ],
     // Add quality options to support 85 quality

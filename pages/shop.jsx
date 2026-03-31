@@ -16,6 +16,7 @@ import ProductFilterSection from '@/components/ProductFilterSection';
 import { ProductCardSkeleton } from '@/components/LoadingSkeletons';
 
 // Sample products for demo (replace with real API call)
+// Using Unsplash placeholder images for demo purposes
 const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
   _id: `product-${i}`,
   name: `Premium Product ${i + 1}`,
@@ -24,16 +25,34 @@ const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
   discount: Math.random() > 0.5 ? Math.floor(Math.random() * 30) + 10 : 0,
   description: 'This is a sample product description that demonstrates the virtual scrolling capability with Pretext height calculation.',
   category: { name: i % 2 === 0 ? 'T-Shirts' : 'Hoodies' },
-  // Use valid Sanity image reference format
-  image: [{ 
+  // Use direct image URLs for demo (replace with real Sanity images in production)
+  image: [{
     _key: `img-${i}`,
     _type: 'image',
-    asset: { 
+    asset: {
       _type: 'reference',
-      _ref: 'image-Tb9Ew8CXIwaY6R1kjMvI0uRR-2000x3000-jpg'
-    }
+      // Using different Unsplash images for variety
+      _ref: `image-${i % 8}`
+    },
+    // Store the actual URL in a custom field for fallback
+    url: `https://images.unsplash.com/photo-${getUnsplashId(i)}?w=600&h=600&fit=crop`
   }],
 }));
+
+// Helper to get different Unsplash image IDs
+function getUnsplashId(index) {
+  const ids = [
+    '1523381210434-271e8be1f52b', // Clothing
+    '1576566588028-4147f3842f27', // T-shirt
+    '1562157873-9182d2484753', // Fashion
+    '1583743814966-8936f5b7be1a', // Black shirt
+    '1576995950047-24d844a4aff7', // Product
+    '1542272454315-4db0a6f718c7', // Style
+    '1589330180430-efc1e69c89b9', // Fashion
+    '1618354691373-d851c5c3a990', // Product
+  ];
+  return ids[index % ids.length];
+}
 
 export default function ShopPage() {
   const [loading, setLoading] = useState(true);

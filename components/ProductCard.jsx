@@ -50,7 +50,11 @@ const ProductCard = memo(function ProductCard({ product }) {
   // Get image URL with error handling for invalid references
   let imageUrl = '/asset/placeholder-image.jpg';
   try {
-    if (firstImage?.asset) {
+    if (firstImage?.url) {
+      // Use direct URL if available (for demo/fallback)
+      imageUrl = firstImage.url;
+    } else if (firstImage?.asset) {
+      // Try Sanity URL
       imageUrl = urlFor(firstImage).width(600).url();
     }
   } catch (error) {
