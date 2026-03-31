@@ -58,14 +58,20 @@ const HomeHeroBanner = ({ heroBanner }) => {
         )}
       </div>
 
-      {/* Shop Now Button */}
+      {/* Shop Now Button with Arrow Icon */}
       {product ? (
         <Link href={`/product/${product}`} className={styles.shopNowLink}>
-          <button className={styles.shopNowBtn}>Shop Now</button>
+          <button className="shop-now-btn">
+            Shop Now
+            <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
+          </button>
         </Link>
       ) : (
         <Link href="/collections/mens-tshirts" className={styles.shopNowLink}>
-          <button className={styles.shopNowBtn}>Shop Now</button>
+          <button className="shop-now-btn">
+            Shop Now
+            <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
+          </button>
         </Link>
       )}
     </section>

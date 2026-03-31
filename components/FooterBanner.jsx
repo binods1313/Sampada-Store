@@ -174,46 +174,25 @@ const FooterBanner = ({ footerBanner }) => {
         </div>
       </div>
       
-      {/* CTA Button - UI/UX Pro Max: 44px min height, white bg, red text */}
+      {/* CTA Button - Premium styled with arrow icon (Light variant for dark background) */}
       <div className="footer-cta" style={{
         marginTop: 'var(--space-8)',
         textAlign: 'center'
       }}>
         {shouldRenderLink ? (
           <Link href={`/product/${product}`}>
-            <button type="button" className="shop-now-btn hover-effect" style={{
-              backgroundColor: 'white',
-              color: 'var(--color-cta-red)',
-              padding: 'var(--space-3) var(--space-8)',
-              border: 'none',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 'var(--text-base)',
-              fontWeight: 'var(--font-bold)',
-              cursor: 'pointer',
-              minHeight: '44px',
-              transition: 'all var(--transition-base)',
-              boxShadow: 'var(--shadow-medium)',
-              textTransform: 'uppercase',
-              letterSpacing: 'var(--tracking-wide)'
-            }}>
+            <button type="button" className="shop-now-btn-light">
               {buttonText}
+              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
             </button>
           </Link>
         ) : (
-          <button type="button" className="shop-now-btn hover-effect" disabled style={{
-            backgroundColor: 'rgba(255,255,255,0.5)',
-            color: 'var(--color-cta-red)',
-            padding: 'var(--space-3) var(--space-8)',
-            border: 'none',
-            borderRadius: 'var(--radius-md)',
-            fontSize: 'var(--text-base)',
-            fontWeight: 'var(--font-bold)',
-            cursor: 'not-allowed',
-            minHeight: '44px',
-            textTransform: 'uppercase',
-            letterSpacing: 'var(--tracking-wide)'
+          <button type="button" className="shop-now-btn-light" disabled style={{
+            opacity: 0.6,
+            cursor: 'not-allowed'
           }}>
             {buttonText}
+            <span style={{ fontSize: '16px' }}>→</span>
           </button>
         )}
       </div>

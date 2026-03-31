@@ -98,7 +98,10 @@ const PromoBanner = ({ bannerData }) => {
           </p>
           <div className={styles.ctaWrapper}>
             <Link href="/collections/mens-tshirts">
-              <button className={styles.shopBtn}>Shop Now</button>
+              <button className="shop-now-btn-light">
+                Shop Now
+                <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
+              </button>
             </Link>
             <p className={styles.discount}>30% off – 01 Feb to 31 Mar 2026</p>
           </div>

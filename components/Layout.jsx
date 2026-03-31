@@ -3,10 +3,12 @@ import React, { useState, useCallback } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
-import MegaNavbar from './HomePage/MegaNavbar';
+import SampadaNavbar from './HomePage/SampadaNavbar';
 import Footer from './Footer';
 import { useUIContext } from '../context/StateContext';
+import { useCartContext } from '../context/CartContext';
 
 // Dynamically import CartSlider
 const CartSlider = dynamic(() => import('./CartSlider'), { ssr: false });
@@ -27,8 +29,11 @@ const VoiceAssistant = dynamic(
 const PAGES_WITHOUT_LAYOUT = ['/'];
 
 const Layout = ({ children }) => {
-  const { showCart } = useUIContext();
+  const { showCart, setShowCart } = useUIContext();
+  const { totalQuantities } = useCartContext();
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const loading = status === 'loading';
   const hideLayout = PAGES_WITHOUT_LAYOUT.includes(router.pathname);
 
   // Widget state management for mobile
@@ -66,7 +71,14 @@ const Layout = ({ children }) => {
       {/* Only show global Navbar on non-homepage pages */}
       {!hideLayout && (
         <header>
-          <MegaNavbar />
+          <SampadaNavbar
+            session={session}
+            loading={loading}
+            onSignIn={() => window.location.href = '/api/auth/signin'}
+            totalQuantities={totalQuantities}
+            setShowCart={setShowCart}
+            showMarquee={true}
+          />
         </header>
       )}
       
