@@ -1,10 +1,15 @@
 /**
  * ReviewSystem — Masonry Layout with Customer Photos
- * 
+ *
  * Pinterest-style masonry grid for review cards
  * Image-first design with verified badges
  * Filter pills, lightbox, and full accessibility
- * 
+ *
+ * Features:
+ * - Pretext-powered review text height calculation
+ * - Zero layout shift on text load
+ * - Accurate masonry layout
+ *
  * Brand: Gold (#C9A227), Dark (#1E1E2E, #13131F)
  */
 
@@ -13,6 +18,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { FaStar, FaUser, FaThumbsUp, FaThumbsDown, FaCamera } from 'react-icons/fa';
 import { X, Upload, CheckCircle, Image as ImageIcon } from 'lucide-react';
+import { useTextHeight } from '../hooks/usePretext';
 
 // COLORS - hardcoded
 const COLORS = {
@@ -200,6 +206,16 @@ export const ReviewCard = ({ review, onOpenLightbox }) => {
   const [helpful, setHelpful] = useState(review?.helpful || 0);
   const [userVoted, setUserVoted] = useState(false);
 
+  // Pre-calculate review text height for zero layout shift
+  const { height: textHeight, loaded: textMeasured } = useTextHeight(
+    review.text || '',
+    {
+      font: '13px Inter, system-ui, sans-serif',
+      maxWidth: 280,
+      lineHeight: 21,
+    }
+  );
+
   const handleHelpful = (vote) => {
     if (!userVoted) {
       setHelpful(prev => prev + (vote === 'yes' ? 1 : -1));
@@ -313,7 +329,7 @@ export const ReviewCard = ({ review, onOpenLightbox }) => {
         </div>
       </div>
 
-      {/* Review Text */}
+      {/* Review Text - Zero layout shift with Pretext */}
       {review.text && (
         <div style={{ padding: '8px 14px 14px' }}>
           {review.title && (
@@ -321,7 +337,16 @@ export const ReviewCard = ({ review, onOpenLightbox }) => {
               {review.title}
             </p>
           )}
-          <p style={{ color: COLORS.textMuted, margin: 0, lineHeight: 1.6, fontSize: '13px' }}>
+          <p
+            style={{
+              color: COLORS.textMuted,
+              margin: 0,
+              lineHeight: 1.6,
+              fontSize: '13px',
+              // Pretext-calculated height for zero layout shift
+              minHeight: textMeasured ? `${textHeight}px` : 'auto',
+            }}
+          >
             {review.text}
           </p>
         </div>
