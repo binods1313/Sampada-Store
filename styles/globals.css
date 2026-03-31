@@ -759,6 +759,11 @@ span.text-red {
   color: #ffffff;
 }
 
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 @media (max-width: 768px) {
   .cta-description {
     position: static;

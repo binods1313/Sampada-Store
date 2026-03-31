@@ -2,6 +2,7 @@
 import { defineField, defineType } from 'sanity'
 import { MdLocalOffer as icon } from 'react-icons/md'
 import { seoFields } from './seoFields'
+import { AIDescriptionInput } from '../components/AIDescriptionInput'
 
 export default defineType({
   name: 'product',
@@ -80,6 +81,9 @@ export default defineType({
       title: 'Details',
       type: 'text', // Changed to 'text' for potentially longer descriptions
       rows: 5, // Gives a larger input area in Sanity Studio
+      components: {
+        input: AIDescriptionInput
+      }
     }),
     
     // --- NEW: Product Specifications Field ---
