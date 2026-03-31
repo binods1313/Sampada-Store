@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -218,11 +219,11 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        className={`nav-link ${isOpen ? 'nav-link-active' : ''}`}
         style={{
           padding: '20px 12px',
           fontSize: '14px',
           fontWeight: 700,
-          color: '#1f2937',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -230,7 +231,6 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
           display: 'flex',
           alignItems: 'center',
           gap: '4px',
-          transition: 'color 0.2s ease',
           position: 'relative'
         }}
         onMouseEnter={(e) => {
@@ -246,9 +246,10 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
       >
         {label}
         <motion.span
+          className={`nav-chevron ${isOpen ? 'nav-chevron-open' : ''}`}
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          style={{ fontSize: '10px' }}
+          style={{ fontSize: '11px' }}
         >
           ▾
         </motion.span>
@@ -982,6 +983,7 @@ export default function SampadaNavbar({
   setShowCart,
   showMarquee = true
 }) {
+  const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeMore, setActiveMore] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -1034,6 +1036,7 @@ export default function SampadaNavbar({
 
   return (
     <header
+      className={isScrolled ? 'navbar-scrolled' : 'navbar-top'}
       style={{
         width: '100%',
         backgroundColor: 'white',
@@ -1041,7 +1044,6 @@ export default function SampadaNavbar({
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.08)' : '0 1px 3px rgba(0, 0, 0, 0.1)',
         transition: 'all 0.3s ease'
       }}
     >
@@ -1063,17 +1065,11 @@ export default function SampadaNavbar({
         {/* LEFT — Logo with Premium Typography */}
         <Link
           href="/"
+          className="sampada-logo"
           style={{
-            fontWeight: 900,
-            fontSize: '26px',
-            background: 'linear-gradient(135deg, #8B1A1A 0%, #0a0a0a 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textDecoration: 'none',
             flexShrink: 0,
             marginRight: '40px',
-            letterSpacing: '-0.5px',
+            textDecoration: 'none',
             transition: 'opacity 0.2s ease'
           }}
           onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
@@ -1095,11 +1091,11 @@ export default function SampadaNavbar({
         >
           <Link
             href="/"
+            className={`nav-link ${pathname === '/' ? 'nav-link-active' : ''}`}
             style={{
               padding: '20px 12px',
               fontSize: '14px',
               fontWeight: 700,
-              color: '#1f2937',
               textDecoration: 'none',
               whiteSpace: 'nowrap',
               position: 'relative',
@@ -1213,31 +1209,17 @@ export default function SampadaNavbar({
             {!session && !loading && (
               <button
                 onClick={onSignIn}
+                className="signin-btn"
                 style={{
-                  backgroundColor: 'transparent',
-                  color: '#8B1A1A',
                   padding: '10px 20px',
                   borderRadius: '8px',
                   fontSize: '14px',
-                  fontWeight: 600,
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  border: '2px solid #C9A84C',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#8B1A1A';
-                  e.currentTarget.style.borderColor = '#8B1A1A';
-                  e.currentTarget.style.color = 'white';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.borderColor = '#C9A84C';
-                  e.currentTarget.style.color = '#8B1A1A';
+                  cursor: 'pointer'
                 }}
               >
                 <User size={16} /> Sign In
@@ -1304,10 +1286,10 @@ export default function SampadaNavbar({
               alignItems: 'center',
               justifyContent: 'center',
               color: '#C9A84C',
-              transition: 'color 0.2s ease'
+              transition: 'opacity 0.2s ease'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = '#8B1A1A'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#C9A84C'}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
             <Menu size={28} />
           </button>
