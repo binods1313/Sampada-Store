@@ -30,7 +30,7 @@ export default defineType({
       of: [
         {
           type: 'image',
-          options: { 
+          options: {
             hotspot: true,
             storeDimensions: true,
             metadata: ['blurhash', 'palette']
@@ -41,7 +41,7 @@ export default defineType({
               title: 'Alt Text',
               type: 'string',
               description: 'Important for accessibility and SEO',
-              validation: Rule => Rule.required().error('Alt text is required for product images'),
+              validation: Rule => Rule.error('Alt text is recommended for product images'),
             },
             {
               name: 'caption',

@@ -3,7 +3,7 @@
  * Generates compelling product descriptions using OpenRouter API
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { set } from 'sanity';
 import { Box, Button, Text, Stack, Spinner } from '@sanity/ui';
 
@@ -11,11 +11,33 @@ export function AIDescriptionInput(props) {
   const { onChange, value, elementProps } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [debugInfo, setDebugInfo] = useState('');
 
-  // Get product context from parent document
-  const productName = props.document?.displayed?.name || '';
-  const category = props.document?.displayed?.category?.name || '';
-  const price = props.document?.displayed?.price || '';
+  // Get product context from parent document - multiple fallback paths
+  const productName = props.document?.displayed?.name || 
+                      props.parent?.name || 
+                      props.value?.name || 
+                      '';
+  const category = props.document?.displayed?.category?.name || 
+                   props.parent?.category?.name || 
+                   '';
+  const price = props.document?.displayed?.price || 
+                props.parent?.price || 
+                '';
+
+  // Debug logging
+  useEffect(() => {
+    setDebugInfo(`Name: "${productName}", Category: "${category}", Price: "${price}"`);
+    console.log('[AIDescriptionInput] Document context:', {
+      productName,
+      category,
+      price,
+      hasDocument: !!props.document,
+      hasParent: !!props.parent,
+      displayedName: props.document?.displayed?.name,
+      parentName: props.parent?.name,
+    });
+  }, [productName, category, price, props.document, props.parent]);
 
   const generateDescription = useCallback(async () => {
     if (!productName) {
@@ -40,6 +62,7 @@ export function AIDescriptionInput(props) {
       const data = await response.json();
       if (data.description) {
         onChange(set(data.description));
+        setError(null);
       } else if (data.error) {
         setError(data.error);
       }
@@ -90,6 +113,20 @@ export function AIDescriptionInput(props) {
         }}
       />
       
+      {/* Debug info (remove in production) */}
+      {debugInfo && (
+        <Text size={1} muted style={{ fontFamily: 'monospace', fontSize: '10px' }}>
+          {debugInfo}
+        </Text>
+      )}
+      
+      {/* Helper text when button is disabled */}
+      {!productName && (
+        <Text size={1} tone="critical">
+          ⚠️ Please enter a Product Name above to enable AI generation
+        </Text>
+      )}
+      
       {/* Loading skeleton */}
       {loading && (
         <Box padding={3} radius={2}>
@@ -105,15 +142,15 @@ export function AIDescriptionInput(props) {
       
       {/* Error message */}
       {error && (
-        <Text size={1} weight={500} style={{ color: '#8B1A1A' }}>
+        <Text size={1} weight={500} tone="critical">
           ⚠️ {error}
         </Text>
       )}
       
       {/* Helper text */}
-      {!value && !error && !loading && (
+      {!value && !error && !loading && productName && (
         <Text size={1} muted>
-          💡 Click "Generate with AI" to create a compelling product description
+          💡 Click "✨ Generate with AI" to create a compelling product description
         </Text>
       )}
       
