@@ -1,5 +1,5 @@
 // components/ProductCard.jsx
-// Sampada Homepage Design - With Urgency & Quick-Add
+// Sampada Homepage Homepage Design - With Urgency & Quick-Add
 // Applied: emil-design-eng, ui-ux-pro-max, vercel-react-best-practices
 
 "use client";
@@ -11,6 +11,7 @@ import { urlFor } from '../lib/client';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { useCartContext } from '../context/CartContext';
 import toast from 'react-hot-toast';
+import { useTextHeight } from '../hooks/usePretext';
 
 const ProductCard = memo(function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -29,6 +30,16 @@ const ProductCard = memo(function ProductCard({ product }) {
     inventory,
     soldCount
   } = product || {};
+
+  // Pre-calculate product name height to prevent layout shift
+  const { height: nameHeight, loaded: nameMeasured } = useTextHeight(
+    name || '',
+    {
+      font: '500 14px Inter, system-ui, sans-serif',
+      maxWidth: 280, // Adjust based on your card width
+      lineHeight: 21,
+    }
+  );
 
   const hasDiscount = discount && discount > 0;
   const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
@@ -212,7 +223,7 @@ const ProductCard = memo(function ProductCard({ product }) {
 
       {/* Product Info */}
       <div style={{ padding: '12px', position: 'relative' }}>
-        {/* Product Name - Clean, 2-line clamp */}
+        {/* Product Name - Zero layout shift with Pretext height */}
         <Link
           href={`/product/${productSlug}`}
           style={{
@@ -228,7 +239,8 @@ const ProductCard = memo(function ProductCard({ product }) {
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            minHeight: '42px',
+            // Use Pretext-calculated height to prevent layout shift
+            minHeight: nameMeasured ? `${nameHeight}px` : '42px',
             transition: 'color 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
           onMouseEnter={(e) => {
