@@ -24,7 +24,15 @@ const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
   discount: Math.random() > 0.5 ? Math.floor(Math.random() * 30) + 10 : 0,
   description: 'This is a sample product description that demonstrates the virtual scrolling capability with Pretext height calculation.',
   category: { name: i % 2 === 0 ? 'T-Shirts' : 'Hoodies' },
-  image: [{ asset: { _ref: 'image-1' } }],
+  // Use valid Sanity image reference format
+  image: [{ 
+    _key: `img-${i}`,
+    _type: 'image',
+    asset: { 
+      _type: 'reference',
+      _ref: 'image-Tb9Ew8CXIwaY6R1kjMvI0uRR-2000x3000-jpg'
+    }
+  }],
 }));
 
 export default function ShopPage() {

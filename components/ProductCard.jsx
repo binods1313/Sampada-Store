@@ -47,9 +47,16 @@ const ProductCard = memo(function ProductCard({ product }) {
   const isLowStock = inventory && inventory < 5;
   const hasSoldCount = soldCount && soldCount > 0;
 
-  const imageUrl = firstImage?.asset
-    ? urlFor(firstImage).width(600).url()
-    : '/asset/placeholder-image.jpg';
+  // Get image URL with error handling for invalid references
+  let imageUrl = '/asset/placeholder-image.jpg';
+  try {
+    if (firstImage?.asset) {
+      imageUrl = urlFor(firstImage).width(600).url();
+    }
+  } catch (error) {
+    // Use placeholder for invalid image references
+    console.warn('Invalid image reference, using placeholder:', firstImage?.asset?._ref);
+  }
 
   const productSlug = slug?.current || _id;
 
