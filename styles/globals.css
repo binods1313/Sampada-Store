@@ -1,6 +1,73 @@
 /* Import Product Card Styles */
 @import './ProductCard.css';
 
+/* ============================================================================
+   SAMPADA MARQUEE ANIMATION - For announcement bar (unique name to avoid conflicts)
+   ============================================================================ */
+@keyframes sampada-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.sampada-marquee-bar {
+  background-color: #8B1A1A;
+  overflow: hidden;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.sampada-marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: sampada-marquee 15s linear infinite;
+  animation-fill-mode: forwards;
+  will-change: transform;
+  width: max-content;
+  min-width: 100%;
+}
+
+.sampada-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.sampada-marquee-text {
+  color: #C9A84C;
+  font-size: 13px;
+  font-weight: 500;
+  padding-right: 80px;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* Force marquee animation even with reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .sampada-marquee-track {
+    animation: sampada-marquee 5s linear infinite !important;
+  }
+}
+
+/* ============================================================================
+   MARQUEE ANIMATION - For announcement bar
+   ============================================================================ */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 25s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
 html,
 body,
 * {
@@ -286,21 +353,172 @@ span.text-red {
   z-index: 10;
 }
 
+/* ============================================================================
+   PREMIUM SHOP NOW BUTTON - Sampada Brand (Deep Red + Gold)
+   Used in Hero Banner and Footer Banner
+   ============================================================================ */
 .shop-now-btn {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  background-color: #ef4444;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border: 2px solid #C9A84C;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 26, 26, 0.4),
+              inset 0 1px 0 rgba(201, 168, 76, 0.2);
 }
 
+/* Shimmer effect on the button */
+.shop-now-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+/* Hover State */
 .shop-now-btn:hover {
-  background-color: #dc2626;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #C9A84C 0%, #a88535 100%);
+  border-color: #C9A84C;
+  color: #1a0a00;
+  box-shadow: 0 6px 25px rgba(201, 168, 76, 0.5),
+              0 0 0 1px rgba(201, 168, 76, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Shimmer runs on hover */
+.shop-now-btn:hover::before {
+  left: 100%;
+}
+
+/* Arrow moves right on hover */
+.shop-now-btn:hover span {
+  transform: translateX(4px);
+}
+
+/* Arrow transition */
+.shop-now-btn span {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* Active/Click State */
+.shop-now-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(139, 26, 26, 0.4);
+}
+
+/* Focus state for accessibility */
+.shop-now-btn:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   SHOP NOW BUTTON - LIGHT VARIANT (for dark backgrounds like FooterBanner)
+   Gold button with white border - creates premium contrast on dark/red background
+   ============================================================================ */
+.shop-now-btn-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #C9A84C 0%, #a88535 100%);
+  color: #1a0a00;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Shimmer effect on the button */
+.shop-now-btn-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+/* Hover State */
+.shop-now-btn-light:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #f0e6cc 100%);
+  border-color: #C9A84C;
+  color: #1a0a00;
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.4),
+              0 0 0 1px rgba(201, 168, 76, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Shimmer runs on hover */
+.shop-now-btn-light:hover::before {
+  left: 100%;
+}
+
+/* Arrow moves right on hover */
+.shop-now-btn-light:hover span {
+  transform: translateX(4px);
+}
+
+/* Arrow transition */
+.shop-now-btn-light span {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* Active/Click State */
+.shop-now-btn-light:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.4);
+}
+
+/* Focus state for accessibility */
+.shop-now-btn-light:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Footer CTA override - keep positioning but use premium colors */
+.footer-cta .shop-now-btn,
+.footer-cta .shop-now-btn-light {
+  position: static !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
 }
 
 @media (max-width: 768px) {
@@ -348,48 +566,12 @@ span.text-red {
   right: 2rem;
 }
 
-.footer-cta .shop-now-btn {
-  position: static !important;
-  /* Override the absolute positioning from the original class */
-  background-color: white !important;
-  color: #ef4444 !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 0.5rem !important;
-  font-weight: 700 !important;
-  /* Stronger bold text */
-  font-size: 1rem !important;
-  border: 2px solid #ef4444 !important;
-  cursor: pointer !important;
-  transition: background-color 0.3s ease, transform 0.3s ease !important;
-  text-align: center !important;
-  display: inline-block !important;
-  min-width: auto !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
-}
-
-.footer-cta .shop-now-btn:hover {
-  background-color: #fef2f2 !important;
-  /* Light red background on hover */
-  transform: scale(1.05);
-}
-
 .banner-desc {
   display: flex;
   justify-content: space-between;
 }
 
-.banner-desc button {
-  border-radius: 15px;
-  padding: 10px 16px;
-  background-color: white;
-  color: red;
-  border: none;
-  margin-top: 40px;
-  font-size: 18px;
-  font-weight: 500;
-  cursor: pointer;
-}
+/* Removed generic button styles - use .shop-now-btn or .shop-now-btn-light classes instead */
 
 .banner-desc .left h3 {
   font-weight: 900;
@@ -1520,23 +1702,7 @@ img {
     margin-top: 15px;
   }
 
-  /* Shop Now button styling */
-  .shop-now-btn {
-    background-color: #f02d34;
-    color: white;
-    border: 1px solid white;
-    padding: 10px 16px;
-    border-radius: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  /* On hover, the Shop Now button scales and its shadow becomes blue */
-  .shop-now-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px blue, 0 0 20px blue, 0 0 30px blue;
-  }
+  /* Removed old shop-now-btn styles - using premium button classes instead */
 
   /* Neon Description Container with red neon glow */
   .neon-description-container {
@@ -1575,54 +1741,6 @@ img {
     padding: 30px 30px 35px;
     /* Increased bottom padding by 5px */
     overflow: hidden;
-  }
-
-  /* Flex container to place left, image, and right side-by-side */
-  .banner-desc {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
-
-  /* Left side texts */
-  .left {
-    flex: 1;
-  }
-
-  /* Right side texts */
-  .right {
-    flex: 1;
-    text-align: right;
-  }
-
-  /* Image container for the smartwatch image */
-  .image-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* Hover effect for elements that still require it (like the Shop Now button) */
-  .hover-effect {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .hover-effect:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px #FF7276, 0 0 20px #FF7276, 0 0 30px #FF7276;
-  }
-
-  /* Shop Now button styling */
-  .shop-now-btn {
-    background-color: #f02d34;
-    color: white;
-    border: 1px solid white;
-    padding: 10px 16px;
-    border-radius: 15px;
-    font-weight: 500;
-    cursor: pointer;
   }
 
   /* Hero Banner Global Styles - Add to globals.css */
@@ -1710,19 +1828,6 @@ img {
     z-index: 3;
   }
 
-  .shop-now-btn {
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 25px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgb(255 107 107 / 30%);
-  }
-
   .neon-description-container {
     background: rgb(255 255 255 / 90%);
     padding: 20px;
@@ -1784,23 +1889,6 @@ img {
   .hero-banner-image.hover-effect:hover {
     transform: scale(1.1) rotate(2deg);
     filter: drop-shadow(0 15px 40px rgb(0 0 0 / 40%)) drop-shadow(0 0 30px rgb(69 183 209 / 30%));
-  }
-
-  /* Button hover effect */
-  .shop-now-btn.hover-effect:hover {
-    background: linear-gradient(45deg, #ff8e8e, #ffb3b3);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgb(255 107 107 / 50%);
-  }
-
-  .shop-now-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .shop-now-btn:disabled:hover {
-    transform: none;
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
   }
 
   /* Description container hover effect */

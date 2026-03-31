@@ -150,33 +150,13 @@
   font-size: 14px;
 }
 
-/* Shop Now button */
+/* Shop Now button - uses global .shop-now-btn styles */
 .shopNowLink {
   display: flex;
   justify-content: flex-end;
   padding: 0 60px;
   position: relative;
   z-index: 1;
-}
-
-.shopNowBtn {
-  background: #c0392b;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 14px 32px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
-  box-shadow: 0 4px 20px rgba(192, 57, 43, 0.4);
-}
-
-.shopNowBtn:hover {
-  background: #a93226;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 28px rgba(192, 57, 43, 0.55);
 }
 
 /* Responsive */

@@ -137,7 +137,8 @@
   .product-name {
     font-size: 1.5rem !important; /* Adjust font size for mobile */
   }
-  .shop-now-btn {
+  .shop-now-btn,
+  .shop-now-btn-light {
     width: 100%; /* Make button full width on mobile */
     max-width: 200px; /* Limit max width */
     margin-top: 10px;

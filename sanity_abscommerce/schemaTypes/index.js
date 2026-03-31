@@ -14,6 +14,7 @@ import contactPage from './contactPage'
 import contactMessage from './contactMessage'
 import footerSettings from './footerSettings'
 import newsletterSubscriber from './newsletterSubscriber'
+import navigation from './navigation'
 
 export const schemaTypes = [
   product,
@@ -30,5 +31,6 @@ export const schemaTypes = [
   banner,
   contactMessage,
   footerSettings,
-  newsletterSubscriber
+  newsletterSubscriber,
+  navigation
 ]

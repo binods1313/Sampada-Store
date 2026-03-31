@@ -1,10 +1,11 @@
 // pages/index.js – Sampada Homepage with Revenue Upgrades
 import React from 'react';
 import Head from 'next/head';
+import { SessionProvider, useSession } from 'next-auth/react';
 import { client } from '../lib/client';
-
-// Using direct imports instead of barrel file
-import MegaNavbar from '../components/HomePage/MegaNavbar';
+import { CartProvider, useCartContext } from '../context/CartContext';
+import { UIProvider, useUIContext } from '../context/StateContext';
+import SampadaNavbar from '../components/HomePage/SampadaNavbar';
 import HomeHeroBanner from '../components/HomePage/HomeHeroBanner';
 import CollectionsSection from '../components/HomePage/CollectionsSection';
 import ProductFilterSection from '../components/ProductFilterSection';
@@ -16,27 +17,23 @@ import SampadaFooter from '../components/HomePage/SampadaFooter';
 import TrustStrip from '../components/TrustStrip';
 import WhySampada from '../components/WhySampada';
 
-const Home = ({ products, categories, bannerData }) => {
+function HomeContent({ products, categories, bannerData }) {
+  const { data: session, status } = useSession();
+  const { totalQuantities } = useCartContext();
+  const { setShowCart } = useUIContext();
+  const loading = status === 'loading';
+
   return (
     <>
-      <Head>
-        <title>Sampada – Wear Your Legacy, Prosper In Style</title>
-        <meta
-          name="description"
-          content="Discover Sampada Winter Drop 2026 – premium custom T-shirts, tunics, and lifestyle wear. Inspired by Vedic prosperity, designed for abundance and style."
-        />
-        <meta property="og:title" content="Sampada – Winter Drop 2026" />
-        <meta
-          property="og:description"
-          content="Wear Your Legacy, Prosper In Style. Shop the Sampada Winter Drop 2026 – 30% off from 01 Feb to 31 Mar 2026."
-        />
-      </Head>
-
-      {/* ── 0. Trust & Urgency Strip (NEW) ── */}
-      <TrustStrip />
-
       {/* ── 1. Navigation ── */}
-      <MegaNavbar />
+      <SampadaNavbar
+        session={session}
+        loading={loading}
+        onSignIn={() => window.location.href = '/api/auth/signin'}
+        totalQuantities={totalQuantities}
+        setShowCart={setShowCart}
+        showMarquee={true}
+      />
 
       {/* ── 2. Hero Banner ── */}
       <HomeHeroBanner heroBanner={bannerData} />
@@ -147,5 +144,15 @@ export const getServerSideProps = async () => {
   }
 };
 
-export default Home;
-
+export default function Home(props) {
+  return (
+    <SessionProvider>
+      <UIProvider>
+        <CartProvider>
+          <HomeContent {...props} />
+        </CartProvider>
+      </UIProvider>
+    </SessionProvider>
+  );
+}
+

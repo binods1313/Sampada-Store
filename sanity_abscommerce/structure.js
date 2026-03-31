@@ -1,7 +1,7 @@
 // sanity_abscommerce/structure.js
 // Optional: Import icons
 // Install if needed: npm install @sanity/icons
-import { PackageIcon, BillIcon, ComposeIcon, UsersIcon } from '@sanity/icons';
+import { PackageIcon, BillIcon, ComposeIcon, UsersIcon, MenuIcon } from '@sanity/icons';
 
 // Define your custom desk structure
 export const structure = (S) =>
@@ -39,6 +39,12 @@ export const structure = (S) =>
         .schemaType('category')
         .icon(PackageIcon) // You can use a different icon if you want
         .child(S.documentTypeList('category').title('Categories')),
+
+      S.listItem()
+        .title('Navigation Menu')
+        .schemaType('navigation')
+        .icon(MenuIcon)
+        .child(S.documentTypeList('navigation').title('Navigation Menu')),
 
       S.divider(), // Optional
 
