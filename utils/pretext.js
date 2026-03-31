@@ -353,6 +353,17 @@ export function measureProductCard(product, cardWidth, typography = {}) {
   return { ...measurements, totalHeight };
 }
 
+export {
+  prepare,
+  layout,
+  prepareWithSegments,
+  layoutWithLines,
+  layoutNextLine,
+  walkLineRanges,
+  clearCache,
+  setLocale,
+};
+
 export default {
   measureTextHeight,
   measureTextsBatch,
@@ -367,4 +378,11 @@ export default {
   areFontsReady,
   DEFAULT_FONT,
   DEFAULT_LINE_HEIGHT,
+  // Re-export Pretext core functions
+  prepare,
+  layout,
+  prepareWithSegments,
+  layoutWithLines,
+  layoutNextLine,
+  walkLineRanges,
 };
