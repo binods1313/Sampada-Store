@@ -1,15 +1,18 @@
-/* ProductCard.css - Enhanced styling matching Products style.png reference */
+/* ProductCard.css - Sampada Premium Brand Styling
+ * Indian heritage meets modern luxury
+ * Brand Colors: Deep Red (#8B1A1A), Gold (#C9A84C), Black (#0a0a0a), White
+ */
 
 /* Product Card Layout & Base Styles */
 .product-card {
   background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
   overflow: hidden;
   text-align: center;
   margin: 10px;
   width: 280px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
   position: relative;
@@ -18,8 +21,8 @@
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-  border-color: rgba(240, 45, 52, 0.2);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-color: rgba(201, 168, 76, 0.5);
 }
 
 .product-card::before {
@@ -29,11 +32,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(240, 45, 52, 0.02), rgba(255, 71, 87, 0.02));
+  background: linear-gradient(135deg, rgba(139, 26, 26, 0.02), rgba(201, 168, 76, 0.02));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 
 .product-card:hover::before {
@@ -58,7 +61,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(240, 45, 52, 0.95);
+  background: rgba(139, 26, 26, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +69,7 @@
   transform: translateY(10px);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 8px;
   z-index: 10;
   pointer-events: none;
 }
@@ -78,21 +81,26 @@
 }
 
 .quick-view-btn {
-  background: white;
-  color: #f02d34;
-  border: none;
+  background: #C9A84C;
+  color: #0a0a0a;
+  border: 2px solid #C9A84C;
   padding: 10px 20px;
-  border-radius: 20px;
-  font-weight: 600;
+  border-radius: 4px;
+  font-weight: 700;
   font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .quick-view-btn:hover {
+  background: #8B1A1A;
+  border-color: #8B1A1A;
+  color: #ffffff;
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 16px rgba(139, 26, 26, 0.3);
 }
 
 /* Image Container */
@@ -120,17 +128,17 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background: linear-gradient(135deg, #ff4757, #ff3742);
+  background: linear-gradient(135deg, #8B1A1A, #6B1414);
   color: white;
   padding: 4px 10px;
-  border-radius: 12px;
+  border-radius: 3px;
   font-size: 11px;
   font-weight: 700;
-  z-index: 20;
-  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.35);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  border: 2px solid white;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(139, 26, 26, 0.35);
+  border: 2px solid #C9A84C;
   /* Subtle fade-in and scale-in on load only - no continuous animation */
   animation: badgeEnter 400ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
   transform-origin: top right;
@@ -210,9 +218,9 @@
   font-weight: 400;
 }
 
-/* Discounted Price - Bold, red, larger */
+/* Discounted Price - Bold, deep red */
 .discounted-price {
-  color: #ff4757;
+  color: #8B1A1A;
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.3px;

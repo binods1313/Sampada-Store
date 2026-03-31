@@ -1,9 +1,10 @@
 // pages/product/[slug].js
-import React, { useState, useEffect, useCallback, Fragment } from 'react'; // Import Fragment
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import { AiOutlineMinus, AiOutlinePlus, AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { BsCheckCircleFill } from 'react-icons/bs'; // For stock/availability icon
-import { IoCloseCircleOutline } from "react-icons/io5"; // For out of stock icon
-import { IoClose } from 'react-icons/io5'; // For modal close button
+import { BsCheckCircleFill } from 'react-icons/bs';
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoClose } from 'react-icons/io5';
+import { ShoppingBag, Zap } from 'lucide-react';
 import { client, urlFor } from '../../lib/client';
 import { useCartContext } from '../../context/CartContext';
 import { useUIContext } from '../../context/StateContext';
@@ -15,7 +16,7 @@ import Head from 'next/head';
 import { ReviewSystem } from '../../components/ReviewSystem';
 import { WishlistButton } from '../../components/WishlistSystem';
 import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
-// Temporarily disabled: import EnhancedTryOn from '../../components/EnhancedTryOn';
+import '../../styles/sampada-premium-brand.css';
 
 
 const ProductDetails = ({ product, products, slug }) => {
@@ -295,7 +296,8 @@ const ProductDetails = ({ product, products, slug }) => {
         <title>{name} – Sampada Custom Print</title>
         <meta name="description" content={`Shop Sampada custom ${name}. Premium print-on-demand with prosperity-inspired designs. Ships via Printify | Stripe Secure Checkout.`} />
       </Head>
-      {/* Main product container */}
+
+      {/* Main product container with consistent spacing */}
       <div className="product-detail-container" style={{
         display: 'flex',
         flexDirection: 'row',
@@ -303,7 +305,7 @@ const ProductDetails = ({ product, products, slug }) => {
         gap: '40px',
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '20px'
+        padding: '40px 20px'
       }}>
         {/* Left side - Product image */}
         <div style={{
@@ -312,14 +314,15 @@ const ProductDetails = ({ product, products, slug }) => {
         }}>
           <div className="image-container" style={{
             backgroundColor: '#f1f1f1',
-            borderRadius: '0px', // Keep as 0px if intended
+            borderRadius: '8px',
             padding: '10px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: '10px',
-            height: '500px', // Fixed height for main image
-            position: 'relative'
+            marginBottom: '16px',
+            height: '500px',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
             <Image
               src={mainProductImageSource}
@@ -344,10 +347,10 @@ const ProductDetails = ({ product, products, slug }) => {
           {/* Small images (thumbnails) */}
           <div className="small-images-container" style={{
             display: 'flex',
-            gap: '10px',
-            marginTop: '10px',
+            gap: '12px',
+            marginTop: '16px',
             justifyContent: 'center',
-            marginBottom: '20px' // Added margin for spacing
+            marginBottom: '24px'
           }}>
             {variants && variants.length > 0 && uniqueColors.length > 0 ? (
               // Thumbnails for color variants (using variantImage if available)
@@ -454,95 +457,99 @@ const ProductDetails = ({ product, products, slug }) => {
           flex: '1 1 50%',
           minWidth: '300px'
         }}>
-          <h1 style={{
-            fontSize: '2rem', // Responsive font size if needed
-            fontWeight: 'bold',
-            marginBottom: '10px',
-            display: 'flex', // For aligning icons
-            alignItems: 'center'
+          <h1 className="product-title" style={{
+            fontSize: '28px',
+            fontWeight: '800',
+            color: '#1a1a1a',
+            marginBottom: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
           }}>
-            <span style={{ color: '#f0ad4e', marginRight: '8px' }}>⚡</span> {/* Example Icon */}
+            <span style={{ color: '#C9A84C', fontSize: '24px' }}>⚡</span>
             {name}
-            <span style={{ color: '#f0ad4e', marginLeft: '8px' }}>⚡</span> {/* Example Icon */}
           </h1>
 
+          {/* Reviews */}
           <div className="reviews" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-            <div style={{ color: '#f02d34', fontSize: '1.2rem', display: 'flex' }}>
+            <div style={{ color: '#C9A84C', fontSize: '18px', display: 'flex', gap: '2px' }}>
               <AiFillStar />
               <AiFillStar />
               <AiFillStar />
               <AiFillStar />
               <AiOutlineStar />
             </div>
-            <p style={{ marginLeft: '5px' }}>(20)</p>
+            <p style={{ marginLeft: '8px', color: '#666', fontSize: '14px' }}>(20)</p>
           </div>
 
-          <div className="details-section" style={{ marginBottom: '20px' }}>
-            <h4 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px' }}>Details:</h4>
-            <p style={{ fontSize: '1rem', lineHeight: '1.5', color: '#4a4a4a' }}>{details}</p>
+          {/* Details section */}
+          <div className="details-section" style={{ marginBottom: '24px' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: '700', marginBottom: '8px', color: '#555', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Details:</h4>
+            <p style={{ fontSize: '15px', lineHeight: '1.6', color: '#4a4a4a' }}>{details}</p>
           </div>
 
-          {/* Price Section - Moved before Specifications */}
-          <p className="price" style={{
-            fontSize: '1.75rem',
-            fontWeight: 'bold',
-            color: '#f02d34',
-            marginBottom: '20px',
+          {/* Price Section */}
+          <p className="product-price-sale" style={{
+            fontSize: '26px',
+            fontWeight: '800',
+            color: '#8B1A1A',
+            marginBottom: '8px',
             display: 'flex',
             alignItems: 'baseline',
-            flexWrap: 'wrap' // Allow wrapping for smaller screens
+            flexWrap: 'wrap',
+            gap: '8px'
           }}>
             ${displayPrice.toFixed(2)}
             {currentDiscount > 0 && (
               <>
                 <span style={{
-                  fontSize: '0.8rem', // Smaller font for original price
+                  fontSize: '16px',
                   color: '#999',
-                  marginLeft: '10px',
-                  textDecoration: 'line-through',
-                  whiteSpace: 'nowrap' // Prevent breaking
+                  textDecoration: 'line-through'
                 }}>
                   ${currentPrice.toFixed(2)}
                 </span>
                 <span style={{
-                  fontSize: '0.8rem', // Consistent size
-                  color: '#e53935', // More vibrant red for discount
-                  marginLeft: '8px',
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap'
+                  fontSize: '11px',
+                  color: '#ffffff',
+                  fontWeight: '700',
+                  background: '#8B1A1A',
+                  padding: '3px 8px',
+                  borderRadius: '3px',
+                  letterSpacing: '0.08em'
                 }}>
-                  (-{currentDiscount}%)
+                  -{currentDiscount}%
                 </span>
               </>
             )}
           </p>
 
           {/* Printify/Stripe Trust Badge */}
-          <div style={{
+          <div className="ships-via-banner" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            marginBottom: '20px',
-            padding: '10px 15px',
-            backgroundColor: '#f0fdf4',
-            border: '1px solid #bbf7d0',
-            borderRadius: '8px',
-            fontSize: '0.9rem',
-            color: '#166534'
+            marginBottom: '24px',
+            padding: '12px 16px',
+            background: 'rgba(201, 168, 76, 0.08)',
+            border: '1px solid rgba(201, 168, 76, 0.3)',
+            borderRadius: '4px',
+            fontSize: '13px',
+            color: '#555'
           }}>
-            <span style={{ fontSize: '1.2rem' }}>📦</span>
+            <span style={{ fontSize: '16px' }}>📦</span>
             <span><strong>Ships via Printify</strong> | <strong>Stripe Secure Checkout</strong></span>
           </div>
 
           {/* Product Variants (Colors & Sizes) */}
           {variants && variants.length > 0 && (
-            <div className="product-variants-section" style={{ marginBottom: '30px' }}>
+            <div className="product-variants-section" style={{ marginBottom: '32px' }}>
               {/* Color Selection */}
-              <div className="color-selector" style={{ marginBottom: '20px' }}>
-                <h3 style={{ marginRight: '10px', fontWeight: '500', marginBottom: '10px' }}>
-                  Color: <span style={{ fontWeight: 'bold' }}>{selectedColor || 'Select Color'}</span>
+              <div className="color-selector" style={{ marginBottom: '24px' }}>
+                <h3 style={{ fontWeight: '600', marginBottom: '12px', color: '#1a1a1a', fontSize: '14px' }}>
+                  Color: <span style={{ fontWeight: '700', color: '#8B1A1A' }}>{selectedColor || 'Select Color'}</span>
                 </h3>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <div className="color-swatch-container" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {uniqueColors.map((colorItem) => (
                     <div
                       key={colorItem.colorName}
@@ -588,11 +595,11 @@ const ProductDetails = ({ product, products, slug }) => {
               </div>
 
               {/* Size Selection */}
-              <div className="size-selector" style={{ marginBottom: '20px' }}>
-                <h3 style={{ marginRight: '10px', fontWeight: '500', marginBottom: '10px' }}>
-                  Size: <span style={{ fontWeight: 'bold' }}>{selectedSize || 'Select Size'}</span>
+              <div className="size-selector" style={{ marginTop: '20px', marginBottom: '20px' }}>
+                <h3 style={{ fontWeight: '600', marginBottom: '12px', color: '#1a1a1a', fontSize: '14px' }}>
+                  Size: <span style={{ fontWeight: '700', color: '#8B1A1A' }}>{selectedSize || 'Select Size'}</span>
                 </h3>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <div className="size-selector-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {availableSizesForSelectedColor.length > 0 ? (
                     availableSizesForSelectedColor.map((sizeItem) => (
                       <button
@@ -639,16 +646,17 @@ const ProductDetails = ({ product, products, slug }) => {
                 <button
                   type="button"
                   onClick={() => setShowSizeChartModal(true)}
+                  className="size-chart-link"
                   style={{
-                    padding: '8px 15px',
-                    backgroundColor: 'transparent',
-                    color: '#007bff', // Standard link color
+                    marginTop: '12px',
+                    background: 'none',
                     border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: '500',
+                    color: '#C9A84C',
+                    fontSize: '12px',
+                    fontWeight: '600',
                     textDecoration: 'underline',
-                    marginBottom: '15px' // Added margin
+                    cursor: 'pointer',
+                    letterSpacing: '0.05em'
                   }}
                 >
                   Size Chart
@@ -656,165 +664,136 @@ const ProductDetails = ({ product, products, slug }) => {
               )}
 
               {/* Selected Variant Summary and Stock Status */}
-              <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
-                <h4 style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+              <div className="selected-variant-display" style={{ 
+                marginTop: '20px', 
+                padding: '12px', 
+                backgroundColor: 'rgba(201, 168, 76, 0.08)', 
+                borderRadius: '4px',
+                borderLeft: '3px solid #C9A84C'
+              }}>
+                <h4 style={{ fontWeight: '700', marginBottom: '8px', fontSize: '13px', color: '#1a1a1a' }}>
                   Selected: {selectedColor || 'Color'} / {selectedSize || 'Size'}
                 </h4>
                 {selectedVariant ? (
-                  <p style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+                  <p style={{ display: 'flex', alignItems: 'center', marginTop: '8px', fontSize: '13px' }}>
                     {currentStock > 0 ? (
                       <>
-                        <BsCheckCircleFill style={{ color: 'green', marginRight: '5px' }} />
-                        In Stock ({currentStock} items)
+                        <BsCheckCircleFill style={{ color: '#2d7a2d', marginRight: '8px', fontSize: '16px' }} />
+                        <span style={{ color: '#2d7a2d', fontWeight: '600' }}>In Stock ({currentStock} items)</span>
                       </>
                     ) : (
                       <>
-                        <IoCloseCircleOutline style={{ color: '#f02d34', marginRight: '5px' }} />
-                        Out of Stock
+                        <IoCloseCircleOutline style={{ color: '#8B1A1A', marginRight: '8px', fontSize: '16px' }} />
+                        <span style={{ color: '#8B1A1A', fontWeight: '600' }}>Out of Stock</span>
                       </>
                     )}
                   </p>
                 ) : (
-                  <p style={{ color: '#888', marginTop: '5px' }}>Please select a variant to see availability.</p>
+                  <p style={{ color: '#888', marginTop: '8px', fontSize: '13px' }}>Please select a color and size to check availability.</p>
                 )}
               </div>
             </div>
           )}
-          {(!variants || variants.length === 0) && ( // Fallback for products without variants
-            <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginBottom: '30px' }}>
-              <h4 style={{ fontWeight: 'bold', marginBottom: '5px' }}>Availability:</h4>
-              <p style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+          {(!variants || variants.length === 0) && (
+            <div className="selected-variant-display" style={{ 
+              marginTop: '20px', 
+              padding: '12px', 
+              backgroundColor: 'rgba(201, 168, 76, 0.08)', 
+              borderRadius: '4px',
+              borderLeft: '3px solid #C9A84C',
+              marginBottom: '24px'
+            }}>
+              <h4 style={{ fontWeight: '700', marginBottom: '8px', fontSize: '13px', color: '#1a1a1a' }}>Availability:</h4>
+              <p style={{ display: 'flex', alignItems: 'center', fontSize: '13px' }}>
                 {currentStock > 0 ? (
                   <>
-                    <BsCheckCircleFill style={{ color: 'green', marginRight: '5px' }} />
-                    In Stock ({currentStock} items)
+                    <BsCheckCircleFill style={{ color: '#2d7a2d', marginRight: '8px', fontSize: '16px' }} />
+                    <span style={{ color: '#2d7a2d', fontWeight: '600' }}>In Stock ({currentStock} items)</span>
                   </>
                 ) : (
                   <>
-                    <IoCloseCircleOutline style={{ color: '#f02d34', marginRight: '5px' }} />
-                    Out of Stock
+                    <IoCloseCircleOutline style={{ color: '#8B1A1A', marginRight: '8px', fontSize: '16px' }} />
+                    <span style={{ color: '#8B1A1A', fontWeight: '600' }}>Out of Stock</span>
                   </>
                 )}
               </p>
             </div>
           )}
 
-          {/* Quantity Controls with Enhanced Styling */}          <div className="quantity" style={{
-            display: 'flex',
+          {/* Quantity Controls with Premium Styling */}
+          <div className="quantity-container" style={{
+            display: 'inline-flex',
             alignItems: 'center',
             marginBottom: '30px',
-            position: 'relative',
-            zIndex: 2,
             opacity: currentStock === 0 ? 0.6 : 1
           }}>
-            <h3 style={{
-              marginRight: '20px',
-              fontWeight: '600',
-              fontSize: '1.1rem'
-            }}>
-              Quantity:
-            </h3>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              background: '#fff',
-              padding: '8px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-            }}>
-              <button
-                onClick={decQty}
-                type="button"
-                disabled={currentStock === 0}
-                aria-label="Decrease quantity"
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '20px',
-                  background: '#ffebee',
-                  color: '#d32f2f',
-                  border: 'none',
-                  borderRadius: '8px',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }} onMouseEnter={(e) => {
-                  if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-                    e.currentTarget.style.backgroundColor = '#ffcdd2';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                    e.currentTarget.style.backgroundColor = '#ffebee';
-                  }
-                }}
-              >
-                <AiOutlineMinus />
-              </button>
-              <span style={{
-                width: '60px',
-                height: '48px',
+            <button
+              onClick={decQty}
+              type="button"
+              disabled={currentStock === 0}
+              aria-label="Decrease quantity"
+              className="qty-btn"
+              style={{
+                width: '40px',
+                height: '40px',
+                cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                margin: '0 10px',
-                background: currentStock === 0 ? '#f5f5f5' : '#f8f9fa',
-                borderRadius: '8px',
-                border: '1px solid #e0e0e0'
-              }}>
-                {qty}
-              </span>              <button onClick={() => incQty(currentStock)}
-                type="button"
-                disabled={currentStock === 0}
-                aria-label="Increase quantity"
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
-                  fontSize: '20px',
-                  background: '#e8f5e8',
-                  color: currentStock === 0 ? '#8aa98e' : '#2e7d32',
-                  border: 'none',
-                  borderRadius: '8px',
-                  transition: 'all 0.3s ease', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-                    e.currentTarget.style.backgroundColor = '#c8e6c9';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                    e.currentTarget.style.backgroundColor = '#e8f5e8';
-                  }
-                }}
-              >
-                <AiOutlinePlus />
-              </button>
-            </div>
+                fontSize: '18px',
+                fontWeight: '700',
+                background: 'transparent',
+                color: '#8B1A1A',
+                border: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <AiOutlineMinus />
+            </button>
+            <span className="qty-display" style={{
+              width: '48px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '15px',
+              fontWeight: '600',
+              color: '#1a1a1a',
+              borderLeft: '1px solid rgba(201, 168, 76, 0.4)',
+              borderRight: '1px solid rgba(201, 168, 76, 0.4)',
+              background: 'rgba(201, 168, 76, 0.05)'
+            }}>
+              {qty}
+            </span>
+            <button
+              onClick={() => incQty(currentStock)}
+              type="button"
+              disabled={currentStock === 0}
+              aria-label="Increase quantity"
+              className="qty-btn"
+              style={{
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
+                fontSize: '18px',
+                fontWeight: '700',
+                background: 'transparent',
+                color: '#8B1A1A',
+                border: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <AiOutlinePlus />
+            </button>
           </div>
 
-          {/* Action Buttons with Enhanced Styling */}
-          <div style={{
+          {/* Action Buttons with Premium Styling */}
+          <div className="action-buttons-container" style={{
             display: 'flex',
-            gap: '20px',
+            gap: '12px',
             marginBottom: '40px',
             flexWrap: 'wrap',
             marginTop: '30px',
@@ -824,90 +803,38 @@ const ProductDetails = ({ product, products, slug }) => {
               type="button"
               onClick={handleAddToCart}
               disabled={(variants && variants.length > 0 && !selectedVariant) || currentStock === 0}
+              className="add-to-cart-btn"
               style={{
-                width: '200px',
+                minWidth: '200px',
                 height: '56px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '2px solid #f02d34',
-                backgroundColor: 'white',
-                color: '#f02d34',
-                fontSize: '16px',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                borderRadius: '12px',
-                cursor: ((variants && variants.length > 0 && !selectedVariant) || currentStock === 0) ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(240, 45, 52, 0.15)',
                 opacity: ((variants && variants.length > 0 && !selectedVariant) || currentStock === 0) ? 0.6 : 1
               }}
-              onMouseEnter={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(240, 45, 52, 0.25)';
-                  e.currentTarget.style.backgroundColor = '#fff5f5';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(240, 45, 52, 0.15)';
-                  e.currentTarget.style.backgroundColor = 'white';
-                }
-              }}
             >
+              <ShoppingBag size={20} />
               Add to Cart
             </button>
             <button
               type="button"
               onClick={handleBuyNow}
               disabled={(variants && variants.length > 0 && !selectedVariant) || currentStock === 0}
+              className="buy-now-btn"
               style={{
-                width: '200px',
+                minWidth: '200px',
                 height: '56px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#f02d34',
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                border: 'none',
-                borderRadius: '12px',
-                cursor: ((variants && variants.length > 0 && !selectedVariant) || currentStock === 0) ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(240, 45, 52, 0.3)',
                 opacity: ((variants && variants.length > 0 && !selectedVariant) || currentStock === 0) ? 0.6 : 1
               }}
-              onMouseEnter={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(240, 45, 52, 0.4)';
-                  e.currentTarget.style.backgroundColor = '#e01e24';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(240, 45, 52, 0.3)';
-                  e.currentTarget.style.backgroundColor = '#f02d34';
-                }
-              }}
             >
+              <Zap size={20} />
               Buy Now
             </button>
+          </div>
 
-            {/* Wishlist Button */}
-            <div style={{ marginLeft: '10px' }}>
-              <WishlistButton
-                product={{ _id, name, slug: { current: slug }, price, discount, image }}
-                size="large"
-              />
-            </div>
+          {/* Wishlist Button */}
+          <div style={{ marginLeft: '10px', marginTop: '12px' }}>
+            <WishlistButton
+              product={{ _id, name, slug: { current: slug }, price, discount, image }}
+              size="large"
+            />
           </div>
 
           {/* Enhanced Virtual Try-On - Temporarily disabled for debugging */}
