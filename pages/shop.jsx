@@ -50,7 +50,7 @@ export default function ShopPage() {
     let result = [...products];
 
     // Category filter
-    if (filters.category !== 'all') {
+    if (filters.category && filters.category !== 'all') {
       result = result.filter(p => p.category?.name === filters.category);
     }
 
@@ -79,8 +79,14 @@ export default function ShopPage() {
   }, [products, filters]);
 
   const categories = useMemo(() => {
+    if (!products || products.length === 0) {
+      return [{ _id: 'all', name: 'All Categories', slug: { current: 'all' } }];
+    }
     const cats = new Set(products.map(p => p.category?.name).filter(Boolean));
-    return ['all', ...Array.from(cats)];
+    return [
+      { _id: 'all', name: 'All Categories', slug: { current: 'all' } },
+      ...Array.from(cats).map(name => ({ _id: name, name, slug: { current: name } }))
+    ];
   }, [products]);
 
   return (
