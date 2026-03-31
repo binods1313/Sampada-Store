@@ -25,16 +25,11 @@ const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
   discount: Math.random() > 0.5 ? Math.floor(Math.random() * 30) + 10 : 0,
   description: 'This is a sample product description that demonstrates the virtual scrolling capability with Pretext height calculation.',
   category: { name: i % 2 === 0 ? 'T-Shirts' : 'Hoodies' },
-  // Use direct image URLs for demo (replace with real Sanity images in production)
+  // Use direct Unsplash image URLs (bypass Sanity image pipeline for demo)
   image: [{
     _key: `img-${i}`,
     _type: 'image',
-    asset: {
-      _type: 'reference',
-      // Using different Unsplash images for variety
-      _ref: `image-${i % 8}`
-    },
-    // Store the actual URL in a custom field for fallback
+    // Direct URL - ProductCard will use this instead of Sanity URL
     url: `https://images.unsplash.com/photo-${getUnsplashId(i)}?w=600&h=600&fit=crop`
   }],
 }));

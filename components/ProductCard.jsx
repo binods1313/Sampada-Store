@@ -47,19 +47,20 @@ const ProductCard = memo(function ProductCard({ product }) {
   const isLowStock = inventory && inventory < 5;
   const hasSoldCount = soldCount && soldCount > 0;
 
-  // Get image URL with error handling for invalid references
+  // Get image URL - prioritize direct URL field (for demo/external images)
   let imageUrl = '/asset/placeholder-image.jpg';
-  try {
-    if (firstImage?.url) {
-      // Use direct URL if available (for demo/fallback)
-      imageUrl = firstImage.url;
-    } else if (firstImage?.asset) {
-      // Try Sanity URL
+  
+  if (firstImage?.url) {
+    // Use direct URL if available (Unsplash, external, etc.)
+    imageUrl = firstImage.url;
+  } else if (firstImage?.asset) {
+    // Try Sanity URL
+    try {
       imageUrl = urlFor(firstImage).width(600).url();
+    } catch (error) {
+      // Use placeholder for invalid image references
+      console.warn('Invalid Sanity image reference, using placeholder:', firstImage?.asset?._ref);
     }
-  } catch (error) {
-    // Use placeholder for invalid image references
-    console.warn('Invalid image reference, using placeholder:', firstImage?.asset?._ref);
   }
 
   const productSlug = slug?.current || _id;
