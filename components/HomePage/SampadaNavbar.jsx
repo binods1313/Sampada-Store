@@ -572,11 +572,12 @@ function MobileMenu({ isOpen, onClose, session }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
+            className="mobile-menu-overlay"
             style={{
               position: 'fixed',
               inset: 0,
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 149
+              zIndex: 9998
             }}
           />
 
@@ -586,6 +587,7 @@ function MobileMenu({ isOpen, onClose, session }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="mobile-menu-panel mobile-menu-panel-open"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
@@ -594,12 +596,11 @@ function MobileMenu({ isOpen, onClose, session }) {
               top: 0,
               right: 0,
               bottom: 0,
-              width: '100%',
-              maxWidth: '400px',
+              width: '85%',
+              maxWidth: '360px',
               backgroundColor: '#0a0a0a',
-              zIndex: 150,
-              overflowY: 'auto',
-              boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.3)'
+              zIndex: 9999,
+              overflowY: 'auto'
             }}
           >
             {/* Header with Close Button */}
@@ -613,6 +614,7 @@ function MobileMenu({ isOpen, onClose, session }) {
               }}
             >
               <span
+                className="sampada-logo"
                 style={{
                   fontSize: '18px',
                   fontWeight: 800,
@@ -620,7 +622,7 @@ function MobileMenu({ isOpen, onClose, session }) {
                   letterSpacing: '1px'
                 }}
               >
-                Menu
+                Sampada
               </span>
               <button
                 onClick={onClose}
@@ -635,8 +637,11 @@ function MobileMenu({ isOpen, onClose, session }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   minHeight: '48px',
-                  minWidth: '48px'
+                  minWidth: '48px',
+                  transition: 'opacity 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
                 <X size={24} />
               </button>
@@ -645,7 +650,7 @@ function MobileMenu({ isOpen, onClose, session }) {
             {/* Menu Items */}
             <div
               style={{
-                padding: '16px 24px',
+                padding: '0',
                 display: 'flex',
                 flexDirection: 'column'
               }}
@@ -654,19 +659,17 @@ function MobileMenu({ isOpen, onClose, session }) {
               <Link
                 href="/"
                 onClick={onClose}
+                className="mobile-nav-item"
                 style={{
                   fontSize: '16px',
                   fontWeight: 600,
-                  color: '#e5e5e5',
                   textDecoration: 'none',
-                  padding: '16px 0',
-                  borderBottom: '1px solid rgba(201, 168, 76, 0.2)',
-                  minHeight: '48px',
                   display: 'flex',
                   alignItems: 'center'
                 }}
               >
-                Home
+                <span style={{ flex: 1 }}>Home</span>
+                <span className="mobile-nav-item-arrow">→</span>
               </Link>
 
               {/* Category Accordion Items */}
@@ -677,35 +680,28 @@ function MobileMenu({ isOpen, onClose, session }) {
                   <div
                     key={label}
                     style={{
-                      borderBottom: '1px solid rgba(201, 168, 76, 0.2)'
                     }}
                   >
                     <button
                       onClick={() => toggleCategory(label)}
                       aria-expanded={isExpanded}
+                      className="mobile-nav-item"
                       style={{
                         width: '100%',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '16px 0',
-                        fontSize: '16px',
-                        fontWeight: 600,
-                        color: '#e5e5e5',
+                        fontSize: '15px',
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        textAlign: 'left',
-                        minHeight: '48px'
+                        textAlign: 'left'
                       }}
                     >
                       {label}
                       <motion.span
+                        className="mobile-nav-item-arrow"
                         animate={{ rotate: isExpanded ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
-                        style={{ color: '#C9A84C' }}
                       >
-                        {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                       </motion.span>
                     </button>
 
@@ -714,54 +710,41 @@ function MobileMenu({ isOpen, onClose, session }) {
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
+                          exit={{ height: 0, opacity: 1 }}
                           transition={{ duration: 0.3 }}
-                          style={{ overflow: 'hidden' }}
+                          className="mobile-submenu mobile-submenu-open"
                         >
                           <div
                             style={{
-                              paddingBottom: '16px',
                               display: 'flex',
-                              flexDirection: 'column',
-                              gap: '12px'
+                              flexDirection: 'column'
                             }}
                           >
-                            {Object.entries(data.sections).flatMap(([_, items]) =>
-                              items.map(item => {
-                                const itemHref = item.href || `${data.href}/${generateSlug(typeof item === 'string' ? item : item.label)}`;
-                                const itemLabel = typeof item === 'string' ? item : item.label;
-                                
-                                return (
-                                  <Link
-                                    key={itemLabel}
-                                    href={itemHref}
-                                    onClick={onClose}
-                                    style={{
-                                      fontSize: '14px',
-                                      color: '#a0a0a0',
-                                      textDecoration: 'none',
-                                      padding: '8px 16px',
-                                      borderRadius: '4px',
-                                      transition: 'all 0.2s ease',
-                                      display: 'block',
-                                      minHeight: '44px',
-                                      display: 'flex',
-                                      alignItems: 'center'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      e.currentTarget.style.color = '#C9A84C';
-                                      e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      e.currentTarget.style.color = '#a0a0a0';
-                                      e.currentTarget.style.backgroundColor = 'transparent';
-                                    }}
-                                  >
-                                    {itemLabel}
-                                  </Link>
-                                );
-                              })
-                            )}
+                            {Object.entries(data.sections).map(([sectionTitle, items]) => (
+                              <>
+                                <div className="mobile-submenu-header">{sectionTitle}</div>
+                                {items.map(item => {
+                                  const itemHref = item.href || `${data.href}/${generateSlug(typeof item === 'string' ? item : item.label)}`;
+                                  const itemLabel = typeof item === 'string' ? item : item.label;
+
+                                  return (
+                                    <Link
+                                      key={itemLabel}
+                                      href={itemHref}
+                                      onClick={onClose}
+                                      className="mobile-submenu-item"
+                                      style={{
+                                        fontSize: '14px',
+                                        textDecoration: 'none',
+                                        display: 'block'
+                                      }}
+                                    >
+                                      {itemLabel}
+                                    </Link>
+                                  );
+                                })}
+                              </>
+                            ))}
                           </div>
                         </motion.div>
                       )}
@@ -774,53 +757,42 @@ function MobileMenu({ isOpen, onClose, session }) {
               <Link
                 href="/stories"
                 onClick={onClose}
+                className="mobile-nav-item"
                 style={{
                   fontSize: '16px',
                   fontWeight: 600,
-                  color: '#e5e5e5',
                   textDecoration: 'none',
-                  padding: '16px 0',
-                  borderBottom: '1px solid rgba(201, 168, 76, 0.2)',
-                  minHeight: '48px',
                   display: 'flex',
                   alignItems: 'center'
                 }}
               >
-                Sampada Stories
+                <span style={{ flex: 1 }}>Sampada Stories</span>
+                <span className="mobile-nav-item-arrow">→</span>
               </Link>
 
               {/* More Dropdown (Mobile) */}
               <div
-                style={{
-                  borderBottom: '1px solid rgba(201, 168, 76, 0.2)'
-                }}
               >
                 <button
                   onClick={() => setExpandedMore(!expandedMore)}
                   aria-expanded={expandedMore}
+                  className="mobile-nav-item"
                   style={{
                     width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '16px 0',
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    color: '#e5e5e5',
+                    fontSize: '15px',
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    textAlign: 'left',
-                    minHeight: '48px'
+                    textAlign: 'left'
                   }}
                 >
                   More
                   <motion.span
+                    className="mobile-nav-item-arrow"
                     animate={{ rotate: expandedMore ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
-                    style={{ color: '#C9A84C' }}
                   >
-                    {expandedMore ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    {expandedMore ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </motion.span>
                 </button>
 
@@ -829,39 +801,24 @@ function MobileMenu({ isOpen, onClose, session }) {
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
+                      exit={{ height: 0, opacity: 1 }}
                       transition={{ duration: 0.3 }}
-                      style={{ overflow: 'hidden' }}
+                      className="mobile-submenu mobile-submenu-open"
                     >
                       <div
                         style={{
-                          paddingBottom: '16px',
                           display: 'flex',
-                          flexDirection: 'column',
-                          gap: '8px'
+                          flexDirection: 'column'
                         }}
                       >
                         <Link
                           href="/about"
                           onClick={onClose}
+                          className="mobile-submenu-item"
                           style={{
                             fontSize: '14px',
-                            color: '#a0a0a0',
                             textDecoration: 'none',
-                            padding: '8px 16px',
-                            borderRadius: '4px',
-                            transition: 'all 0.2s ease',
-                            minHeight: '44px',
-                            display: 'flex',
-                            alignItems: 'center'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#C9A84C';
-                            e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#a0a0a0';
-                            e.currentTarget.style.backgroundColor = 'transparent';
+                            display: 'block'
                           }}
                         >
                           About Us
@@ -869,24 +826,11 @@ function MobileMenu({ isOpen, onClose, session }) {
                         <Link
                           href="/contact"
                           onClick={onClose}
+                          className="mobile-submenu-item"
                           style={{
                             fontSize: '14px',
-                            color: '#a0a0a0',
                             textDecoration: 'none',
-                            padding: '8px 16px',
-                            borderRadius: '4px',
-                            transition: 'all 0.2s ease',
-                            minHeight: '44px',
-                            display: 'flex',
-                            alignItems: 'center'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#C9A84C';
-                            e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#a0a0a0';
-                            e.currentTarget.style.backgroundColor = 'transparent';
+                            display: 'block'
                           }}
                         >
                           Contact
@@ -899,22 +843,21 @@ function MobileMenu({ isOpen, onClose, session }) {
 
               {/* Sign In Button (Prominent at Bottom) */}
               {!session && (
-                <div style={{ marginTop: '24px' }}>
+                <div style={{ marginTop: '24px', padding: '0 24px' }}>
                   <Link
                     href="/api/auth/signin"
+                    className="mobile-signin-btn"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
-                      backgroundColor: '#8B1A1A',
-                      color: 'white',
-                      padding: '16px 24px',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: 600,
+                      padding: '14px',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: 700,
                       textDecoration: 'none',
-                      transition: 'all 0.2s ease',
+                      textTransform: 'uppercase',
                       border: '2px solid transparent',
                       minHeight: '56px'
                     }}
