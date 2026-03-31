@@ -4,76 +4,75 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { set } from 'sanity';
+import { set, useClient, useFormValue } from 'sanity';
 import { Box, Button, Text, Stack, Spinner } from '@sanity/ui';
 
 export function AIDescriptionInput(props) {
-  const { onChange, value, elementProps } = props;
+  const { onChange, value } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [debugInfo, setDebugInfo] = useState('');
+  
+  const client = useClient({ apiVersion: '2024-05-18' });
 
-  // Log full props structure to console for debugging
+  // Get specific field values using useFormValue
+  // useFormValue takes a path array and returns the value at that path
+  const productName = useFormValue(['name']);
+  const category = useFormValue(['category']);
+  const price = useFormValue(['price']);
+
+  // Fetch full category document if needed
+  const [categoryData, setCategoryData] = useState(null);
+  
   useEffect(() => {
-    console.log('[AIDescriptionInput] FULL PROPS:', JSON.stringify(props, null, 2));
-    console.log('[AIDescriptionInput] props.document:', props.document);
-    console.log('[AIDescriptionInput] props.parent:', props.parent);
-    console.log('[AIDescriptionInput] props.value:', props.value);
-    
-    // Try to find the product name in multiple ways
-    const namePaths = [
-      'props.document.displayed.name',
-      'props.document.displayed.title',
-      'props.parent.name',
-      'props.parent.title',
-      'props.value.name',
-      'props.value.title',
-    ];
-    
-    const debugLines = namePaths.map(path => {
-      const val = path.split('.').reduce((obj, key) => obj?.[key], props);
-      return `${path}: ${JSON.stringify(val)}`;
-    });
-    
-    setDebugInfo(debugLines.join('\n'));
-  }, [props]);
+    const fetchCategory = async () => {
+      if (category?._ref) {
+        try {
+          const data = await client.getDocument(category._ref);
+          setCategoryData(data);
+        } catch (err) {
+          console.error('[AIDescriptionInput] Failed to fetch category:', err);
+        }
+      }
+    };
+    fetchCategory();
+  }, [category?._ref, client]);
 
-  // Get product context from parent document - multiple fallback paths
-  // Try both 'name' and 'title' as the field might be called either
-  const productName = props.document?.displayed?.name || 
-                      props.document?.displayed?.title ||
-                      props.parent?.name || 
-                      props.parent?.title ||
-                      props.value?.name ||
-                      props.value?.title || 
-                      '';
-  const category = props.document?.displayed?.category?.name || 
-                   props.parent?.category?.name || 
-                   '';
-  const price = props.document?.displayed?.price || 
-                props.parent?.price || 
-                '';
+  // Log props structure to console for debugging
+  useEffect(() => {
+    console.log('[AIDescriptionInput] Props keys:', Object.keys(props || {}));
+    console.log('[AIDescriptionInput] productName:', productName);
+    console.log('[AIDescriptionInput] category:', category);
+    console.log('[AIDescriptionInput] price:', price);
+    console.log('[AIDescriptionInput] categoryData:', categoryData);
+
+    setDebugInfo(`Product Name: ${productName || 'Loading...'}\nCategory: ${categoryData?.name || category?.name || 'N/A'}\nPrice: ₹${price || 'N/A'}`);
+  }, [props, productName, category, price, categoryData]);
+
+  // Use the actual values
+  const categoryName = categoryData?.name || '';
+  const productPrice = price || '';
 
   const generateDescription = useCallback(async () => {
     if (!productName) {
       setError('Please enter a product name first');
       return;
     }
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/ai/generate-description', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          productName, 
-          category,
-          price
+        body: JSON.stringify({
+          productName,
+          category: categoryName,
+          price: productPrice
         })
       });
-      
+
       const data = await response.json();
       if (data.description) {
         onChange(set(data.description));
@@ -87,16 +86,20 @@ export function AIDescriptionInput(props) {
     } finally {
       setLoading(false);
     }
-  }, [productName, category, price, onChange]);
+  }, [productName, categoryName, productPrice, onChange]);
 
   return (
     <Stack space={3}>
       <textarea
-        {...elementProps}
+        // Filter out Sanity-specific props that shouldn't go to DOM elements
+        // to avoid styled-components warnings
+        tone={undefined}
+        items={undefined}
+        onChange={(e) => onChange(set(e.target.value))}
         value={value || ''}
         rows={5}
-        style={{ 
-          width: '100%', 
+        style={{
+          width: '100%',
           minHeight: '120px',
           fontFamily: 'inherit',
           fontSize: 'inherit',
