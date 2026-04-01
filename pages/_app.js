@@ -12,7 +12,6 @@ import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../components/WishlistSystem';
 import { useEffect } from 'react';
 import { initializeSampadaFonts } from '../utils/fontLoader';
-import dynamic from 'next/dynamic';
 
 // Preload fonts for accurate text measurement (Pretext)
 function FontLoader() {
@@ -21,12 +20,6 @@ function FontLoader() {
   }, []);
   return null;
 }
-
-// Dynamically import SampadaVoiceButton to avoid SSR issues with Web Speech API
-const SampadaVoiceButton = dynamic(
-  () => import('../components/VoiceAssistant/SampadaVoiceButton'),
-  { ssr: false }
-);
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
@@ -49,8 +42,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                     }}
                   />
                   <Component {...pageProps} />
-                  {/* Sampada AI Voice Assistant */}
-                  <SampadaVoiceButton />
                   {/* Dev Tools Panel - Admin/Dev Only */}
                   <DevToolsPanel />
                 </Layout>
