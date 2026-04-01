@@ -2811,3 +2811,23 @@ img {
   aspect-ratio: 1;
   width: 100%;
 }
+
+/* ═══════════════════════════════════════════════
+   EMERGENCY OVERRIDE - Force floating widgets to 52px
+   Remove this after verifying root cause is fixed
+   ═══════════════════════════════════════════════ */
+[class*="voice"]:not(.voice-float-btn):not([class*="btn"]):not([class*="icon"]),
+[class*="Voice"]:not(.voice-float-btn):not([class*="btn"]):not([class*="icon"]),
+[class*="chat"]:not(.chat-float-btn):not([class*="btn"]):not([class*="icon"]),
+[class*="Chat"]:not(.chat-float-btn):not([class*="btn"]):not([class*="icon"]) {
+  max-width: 52px !important;
+  max-height: 52px !important;
+  overflow: hidden !important;
+}
+
+/* Force any fixed element larger than 100px at bottom to be 52px */
+/* Except navbar, footer, and known good elements */
+*[style*="position: fixed"]:not(nav):not(.navbar):not(.footer):not([class*="toast"]):not([class*="modal"]) {
+  max-width: 52px !important;
+  max-height: 52px !important;
+}
