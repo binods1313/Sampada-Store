@@ -6,6 +6,7 @@
  * - Pretext-powered accurate row heights
  * - Filter and sort functionality
  * - Zero layout shift
+ * - Sampada premium brand styling
  */
 
 'use client';
@@ -15,38 +16,54 @@ import VirtualProductList from '@/components/VirtualProductList';
 import ProductFilterSection from '@/components/ProductFilterSection';
 import { ProductCardSkeleton } from '@/components/LoadingSkeletons';
 
-// Sample products for demo (replace with real API call)
-// Using Unsplash placeholder images for demo purposes
+// Sample products for demo (replace with real API call from Sanity)
 const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
   _id: `product-${i}`,
-  name: `Premium Product ${i + 1}`,
+  name: generateProductName(i),
   slug: { current: `product-${i}` },
   price: Math.floor(Math.random() * 5000) + 999,
   discount: Math.random() > 0.5 ? Math.floor(Math.random() * 30) + 10 : 0,
-  description: 'This is a sample product description that demonstrates the virtual scrolling capability with Pretext height calculation.',
+  description: generateProductDescription(i),
   category: { name: i % 2 === 0 ? 'T-Shirts' : 'Hoodies' },
-  // Use direct Unsplash image URLs (bypass Sanity image pipeline for demo)
   image: [{
     _key: `img-${i}`,
     _type: 'image',
-    // Direct URL - ProductCard will use this instead of Sanity URL
-    url: `https://images.unsplash.com/photo-${getUnsplashId(i)}?w=600&h=600&fit=crop`
+    // Use Picsum for reliable, diverse placeholder images
+    url: `https://picsum.photos/seed/product${i}/600/600`
   }],
 }));
 
-// Helper to get different Unsplash image IDs
-function getUnsplashId(index) {
-  const ids = [
-    '1523381210434-271e8be1f52b', // Clothing
-    '1576566588028-4147f3842f27', // T-shirt
-    '1562157873-9182d2484753', // Fashion
-    '1583743814966-8936f5b7be1a', // Black shirt
-    '1576995950047-24d844a4aff7', // Product
-    '1542272454315-4db0a6f718c7', // Style
-    '1589330180430-efc1e69c89b9', // Fashion
-    '1618354691373-d851c5c3a990', // Product
+// Generate diverse product names
+function generateProductName(index) {
+  const adjectives = [
+    'Premium', 'Classic', 'Modern', 'Elegant', 'Vintage', 
+    'Urban', 'Casual', 'Chic', 'Bohemian', 'Minimalist',
+    'Artisan', 'Heritage', 'Contemporary', 'Timeless', 'Signature'
   ];
-  return ids[index % ids.length];
+  const nouns = [
+    'T-Shirt', 'Hoodie', 'Polo', 'Tank Top', 'Sweatshirt',
+    'Jacket', 'Cardigan', 'Tunic', 'Blouse', 'Shirt'
+  ];
+  const adj = adjectives[index % adjectives.length];
+  const noun = nouns[Math.floor(index / adjectives.length) % nouns.length];
+  return `${adj} ${noun} ${Math.floor(index / 10) + 1}`;
+}
+
+// Generate diverse product descriptions
+function generateProductDescription(index) {
+  const descriptions = [
+    'Crafted from premium organic cotton for all-day comfort and breathability.',
+    'Features a modern fit with reinforced stitching for long-lasting durability.',
+    'Perfect for casual outings or layering during cooler evenings.',
+    'Made with sustainable materials and eco-friendly dyes.',
+    'Classic design meets contemporary style in this versatile piece.',
+    'Soft, lightweight fabric ideal for everyday wear.',
+    'Tailored fit with attention to detail and quality craftsmanship.',
+    'Versatile wardrobe essential that pairs well with any outfit.',
+    'Premium quality fabric with excellent color retention.',
+    'Designed for comfort without compromising on style.'
+  ];
+  return descriptions[index % descriptions.length];
 }
 
 export default function ShopPage() {
@@ -112,18 +129,53 @@ export default function ShopPage() {
   }, [products]);
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px' }}>
-      {/* Header */}
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+    <div className="shop-page" style={{ 
+      maxWidth: '1400px', 
+      margin: '0 auto', 
+      padding: '40px 20px',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    }}>
+      {/* Header with Sampada brand styling */}
+      <header style={{ 
+        marginBottom: '40px',
+        textAlign: 'center',
+        position: 'relative'
+      }}>
+        <h1 style={{ 
+          fontSize: '36px', 
+          fontWeight: '800', 
+          marginBottom: '12px',
+          color: '#1a1a1a',
+          letterSpacing: '-0.02em',
+          position: 'relative',
+          display: 'inline-block'
+        }}>
           Shop All Products
         </h1>
-        <p style={{ color: '#666', fontSize: '14px' }}>
-          {loading ? 'Loading...' : `${filteredProducts.length} products`}
+        <div style={{
+          width: '60px',
+          height: '3px',
+          background: 'linear-gradient(90deg, #8B1A1A, #C9A84C)',
+          margin: '16px auto',
+          borderRadius: '2px'
+        }} />
+        <p style={{ 
+          color: '#666', 
+          fontSize: '15px',
+          marginTop: '16px'
+        }}>
+          {loading ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ width: '16px', height: '16px', border: '2px solid #C9A84C', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+              Loading products...
+            </span>
+          ) : (
+            `${filteredProducts.length} products`
+          )}
         </p>
       </header>
 
-      {/* Filters */}
+      {/* Filters with premium styling */}
       <ProductFilterSection
         products={filteredProducts}
         categories={categories}
@@ -133,7 +185,7 @@ export default function ShopPage() {
       />
 
       {/* Virtual Product List */}
-      <div style={{ marginTop: '24px' }}>
+      <div style={{ marginTop: '32px' }}>
         {loading ? (
           <div style={{
             display: 'grid',
@@ -145,9 +197,15 @@ export default function ShopPage() {
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <p style={{ fontSize: '16px', marginBottom: '8px' }}>No products found</p>
-            <p style={{ fontSize: '14px', color: '#999' }}>Try adjusting your filters</p>
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '80px 20px',
+            backgroundColor: '#f9f9f9',
+            borderRadius: '8px',
+            border: '1px solid rgba(201, 168, 76, 0.2)'
+          }}>
+            <p style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: '#1a1a1a' }}>No products found</p>
+            <p style={{ fontSize: '14px', color: '#666' }}>Try adjusting your filters or search criteria</p>
           </div>
         ) : (
           <VirtualProductList
@@ -158,6 +216,12 @@ export default function ShopPage() {
           />
         )}
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

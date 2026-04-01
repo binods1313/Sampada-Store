@@ -41,6 +41,12 @@ const nextConfigCore = {
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
+      },
+      { // Add Picsum for demo product images
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
       }
     ],
     // Add quality options to support 85 quality

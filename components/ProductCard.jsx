@@ -77,6 +77,12 @@ const ProductCard = memo(function ProductCard({ product }) {
     onAdd(product, 1);
   }, [onAdd, product]);
 
+  // Handle image load error
+  const handleImageError = useCallback((e) => {
+    console.warn('Product image failed to load, using placeholder:', imageUrl);
+    e.target.src = '/asset/placeholder-image.jpg';
+  }, [imageUrl]);
+
   return (
     <article
       onMouseEnter={() => setIsHovered(true)}
@@ -228,7 +234,8 @@ const ProductCard = memo(function ProductCard({ product }) {
             transform: isHovered ? 'scale(1.05)' : 'scale(1)',
             willChange: 'transform'
           }}
-          onLoadingComplete={() => setImageLoaded(true)}
+          onLoad={() => setImageLoaded(true)}
+          onError={handleImageError}
           loading="lazy"
         />
       </div>
