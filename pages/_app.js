@@ -1,5 +1,6 @@
 // pages/_app.js
 import '../styles/globals.css';
+import '../styles/sampada-brand-global.css'; // Global brand styles
 import Layout from '../components/Layout';
 import ErrorBoundaryWithFallback from '../components/ErrorBoundaryWithFallback';
 import DevToolsPanel from '../components/DevToolsPanel';
