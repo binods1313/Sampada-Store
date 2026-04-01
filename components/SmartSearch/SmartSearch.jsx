@@ -14,7 +14,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { client, getOptimizedImageUrl } from '@/lib/client';
+import { client, getReliableImageUrl } from '@/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -181,7 +181,7 @@ export default function SmartSearch({ isOpen, onClose }) {
                     <div className="search-result-item">
                       {product.image && (
                         <Image
-                          src={getOptimizedImageUrl(product.image, 56, 56)}
+                          src={getReliableImageUrl(product.image, { width: 56, height: 56 })}
                           alt={product.name}
                           width={56}
                           height={56}

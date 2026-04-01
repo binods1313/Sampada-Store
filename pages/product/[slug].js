@@ -16,6 +16,7 @@ import Head from 'next/head';
 import { ReviewSystem } from '../../components/ReviewSystem';
 import { WishlistButton } from '../../components/WishlistSystem';
 import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
+import ProductRecommendations from '../../components/Recommendations/ProductRecommendations';
 import '../../styles/sampada-premium-brand.css';
 
 
@@ -1048,6 +1049,14 @@ const ProductDetails = ({ product, products, slug }) => {
         </div>
       )}
 
+      {/* Product Recommendations - Same Category (NEW) */}
+      {product.category?._ref && (
+        <ProductRecommendations
+          categoryId={product.category._ref}
+          currentProductId={product._id}
+        />
+      )}
+
       {/* Size Chart Modal */}
       {showSizeChartModal && sizeChart && sizeChart.asset && (
         <div
@@ -1153,6 +1162,12 @@ export const getStaticProps = async ({ params: { slug } }) => {
         _key, asset->{_id, url}
       },
       specialty, pros, cons, bestUseCases,
+      category->{
+        _id,
+        _ref,
+        name,
+        "slug": slug.current
+      },
       "variants": variants[]{
         _key,
         colorName,
