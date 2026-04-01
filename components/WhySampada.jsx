@@ -175,7 +175,11 @@ const WhySampada = () => {
       aria-labelledby="why-sampada-title"
       style={{
         background: '#0D0D14',
-        padding: '80px 24px',
+        padding: '80px 0',
+        width: '100%',
+        maxWidth: '100vw',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
       }}
     >
       {/* Section Eyebrow */}
@@ -210,185 +214,229 @@ const WhySampada = () => {
       {/* Cards Grid - Credit card aspect ratio */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '20px',
-          maxWidth: '1200px',
+          width: '100%',
+          maxWidth: '1280px',
           margin: '0 auto',
+          padding: '0 32px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+          gap: '20px',
+          boxSizing: 'border-box',
         }}
       >
         {features.map((feature, index) => (
-          // Outer wrapper with animated gold border
+          // Outer wrapper with hover effects
           <div
             key={index}
             className="pillar-card-wrapper"
             style={{
               position: 'relative',
               borderRadius: '16px',
-              padding: '1.5px',
-              background: `linear-gradient(
-                135deg,
-                rgba(201,162,39,0.9) 0%,
-                rgba(255,215,0,0.4) 25%,
-                rgba(201,162,39,0.1) 50%,
-                rgba(255,215,0,0.6) 75%,
-                rgba(201,162,39,0.9) 100%
-              )`,
-              backgroundSize: '300% 300%',
-              animation: 'gold-shimmer 4s ease infinite',
-              transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transitionDelay: `${index * 100}ms`,
+              overflow: 'hidden',
+              cursor: 'pointer',
+              transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+              border: '2px solid rgba(245, 208, 107, 0.3)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = `linear-gradient(
-                135deg,
-                rgba(255,215,0,1) 0%,
-                rgba(201,162,39,0.6) 25%,
-                rgba(255,215,0,0.3) 50%,
-                rgba(201,162,39,0.8) 75%,
-                rgba(255,215,0,1) 100%
-              )`;
-              e.currentTarget.style.boxShadow = '0 0 30px rgba(201,162,39,0.3), 0 0 60px rgba(201,162,39,0.1)';
+              e.currentTarget.style.borderColor = 'rgba(245, 208, 107, 0.8)';
+              e.currentTarget.style.boxShadow = '0 0 40px rgba(245, 208, 107, 0.3), 0 16px 48px rgba(0,0,0,0.6)';
+              e.currentTarget.style.transform = 'translateY(-10px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = `linear-gradient(
-                135deg,
-                rgba(201,162,39,0.9) 0%,
-                rgba(255,215,0,0.4) 25%,
-                rgba(201,162,39,0.1) 50%,
-                rgba(255,215,0,0.6) 75%,
-                rgba(201,162,39,0.9) 100%
-              )`;
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = 'rgba(245, 208, 107, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+              e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
-            {/* Inner card - Credit/Debit card aspect ratio */}
+            {/* Card */}
             <article
               role="article"
               aria-labelledby={`feature-title-${index}`}
               className="pillar-card"
               style={{
-                background: `${feature.bgGradient}, ${stoneTexture}`,
-                borderRadius: '15px',
-                padding: '48px 36px',
-                width: '100%',
-                aspectRatio: '1.586 / 1',
                 position: 'relative',
+                borderRadius: '16px',
                 overflow: 'hidden',
-                height: '100%',
-                zIndex: 1,
+                aspectRatio: '16 / 9',
+                background: '#f3f4f6',
               }}
             >
-              {/* Shiva Watermark - behind content */}
-              <ShivaWatermark
-                position={feature.shivaPosition}
-                opacity={feature.shivaOpacity}
+              {/* LAYER 1: Full bleed Shiva image */}
+              <img
+                src={index === 0 
+                  ? '/images/shiva-heritage.png'
+                  : index === 1
+                  ? '/images/shiva-premium.png'
+                  : '/images/shiva-shipping.png'}
+                alt={feature.title}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 10%',
+                  transition: 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+                  zIndex: 0,
+                }}
+                className="pillar-card-image"
               />
 
-              {/* Centered Content */}
+              {/* LAYER 2: Minimal bottom gradient ONLY for text readability */}
+              <div
+                className="pillar-card-overlay"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 70%)',
+                  pointerEvents: 'none',
+                  transition: 'background 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+                  zIndex: 1,
+                }}
+              />
+
+              {/* LAYER 3: Icon — top left */}
               <div
                 style={{
+                  position: 'absolute',
+                  top: '20px',
+                  left: '20px',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  border: '2px solid #F5D06B',
+                  background: 'rgba(0,0,0,0.4)',
+                  backdropFilter: 'blur(8px)',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  textAlign: 'center',
-                  height: '100%',
-                  position: 'relative',
+                  justifyContent: 'center',
+                  color: '#F5D06B',
+                  fontSize: '20px',
                   zIndex: 2,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
                 }}
               >
-                {/* Icon Container */}
-                <div
-                  style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '50%',
-                    background: feature.cornerGradient,
-                    border: '1px solid rgba(201, 162, 39, 0.4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '20px',
-                    color: '#C9A227',
-                    flexShrink: 0,
-                  }}
-                >
-                  {feature.icon}
-                </div>
+                {feature.icon}
+              </div>
 
-                {/* Title */}
+              {/* LAYER 4: Title — top right corner */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  textAlign: 'right',
+                  zIndex: 2,
+                  maxWidth: '45%',
+                }}
+              >
                 <h3
                   id={`feature-title-${index}`}
                   style={{
-                    color: '#C9A227',
-                    fontSize: '18px',
-                    fontWeight: 700,
-                    letterSpacing: '0.02em',
-                    margin: '0 0 12px 0',
-                    width: '100%',
+                    color: '#FFE8A3',
+                    fontSize: '1.2rem',
+                    fontWeight: '800',
+                    margin: 0,
+                    textShadow: '0 2px 16px rgba(0, 0, 0, 0.9), 0 0 24px rgba(201, 168, 76, 0.4)',
+                    letterSpacing: '-0.02em',
+                    lineHeight: '1.3',
                   }}
                 >
                   {feature.title}
                 </h3>
+              </div>
 
-                {/* Tagline */}
+              {/* LAYER 5: Tagline & Quote — bottom */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '20px 24px 24px',
+                  zIndex: 2,
+                }}
+              >
                 <p
                   style={{
-                    color: '#B0A898',
+                    color: '#FFE8A3',
                     fontSize: '13px',
-                    lineHeight: 1.6,
-                    margin: '0 0 auto 0',
-                    width: '100%',
+                    lineHeight: '1.5',
+                    margin: '0 0 10px 0',
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.9), 0 0 16px rgba(201, 168, 76, 0.3)',
+                    fontWeight: '500',
                   }}
                 >
                   {feature.tagline}
                 </p>
-
-                {/* Vision Quote - bottom with top border */}
-                <blockquote
+                <div
                   style={{
-                    color: 'rgba(201, 162, 39, 0.65)',
-                    fontSize: '12px',
+                    width: '32px',
+                    height: '2px',
+                    background: 'linear-gradient(90deg, #F5D06B, transparent)',
+                    boxShadow: '0 0 10px rgba(201, 168, 76, 0.6)',
+                    marginBottom: '10px',
+                  }}
+                />
+                <p
+                  style={{
+                    color: '#FFE8A3',
+                    fontSize: '11px',
                     fontStyle: 'italic',
-                    lineHeight: 1.5,
-                    marginTop: '24px',
-                    paddingTop: '16px',
-                    borderTop: '1px solid rgba(201, 162, 39, 0.25)',
-                    width: '100%',
+                    margin: 0,
+                    textShadow: '0 1px 8px rgba(0, 0, 0, 0.9), 0 0 14px rgba(201, 168, 76, 0.35)',
+                    fontWeight: '500',
+                    letterSpacing: '0.02em',
                   }}
                 >
-                  "{feature.quote}"
-                </blockquote>
+                  {feature.quote}
+                </p>
               </div>
             </article>
+
+            {/* Hover: Image zooms in to show portrait detail */}
+            <style>{`
+              .pillar-card-wrapper:hover .pillar-card-image {
+                transform: scale(1.12);
+              }
+              .pillar-card-wrapper:hover .pillar-card-overlay {
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.25) 40%, transparent 70%);
+              }
+            `}</style>
           </div>
         ))}
       </div>
 
       {/* Animations & Responsive */}
       <style>{`
-        @keyframes gold-shimmer {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        @media (max-width: 1024px) {
+          section[aria-labelledby="why-sampada-title"] > div:last-child {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            padding: 0 16px !important;
+            gap: 16px !important;
+          }
         }
-        
-        @media (max-width: 900px) {
+
+        @media (max-width: 768px) {
           section[aria-labelledby="why-sampada-title"] > div:last-child {
             grid-template-columns: 1fr !important;
+            padding: 0 20px !important;
+            gap: 16px !important;
           }
         }
-        
+
         @media (prefers-reduced-motion: reduce) {
-          .pillar-card-wrapper {
-            animation: none !important;
+          .pillar-card-wrapper,
+          .pillar-card-image,
+          .pillar-card-overlay {
+            transition: none !important;
           }
-          * {
-            transition-duration: 0.01ms !important;
-            animation-duration: 0.01ms !important;
+          .pillar-card-wrapper:hover {
+            transform: none !important;
+          }
+          .pillar-card-wrapper:hover .pillar-card-image {
+            transform: none !important;
           }
         }
       `}</style>
