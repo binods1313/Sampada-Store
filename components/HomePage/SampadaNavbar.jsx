@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp } from "lucide-react";
+import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { getNavigationData } from '@/lib/client';
+import SmartSearch from '@/components/SmartSearch/SmartSearch';
 
 // ============================================================================
 // CONFIGURATION - Hardcoded Menu Items (Fallback if Sanity is unreachable)
@@ -924,13 +925,26 @@ export default function SampadaNavbar({
   onSignIn,
   totalQuantities,
   setShowCart,
-  showMarquee = true
+  showMarquee = false
 }) {
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeMore, setActiveMore] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // Keyboard shortcut: Ctrl+K or Cmd+K to open search
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   
   // Navigation data state - Initialize with hardcoded fallback for immediate render
   const [menuItems, setMenuItems] = useState(HARDCODED_MENU_ITEMS);
@@ -1169,6 +1183,27 @@ export default function SampadaNavbar({
               </button>
             )}
 
+            {/* Search Icon */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search products"
+              style={{
+                color: '#1f2937',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                transition: 'color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#8B1A1A'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#1f2937'}
+            >
+              <Search size={24} />
+            </button>
+
             {/* Cart Icon */}
             <button
               onClick={() => setShowCart(true)}
@@ -1244,6 +1279,12 @@ export default function SampadaNavbar({
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         session={session}
+      />
+
+      {/* Smart Search Overlay */}
+      <SmartSearch
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
       />
     </header>
   );
