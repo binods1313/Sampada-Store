@@ -13,7 +13,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { client, getOptimizedImageUrl } from '@/lib/client';
+import { client, getReliableImageUrl } from '@/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -128,7 +128,7 @@ export default function ProductRecommendations({
                 )}
                 {product.image && (
                   <Image
-                    src={getOptimizedImageUrl(product.image, 220, 220)}
+                    src={getReliableImageUrl(product.image, { width: 220, height: 220 })}
                     alt={product.name}
                     width={220}
                     height={220}
