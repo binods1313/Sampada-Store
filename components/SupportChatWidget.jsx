@@ -193,6 +193,10 @@ const SupportChatWidget = () => {
           style={{
             width: '52px',
             height: '52px',
+            minWidth: '52px',
+            minHeight: '52px',
+            maxWidth: '52px',
+            maxHeight: '52px',
             borderRadius: '50%',
             background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})`,
             boxShadow: showPulse
@@ -205,10 +209,12 @@ const SupportChatWidget = () => {
             justifyContent: 'center',
             transition: 'all 0.2s',
             animation: showPulse ? 'pulse 1.5s ease-in-out infinite' : 'none',
+            overflow: 'hidden',
+            flexShrink: 0
           }}
           aria-label="Open support chat"
         >
-          <MessageCircle style={{ width: '24px', height: '24px', color: 'white' }} />
+          <MessageCircle style={{ width: '22px', height: '22px', color: 'white', flexShrink: 0 }} />
         </button>
 
         <style>{`
