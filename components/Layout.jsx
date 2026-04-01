@@ -100,11 +100,15 @@ const Layout = ({ children }) => {
       {/* On mobile (<768px), only one widget shows at a time via activeWidget state */}
       <div className="hidden sm:block">
         {/* Desktop: show both widgets with higher z-index to be above cart */}
-        <div className="fixed bottom-4 left-4 z-[1100]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-          <SupportChatWidget onToggleOpen={handleChatToggle} />
+        <div className="fixed bottom-4 left-4 z-[1100]" style={{ paddingBottom: 'env(safe-area-inset-bottom)', width: '52px', height: '52px', pointerEvents: 'none' }}>
+          <div style={{ pointerEvents: 'auto' }}>
+            <SupportChatWidget onToggleOpen={handleChatToggle} />
+          </div>
         </div>
-        <div className="fixed bottom-4 right-4 z-[1100]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-          <VoiceAssistant onToggleOpen={handleVoiceToggle} />
+        <div className="fixed bottom-4 right-4 z-[1100]" style={{ paddingBottom: 'env(safe-area-inset-bottom)', width: '52px', height: '52px', pointerEvents: 'none' }}>
+          <div style={{ pointerEvents: 'auto' }}>
+            <VoiceAssistant onToggleOpen={handleVoiceToggle} />
+          </div>
         </div>
       </div>
       
