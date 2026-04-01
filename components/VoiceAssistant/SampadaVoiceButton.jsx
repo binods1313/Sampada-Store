@@ -710,7 +710,7 @@ const SampadaVoiceButton = ({ onToggleOpen }) => {
         </div>
       )}
 
-      {/* Floating Trigger Button - Positioned ABOVE chat widget */}
+      {/* Floating Trigger Button - Positioned ABOVE chat widget - EXACT 52px SIZE */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -724,8 +724,12 @@ const SampadaVoiceButton = ({ onToggleOpen }) => {
           bottom: '84px',
           right: '24px',
           zIndex: 9998,
-          width: '44px',
-          height: '44px',
+          width: '52px',
+          height: '52px',
+          minWidth: '52px',
+          minHeight: '52px',
+          maxWidth: '52px',
+          maxHeight: '52px',
           borderRadius: '50%',
           background: `linear-gradient(135deg, ${COLORS.gold} 0%, ${COLORS.goldMuted} 100%)`,
           border: `2px solid ${COLORS.border}`,
@@ -738,6 +742,8 @@ const SampadaVoiceButton = ({ onToggleOpen }) => {
           justifyContent: 'center',
           transition: 'all 0.2s',
           transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+          overflow: 'hidden',
+          flexShrink: 0
         }}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
@@ -745,9 +751,9 @@ const SampadaVoiceButton = ({ onToggleOpen }) => {
         aria-expanded={isOpen}
       >
         {isOpen ? (
-          <X style={{ width: '20px', height: '20px', color: 'white' }} />
+          <X style={{ width: '22px', height: '22px', color: 'white', flexShrink: 0 }} />
         ) : (
-          <Mic style={{ width: '20px', height: '20px', color: COLORS.gold }} />
+          <Mic style={{ width: '22px', height: '22px', color: COLORS.gold, flexShrink: 0 }} />
         )}
       </button>
 
