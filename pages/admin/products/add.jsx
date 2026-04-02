@@ -1,21 +1,24 @@
 /**
  * Admin - Add New Product Page
- * 
+ *
  * Features:
  * - ProductForm with AI description generator
  * - Sanity CMS integration
  * - Image upload support
  * - Toast notifications
+ * - AdminLayout integration
  */
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { useToast } from '@/components/Admin/Toast';
+import AdminLayout from '@/components/Admin/AdminLayout';
 import ProductForm from '@/components/admin/ProductForm';
-import toast from 'react-hot-toast';
 import { getClient } from '@/lib/sanity';
 
 const AddProductPage = () => {
   const router = useRouter();
+  const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = useCallback(async (formData) => {
@@ -73,25 +76,23 @@ const AddProductPage = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [router]);
+  }, [router, toast]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Add New Product
-          </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Create a new product with AI-powered description generation
-          </p>
-        </div>
-
-        {/* Product Form */}
-        <ProductForm onSubmit={handleSubmit} />
+    <AdminLayout title="Add Product">
+      {/* Page Header */}
+      <div style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0' }}>
+          Add New Product
+        </h1>
+        <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>
+          Create a new product with AI-powered description generation
+        </p>
       </div>
-    </div>
+
+      {/* Product Form */}
+      <ProductForm onSubmit={handleSubmit} />
+    </AdminLayout>
   );
 };
 
