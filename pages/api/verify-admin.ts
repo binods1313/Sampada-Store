@@ -1,50 +1,74 @@
-/**
- * Admin Verification API
- * 
- * Server-side verification of admin status.
- * Used by DevToolsPanel to verify user has admin access.
- * 
- * Security:
- * - Checks session server-side (not trustable client data)
- * - Verifies against admin email whitelist
- * - Returns only isAdmin boolean (no sensitive data)
- */
+import type { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { serialize } from 'cookie'
 
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from './auth/[...nextauth]';
+// In-memory rate limiter (for production, use Redis/Upstash)
+const attempts = new Map<string, { count: number; resetAt: number }>()
 
-// Admin email whitelist
-const ADMIN_EMAILS = ['admin@sampada.com', 'admin@localhost'];
-
-export default async function handler(req, res) {
-  // Only allow GET
-  if (req.method !== 'GET') {
-    return res.status(405).json({ isAdmin: false });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  try {
-    // Get session server-side
-    const session = await getServerSession(req, res, authOptions);
+  const ip = (req.headers['x-forwarded-for'] as string) || 'unknown'
+  const now = Date.now()
 
-    // No session = not admin
-    if (!session?.user?.email) {
-      return res.status(200).json({ isAdmin: false });
+  // Rate limiting: 5 attempts per 15 minutes per IP
+  const record = attempts.get(ip)
+  if (record) {
+    if (now < record.resetAt && record.count >= 5) {
+      const remainingTime = Math.ceil((record.resetAt - now) / 60000)
+      return res.status(429).json({
+        error: `Too many attempts. Try again in ${remainingTime} minutes.`
+      })
     }
-
-    // Check if email is in admin whitelist
-    const userEmail = session.user.email.toLowerCase();
-    const isAdmin = ADMIN_EMAILS.includes(userEmail);
-
-    // Log admin access attempts (useful for security auditing)
-    if (isAdmin) {
-      console.log('[Admin Verify] Admin access granted:', userEmail);
+    if (now >= record.resetAt) {
+      attempts.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 })
     } else {
-      console.log('[Admin Verify] Non-admin access attempt:', userEmail);
+      record.count++
     }
-
-    return res.status(200).json({ isAdmin });
-  } catch (error) {
-    console.error('[Admin Verify] Error:', error);
-    return res.status(200).json({ isAdmin: false });
+  } else {
+    attempts.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 })
   }
+
+  const { email, password } = req.body
+
+  // Validate input
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' })
+  }
+
+  // Verify credentials against environment variables
+  const validEmail = email === process.env.ADMIN_EMAIL
+  const validPassword = await bcrypt.compare(
+    password,
+    process.env.ADMIN_PASSWORD_HASH || ''
+  )
+
+  if (!validEmail || !validPassword) {
+    return res.status(401).json({ error: 'Invalid credentials' })
+  }
+
+  // Generate JWT token
+  const token = jwt.sign(
+    { email, role: 'admin', iat: Date.now() },
+    process.env.JWT_SECRET || 'change-this-secret',
+    { expiresIn: '7d' }
+  )
+
+  // Set httpOnly cookie (XSS protection)
+  res.setHeader('Set-Cookie', serialize('admin-token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  }))
+
+  // Reset attempt counter on success
+  attempts.delete(ip)
+
+  return res.status(200).json({ success: true })
 }

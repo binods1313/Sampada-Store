@@ -10,16 +10,17 @@ import { SessionProvider } from 'next-auth/react';
 import { UIProvider } from '../context/StateContext';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../components/WishlistSystem';
-import { useEffect } from 'react';
-import { initializeSampadaFonts } from '../utils/fontLoader';
+// import { useEffect } from 'react';
+// import { initializeSampadaFonts } from '../utils/fontLoader';
 
 // Preload fonts for accurate text measurement (Pretext)
-function FontLoader() {
-  useEffect(() => {
-    initializeSampadaFonts();
-  }, []);
-  return null;
-}
+// DISABLED: Inter font already loads via Google Fonts in Layout
+// function FontLoader() {
+//   useEffect(() => {
+//     initializeSampadaFonts();
+//   }, []);
+//   return null;
+// }
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
@@ -30,8 +31,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             <WishlistProvider>
               <OfflineWrapper>
                 <Layout>
-                  {/* Font loader for Pretext text measurement */}
-                  <FontLoader />
+                  {/* Font loader disabled - Inter loads via Google Fonts */}
+                  {/* <FontLoader /> */}
                   <Toaster
                     position="bottom-center"
                     toastOptions={{
