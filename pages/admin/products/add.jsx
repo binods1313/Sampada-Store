@@ -3,6 +3,7 @@
  *
  * Features:
  * - ProductForm with AI description generator
+ * - AI Image Generator (Pollinations.ai + Stability AI)
  * - Sanity CMS integration
  * - Image upload support
  * - Toast notifications
@@ -14,9 +15,17 @@ import { useRouter } from 'next/router';
 import { useToast } from '@/components/Admin/Toast';
 import AdminLayout from '@/components/Admin/AdminLayout';
 import ProductForm from '@/components/admin/ProductForm';
-import { getClient } from '@/lib/sanity';
+import { client } from '@/lib/sanity';
 
-const AddProductPage = () => {
+export default function AddProductPage() {
+  return (
+    <AdminLayout title="Add Product">
+      <AddProductContent />
+    </AdminLayout>
+  )
+}
+
+function AddProductContent() {
   const router = useRouter();
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,24 +34,22 @@ const AddProductPage = () => {
     setIsSubmitting(true);
 
     try {
-      const client = getClient('admin');
-      
       // Generate unique slug with collision handling
       const baseSlug = formData.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
-      
+
       // Check for existing slug
       const existingSlug = await client.fetch(
         `*[_type == "product" && slug.current == $slug][0].slug.current`,
         { slug: baseSlug }
       );
-      
-      const finalSlug = existingSlug 
+
+      const finalSlug = existingSlug
         ? `${baseSlug}-${Date.now().toString(36)}`
         : baseSlug;
-      
+
       // Create product document in Sanity
       const product = {
         _type: 'product',
@@ -52,23 +59,18 @@ const AddProductPage = () => {
           current: finalSlug,
         },
         description: formData.description,
-        // Store category as plain string (not reference) for simplicity
         category: formData.category || undefined,
         price: parseFloat(formData.price) || 0,
         features: formData.features || [],
         targetAudience: formData.targetAudience,
         keywords: formData.keywords || [],
-        inventory: 0, // Default to 0, admin can update later
+        inventory: 0,
         isActive: true,
       };
 
       const result = await client.create(product);
-      
       console.log('Product created:', result);
-      
       toast.success('Product created successfully!');
-      
-      // Navigate to products list or edit page
       router.push('/admin/products');
     } catch (error) {
       console.error('Error creating product:', error);
@@ -79,21 +81,19 @@ const AddProductPage = () => {
   }, [router, toast]);
 
   return (
-    <AdminLayout title="Add Product">
+    <>
       {/* Page Header */}
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', margin: '0 0 6px 0' }}>
+      <div style={{ marginBottom: 'var(--admin-space-6)' }}>
+        <h1 className="admin-heading" style={{ margin: '0 0 var(--admin-space-1) 0' }}>
           Add New Product
         </h1>
-        <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>
-          Create a new product with AI-powered description generation
+        <p className="admin-text-secondary admin-text-sm" style={{ margin: 0 }}>
+          Create a new product with AI-powered description and image generation
         </p>
       </div>
 
       {/* Product Form */}
-      <ProductForm onSubmit={handleSubmit} />
-    </AdminLayout>
+      <ProductForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+    </>
   );
-};
-
-export default AddProductPage;
+}

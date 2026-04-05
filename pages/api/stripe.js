@@ -17,13 +17,20 @@ export default async function handler(req, res) {
     console.log('\n--- Stripe API Request Handler Started ---');
     console.time('StripeApiRequest'); // Overall API request timer
     try {
-      const { cartItems, success_url, cancel_url, customerEmail, paymentMethodId } = req.body;
+      const { cartItems, success_url, cancel_url, customerEmail, paymentMethodId, currency = 'usd' } = req.body;
+
+      // Normalize currency (Stripe expects lowercase)
+      const normalizedCurrency = currency.toLowerCase() || 'usd';
+      // Stripe requires specific currency codes - validate
+      const supportedCurrencies = ['usd', 'eur', 'gbp', 'inr', 'aud', 'cad', 'jpy', 'cny', 'nzd', 'chf', 'sek', 'sgd'];
+      const finalCurrency = supportedCurrencies.includes(normalizedCurrency) ? normalizedCurrency : 'usd';
 
       console.log('Received payload:', {
         cartItems: cartItems ? JSON.stringify(cartItems).substring(0, 500) + '...' : 'Not provided',
         success_url,
         cancel_url,
         customerEmail: customerEmail || 'Not provided',
+        currency: finalCurrency,
         paymentMethodId: paymentMethodId ? paymentMethodId.substring(0, 10) + '...' : 'Not provided'
       });
 

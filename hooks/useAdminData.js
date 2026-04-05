@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { client } from '@/lib/sanityClient'
+import { client } from '@/utils/sanityClient'
 
 /**
  * Hook for fetching admin data from Sanity
@@ -98,7 +98,13 @@ export function useRecentProducts(limit = 10) {
       status,
       price,
       discount,
-      "image": image[0].asset->url,
+      "image": image[0],
+      inventory,
+      variants[] {
+        variantStock,
+        colorName,
+        size
+      },
       _createdAt
     }`
 

@@ -12,8 +12,10 @@ import { Heart, ShoppingBag } from 'lucide-react';
 import { useCartContext } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import { useTextHeight } from '../hooks/usePretext';
+import { useCurrency } from '../hooks/useCurrency';
+import { formatCurrency } from '../utils/currency';
 
-const ProductCard = memo(function ProductCard({ product }) {
+const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD' }) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -31,6 +33,22 @@ const ProductCard = memo(function ProductCard({ product }) {
     soldCount
   } = product || {};
 
+  const hasDiscount = discount && discount > 0;
+  const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
+
+  // Currency conversion hooks
+  const { formattedAmount: formattedBasePrice, loading: basePriceLoading } = useCurrency(
+    price,
+    'USD',
+    displayCurrency
+  );
+  
+  const { formattedAmount: formattedDiscountedPrice, loading: discountedPriceLoading } = useCurrency(
+    discountedPrice,
+    'USD',
+    displayCurrency
+  );
+
   // Pre-calculate product name height to prevent layout shift
   const { height: nameHeight, loaded: nameMeasured } = useTextHeight(
     name || '',
@@ -41,8 +59,6 @@ const ProductCard = memo(function ProductCard({ product }) {
     }
   );
 
-  const hasDiscount = discount && discount > 0;
-  const discountedPrice = hasDiscount ? price * (1 - (discount / 100)) : price;
   const firstImage = image && image[0] ? image[0] : null;
   const isLowStock = inventory && inventory < 5;
   const hasSoldCount = soldCount && soldCount > 0;
@@ -75,6 +91,21 @@ const ProductCard = memo(function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     onAdd(product, 1);
+    
+    // Track add to cart with GA4
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'add_to_cart', {
+        currency: 'USD',
+        value: product.price || 0,
+        items: [{
+          item_id: product._id,
+          item_name: product.name,
+          item_category: product.category,
+          price: product.price || 0,
+          quantity: 1
+        }]
+      });
+    }
   }, [onAdd, product]);
 
   // Handle image load error
@@ -320,7 +351,7 @@ const ProductCard = memo(function ProductCard({ product }) {
                 textDecorationColor: '#9ca3af',
                 fontWeight: '400'
               }}>
-                ${price.toFixed(2)}
+                {basePriceLoading ? '$' + price.toFixed(2) : formattedBasePrice}
               </span>
               <span style={{
                 fontSize: '16px',
@@ -328,18 +359,40 @@ const ProductCard = memo(function ProductCard({ product }) {
                 color: '#dc2626',
                 letterSpacing: '-0.01em'
               }}>
-                ${discountedPrice.toFixed(2)}
+                {discountedPriceLoading ? '$' + discountedPrice.toFixed(2) : formattedDiscountedPrice}
               </span>
+              {/* Show original currency if different from display currency */}
+              {displayCurrency !== 'USD' && (
+                <span style={{
+                  fontSize: '10px',
+                  color: '#9ca3af',
+                  fontWeight: '400'
+                }}>
+                  ${discountedPrice.toFixed(2)} USD
+                </span>
+              )}
             </>
           ) : (
-            <span style={{
-              fontSize: '16px',
-              fontWeight: '700',
-              color: 'var(--color-text-primary)',
-              letterSpacing: '-0.01em'
-            }}>
-              ${price?.toFixed(2) || '0.00'}
-            </span>
+            <>
+              <span style={{
+                fontSize: '16px',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
+                letterSpacing: '-0.01em'
+              }}>
+                {basePriceLoading ? '$' + (price?.toFixed(2) || '0.00') : formattedBasePrice}
+              </span>
+              {/* Show original currency if different from display currency */}
+              {displayCurrency !== 'USD' && (
+                <span style={{
+                  fontSize: '10px',
+                  color: '#9ca3af',
+                  fontWeight: '400'
+                }}>
+                  ${price?.toFixed(2) || '0.00'} USD
+                </span>
+              )}
+            </>
           )}
         </div>
 

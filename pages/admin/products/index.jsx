@@ -6,6 +6,15 @@ import { useAdminData } from '@/hooks/useAdminData'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Helper to safely render values that might be Sanity reference objects
+const safeValue = (val, fallback = '') => {
+  if (val === null || val === undefined) return fallback
+  if (typeof val === 'object') {
+    return val.name || val.email || val.title || val.amount || val._ref || val.current || String(val) || fallback
+  }
+  return String(val)
+}
+
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First' },
   { value: 'price-asc', label: 'Price: Low to High' },
@@ -30,6 +39,17 @@ export default function ProductsList() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 20
 
+  // Helper to get display status
+  const getDisplayStatus = (product) => {
+    const status = product.status || 'draft'
+    const statusMap = {
+      active: { label: 'Active', color: '#4ade80', value: 'active' },
+      draft: { label: 'Draft', color: '#C9A84C', value: 'draft' },
+      archived: { label: 'Archived', color: '#ff6b6b', value: 'archived' },
+    }
+    return statusMap[status] || { label: 'Draft', color: '#C9A84C', value: 'draft' }
+  }
+
   // Filter and sort products
   const filtered = useMemo(() => {
     if (!products) return []
@@ -40,8 +60,8 @@ export default function ProductsList() {
     if (search) {
       const q = search.toLowerCase()
       result = result.filter(p =>
-        p.name?.toLowerCase().includes(q) ||
-        p.description?.toLowerCase().includes(q)
+        safeValue(p.name, '').toLowerCase().includes(q) ||
+        safeValue(p.description, '').toLowerCase().includes(q)
       )
     }
 
@@ -62,7 +82,7 @@ export default function ProductsList() {
         result.sort((a, b) => (b.price || 0) - (a.price || 0))
         break
       case 'name':
-        result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+        result.sort((a, b) => safeValue(a.name, '').localeCompare(safeValue(b.name, '')))
         break
       case 'stock':
         result.sort((a, b) => (b.inventory || 0) - (a.inventory || 0))
@@ -285,6 +305,7 @@ export default function ProductsList() {
               type="checkbox"
               checked={selected.size === paginated.length && paginated.length > 0}
               onChange={toggleSelectAll}
+              aria-label="Select all products"
               style={{ cursor: 'pointer' }}
             />
           </div>
@@ -306,7 +327,63 @@ export default function ProductsList() {
             {search || statusFilter !== 'all' ? 'No products match your filters' : 'No products yet'}
           </div>
         ) : (
-          paginated.map(product => (
+          <>
+            {/* Mobile Card View */}
+            <div className="admin-products-cards">
+              {paginated.map(product => {
+                const status = getDisplayStatus(product)
+                const price = product.price || 0
+                const discount = product.discount || 0
+                const discountedPrice = price * (1 - discount / 100)
+
+                return (
+                  <Link
+                    key={product._id}
+                    href={`/admin/products?edit=${product._id}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <div className="admin-product-card-mobile">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--admin-space-3)' }}>
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ fontSize: 'var(--admin-text-md)', fontWeight: 'var(--admin-font-bold)', color: 'var(--admin-text-primary)', margin: '0 0 var(--admin-space-1) 0' }}>
+                            {safeValue(product.name, 'Untitled')}
+                          </h3>
+                          <div style={{ fontSize: 'var(--admin-text-xs)', color: 'var(--admin-text-secondary)' }}>
+                            {safeValue(product.category, 'No category')}
+                          </div>
+                        </div>
+                        <StatusBadge status={status.value} label={status.label} color={status.color} />
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          {discount > 0 ? (
+                            <>
+                              <span style={{ fontSize: 'var(--admin-text-xs)', color: 'var(--admin-text-muted)', textDecoration: 'line-through', marginRight: 'var(--admin-space-2)' }}>
+                                ₹{price.toFixed(2)}
+                              </span>
+                              <span style={{ fontSize: 'var(--admin-text-md)', fontWeight: 'var(--admin-font-bold)', color: '#4ade80' }}>
+                                ₹{discountedPrice.toFixed(2)}
+                              </span>
+                            </>
+                          ) : (
+                            <span style={{ fontSize: 'var(--admin-text-md)', fontWeight: 'var(--admin-font-bold)', color: 'var(--admin-text-primary)' }}>
+                              ₹{price.toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 'var(--admin-text-xs)', color: 'var(--admin-text-secondary)' }}>
+                          Stock: {product.inventory || 0}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="admin-products-table">
+              {paginated.map(product => (
             <div
               key={product._id}
               style={{
@@ -331,6 +408,7 @@ export default function ProductsList() {
                   type="checkbox"
                   checked={selected.has(product._id)}
                   onChange={() => toggleSelect(product._id)}
+                  aria-label={`Select ${safeValue(product.name, 'product')}`}
                   style={{ cursor: 'pointer' }}
                 />
               </div>
@@ -347,7 +425,7 @@ export default function ProductsList() {
                 {product.image?.asset ? (
                   <Image
                     src={product.image.asset.url}
-                    alt={product.name}
+                    alt={safeValue(product.name, 'Product')}
                     width={40}
                     height={40}
                     style={{ objectFit: 'cover' }}
@@ -374,7 +452,7 @@ export default function ProductsList() {
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap'
               }}>
-                {product.name}
+                {safeValue(product.name, 'Untitled')}
               </div>
 
               {/* Status */}
@@ -410,7 +488,9 @@ export default function ProductsList() {
                 </Link>
               </div>
             </div>
-          ))
+          ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -431,7 +511,7 @@ export default function ProductsList() {
               background: currentPage === 1 ? '#1a1a1a' : 'rgba(201,168,76,0.1)',
               border: '1px solid rgba(201,168,76,0.2)',
               borderRadius: '6px',
-              color: currentPage === 1 ? '#444' : '#C9A84C',
+              color: currentPage === 1 ? '#666' : '#C9A84C',
               fontSize: '13px',
               fontWeight: '600',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
@@ -441,25 +521,69 @@ export default function ProductsList() {
             Previous
           </button>
           <div style={{ display: 'flex', gap: '4px' }}>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                style={{
-                  padding: '8px 14px',
-                  background: page === currentPage ? 'rgba(201,168,76,0.2)' : 'rgba(201,168,76,0.1)',
-                  border: `1px solid ${page === currentPage ? 'rgba(201,168,76,0.4)' : 'rgba(201,168,76,0.2)'}`,
-                  borderRadius: '6px',
-                  color: page === currentPage ? '#C9A84C' : '#888',
-                  fontSize: '13px',
-                  fontWeight: page === currentPage ? '700' : '600',
-                  cursor: 'pointer',
-                  minWidth: '40px'
-                }}
-              >
-                {page}
-              </button>
-            ))}
+            {(() => {
+              const delta = 2; // Pages to show on each side of current
+              const range = [];
+              const rangeWithDots = [];
+
+              // Calculate range
+              for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+                range.push(i);
+              }
+
+              // Build range with dots
+              if (currentPage - delta > 2) {
+                rangeWithDots.push(1, '...');
+              } else {
+                rangeWithDots.push(1);
+              }
+
+              rangeWithDots.push(...range);
+
+              if (currentPage + delta < totalPages - 1) {
+                rangeWithDots.push('...', totalPages);
+              } else if (totalPages > 1) {
+                rangeWithDots.push(totalPages);
+              }
+
+              return rangeWithDots.map((page, index) => {
+                if (page === '...') {
+                  return (
+                    <span
+                      key={`dots-${index}`}
+                      style={{
+                        padding: '8px 6px',
+                        color: '#888',
+                        fontSize: '13px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      ...
+                    </span>
+                  );
+                }
+
+                return (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    style={{
+                      padding: '8px 14px',
+                      background: page === currentPage ? 'rgba(201,168,76,0.2)' : 'rgba(201,168,76,0.1)',
+                      border: `1px solid ${page === currentPage ? 'rgba(201,168,76,0.4)' : 'rgba(201,168,76,0.2)'}`,
+                      borderRadius: '6px',
+                      color: page === currentPage ? '#C9A84C' : '#888',
+                      fontSize: '13px',
+                      fontWeight: page === currentPage ? '700' : '600',
+                      cursor: 'pointer',
+                      minWidth: '40px'
+                    }}
+                  >
+                    {page}
+                  </button>
+                );
+              });
+            })()}
           </div>
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
@@ -469,7 +593,7 @@ export default function ProductsList() {
               background: currentPage === totalPages ? '#1a1a1a' : 'rgba(201,168,76,0.1)',
               border: '1px solid rgba(201,168,76,0.2)',
               borderRadius: '6px',
-              color: currentPage === totalPages ? '#444' : '#C9A84C',
+              color: currentPage === totalPages ? '#666' : '#C9A84C',
               fontSize: '13px',
               fontWeight: '600',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
@@ -480,6 +604,40 @@ export default function ProductsList() {
           </button>
         </div>
       )}
+
+      {/* Mobile Responsive CSS */}
+      <style jsx global>{`
+        /* Mobile: Show cards, hide table */
+        .admin-products-table {
+          display: none;
+        }
+        .admin-products-cards {
+          display: block;
+          padding: var(--admin-space-4);
+        }
+      .admin-product-card-mobile {
+        background: var(--admin-surface-3);
+        border: 1px solid var(--admin-border-subtle);
+        border-radius: var(--admin-radius-md);
+        padding: var(--admin-space-4);
+        margin-bottom: var(--admin-space-3);
+        transition: var(--admin-transition-fast);
+      }
+      .admin-product-card-mobile:hover {
+        border-color: var(--admin-border-default);
+        box-shadow: var(--admin-shadow-sm);
+      }
+
+      /* Tablet & Desktop: Show table, hide cards */
+      @media (min-width: 768px) {
+        .admin-products-table {
+          display: block;
+        }
+        .admin-products-cards {
+          display: none;
+        }
+      }
+    `}</style>
     </AdminLayout>
   )
 }

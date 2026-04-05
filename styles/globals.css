@@ -1,6 +1,9 @@
 /* Import Product Card Styles */
 @import './ProductCard.css';
 
+/* Import Admin Design Tokens */
+@import './admin-tokens.css';
+
 /* ============================================================================
    SAMPADA MARQUEE ANIMATION - For announcement bar (unique name to avoid conflicts)
    ============================================================================ */
@@ -3100,8 +3103,58 @@ img {
   .recommendations-section {
     padding: 32px 0;
   }
-  
+
   .rec-card {
     flex: 0 0 180px;
   }
+}
+
+/* ============================================================================
+   ADMIN PANEL FOCUS INDICATORS - Accessibility (WCAG 2.1 AA)
+   ============================================================================ */
+
+/* Focus-visible for all interactive elements in admin */
+.admin-page button:focus-visible,
+.admin-page a:focus-visible,
+.admin-page input:focus-visible,
+.admin-page select:focus-visible,
+.admin-page textarea:focus-visible,
+.admin-page [tabindex]:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
+
+/* Remove default outline for mouse users, keep for keyboard */
+.admin-page button:focus:not(:focus-visible),
+.admin-page a:focus:not(:focus-visible),
+.admin-page input:focus:not(:focus-visible),
+.admin-page select:focus:not(:focus-visible),
+.admin-page textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enhanced focus for input fields */
+.admin-page input:focus-visible,
+.admin-page select:focus-visible,
+.admin-page textarea:focus-visible {
+  border-color: #C9A84C;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+}
+
+/* Skip to content link (hidden visually, visible on focus) */
+.admin-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #C9A84C;
+  color: #0f0f0f;
+  padding: 8px 16px;
+  z-index: 10000;
+  transition: top 0.2s ease;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.admin-skip-link:focus {
+  top: 0;
 }

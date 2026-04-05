@@ -107,9 +107,17 @@ function BulkAutoTag() {
     };
 
     return (
-        <div className="bulk-tag-admin" style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', maxWidth: '600px', margin: '20px auto', backgroundColor: '#fff' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>📦 Bulk Auto-Tag Products</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>Automatically generate AI tags, descriptions, and SEO keywords for your entire catalog.</p>
+        <div className="bulk-tag-admin" style={{ 
+            padding: '20px', 
+            border: '1px solid rgba(201, 168, 76, 0.12)', 
+            borderRadius: '12px', 
+            maxWidth: '600px', 
+            margin: '20px auto', 
+            backgroundColor: '#1a1a1a',
+            color: '#ffffff'
+        }}>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '10px', color: '#ffffff' }}>📦 Bulk Auto-Tag Products</h2>
+            <p style={{ color: '#888888', marginBottom: '20px' }}>Automatically generate AI tags, descriptions, and SEO keywords for your entire catalog.</p>
 
             <div style={{ marginBottom: '20px' }}>
                 <button
@@ -117,11 +125,12 @@ function BulkAutoTag() {
                     disabled={status === 'running'}
                     style={{
                         padding: '12px 24px',
-                        backgroundColor: status === 'running' ? '#ccc' : '#0070f3',
+                        backgroundColor: status === 'running' ? '#444444' : '#C9A84C',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
                         fontSize: '1rem',
+                        fontWeight: '600',
                         cursor: status === 'running' ? 'not-allowed' : 'pointer',
                         transition: 'background-color 0.2s'
                     }}
@@ -132,23 +141,23 @@ function BulkAutoTag() {
 
             {progress && (
                 <div className="progress" style={{ marginBottom: '20px' }}>
-                    <div style={{ height: '10px', width: '100%', backgroundColor: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: `${progress.percentage}%`, backgroundColor: '#4caf50', transition: 'width 0.3s' }} />
+                    <div style={{ height: '10px', width: '100%', backgroundColor: '#2a2a2a', borderRadius: '5px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${progress.percentage}%`, backgroundColor: '#4ade80', transition: 'width 0.3s' }} />
                     </div>
-                    <p style={{ textAlign: 'right', fontSize: '0.9rem', color: '#666', marginTop: '5px' }}>
+                    <p style={{ textAlign: 'right', fontSize: '0.9rem', color: '#888888', marginTop: '5px' }}>
                         {progress.completed} / {progress.total} products ({progress.percentage}%)
                     </p>
                 </div>
             )}
 
             {logs.length > 0 && (
-                <div className="logs" style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '4px', maxHeight: '200px', overflowY: 'auto', fontSize: '0.85rem', fontFamily: 'monospace' }}>
-                    {logs.map((log, i) => <div key={i}>{log}</div>)}
+                <div className="logs" style={{ backgroundColor: '#0f0f0f', padding: '12px', borderRadius: '6px', maxHeight: '200px', overflowY: 'auto', fontSize: '0.85rem', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", color: '#888888', border: '1px solid rgba(201, 168, 76, 0.06)' }}>
+                    {logs.map((log, i) => <div key={i} style={{ padding: '2px 0' }}>{log}</div>)}
                 </div>
             )}
 
             {status === 'completed' && (
-                <div className="success-message" style={{ marginTop: '20px', color: 'green', fontWeight: 'bold' }}>
+                <div className="success-message" style={{ marginTop: '20px', color: '#4ade80', fontWeight: 'bold' }}>
                     ✓ Bulk tagging process finished.
                 </div>
             )}

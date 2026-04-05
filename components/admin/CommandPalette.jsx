@@ -96,7 +96,7 @@ export default function CommandPalette({ onClose }) {
           padding: '16px 20px',
           borderBottom: '1px solid rgba(201,168,76,0.12)'
         }}>
-          <span style={{ fontSize: '18px', color: '#666', marginRight: '12px' }}>⌕</span>
+          <span style={{ fontSize: '18px', color: '#888', marginRight: '12px' }}>⌕</span>
           <input
             ref={inputRef}
             value={search}
@@ -113,7 +113,7 @@ export default function CommandPalette({ onClose }) {
           />
           <kbd style={{
             fontSize: '11px',
-            color: '#666',
+            color: '#888',
             background: '#0f0f0f',
             border: '1px solid #333',
             borderRadius: '4px',
@@ -130,7 +130,7 @@ export default function CommandPalette({ onClose }) {
             <div style={{
               padding: '32px 20px',
               textAlign: 'center',
-              color: '#666',
+              color: '#888',
               fontSize: '14px'
             }}>
               No commands found
@@ -165,7 +165,7 @@ export default function CommandPalette({ onClose }) {
                 {cmd.shortcut && (
                   <kbd style={{
                     fontSize: '10px',
-                    color: '#666',
+                    color: '#888',
                     background: '#0f0f0f',
                     border: '1px solid #333',
                     borderRadius: '4px',

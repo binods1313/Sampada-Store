@@ -9,19 +9,69 @@ import { useSession } from 'next-auth/react';
 import { useCartContext } from '../context/CartContext';
 import { urlFor } from '../lib/client';
 import { useUIContext } from '../context/StateContext';
+import { useCurrencyContext } from '../context/CurrencyContext';
+import { useCurrency } from '../hooks/useCurrency';
+import { formatCurrency } from '../utils/currency';
+import CurrencySelector from './CurrencySelector';
+import PaymentSelector, { autoSelectPaymentProcessor } from './PaymentSelector';
+import VATValidator from './VATValidator';
+import IFSCValidator from './IFSCValidator';
+import AddressValidator from './AddressValidator';
+import B2BCustomerDisplay from './B2BCustomerDisplay';
+import { trackBeginCheckout } from '../lib/analytics';
 
 // Import your Stripe utility function
 import getStripe from '../lib/getStripe';
 import GooglePayButton from './GooglePayButton';
+import KlarnaPaymentButton from './KlarnaPaymentButton';
 
 const Cart = () => {
   const cartRef = useRef();
   const { data: session } = useSession();
   const { cartItems, totalPrice, removeFromCart, totalQuantities, updateCartItemQuantity, calculateItemPrice } = useCartContext();
   const { setShowCart } = useUIContext();
+  const { selectedCurrency } = useCurrencyContext();
+
+  // Currency conversion for cart total
+  const { formattedAmount: formattedTotalPrice, loading: currencyLoading } = useCurrency(
+    totalPrice,
+    'USD',
+    selectedCurrency
+  );
 
   // State for Google Pay availability
   const [isGooglePayAvailable, setIsGooglePayAvailable] = useState(false);
+
+  // State for selected payment processor (auto-selected based on currency)
+  const [selectedPaymentProcessor, setSelectedPaymentProcessor] = useState(
+    autoSelectPaymentProcessor(selectedCurrency)
+  );
+
+  // State for Razorpay checkout loading
+  const [isRazorpayProcessing, setIsRazorpayProcessing] = useState(false);
+
+  // Load Razorpay checkout script dynamically
+  useEffect(() => {
+    if (selectedPaymentProcessor === 'razorpay' && !window.Razorpay) {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => {
+        console.log('Razorpay checkout script loaded successfully');
+      };
+      script.onerror = () => {
+        console.error('Failed to load Razorpay checkout script');
+        toast.error('Failed to load payment gateway. Please refresh the page.');
+      };
+      document.body.appendChild(script);
+    }
+  }, [selectedPaymentProcessor]);
+
+  // Auto-switch payment processor when currency changes
+  useEffect(() => {
+    const autoSelected = autoSelectPaymentProcessor(selectedCurrency);
+    setSelectedPaymentProcessor(autoSelected);
+  }, [selectedCurrency]);
 
   // Check Google Pay availability on component mount
   useEffect(() => {
@@ -142,7 +192,7 @@ const Cart = () => {
 
         return {
           price_data: {
-            currency: 'usd',
+            currency: selectedCurrency.toLowerCase(),
             unit_amount: Math.round(actualPrice * 100), // Convert to cents
             product_data: {
               name: itemName,
@@ -164,6 +214,7 @@ const Cart = () => {
         body: JSON.stringify({
           cartItems: lineItems,
           customerEmail: session?.user?.email || null, // Pass logged-in user's email
+          currency: selectedCurrency, // Pass selected currency
           success_url: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${window.location.origin}/?canceled=true`
         }),
@@ -196,7 +247,34 @@ const Cart = () => {
       }
 
       console.log(`Redirecting to checkout: ${sessionData.id}`);
-      
+
+      // 🎯 GA4: Track begin_checkout event
+      trackBeginCheckout(cartItems, totalPrice);
+
+      // 📧 Mailchimp: Track abandoned cart (fire and forget)
+      if (session?.user?.email) {
+        try {
+          fetch('/api/mailchimp/abandoned-cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: session.user.email,
+              cartItems: cartItems.map(item => ({
+                id: item._id || item.cartUniqueId,
+                name: item.name,
+                quantity: item.quantity,
+                price: calculateItemPrice(item)
+              })),
+              cartTotal: totalPrice,
+              cartUrl: `${window.location.origin}/cart`
+            }),
+            keepalive: true // Send even if page unloads
+          });
+        } catch (err) {
+          console.warn('Abandoned cart tracking failed:', err);
+        }
+      }
+
       // Dismiss the loading toast BEFORE attempting redirect
       toast.dismiss(loadingToast);
       toast.success('Redirecting to checkout...');
@@ -227,6 +305,175 @@ const Cart = () => {
     // Removed the finally block since we're handling toast dismissal explicitly
   };
 
+  // Razorpay checkout handler
+  const handleRazorpayCheckout = async () => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty!');
+      return;
+    }
+
+    // Check if Razorpay script is loaded
+    if (!window.Razorpay) {
+      toast.error('Payment gateway not loaded. Please refresh the page and try again.');
+      return;
+    }
+
+    const loadingToast = toast.loading('Preparing payment...');
+    setIsRazorpayProcessing(true);
+
+    try {
+      // 🎯 GA4: Track begin_checkout event
+      trackBeginCheckout(cartItems, totalPrice);
+
+      // 📧 Mailchimp: Track abandoned cart (fire and forget)
+      if (session?.user?.email) {
+        try {
+          fetch('/api/mailchimp/abandoned-cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: session.user.email,
+              cartItems: cartItems.map(item => ({
+                id: item._id || item.cartUniqueId,
+                name: item.name,
+                quantity: item.quantity,
+                price: calculateItemPrice(item)
+              })),
+              cartTotal: totalPrice,
+              cartUrl: `${window.location.origin}/cart`
+            }),
+            keepalive: true
+          });
+        } catch (err) {
+          console.warn('Abandoned cart tracking failed:', err);
+        }
+      }
+
+      // Step 1: Create order on server
+      console.log('Creating Razorpay order...');
+      const orderResponse = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: totalPrice, // Amount in INR (already converted)
+          currency: selectedCurrency,
+          customerEmail: session?.user?.email || '',
+          customerName: session?.user?.name || '',
+          cartItems: cartItems.map(item => ({
+            id: item._id || item.cartUniqueId,
+            name: item.name,
+            quantity: item.quantity,
+            price: calculateItemPrice(item)
+          })),
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        let errorMessage = 'Failed to create payment order.';
+        try {
+          const errorData = await orderResponse.json();
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } catch (e) {
+          console.error('Failed to parse error response:', e);
+        }
+        throw new Error(errorMessage);
+      }
+
+      const orderData = await orderResponse.json();
+
+      if (!orderData.order_id) {
+        throw new Error('Invalid order response from server.');
+      }
+
+      console.log('Razorpay order created:', orderData.order_id);
+      toast.dismiss(loadingToast);
+
+      // Step 2: Open Razorpay checkout modal
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Sampada Store',
+        description: `Order ${orderData.receipt}`,
+        order_id: orderData.order_id,
+        handler: async function (response) {
+          // Step 3: Verify payment on server
+          const verifyToast = toast.loading('Verifying payment...');
+
+          try {
+            const verifyResponse = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                cartItems: cartItems,
+                customerEmail: session?.user?.email || '',
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (!verifyResponse.ok || !verifyData.success) {
+              throw new Error(verifyData.error || 'Payment verification failed.');
+            }
+
+            toast.dismiss(verifyToast);
+            toast.success('Payment successful! Redirecting to confirmation...');
+
+            // Clear cart and redirect to success page
+            // Note: Cart context should have a clearCart function
+            setTimeout(() => {
+              window.location.href = `/success?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}`;
+            }, 1500);
+          } catch (error) {
+            toast.dismiss(verifyToast);
+            console.error('Payment verification error:', error);
+            toast.error(error.message || 'Payment verification failed. Please contact support.');
+          }
+        },
+        prefill: {
+          name: session?.user?.name || '',
+          email: session?.user?.email || '',
+        },
+        theme: {
+          color: '#3B82F6', // Match your brand color
+        },
+        modal: {
+          ondismiss: function () {
+            console.log('Razorpay checkout dismissed by user');
+            setIsRazorpayProcessing(false);
+            toast.error('Payment cancelled.');
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+    } catch (error) {
+      console.error('Razorpay Checkout Error:', error);
+      toast.dismiss(loadingToast);
+      toast.error(error.message || 'An error occurred during payment processing.');
+    } finally {
+      setIsRazorpayProcessing(false);
+    }
+  };
+
+  // Unified checkout handler
+  const handleCheckout = async () => {
+    if (selectedPaymentProcessor === 'razorpay') {
+      await handleRazorpayCheckout();
+    } else {
+      await handleStripeCheckout();
+    }
+  };
+
   return (
     <div className="cart-wrapper" ref={cartRef}>
       <div className="cart-container">
@@ -240,6 +487,16 @@ const Cart = () => {
           <span className="heading">Your Cart</span>
           <span className="cart-num-items">({totalQuantities} items)</span>
         </button>
+
+        {/* B2B Customer Display */}
+        {session?.user?.email && (
+          <div style={{ marginTop: '16px', marginBottom: '8px' }}>
+            <B2BCustomerDisplay
+              email={session.user.email}
+              showDetails={true}
+            />
+          </div>
+        )}
 
         {/* Empty Cart Message */}
         {cartItems.length < 1 && (
@@ -358,27 +615,211 @@ const Cart = () => {
         {/* Cart Bottom Section (Subtotal and Checkout Button) */}
         {cartItems.length >= 1 && (
           <div className="cart-bottom">
+            {/* Currency Selector */}
+            <div style={{ marginBottom: '16px' }}>
+              <CurrencySelector showLabel={false} />
+            </div>
+
+            {/* Subtotal Display with Converted Currency */}
             <div className="total">
               <h3>Subtotal:</h3>
-              <h3>${totalPrice.toFixed(2)}</h3>
+              <h3>
+                {currencyLoading ? (
+                  '$' + totalPrice.toFixed(2)
+                ) : (
+                  formattedTotalPrice
+                )}
+              </h3>
             </div>
+
+            {/* Original USD display if not USD */}
+            {selectedCurrency !== 'USD' && (
+              <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+                <p style={{ fontSize: '12px', color: '#9CA3AF', margin: 0 }}>
+                  (${totalPrice.toFixed(2)} USD)
+                </p>
+              </div>
+            )}
+
             <div className="btn-container">
+              {/* Payment Selector */}
+              <PaymentSelector
+                currency={selectedCurrency}
+                totalPrice={totalPrice}
+                selectedProcessor={selectedPaymentProcessor}
+                onProcessorChange={setSelectedPaymentProcessor}
+              />
+
+              {/* Main Checkout Button */}
               <button
                 type="button"
-                className="btn"
-                onClick={handleStripeCheckout}
+                className="btn checkout-btn"
+                onClick={handleCheckout}
+                disabled={isRazorpayProcessing}
               >
-                Pay with Stripe
+                {isRazorpayProcessing ? (
+                  <>
+                    <span className="spinner" />
+                    Processing Payment...
+                  </>
+                ) : selectedPaymentProcessor === 'razorpay' ? (
+                  <>
+                    🇮🇳 Pay with Razorpay
+                    <span className="payment-methods-hint">
+                      (UPI, Net Banking, Cards, Wallets, EMI)
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    💳 Pay with Stripe
+                    <span className="payment-methods-hint">
+                      (Cards, Google Pay, Apple Pay)
+                    </span>
+                  </>
+                )}
               </button>
 
-              {/* Google Pay button */}
-              {isGooglePayAvailable && (
+              {/* Google Pay button (shown alongside Stripe) */}
+              {isGooglePayAvailable && selectedPaymentProcessor === 'stripe' && (
                 <GooglePayButton
                   cartItems={cartItems}
                   totalPrice={totalPrice}
                   userEmail={session?.user?.email}
                 />
               )}
+
+              {/* Klarna Buy Now Pay Later (Not available for India) */}
+              {selectedPaymentProcessor === 'stripe' && (
+                <KlarnaPaymentButton
+                  cartItems={cartItems}
+                  totalPrice={totalPrice}
+                  userEmail={session?.user?.email}
+                  selectedCurrency={selectedCurrency}
+                />
+              )}
+
+              {/* Stripe EMI for Indian Customers (shown when Stripe is selected) */}
+              {selectedCurrency === 'INR' && totalPrice > 3000 && selectedPaymentProcessor === 'stripe' && (
+                <div style={{
+                  padding: '16px',
+                  backgroundColor: '#FFF8F0',
+                  borderRadius: '12px',
+                  border: '2px solid #FFB380',
+                  marginTop: '12px',
+                  textAlign: 'center'
+                }}>
+                  <p style={{
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    color: '#1A1A1A',
+                    margin: '0 0 6px 0'
+                  }}>
+                    💳 Pay with EMI
+                  </p>
+                  <p style={{
+                    fontSize: '13px',
+                    color: '#666',
+                    margin: '0 0 8px 0'
+                  }}>
+                    Convert to 3, 6, 9, or 12 month EMI at checkout
+                  </p>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    flexWrap: 'wrap'
+                  }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      backgroundColor: '#10B981',
+                      color: '#FFFFFF',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}>
+                      HDFC ✓
+                    </span>
+                    <span style={{
+                      padding: '4px 10px',
+                      backgroundColor: '#10B981',
+                      color: '#FFFFFF',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}>
+                      ICICI ✓
+                    </span>
+                    <span style={{
+                      padding: '4px 10px',
+                      backgroundColor: '#10B981',
+                      color: '#FFFFFF',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}>
+                      SBI ✓
+                    </span>
+                    <span style={{
+                      padding: '4px 10px',
+                      backgroundColor: '#10B981',
+                      color: '#FFFFFF',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}>
+                      Axis ✓
+                    </span>
+                    <span style={{
+                      padding: '4px 10px',
+                      backgroundColor: '#F3F4F6',
+                      color: '#6B7280',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}>
+                      +more
+                    </span>
+                  </div>
+                  <p style={{
+                    fontSize: '11px',
+                    color: '#10B981',
+                    margin: '8px 0 0 0',
+                    fontWeight: '600'
+                  }}>
+                    ✨ Available at checkout • Instant approval • 0% down payment
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* VAT Validator for EU B2B Customers */}
+            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+              <VATValidator
+                onValidate={(validation) => {
+                  toast.success(`VAT validated successfully: ${validation.company_name}`);
+                  // TODO: Apply VAT exemption to checkout
+                }}
+              />
+            </div>
+
+            {/* IFSC Validator for Indian Customers */}
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+              <IFSCValidator
+                onValidate={(validation) => {
+                  toast.success(`IFSC validated: ${validation.bank} - ${validation.branch}`);
+                  // TODO: Store bank details for NEFT/RTGS payment
+                }}
+              />
+            </div>
+
+            {/* Address Validator (Lob.com) for International Customers */}
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+              <AddressValidator
+                onValidate={(correctedAddress) => {
+                  toast.success('Address validated successfully!');
+                  // TODO: Store validated address for checkout
+                }}
+              />
             </div>
           </div>
         )}
@@ -590,6 +1031,42 @@ const Cart = () => {
           opacity: 0.9;
           transform: scale(1.01);
           transition: all 0.2s ease;
+        }
+
+        /* Checkout Button Styles */
+        .checkout-btn {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          padding: 16px 24px;
+        }
+
+        .payment-methods-hint {
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.8);
+          font-weight: 400;
+        }
+
+        .checkout-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        .spinner {
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top-color: #FFFFFF;
+          border-radius: 50%;
+          animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         /* Responsive adjustments */

@@ -17,6 +17,7 @@ import { ReviewSystem } from '../../components/ReviewSystem';
 import { WishlistButton } from '../../components/WishlistSystem';
 import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
 import ProductRecommendations from '../../components/Recommendations/ProductRecommendations';
+import { trackViewItem, trackAddToCart } from '../../lib/analytics';
 import '../../styles/sampada-premium-brand.css';
 
 
@@ -57,6 +58,19 @@ const ProductDetails = ({ product, products, slug }) => {
       setSelectedSize(null);
     }
   }, [product, resetQty]); // Updated dependencies
+
+  // 🎯 GA4: Track product view
+  useEffect(() => {
+    if (product) {
+      trackViewItem({
+        id: product._id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        currency: 'USD'
+      });
+    }
+  }, [product]);
 
   // --- Update selectedVariant whenever selectedColor or selectedSize changes ---
   useEffect(() => {
@@ -181,6 +195,16 @@ const ProductDetails = ({ product, products, slug }) => {
     }
 
     onAdd(itemDetails, qty);
+
+    // 🎯 GA4: Track add to cart event
+    trackAddToCart([{
+      id: _id,
+      name: name,
+      category: product.category?.name || '',
+      price: currentPrice,
+      quantity: qty,
+      currency: 'USD'
+    }]);
   };
 
   const handleBuyNow = () => {
@@ -294,7 +318,7 @@ const ProductDetails = ({ product, products, slug }) => {
   return (
     <div className="product-page-container">
       <Head>
-        <title>{name} – Sampada Custom Print</title>
+        <title>{`${name} – Sampada Custom Print`}</title>
         <meta name="description" content={`Shop Sampada custom ${name}. Premium print-on-demand with prosperity-inspired designs. Ships via Printify | Stripe Secure Checkout.`} />
       </Head>
 

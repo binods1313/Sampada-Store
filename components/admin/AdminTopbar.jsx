@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { Menu, Search, Bell, ExternalLink, Command } from 'lucide-react'
 
-export default function AdminTopbar({ title, sidebarWidth }) {
+export default function AdminTopbar({ title, sidebarWidth, onMenuClick }) {
   const [search, setSearch] = useState('')
   const router = useRouter()
 
@@ -12,45 +13,40 @@ export default function AdminTopbar({ title, sidebarWidth }) {
   }
 
   return (
-    <header style={{
-      height: '64px',
-      background: '#141414',
-      borderBottom: '1px solid rgba(201,168,76,0.12)',
-      position: 'fixed',
-      top: 0,
+    <header className="admin-topbar" style={{
       left: `${sidebarWidth}px`,
-      right: 0,
-      zIndex: 99,
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 24px',
-      gap: '16px',
       transition: 'left 0.25s ease'
     }}>
-      <h1 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', margin: 0, flexShrink: 0 }}>
+      {/* Mobile menu button */}
+      <button
+        onClick={onMenuClick}
+        aria-label="Open navigation menu"
+        className="admin-btn mobile-menu-btn"
+        style={{ display: 'none', padding: 'var(--admin-space-2)' }}
+      >
+        <Menu style={{ width: '20px', height: '20px', color: 'var(--admin-gold)' }} />
+      </button>
+
+      <h1 className="admin-heading" style={{ margin: 0, flexShrink: 0, fontSize: 'var(--admin-text-lg)' }}>
         {title}
       </h1>
 
       {/* Search */}
-      <div style={{ flex: 1, maxWidth: '320px', position: 'relative', marginLeft: '16px' }}>
-        <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#444', fontSize: '13px' }}>⌕</span>
+      <div className="admin-topbar-search" style={{ flex: 1, maxWidth: '320px', position: 'relative', marginLeft: 'var(--admin-space-4)' }}>
+        <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--admin-text-muted)', width: '14px', height: '14px' }} />
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
           onKeyDown={handleSearch}
           placeholder="Search products... (Enter)"
+          aria-label="Search products"
+          className="admin-input"
           style={{
             width: '100%',
-            background: '#1a1a1a',
-            border: '1px solid rgba(201,168,76,0.15)',
-            borderRadius: '8px',
-            padding: '8px 14px 8px 32px',
-            color: '#fff',
-            fontSize: '13px',
-            outline: 'none',
+            paddingLeft: '32px',
+            paddingRight: '80px',
+            fontSize: 'var(--admin-text-sm)'
           }}
-          onFocus={e => e.target.style.borderColor = '#C9A84C'}
-          onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'}
         />
         <kbd style={{
           position: 'absolute',
@@ -58,80 +54,101 @@ export default function AdminTopbar({ title, sidebarWidth }) {
           top: '50%',
           transform: 'translateY(-50%)',
           fontSize: '10px',
-          color: '#444',
-          background: '#0f0f0f',
-          border: '1px solid #333',
-          borderRadius: '4px',
-          padding: '2px 5px'
-        }}>⌘K</kbd>
-      </div>
-
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        {/* View site */}
-        <a href="/" target="_blank" rel="noopener noreferrer" style={{
+          color: 'var(--admin-text-muted)',
+          background: 'var(--admin-surface-0)',
+          border: 'var(--admin-border-width-sm) solid #333',
+          borderRadius: 'var(--admin-radius-sm)',
+          padding: '2px 5px',
           display: 'flex',
           alignItems: 'center',
-          gap: '5px',
-          padding: '7px 12px',
-          background: 'transparent',
-          border: '1px solid rgba(201,168,76,0.3)',
-          borderRadius: '7px',
-          color: '#C9A84C',
-          fontSize: '12px',
-          fontWeight: '600',
-          textDecoration: 'none',
-          transition: 'all 0.15s'
-        }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.08)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-        >
-          ↗ View Store
+          gap: '4px'
+        }}>
+          <Command style={{ width: '10px', height: '10px' }} />K
+        </kbd>
+      </div>
+
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>
+        {/* View site */}
+        <a href="/" target="_blank" rel="noopener noreferrer" className="admin-btn admin-btn-secondary" style={{
+          padding: 'var(--admin-space-2) var(--admin-space-3)',
+          fontSize: 'var(--admin-text-xs)',
+          gap: '4px'
+        }}>
+          <ExternalLink style={{ width: '12px', height: '12px' }} />
+          View Store
         </a>
 
         {/* Notification bell */}
-        <button style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          background: '#1a1a1a',
-          border: '1px solid rgba(201,168,76,0.15)',
-          color: '#888',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          position: 'relative',
-          fontSize: '15px'
-        }}>
-          🔔
+        <button
+          aria-label="Notifications"
+          className="admin-btn"
+          style={{ width: '36px', height: '36px', padding: 0, position: 'relative' }}
+        >
+          <Bell style={{ width: '16px', height: '16px', color: 'var(--admin-text-secondary)' }} />
           <div style={{
             position: 'absolute',
             top: '6px',
             right: '6px',
             width: '8px',
             height: '8px',
-            background: '#8B1A1A',
+            background: 'var(--admin-red)',
             borderRadius: '50%',
-            border: '2px solid #1a1a1a'
+            border: '2px solid var(--admin-surface-1)'
           }} />
         </button>
 
         {/* Avatar */}
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #8B1A1A, #C9A84C)',
-          border: '2px solid rgba(201,168,76,0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontWeight: '700',
-          fontSize: '13px',
-          cursor: 'pointer'
-        }}>A</div>
+        <button
+          aria-label="User profile menu"
+          className="admin-avatar-btn"
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, var(--admin-red), var(--admin-gold))',
+            border: '2px solid var(--admin-gold-border-strong)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'var(--admin-font-bold)',
+            fontSize: 'var(--admin-text-sm)',
+            cursor: 'pointer',
+            padding: 0
+          }}
+        >A</button>
       </div>
+
+      <style jsx global>{`
+        .admin-topbar {
+          height: var(--admin-topbar-height);
+          background: var(--admin-surface-1);
+          border-bottom: var(--admin-border-width-sm) solid var(--admin-border-subtle);
+          position: fixed;
+          top: 0;
+          right: 0;
+          z-index: var(--admin-z-sticky);
+          display: flex;
+          align-items: center;
+          padding: 0 var(--admin-space-6);
+          gap: var(--admin-space-4);
+        }
+        .mobile-menu-btn {
+          display: none !important;
+        }
+        @media (max-width: 768px) {
+          .admin-topbar {
+            left: 0 !important;
+            padding: 0 var(--admin-space-4);
+          }
+          .mobile-menu-btn {
+            display: flex !important;
+          }
+          .admin-topbar-search {
+            display: none;
+          }
+        }
+      `}</style>
     </header>
   )
 }
