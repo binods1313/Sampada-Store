@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import AdminLayout from '@/components/Admin/AdminLayout'
 import StatCard from '@/components/Admin/StatCard'
+import Breadcrumbs from '@/components/admin/Breadcrumbs'
 
 const DATE_RANGES = [
   { value: '7d', label: 'Last 7 Days' },
@@ -10,7 +11,6 @@ const DATE_RANGES = [
   { value: 'all', label: 'All Time' },
 ]
 
-// Mock data for demonstration
 const MOCK_DATA = {
   '7d': { revenue: 12450, orders: 87, visitors: 3420, conversion: 2.54 },
   '30d': { revenue: 48920, orders: 342, visitors: 12840, conversion: 2.66 },
@@ -28,41 +28,51 @@ const TOP_PRODUCTS = [
 ]
 
 export default function Analytics() {
+  return (
+    <AdminLayout title="Analytics">
+      <AnalyticsContent />
+    </AdminLayout>
+  )
+}
+
+function AnalyticsContent() {
   const [dateRange, setDateRange] = useState('30d')
   const data = MOCK_DATA[dateRange]
 
+  const breadcrumbs = [
+    { label: 'Dashboard', href: '/admin' },
+    { label: 'Analytics', current: true }
+  ]
+
   return (
-    <AdminLayout title="Analytics">
+    <>
+      <Breadcrumbs items={breadcrumbs} />
+
       {/* Header with Date Range */}
-      <div style={{
+      <div className="analytics-header" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '32px',
+        marginBottom: 'var(--admin-space-6)',
         flexWrap: 'wrap',
-        gap: '16px'
+        gap: 'var(--admin-space-4)'
       }}>
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#fff', margin: '0 0 4px 0' }}>
+          <h2 className="admin-heading" style={{ margin: '0 0 var(--admin-space-1) 0' }}>
             Analytics Overview
           </h2>
-          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
+          <p className="admin-text-secondary admin-text-sm" style={{ margin: 0 }}>
             Track your store performance
           </p>
         </div>
         <select
           value={dateRange}
           onChange={e => setDateRange(e.target.value)}
+          className="admin-input"
           style={{
-            background: '#1a1a1a',
-            border: '1px solid rgba(201,168,76,0.2)',
-            borderRadius: '8px',
-            padding: '10px 16px',
-            color: '#fff',
-            fontSize: '13px',
-            fontWeight: '600',
-            outline: 'none',
-            cursor: 'pointer'
+            width: 'auto',
+            minWidth: '150px',
+            padding: 'var(--admin-space-2) var(--admin-space-4)'
           }}
         >
           {DATE_RANGES.map(range => (
@@ -72,11 +82,11 @@ export default function Analytics() {
       </div>
 
       {/* Revenue Stats */}
-      <div style={{
+      <div className="analytics-stat-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '20px',
-        marginBottom: '32px'
+        gap: 'var(--admin-space-5)',
+        marginBottom: 'var(--admin-space-8)'
       }}>
         <StatCard
           icon="₹"
@@ -310,6 +320,20 @@ export default function Analytics() {
           Real-time charts, customer insights, and detailed reports are in development
         </p>
       </div>
-    </AdminLayout>
+
+      {/* Mobile Responsive CSS */}
+      <style jsx global>{`
+        @media (min-width: 769px) {
+          .analytics-header { flex-direction: row !important; }
+          .analytics-stat-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important; }
+        }
+        @media (max-width: 768px) {
+          .analytics-header { flex-direction: column !important; }
+          .analytics-stat-grid { grid-template-columns: 1fr !important; }
+          .analytics-table-wrapper { overflow-x: auto !important; }
+          .analytics-table { min-width: 600px !important; }
+        }
+      `}</style>
+    </>
   )
 }

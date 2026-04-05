@@ -37,68 +37,116 @@ function Skeleton({ width = '100%', height = '20px', style = {} }) {
   )
 }
 
-export default function StatCard({ icon, iconBg, label, value, sub, borderColor, loading }) {
+export default function StatCard({ icon, iconBg, label, value, sub, borderColor, loading, onClick, style, logoPath }) {
   const animated = useCounter(loading ? 0 : value)
 
   return (
-    <div style={{
-      background: '#1a1a1a',
-      border: `1px solid rgba(201,168,76,0.12)`,
-      borderLeft: `3px solid ${borderColor}`,
-      borderRadius: '12px',
-      padding: '22px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-      transition: 'all 0.2s ease',
-      cursor: 'default'
-    }}
+    <div
+      className="stat-card admin-card"
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `View ${label} details` : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
+      style={{
+        position: 'relative',
+        background: 'linear-gradient(135deg, var(--admin-surface-3) 0%, var(--admin-surface-5) 100%)',
+        borderLeft: `var(--admin-border-width-md) solid ${borderColor}`,
+        minHeight: '140px',
+        padding: 'var(--admin-space-5)',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 'var(--admin-space-4)',
+        cursor: onClick ? 'pointer' : 'default',
+        overflow: 'hidden',
+        color: 'var(--admin-text-primary)',
+        ...style
+      }}
+      onClick={onClick}
       onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-2px)'
-        e.currentTarget.style.boxShadow = `0 8px 24px rgba(0,0,0,0.3)`
+        e.currentTarget.style.transform = 'translateY(-3px)'
+        e.currentTarget.style.boxShadow = 'var(--admin-shadow-md)'
+        const logo = e.currentTarget.querySelector('.stat-card-logo-area')
+        if (logo) logo.style.opacity = '0.8'
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'none'
         e.currentTarget.style.boxShadow = 'none'
+        const logo = e.currentTarget.querySelector('.stat-card-logo-area')
+        if (logo) logo.style.opacity = '0.65'
       }}
     >
+      {/* Subtle gradient overlay for depth */}
       <div style={{
-        width: '48px',
-        height: '48px',
-        borderRadius: '12px',
-        background: iconBg,
-        flexShrink: 0,
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.1) 100%)',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      {/* Logo area - left side */}
+      <div className="stat-card-logo-area" style={{
+        flex: '0 0 40%',
+        position: 'relative',
+        zIndex: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '22px'
-      }}>{icon}</div>
-      <div style={{ flex: 1, minWidth: 0 }}>
+        minHeight: '100px',
+        backgroundImage: logoPath ? `url('${logoPath}')` : "url('/images/Logo_16.png')",
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'contain',
+        opacity: 0.65,
+        transition: 'var(--admin-transition-base)'
+      }} />
+
+      {/* Text content - right side */}
+      <div className="stat-card-content" style={{
+        position: 'relative',
+        zIndex: 1,
+        flex: 1,
+        textAlign: 'right',
+        minWidth: 0
+      }}>
+        {/* Icon + Label row */}
         <div style={{
-          fontSize: '11px',
-          color: '#666',
-          fontWeight: '600',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          marginBottom: '6px'
-        }}>{label}</div>
-        {loading ? (
-          <Skeleton height="32px" width="80px" style={{ marginBottom: '6px' }} />
-        ) : (
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          gap: 'var(--admin-space-2)',
+          marginBottom: 'var(--admin-space-2)'
+        }}>
+          <div className="admin-text-xs admin-font-semibold" style={{ color: 'var(--admin-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--admin-tracking-wider)' }}>{label}</div>
           <div style={{
-            fontSize: '30px',
-            fontWeight: '800',
-            color: '#fff',
-            lineHeight: 1,
-            fontVariantNumeric: 'tabular-nums'
-          }}>
+            width: '32px',
+            height: '32px',
+            borderRadius: 'var(--admin-radius-md)',
+            background: iconBg,
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 'var(--admin-text-lg)'
+          }}>{icon}</div>
+        </div>
+
+        {/* Value */}
+        {loading ? (
+          <Skeleton height="36px" width="100px" style={{ marginBottom: 'var(--admin-space-1)', marginLeft: 'auto' }} />
+        ) : (
+          <div className="admin-text-3xl admin-font-extrabold" style={{ color: 'var(--admin-text-primary)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
             {animated.toLocaleString()}
           </div>
         )}
+
+        {/* Sub text */}
         {loading ? (
-          <Skeleton height="14px" width="120px" />
+          <Skeleton height="14px" width="120px" style={{ marginLeft: 'auto' }} />
         ) : (
-          <div style={{ fontSize: '12px', color: '#C9A84C', marginTop: '5px' }}>
+          <div className="admin-text-sm" style={{ color: 'var(--admin-gold)' }}>
             {sub}
           </div>
         )}
@@ -107,6 +155,62 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
         @keyframes shimmer {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
+        }
+        ${value > 0 && label === 'Low Stock' ? `
+          @keyframes pulse-red {
+            0%, 100% { border-color: rgba(139,26,26,0.4); }
+            50% { border-color: rgba(139,26,26,0.9); }
+          }
+          .stat-card {
+            animation: pulse-red 2s ease-in-out infinite;
+          }
+        ` : ''}
+        /* Responsive layout - stack on mobile, side-by-side on desktop */
+        @media (max-width: 768px) {
+          .stat-card {
+            flex-direction: column !important;
+            min-height: auto !important;
+            padding: 16px !important;
+            gap: 12px !important;
+          }
+          .stat-card-logo-area {
+            flex: 0 0 80px !important;
+            width: 100% !important;
+            minHeight: 80px !important;
+            opacity: 0.55 !important;
+          }
+          .stat-card-content {
+            textAlign: center !important;
+          }
+          .stat-card-content > div:first-child {
+            justify-content: center !important;
+          }
+          .stat-card-content > div:nth-child(2) {
+            margin-left: 0 !important;
+          }
+          .stat-card-content > div:last-child {
+            margin-left: 0 !important;
+          }
+        }
+        @media (min-width: 769px) and (max-width: 1023px) {
+          .stat-card {
+            min-height: 120px !important;
+            padding: 18px !important;
+          }
+          .stat-card-logo-area {
+            flex: 0 0 35% !important;
+            opacity: 0.6 !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          .stat-card {
+            min-height: 140px !important;
+            padding: 20px !important;
+          }
+          .stat-card-logo-area {
+            flex: 0 0 40% !important;
+            opacity: 0.65 !important;
+          }
         }
       `}</style>
     </div>

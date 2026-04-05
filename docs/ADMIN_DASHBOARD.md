@@ -65,7 +65,7 @@ Effects:
 **Default Admin Account:**
 ```
 Email: admin@sampada.com
-Password: SampadaAdmin2024!
+Password: admin123
 ```
 
 > ⚠️ **Security Note:** Change these credentials in `.env.local` before deploying to production!
@@ -129,7 +129,7 @@ Password: SampadaAdmin2024!
 
 1. **Successful Login:**
    - Navigate to `/admin/login`
-   - Enter: `admin@sampada.com` / `SampadaAdmin2024!`
+   - Enter: `admin@sampada.com` / `admin123`
    - Click "Sign In to Dashboard"
    - ✅ Should redirect to `/admin`
 

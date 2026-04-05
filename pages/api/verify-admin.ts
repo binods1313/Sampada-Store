@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
+import adminAuth from '../../config/admin-auth.json'
 
 // In-memory rate limiter (for production, use Redis/Upstash)
 const attempts = new Map<string, { count: number; resetAt: number }>()
@@ -40,12 +41,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Email and password are required' })
   }
 
-  // Verify credentials against environment variables
-  const validEmail = email === process.env.ADMIN_EMAIL
-  const validPassword = await bcrypt.compare(
-    password,
-    process.env.ADMIN_PASSWORD_HASH || ''
-  )
+  // Get credentials from config file
+  const adminEmail = adminAuth.adminEmail
+  const adminHash = adminAuth.adminPasswordHash
+
+  // Verify credentials
+  const validEmail = email === adminEmail
+  let validPassword = false
+  try {
+    validPassword = await bcrypt.compare(password, adminHash)
+  } catch (err) {
+    console.error('bcrypt error:', err)
+    return res.status(500).json({ error: 'Authentication error' })
+  }
 
   if (!validEmail || !validPassword) {
     return res.status(401).json({ error: 'Invalid credentials' })
@@ -54,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Generate JWT token
   const token = jwt.sign(
     { email, role: 'admin', iat: Date.now() },
-    process.env.JWT_SECRET || 'change-this-secret',
+    adminAuth.jwtSecret,
     { expiresIn: '7d' }
   )
 

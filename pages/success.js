@@ -11,6 +11,10 @@ import { CheckCircle, ArrowRight, Home } from 'lucide-react';
 import { useCartContext } from '../context/CartContext';
 import { runFireworks } from '../lib/utils';
 
+// Import Analytics & Marketing
+import { trackPurchase } from '@/lib/analytics';
+import { subscribeUser, triggerPostPurchaseEmail } from '@/lib/mailchimp';
+
 const Success = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -27,6 +31,38 @@ const Success = () => {
 
     if (runFireworks) {
       runFireworks();
+    }
+
+    // Track purchase with GA4
+    if (session_id) {
+      // Try to get order details from session storage (set by Stripe webhook or redirect)
+      const orderData = typeof window !== 'undefined' ?
+        JSON.parse(sessionStorage.getItem('lastOrder') || '{}') : {};
+
+      trackPurchase({
+        id: session_id,
+        total: orderData.total || 0,
+        currency: orderData.currency || 'USD',
+        tax: orderData.tax || 0,
+        shipping: orderData.shipping || 0,
+        items: orderData.items || []
+      });
+
+      // Trigger Mailchimp post-purchase email
+      if (session?.user?.email) {
+        triggerPostPurchaseEmail({
+          email: session.user.email,
+          orderId: session_id,
+          orderTotal: orderData.total || 0,
+          items: orderData.items || []
+        }).catch(err => console.warn('Mailchimp post-purchase failed:', err));
+
+        // Auto-subscribe to newsletter
+        subscribeUser({
+          email: session.user.email,
+          status: 'subscribed'
+        }).catch(err => console.warn('Mailchimp subscribe failed:', err));
+      }
     }
 
     if (session_id && !hasCleared) {
