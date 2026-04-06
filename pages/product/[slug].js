@@ -1091,6 +1091,36 @@ const ProductDetails = ({ product, products, slug }) => {
         />
       </div>
 
+      {/* Related Products Section - Auto-scrolling carousel */}
+      {products && products.length > 0 && (
+        <div style={{
+          margin: '50px 0',
+          padding: '0 20px',
+          maxWidth: '1200px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '1.75rem',
+            fontWeight: 'bold',
+            marginBottom: '30px',
+          }}>
+            You may also like
+          </h2>
+
+          {/* Outer: clips overflow, hides scrollbar */}
+          <div style={{
+            overflow: 'hidden',
+            position: 'relative',
+            width: '100%',
+          }}>
+            {/* Inner: actual scrolling track */}
+            <RelatedProductsCarousel products={products} />
+          </div>
+        </div>
+      )}
+
       {/* Product Recommendations - Same Category */}
       {product.category?._ref && (
         <ProductRecommendations
