@@ -1,8 +1,93 @@
+/* Heritage Serif Font for Premium Brand Typography (Cinzel for luxury/heritage feel) */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+
 /* Import Product Card Styles */
 @import './ProductCard.css';
 
 /* Import Admin Design Tokens */
 @import './admin-tokens.css';
+
+/* ============================================================================
+   ACCESSIBILITY: Global Focus-Visible Styles (WCAG 2.4.7 Focus Visible)
+   All focusable elements must have visible focus indicators
+   ============================================================================ */
+
+/* Reset default outlines, then apply focus-visible for keyboard users */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
+
+/* Higher contrast focus for dark backgrounds */
+.dark *:focus-visible,
+[style*="background-color: #0a0a0a"] *:focus-visible,
+[style*="background:#0a0a0a"] *:focus-visible {
+  outline-color: #F5F0E8;
+}
+
+/* Skip Link base styles */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: #C9A84C;
+  color: #1a0a00;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid #1a0a00;
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   ACCESSIBILITY: Reduced Motion (WCAG 2.3.3 Animation from Interactions)
+   Respect user's motion preferences
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Exception: keep marquee animation but slow it down significantly */
+  .sampada-marquee-track {
+    animation-duration: 60s !important;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY: Touch Target Sizes (WCAG 2.5.8 Target Size Minimum)
+   Ensure minimum 44x44px touch targets on mobile
+   ============================================================================ */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  a,
+  input[type="submit"],
+  input[type="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 
 /* ============================================================================
    SAMPADA MARQUEE ANIMATION - For announcement bar (unique name to avoid conflicts)
@@ -357,26 +442,29 @@ span.text-red {
 }
 
 /* ============================================================================
-   PREMIUM SHOP NOW BUTTON - Sampada Brand (Deep Red + Gold)
+   PREMIUM SHOP NOW BUTTON - Sampada Heritage Brand (Deep Maroon + Gold)
    Used in Hero Banner and Footer Banner
+   Font: Cinzel (serif, heritage-inspired elegance)
    ============================================================================ */
 .shop-now-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  color: #D4AF37; /* Premium gold text */
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif; /* Heritage serif */
+  font-size: 16px; /* Accessible minimum size */
+  font-weight: 600;
+  letter-spacing: 1.5px; /* Elegant spacing */
   text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle depth for luxury feel */
   padding: 14px 32px;
   border: 2px solid #C9A84C;
   border-radius: 4px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
   box-shadow: 0 4px 15px rgba(139, 26, 26, 0.4),
               inset 0 1px 0 rgba(201, 168, 76, 0.2);
 }
@@ -392,20 +480,39 @@ span.text-red {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(201, 168, 76, 0.2),
+    rgba(255, 255, 255, 0.15),
     transparent
   );
-  transition: left 0.5s ease;
+  transition: left 0.5s ease-in-out;
 }
 
-/* Hover State */
+/* Underline animation element (hidden by default) */
+.shop-now-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: #800000; /* Sampada maroon (matches logo) */
+  transform: scaleX(0);
+  transform-origin: left; /* Animates left to right */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover State: Gold background, maroon text/border/glow */
 .shop-now-btn:hover {
-  background: linear-gradient(135deg, #C9A84C 0%, #a88535 100%);
-  border-color: #C9A84C;
-  color: #1a0a00;
-  box-shadow: 0 6px 25px rgba(201, 168, 76, 0.5),
-              0 0 0 1px rgba(201, 168, 76, 0.3);
+  background: #D4AF37; /* Solid Sampada gold */
+  border-color: #800000; /* 2px solid maroon border */
+  color: #800000; /* Sampada maroon text (matches logo) */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2); /* Subtle highlight for readability */
+  box-shadow: 0 0 6px rgba(128, 0, 0, 0.7); /* Subtle maroon glow */
   transform: translateY(-2px);
+}
+
+/* Underline slides in left to right on hover */
+.shop-now-btn:hover::after {
+  transform: scaleX(1);
 }
 
 /* Shimmer runs on hover */
@@ -413,32 +520,37 @@ span.text-red {
   left: 100%;
 }
 
-/* Arrow moves right on hover */
+/* Arrow moves right + turns maroon on hover */
 .shop-now-btn:hover span {
   transform: translateX(4px);
+  color: #800000; /* Sampada maroon arrow */
 }
 
 /* Arrow transition */
 .shop-now-btn span {
   display: inline-block;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  color: #D4AF37; /* Default gold arrow */
 }
 
-/* Active/Click State */
+/* Active/Click State: Subtle press feedback */
 .shop-now-btn:active {
   transform: translateY(0px);
-  box-shadow: 0 2px 8px rgba(139, 26, 26, 0.4);
+  box-shadow: 0 0 4px rgba(128, 0, 0, 0.5);
+  background: #C9A84C; /* Slightly darker gold */
 }
 
 /* Focus state for accessibility */
 .shop-now-btn:focus-visible {
-  outline: 2px solid #C9A84C;
-  outline-offset: 2px;
+  outline: 2px solid #800000; /* Maroon outline for visibility */
+  outline-offset: 3px;
+  box-shadow: 0 0 8px rgba(128, 0, 0, 0.8); /* Enhanced maroon glow */
 }
 
 /* ============================================================================
    SHOP NOW BUTTON - LIGHT VARIANT (for dark backgrounds like FooterBanner)
    Gold button with white border - creates premium contrast on dark/red background
+   Font: Cinzel (heritary serif elegance)
    ============================================================================ */
 .shop-now-btn-light {
   display: inline-flex;
@@ -446,17 +558,19 @@ span.text-red {
   gap: 8px;
   background: linear-gradient(135deg, #C9A84C 0%, #a88535 100%);
   color: #1a0a00;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif; /* Heritage serif */
+  font-size: 16px; /* Accessible minimum size */
+  font-weight: 600;
+  letter-spacing: 1.5px; /* Elegant spacing */
   text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2); /* Subtle highlight depth */
   padding: 14px 32px;
   border: 2px solid #ffffff;
   border-radius: 4px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
   box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4),
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -475,17 +589,36 @@ span.text-red {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  transition: left 0.5s ease;
+  transition: left 0.5s ease-in-out;
 }
 
-/* Hover State */
+/* Underline for light variant */
+.shop-now-btn-light::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: #800000; /* Sampada maroon (matches logo) */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover State: Gold background, maroon text/border/glow */
 .shop-now-btn-light:hover {
-  background: linear-gradient(135deg, #ffffff 0%, #f0e6cc 100%);
-  border-color: #C9A84C;
-  color: #1a0a00;
-  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.4),
-              0 0 0 1px rgba(201, 168, 76, 0.3);
+  background: #D4AF37; /* Solid Sampada gold */
+  border-color: #800000; /* 2px solid maroon border */
+  color: #800000; /* Sampada maroon text */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 6px rgba(128, 0, 0, 0.7); /* Subtle maroon glow */
   transform: translateY(-2px);
+}
+
+/* Underline slides in on hover */
+.shop-now-btn-light:hover::after {
+  transform: scaleX(1);
 }
 
 /* Shimmer runs on hover */
@@ -493,35 +626,37 @@ span.text-red {
   left: 100%;
 }
 
-/* Arrow moves right on hover */
+/* Arrow moves right + turns maroon on hover */
 .shop-now-btn-light:hover span {
   transform: translateX(4px);
+  color: #800000; /* Sampada maroon arrow */
 }
 
 /* Arrow transition */
 .shop-now-btn-light span {
   display: inline-block;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  color: #1a0a00; /* Default dark arrow */
 }
 
 /* Active/Click State */
 .shop-now-btn-light:active {
   transform: translateY(0px);
-  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.4);
+  box-shadow: 0 0 4px rgba(128, 0, 0, 0.5);
+  background: #C9A84C; /* Slightly darker gold */
 }
 
 /* Focus state for accessibility */
 .shop-now-btn-light:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
+  outline: 2px solid #800000; /* Maroon outline for visibility */
+  outline-offset: 3px;
+  box-shadow: 0 0 8px rgba(128, 0, 0, 0.8); /* Enhanced maroon glow */
 }
 
-/* Footer CTA override - keep positioning but use premium colors */
+/* Footer CTA override - keep positioning but preserve heritage serif font */
 .footer-cta .shop-now-btn,
 .footer-cta .shop-now-btn-light {
   position: static !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
 }
 
 /* ============================================================================

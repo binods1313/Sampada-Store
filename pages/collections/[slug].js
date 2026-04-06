@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { client } from '../../lib/client';
+import { client, fetchOptions, longCache } from '../../lib/client';
+import { logger, logFetchError } from '../../lib/logger';
 import { Product } from '@/components';
 import FilterBar from '@/components/FilterBar';
 import ActiveFilters from '@/components/ActiveFilters';
@@ -195,8 +196,8 @@ const CollectionPage = ({ products, categories }) => {
 };
 
 export const getServerSideProps = async () => {
-    // Fetch all products to filter client-side
-    const productsQuery = `*[_type == "product"]{
+    // Fetch only published products
+    const productsQuery = `*[_type == "product" && status == "published"]{
         _id,
         _createdAt,
         name,
@@ -210,19 +211,40 @@ export const getServerSideProps = async () => {
             name,
             slug
         }
-    }`;
-    const products = await client.fetch(productsQuery);
+    } | order(_createdAt desc)`;
 
-    // Fetch all categories for filter dropdown
-    const categoriesQuery = `*[_type == "category"]{
+    // Fetch only categories with defined slugs
+    const categoriesQuery = `*[_type == "category" && defined(slug.current)]{
         _id,
         name,
         slug
-    }`;
-    const categories = await client.fetch(categoriesQuery);
+    } | order(name asc)`;
 
-    return {
-        props: { products, categories }
+    try {
+        const [products, categories] = await Promise.all([
+            client.fetch(productsQuery, {}, fetchOptions(3600)),
+            client.fetch(categoriesQuery, {}, longCache()),
+        ]);
+
+        logger.debug('Collection page data fetched', {
+            productsCount: products?.length || 0,
+            categoriesCount: categories?.length || 0,
+        });
+
+        return {
+            props: {
+                products: products || [],
+                categories: categories || [],
+            },
+        };
+    } catch (error) {
+        logFetchError('collections:getServerSideProps', error);
+        return {
+            props: {
+                products: [],
+                categories: [],
+            },
+        };
     }
 }
 

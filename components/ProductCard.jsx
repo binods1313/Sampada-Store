@@ -155,6 +155,12 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
       {/* Heart Icon - Top Left Corner, hidden by default, shown on hover */}
       <button
         onClick={handleWishlistClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleWishlistClick(e);
+          }
+        }}
         style={{
           position: 'absolute',
           top: '8px',
@@ -171,7 +177,6 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
           cursor: 'pointer',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           boxShadow: '0 2px 4px rgba(0,0,0,0.06)',
-          outline: 'none',
           opacity: isHovered ? 1 : 0,
           transform: isHovered ? 'translateY(0) scale(1)' : 'translateY(-4px) scale(0.95)',
           pointerEvents: isHovered ? 'auto' : 'none'
@@ -184,6 +189,18 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
           e.currentTarget.style.borderColor = '#ef4444';
         }}
         onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.backgroundColor = 'var(--color-bg-white)';
+          e.currentTarget.style.borderColor = '#e5e7eb';
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.outline = '2px solid #C9A84C';
+          e.currentTarget.style.outlineOffset = '2px';
+          e.currentTarget.style.opacity = '1';
+          e.currentTarget.style.pointerEvents = 'auto';
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.outline = 'none';
           e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.backgroundColor = 'var(--color-bg-white)';
           e.currentTarget.style.borderColor = '#e5e7eb';
@@ -239,6 +256,16 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
             e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
             e.currentTarget.style.transform = 'scale(1)';
           }}
+          onFocus={(e) => {
+            e.currentTarget.style.outline = '2px solid #C9A84C';
+            e.currentTarget.style.outlineOffset = '2px';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.outline = 'none';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
         >
           Quick View
         </Link>
@@ -256,7 +283,7 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
       }}>
         <Image
           src={imageUrl}
-          alt={name || 'Product Image'}
+          alt={name || 'Product image'}
           fill
           sizes="(max-width: 768px) 100vw, 300px"
           style={{
@@ -299,6 +326,16 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
           onMouseLeave={(e) => {
             e.currentTarget.style.color = 'var(--color-text-primary)';
           }}
+          onFocus={(e) => {
+            e.currentTarget.style.color = '#C9A84C';
+            e.currentTarget.style.textDecoration = 'underline';
+            e.currentTarget.style.textDecorationColor = '#C9A84C';
+            e.currentTarget.style.textUnderlineOffset = '3px';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.color = 'var(--color-text-primary)';
+            e.currentTarget.style.textDecoration = 'none';
+          }}
         >
           {name}
         </Link>
@@ -313,7 +350,7 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
             alignItems: 'center',
             gap: '4px'
           }}>
-            <span style={{ color: '#22c55e', fontWeight: '600' }}>●</span>
+            <span style={{ color: '#22c55e', fontWeight: '600' }} aria-hidden="true">●</span>
             {soldCount} sold this week
           </p>
         )}
@@ -329,7 +366,7 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
             alignItems: 'center',
             gap: '4px'
           }}>
-            <span style={{ color: '#dc2626', fontWeight: '600' }}>●</span>
+            <span style={{ color: '#dc2626', fontWeight: '600' }} aria-hidden="true">●</span>
             Only {inventory} left in stock!
           </p>
         )}
@@ -396,9 +433,15 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
           )}
         </div>
 
-        {/* Quick-Add Button - Slides up on hover */}
+        {/* Quick-Add Button - Slides up on hover, also always visible on focus */}
         <button
           onClick={handleAddToCart}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleAddToCart(e);
+            }
+          }}
           style={{
             position: 'absolute',
             bottom: 0,
@@ -427,9 +470,22 @@ const ProductCard = memo(function ProductCard({ product, displayCurrency = 'USD'
           onMouseLeave={(e) => {
             e.currentTarget.style.background = `linear-gradient(90deg, #8B0000 0%, #6B0000 100%)`;
           }}
+          onFocus={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.outline = '2px solid #C9A84C';
+            e.currentTarget.style.outlineOffset = '-2px';
+          }}
+          onBlur={(e) => {
+            if (!isHovered) {
+              e.currentTarget.style.transform = 'translateY(100%)';
+              e.currentTarget.style.opacity = '0';
+            }
+            e.currentTarget.style.outline = 'none';
+          }}
           aria-label={`Add ${name} to cart`}
         >
-          <ShoppingBag className="w-4 h-4" />
+          <ShoppingBag className="w-4 h-4" aria-hidden="true" />
           Add to Cart
         </button>
       </div>

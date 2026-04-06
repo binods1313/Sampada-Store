@@ -97,11 +97,19 @@ const PromoBanner = ({ bannerData }) => {
             Beyond Fabric: A T-shirt collection crafted to embody grace, grit, and generational wealth!
           </p>
           <div className={styles.ctaWrapper}>
-            <Link href="/collections/mens-tshirts">
-              <button className="shop-now-btn-light">
-                Shop Now
-                <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
-              </button>
+            <Link
+              href="/collections/mens-tshirts"
+              className="shop-now-btn-light"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                textDecoration: 'none'
+              }}
+              aria-label="Shop men's t-shirts collection"
+            >
+              Shop Now
+              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
             </Link>
             <p className={styles.discount}>30% off – 01 Feb to 31 Mar 2026</p>
           </div>

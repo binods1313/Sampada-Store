@@ -55,13 +55,14 @@ const CollectionsSection = () => {
         Explore Our Collections
       </h2>
 
-      <div className={styles.grid}>
+      <div className={styles.grid} role="list">
         {collections.map((col) => (
           <Link
             key={col.id}
             href={col.href}
             className={styles.cardLink}
             style={{ textDecoration: 'none', color: 'inherit' }}
+            role="listitem"
           >
             <article
               className={styles.card}
@@ -89,9 +90,12 @@ const CollectionsSection = () => {
               {/* Content */}
               <div className={styles.cardContent}>
                 <h3 className={styles.cardLabel}>{col.label}</h3>
-                <button className={styles.cardBtn} aria-label={`Shop ${col.label}`}>
+                <span
+                  className={styles.cardBtn}
+                  aria-hidden="true"
+                >
                   {col.btnText}
-                </button>
+                </span>
               </div>
             </article>
           </Link>

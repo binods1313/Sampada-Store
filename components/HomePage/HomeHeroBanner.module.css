@@ -49,6 +49,24 @@
   font-style: italic;
 }
 
+/* Right visual column: emblem/image + Shop Now button */
+.heroVisual {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Shop Now button - centered below the logo */
+.shopNowLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
 /* Main hero inner layout */
 .heroInner {
   max-width: 1400px;
@@ -150,15 +168,6 @@
   font-size: 14px;
 }
 
-/* Shop Now button - uses global .shop-now-btn styles */
-.shopNowLink {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 60px;
-  position: relative;
-  z-index: 1;
-}
-
 /* Responsive */
 @media (max-width: 900px) {
   .heroInner {
@@ -167,9 +176,11 @@
     text-align: center;
     gap: 28px;
   }
+  .heroVisual {
+    gap: 20px;
+  }
   .shopNowLink {
     justify-content: center;
-    padding: 0 32px;
   }
   .imageWrapper {
     width: 300px;
@@ -184,8 +195,8 @@
   .announcementBar {
     padding: 8px 16px;
   }
-  .shopNowLink {
-    padding: 0 20px;
+  .heroVisual {
+    gap: 16px;
   }
   .imageWrapper {
     width: 250px;

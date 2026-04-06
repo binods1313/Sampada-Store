@@ -5,7 +5,8 @@ import { BsCheckCircleFill } from 'react-icons/bs';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoClose } from 'react-icons/io5';
 import { ShoppingBag, Zap } from 'lucide-react';
-import { client, urlFor } from '../../lib/client';
+import { client, urlFor, fetchOptions, longCache } from '../../lib/client';
+import { logger, logFetchError } from '../../lib/logger';
 import { useCartContext } from '../../context/CartContext';
 import { useUIContext } from '../../context/StateContext';
 import Link from 'next/link';
@@ -17,6 +18,7 @@ import { ReviewSystem } from '../../components/ReviewSystem';
 import { WishlistButton } from '../../components/WishlistSystem';
 import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
 import ProductRecommendations from '../../components/Recommendations/ProductRecommendations';
+import JsonLd from '../../components/JsonLd';
 import { trackViewItem, trackAddToCart } from '../../lib/analytics';
 import '../../styles/sampada-premium-brand.css';
 
@@ -320,9 +322,46 @@ const ProductDetails = ({ product, products, slug }) => {
       <Head>
         <title>{`${name} – Sampada Custom Print`}</title>
         <meta name="description" content={`Shop Sampada custom ${name}. Premium print-on-demand with prosperity-inspired designs. Ships via Printify | Stripe Secure Checkout.`} />
+        <meta property="og:title" content={`${name} – Sampada Custom Print`} />
+        <meta property="og:description" content={details?.substring(0, 160) || `Shop ${name} at Sampada`} />
+        <meta property="og:type" content="product" />
+        <meta property="product:price:amount" content={displayPrice.toFixed(2)} />
+        <meta property="product:price:currency" content="USD" />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://sampada-store.com'}/product/${slug}`} />
       </Head>
 
+      {/* JSON-LD Structured Data for SEO */}
+      <JsonLd
+        type="product"
+        data={{
+          name: name || 'Product',
+          description: details || '',
+          image: image?.map(img => img?.asset?.url).filter(Boolean) || [],
+          brand: 'Sampada',
+          price: displayPrice,
+          currency: 'USD',
+          availability: currentStock > 0
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+          sku: _id,
+          slug,
+        }}
+      />
+
+      {/* BreadcrumbList Schema */}
+      <JsonLd
+        type="breadcrumb"
+        data={{
+          items: [
+            { name: 'Home', item: '/' },
+            { name: product?.category?.name || 'Products', item: product?.category?.slug ? `/collections/${product.category.slug}` : '/collections/all' },
+            { name: name, item: null },
+          ],
+        }}
+      />
+
       {/* Main product container with consistent spacing */}
+      <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
       <div className="product-detail-container" style={{
         display: 'flex',
         flexDirection: 'row',
@@ -576,15 +615,17 @@ const ProductDetails = ({ product, products, slug }) => {
                 </h3>
                 <div className="color-swatch-container" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {uniqueColors.map((colorItem) => (
-                    <div
+                    <button
                       key={colorItem.colorName}
                       className={`color-option ${selectedColor === colorItem.colorName ? 'selected' : ''}`}
                       onClick={() => handleColorSelect(colorItem.colorName)}
-                      title={colorItem.colorName} // Accessibility
+                      aria-label={`Color: ${colorItem.colorName}`}
+                      aria-pressed={selectedColor === colorItem.colorName}
+                      title={colorItem.colorName}
                       style={{
                         width: '50px',
                         height: '50px',
-                        borderRadius: '4px', // Slightly rounded
+                        borderRadius: '4px',
                         cursor: 'pointer',
                         border: selectedColor === colorItem.colorName ? '2px solid #f02d34' : '1px solid #d0d0d0',
                         overflow: 'hidden',
@@ -593,13 +634,21 @@ const ProductDetails = ({ product, products, slug }) => {
                         justifyContent: 'center',
                         transition: 'border-color 0.3s ease, background-color 0.3s ease',
                         backgroundColor: colorItem.colorHex || '#f1f1f1',
-                        boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none' // Inner shadow for selection
+                        boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none',
+                        padding: 0
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.outline = '2px solid #C9A84C';
+                        e.currentTarget.style.outlineOffset = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.outline = 'none';
                       }}
                     >
                       {colorItem.variantImage && colorItem.variantImage.asset ? (
                         <Image
                           src={urlFor(colorItem.variantImage).width(50).height(50).url()}
-                          alt={colorItem.colorName}
+                          alt=""
                           width={50}
                           height={50}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -609,12 +658,11 @@ const ProductDetails = ({ product, products, slug }) => {
                           }}
                         />
                       ) : (
-                        // Fallback text if no image, ensure good contrast with hex background
                         <span style={{ color: selectedColor === colorItem.colorName ? 'white' : '#333', fontSize: '0.7em', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
                           {colorItem.colorName}
                         </span>
                       )}
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -1085,39 +1133,47 @@ const ProductDetails = ({ product, products, slug }) => {
       {showSizeChartModal && sizeChart && sizeChart.asset && (
         <div
           className="size-chart-modal-overlay"
-          onClick={() => setShowSizeChartModal(false)} // Close on overlay click
+          onClick={() => setShowSizeChartModal(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setShowSizeChartModal(false);
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Product size chart"
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker overlay
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            zIndex: 1000, // Ensure it's on top
-            backdropFilter: 'blur(5px)', // Optional: blur background
-            WebkitBackdropFilter: 'blur(5px)' // For Safari
+            zIndex: 1000,
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)'
           }}
         >
           <div
             className="size-chart-modal-content"
-            onClick={e => e.stopPropagation()} // Prevent closing when clicking inside modal
+            onClick={e => e.stopPropagation()}
             style={{
               backgroundColor: 'white',
               padding: '20px',
               borderRadius: '8px',
               position: 'relative',
-              maxWidth: '90%', // Responsive width
-              maxHeight: '90%', // Responsive height
-              overflow: 'auto', // Scroll if content is too large
+              maxWidth: '90%',
+              maxHeight: '90%',
+              overflow: 'auto',
               boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
             }}
           >
             <button
               className="close-modal-btn"
-              aria-label="Close size chart" // Accessibility
+              aria-label="Close size chart"
               onClick={() => setShowSizeChartModal(false)}
               style={{
                 position: 'absolute',
@@ -1125,57 +1181,70 @@ const ProductDetails = ({ product, products, slug }) => {
                 right: '10px',
                 background: 'none',
                 border: 'none',
-                fontSize: '1.5rem', // Larger close icon
+                fontSize: '1.5rem',
                 cursor: 'pointer',
-                color: '#333', // Darker color for better visibility
-                padding: '5px' // Easier to click
+                color: '#333',
+                padding: '8px',
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = '2px solid #C9A84C';
+                e.currentTarget.style.outlineOffset = '2px';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = 'none';
               }}
             >
               <IoClose />
             </button>
-            <h3 style={{ marginBottom: '15px', color: '#333', textAlign: 'center' }}>Size Chart</h3>
+            <h3 id="size-chart-title" style={{ marginBottom: '15px', color: '#333', textAlign: 'center' }}>Size Chart</h3>
             <Image
               src={urlFor(sizeChart).url()}
-              alt={`${name || 'Product'} Size Chart`}
+              alt={`${name || 'Product'} size chart showing measurements for all sizes`}
               width={800}
               height={600}
-              style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }} // Center image
+              style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
               onError={(e) => {
                 console.error('Size chart image load failed for:', name, 'from URL:', e.target.src);
-                e.target.src = '/asset/placeholder-size-chart.jpg'; // Fallback placeholder
+                e.target.src = '/asset/placeholder-size-chart.jpg';
               }}
             />
           </div>
         </div>
       )}
+      </main>
     </div>
   )
 };
 
 export const getStaticPaths = async () => {
-  const query = `*[_type == "product" && defined(slug.current)] { slug { current } }`; // Ensure slug is defined
-  const productsData = await client.fetch(query);
+  // Only generate paths for published products
+  const query = `*[_type == "product" && status == "published" && defined(slug.current)] { slug { current } }`;
+  const productsData = await client.fetch(query, {}, longCache());
 
   const paths = productsData
-    .filter(p => p.slug && p.slug.current) // Additional safety check
+    .filter(p => p.slug && p.slug.current)
     .map((p) => ({
       params: { slug: p.slug.current }
     }));
 
-  return { paths, fallback: 'blocking' }
+  return { paths, fallback: 'blocking' };
 };
 
 export const getStaticProps = async ({ params: { slug } }) => {
   try {
-    if (typeof slug !== 'string' || !slug) { // Check for empty slug too
-      console.warn('Invalid or missing slug:', slug);
-      return {
-        notFound: true // Use notFound directly
-      };
+    if (typeof slug !== 'string' || !slug) {
+      logger.warn('Invalid or missing slug:', slug);
+      return { notFound: true };
     }
 
-    // UPDATED QUERY: Added 'specifications'
-    const currentProductQuery = `*[_type == "product" && slug.current == '${slug}'][0]{
+    // Query only published products
+    const currentProductQuery = `*[_type == "product" && status == "published" && slug.current == $slug][0]{
       _id,
       name,
       details,
@@ -1207,10 +1276,11 @@ export const getStaticProps = async ({ params: { slug } }) => {
       sizeChart{
         _key, asset->{_id, url}
       },
-      specifications[]{_key, feature, value} // Fetch specifications here
+      specifications[]{_key, feature, value}
     }`;
 
-    const allProductsQuery = `*[_type == "product" && defined(slug.current)]{
+    // Only fetch published products for related products
+    const allProductsQuery = `*[_type == "product" && status == "published" && defined(slug.current)]{
       _id,
       name,
       slug,
@@ -1222,11 +1292,15 @@ export const getStaticProps = async ({ params: { slug } }) => {
       category
     }`;
 
-    const fetchedProduct = await client.fetch(currentProductQuery);
-    const allFetchedProducts = await client.fetch(allProductsQuery);
+    // Use parameterized queries to prevent injection and enable query plan caching
+    const params = { slug };
+    const [fetchedProduct, allFetchedProducts] = await Promise.all([
+      client.fetch(currentProductQuery, params, fetchOptions(3600)),
+      client.fetch(allProductsQuery, {}, longCache()),
+    ]);
 
     if (!fetchedProduct) {
-      console.warn('Product not found for slug:', slug);
+      logger.warn('Product not found for slug:', slug);
       return { notFound: true };
     }
 
@@ -1242,17 +1316,23 @@ export const getStaticProps = async ({ params: { slug } }) => {
       relatedProducts = [...relatedProducts, ...otherProducts].slice(0, 8);
     }
 
+    logger.debug('Product page SSG generated', {
+      productName: fetchedProduct.name,
+      relatedProductsCount: relatedProducts.length,
+      slug,
+    });
+
     return {
       props: {
         product: fetchedProduct,
-        products: relatedProducts || [],
-        slug
+        products: relatedProducts,
+        slug,
       },
-      revalidate: 60
+      revalidate: 60, // ISR: revalidate every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching product in getStaticProps for slug', slug, ':', error);
-    return { notFound: true }; // Return notFound on error
+    logFetchError(`product:getStaticProps:${slug}`, error);
+    return { notFound: true };
   }
 };
 

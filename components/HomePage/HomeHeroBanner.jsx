@@ -16,10 +16,10 @@ const HomeHeroBanner = ({ heroBanner }) => {
     : null;
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} aria-label="Hero section">
       {/* Description ticker / announcement bar */}
       {desc && (
-        <div className={styles.announcementBar}>
+        <div className={styles.announcementBar} role="status" aria-live="polite">
           <p>{desc}</p>
         </div>
       )}
@@ -30,6 +30,7 @@ const HomeHeroBanner = ({ heroBanner }) => {
           <p className={styles.smallLabel}>Sampada Originals™</p>
           <p className={styles.winterDrop}>Winter Drop 2026</p>
 
+          {/* The h1 is the page heading - this is the primary heading for the homepage */}
           <h1 className={styles.heroHeading}>
             <span className={styles.heroLine1}>WEAR YOUR</span>
             <span className={styles.heroLine2}>LEGACY</span>
@@ -37,43 +38,51 @@ const HomeHeroBanner = ({ heroBanner }) => {
           </h1>
         </div>
 
-        {/* Right: Banner Image from Sanity */}
-        {imageUrl ? (
-          <div className={styles.imageWrapper}>
-            <Image
-              src={imageUrl}
-              alt={heroBanner?.midText || 'Sampada banner'}
-              width={400}
-              height={400}
-              className={styles.bannerImage}
-              priority
-            />
-          </div>
-        ) : (
-          <div className={styles.imageWrapper}>
-            <div className={styles.imagePlaceholder}>
-              <p>No image set</p>
+        {/* Right: Banner Image + Shop Now Button (vertical stack) */}
+        <div className={styles.heroVisual}>
+          {imageUrl ? (
+            <div className={styles.imageWrapper}>
+              <Image
+                src={imageUrl}
+                alt={heroBanner?.altText || heroBanner?.midText || 'Sampada winter collection banner image'}
+                width={400}
+                height={400}
+                className={styles.bannerImage}
+                priority
+              />
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className={styles.imageWrapper} aria-hidden="true">
+              <div className={styles.imagePlaceholder}>
+                <p>No image set</p>
+              </div>
+            </div>
+          )}
 
-      {/* Shop Now Button with Arrow Icon */}
-      {product ? (
-        <Link href={`/product/${product}`} className={styles.shopNowLink}>
-          <button className="shop-now-btn">
-            Shop Now
-            <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
-          </button>
-        </Link>
-      ) : (
-        <Link href="/collections/mens-tshirts" className={styles.shopNowLink}>
-          <button className="shop-now-btn">
-            Shop Now
-            <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>
-          </button>
-        </Link>
-      )}
+          {/* Shop Now Button - sits directly below the logo */}
+          {product ? (
+            <Link
+              href={`/product/${product}`}
+              className="shop-now-btn"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              aria-label={`Shop ${product}`}
+            >
+              Shop Now
+              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+            </Link>
+          ) : (
+            <Link
+              href="/collections/mens-tshirts"
+              className="shop-now-btn"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              aria-label="Shop men's t-shirts"
+            >
+              Shop Now
+              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+            </Link>
+          )}
+        </div>
+      </div>
     </section>
   );
 };

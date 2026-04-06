@@ -25,7 +25,7 @@ export default function FilterBar({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [minDiscount, setMinDiscount] = useState(0);
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(false);
@@ -68,12 +68,12 @@ export default function FilterBar({
   const clearAllFilters = () => {
     setSearchQuery("");
     setSelectedCategory("");
-    setPriceRange([0, 500]);
+    setPriceRange([0, 1000]);
     setMinDiscount(0);
     setSortBy("newest");
   };
 
-  const hasActiveFilters = searchQuery || selectedCategory || priceRange[0] > 0 || priceRange[1] < 500 || minDiscount > 0;
+  const hasActiveFilters = searchQuery || selectedCategory || priceRange[0] > 0 || priceRange[1] < 1000 || minDiscount > 0;
 
   const sortOptions = [
     { value: 'newest', label: 'Newest First' },
@@ -520,7 +520,7 @@ export default function FilterBar({
                 <input
                   type="number"
                   min="0"
-                  max="500"
+                  max="1000"
                   value={priceRange[0]}
                   onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
                   placeholder="Min"
@@ -533,7 +533,7 @@ export default function FilterBar({
                   min="0"
                   max="1000"
                   value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 500])}
+                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 1000])}
                   placeholder="Max"
                   style={styles.priceInput}
                   className="price-input-hover"
