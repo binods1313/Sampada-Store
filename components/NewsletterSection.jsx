@@ -269,12 +269,14 @@ export default function NewsletterSection() {
                       backdropFilter: 'blur(8px)'
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                      e.target.style.borderColor = '#C9A84C';
                       e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                      e.target.style.boxShadow = '0 0 0 2px rgba(201, 168, 76, 0.3)';
                     }}
                     onBlur={(e) => {
                       e.target.style.borderColor = status === 'error' && !isValidEmail(email) ? '#ef4444' : 'rgba(255, 255, 255, 0.1)';
                       e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   />
                   <Mail
@@ -295,6 +297,7 @@ export default function NewsletterSection() {
               {/* Checkbox */}
               <div>
                 <label
+                  htmlFor="newsletter-agree"
                   style={{
                     display: 'flex',
                     alignItems: 'flex-start',
@@ -306,6 +309,7 @@ export default function NewsletterSection() {
                   }}
                 >
                   <input
+                    id="newsletter-agree"
                     type="checkbox"
                     checked={agreed}
                     onChange={(e) => {
@@ -325,6 +329,13 @@ export default function NewsletterSection() {
                       flexShrink: 0
                     }}
                     aria-describedby={status === 'error' && !agreed ? 'newsletter-error' : undefined}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '2px solid #C9A84C';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
                   />
                   <span>
                     I agree to the{' '}
@@ -337,6 +348,13 @@ export default function NewsletterSection() {
                         textDecoration: 'underline',
                         textDecorationThickness: '1px',
                         textUnderlineOffset: '2px'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.outline = '2px solid #C9A84C';
+                        e.currentTarget.style.outlineOffset = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.outline = 'none';
                       }}
                     >
                       Privacy Policy
@@ -393,6 +411,13 @@ export default function NewsletterSection() {
                 if (status !== 'loading') {
                   e.target.style.transform = 'translateY(-2px)';
                 }
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = '2px solid #C9A84C';
+                e.currentTarget.style.outlineOffset = '2px';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = 'none';
               }}
             >
               {status === 'loading' ? (

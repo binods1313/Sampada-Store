@@ -2,7 +2,9 @@
 import React from 'react';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
-import { client } from '../lib/client';
+import { client, fetchOptions, longCache } from '../lib/client';
+import { logger, logFetchError } from '../lib/logger';
+import JsonLd from '../components/JsonLd';
 import { CartProvider, useCartContext } from '../context/CartContext';
 import { UIProvider, useUIContext } from '../context/StateContext';
 import SampadaNavbar from '../components/HomePage/SampadaNavbar';
@@ -35,36 +37,40 @@ function HomeContent({ products, categories, bannerData }) {
         showMarquee={true}
       />
 
-      {/* ── 2. Hero Banner ── */}
-      <HomeHeroBanner heroBanner={bannerData} />
+      {/* Main content landmark - skip link target */}
+      <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
+        {/* ── 2. Hero Banner ── */}
+        <HomeHeroBanner heroBanner={bannerData} />
 
-      {/* ── 3. Collections ── */}
-      <CollectionsSection />
+        {/* ── 3. Collections ── */}
+        <CollectionsSection />
 
-      {/* ── 4. Why Sampada Value Props (NEW) ── */}
-      <WhySampada />
+        {/* ── 4. Why Sampada Value Props (NEW) ── */}
+        <WhySampada />
 
-      {/* ── 5. Featured Products with Filters ── */}
-      <ProductFilterSection
-        products={products}
-        categories={categories}
-        title="Featured Products"
-      />
+        {/* ── 5. Featured Products with Filters ── */}
+        <ProductFilterSection
+          products={products}
+          categories={categories}
+          title="Featured Products"
+        />
 
-      {/* ── 6. Promo Banner ── */}
-      <PromoBanner bannerData={bannerData} />
+        {/* ── 6. Promo Banner ── */}
+        <PromoBanner bannerData={bannerData} />
 
-      {/* ── 7. Newsletter Section ── */}
-      <NewsletterSection />
+        {/* ── 7. Newsletter Section ── */}
+        <NewsletterSection />
 
-      {/* ── 8. Footer ── */}
-      <SampadaFooter />
+        {/* ── 8. Footer ── */}
+        <SampadaFooter />
+      </main>
     </>
   );
 };
 
 export const getServerSideProps = async () => {
-  const productQuery = `*[_type == "product"] {
+  // GROQ queries with status == "published" filter to exclude drafts
+  const productQuery = `*[_type == "product" && status == "published"] {
     _id,
     _createdAt,
     name,
@@ -81,8 +87,8 @@ export const getServerSideProps = async () => {
     inventory,
     status
   } | order(_createdAt desc)[0...24]`;
-  
-  const bannerQuery = `*[_type == "banner"][0]{
+
+  const bannerQuery = `*[_type == "banner" && defined(desc)][0]{
     _id,
     image,
     logo,
@@ -96,34 +102,39 @@ export const getServerSideProps = async () => {
     discount,
     saleTime
   }`;
-  
-  const categoriesQuery = `*[_type == "category"] {
+
+  const categoriesQuery = `*[_type == "category" && defined(slug.current)] {
     _id,
     name,
     slug
-  }`;
+  } | order(name asc)`;
+
+  // Fetch options with revalidation
+  const productOptions = fetchOptions(3600); // 1 hour revalidation
+  const bannerOptions = fetchOptions(1800);  // 30 min revalidation
+  const categoriesOptions = longCache();      // 24 hour revalidation (static data)
 
   try {
     const [products, bannerData, categories] = await Promise.all([
-      client.fetch(productQuery).catch((err) => {
-        console.error('Error fetching products:', err);
+      client.fetch(productQuery, {}, productOptions).catch((err) => {
+        logFetchError('homepage:products', err);
         return [];
       }),
-      client.fetch(bannerQuery).catch((err) => {
-        console.error('Error fetching banner:', err);
+      client.fetch(bannerQuery, {}, bannerOptions).catch((err) => {
+        logFetchError('homepage:banner', err);
         return {};
       }),
-      client.fetch(categoriesQuery).catch((err) => {
-        console.error('Error fetching categories:', err);
+      client.fetch(categoriesQuery, {}, categoriesOptions).catch((err) => {
+        logFetchError('homepage:categories', err);
         return [];
       }),
     ]);
 
-    // Debug: Log banner data
-    console.log('=== BANNER DATA DEBUG ===');
-    console.log('bannerData:', bannerData);
-    console.log('bannerData.logo:', bannerData?.logo);
-    console.log('========================');
+    logger.debug('Homepage data fetched successfully', {
+      productsCount: products?.length || 0,
+      hasBanner: !!bannerData?.desc,
+      categoriesCount: categories?.length || 0,
+    });
 
     return {
       props: {
@@ -133,7 +144,7 @@ export const getServerSideProps = async () => {
       },
     };
   } catch (error) {
-    console.error('Data fetch error:', error);
+    logFetchError('homepage:getServerSideProps', error);
     return {
       props: {
         products: [],

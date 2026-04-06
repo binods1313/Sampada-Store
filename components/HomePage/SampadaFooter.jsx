@@ -64,23 +64,31 @@ const SampadaFooter = ({ footerData }) => {
   };
 
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} role="contentinfo">
       <div className={styles.topRow}>
         {/* Brand Column */}
         <div className={styles.brandCol}>
-          <h4 className={styles.brandName}>{brandName}</h4>
+          <h3 className={styles.brandName}>{brandName}</h3>
           <p className={styles.brandDesc}>{brandTagline}</p>
-          
+
           {/* Social Icons */}
           {socialLinks && socialLinks.length > 0 && (
-            <div className={styles.socialIcons}>
+            <div className={styles.socialIcons} role="list" aria-label="Social media links">
               {socialLinks.map((social, index) => (
                 <a
                   key={`${social.platform}-${index}`}
                   href={social.url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={social.platform || 'Social media link'}
+                  role="listitem"
+                  aria-label={`Follow us on ${social.platform || 'social media'}`}
+                  onFocus={(e) => {
+                    e.currentTarget.style.outline = '2px solid #C9A84C';
+                    e.currentTarget.style.outlineOffset = '2px';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.outline = 'none';
+                  }}
                 >
                   {getSocialIcon(social.platform)}
                 </a>
@@ -124,9 +132,9 @@ const SampadaFooter = ({ footerData }) => {
       <div className={styles.legalRow}>
         <div className={styles.legalLinks}>
           {legalLinks && legalLinks.map((link, index) => (
-            <Link 
-              key={`legal-${index}`} 
-              href={link.url || '#'} 
+            <Link
+              key={`legal-${index}`}
+              href={link.url || '#'}
               className={styles.legalLink}
             >
               {link.label}

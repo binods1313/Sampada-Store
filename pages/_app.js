@@ -4,6 +4,7 @@ import '../styles/sampada-brand-global.css'; // Global brand styles
 import Layout from '../components/Layout';
 import ErrorBoundaryWithFallback from '../components/ErrorBoundaryWithFallback';
 import DevToolsPanel from '../components/DevToolsPanel';
+import SkipLink from '../components/SkipLink';
 import { OfflineWrapper } from '../components/FallbackUI-Examples';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
@@ -56,6 +57,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
                   <OfflineWrapper>
                     {/* Font loader disabled - Inter loads via Google Fonts */}
                     {/* <FontLoader /> */}
+                    <SkipLink />
                     <Toaster
                       position="bottom-center"
                       toastOptions={{
@@ -90,6 +92,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
                   <Layout>
                     {/* Font loader disabled - Inter loads via Google Fonts */}
                     {/* <FontLoader /> */}
+                    <SkipLink />
                     <Toaster
                       position="bottom-center"
                       toastOptions={{

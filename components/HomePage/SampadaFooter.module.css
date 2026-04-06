@@ -52,6 +52,13 @@
   transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
   align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.socialIcons a:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
 }
 
 /* Hover only on devices that support it */
@@ -112,6 +119,12 @@
   transition: width 0.25s ease;
 }
 
+.footerLink:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+  color: #e5e7eb;
+}
+
 .footerLink:hover {
   color: #e5e7eb;
 }
@@ -143,10 +156,17 @@
   color: #6b7280;
   text-decoration: none;
   transition: color 0.2s;
+  padding: 2px;
+  border-radius: 2px;
 }
 
 .legalLink:hover {
   color: #9ca3af;
+}
+
+.legalLink:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
 }
 
 .copyright {
