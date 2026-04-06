@@ -23,7 +23,7 @@ const recommendationsQuery = `
     category._ref == $categoryId &&
     _id != $currentId &&
     status in ["published", "active"]
-  ] | order(_createdAt desc) [0...10] {
+  ] | order(_createdAt desc) [0...6] {
     _id,
     name,
     "slug": slug.current,
@@ -35,9 +35,9 @@ const recommendationsQuery = `
   }
 `;
 
-export default function ProductRecommendations({ 
-  categoryId, 
-  currentProductId 
+export default function ProductRecommendations({
+  categoryId,
+  currentProductId
 }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,21 +49,19 @@ export default function ProductRecommendations({
       categoryId,
       currentId: currentProductId
     }).then(data => {
-      // Shuffle and pick up to 4 unique recommendations
-      const shuffled = [...data].sort(() => 0.5 - Math.random());
-      setProducts(shuffled.slice(0, 4));
+      setProducts(data);
       setLoading(false);
     });
   }, [categoryId, currentProductId]);
 
   if (loading) return (
     <div className="recommendations-section">
-      <h2 className="section-title" 
+      <h2 className="section-title"
           style={{ fontSize: '22px', marginBottom: '24px' }}>
         You May Also Like
       </h2>
       <div className="recommendations-scroll">
-        {[1,2,3,4].map(i => (
+        {[1,2,3,4,5,6].map(i => (
           <div key={i} className="rec-card">
             <div className="product-card-skeleton" 
                  style={{ aspectRatio: '1' }} />
