@@ -197,7 +197,7 @@ const CollectionPage = ({ products, categories }) => {
 
 export const getServerSideProps = async () => {
     // Fetch only published products
-    const productsQuery = `*[_type == "product" && status == "published"]{
+    const productsQuery = `*[_type == "product" && status in ["published", "active"]]{
         _id,
         _createdAt,
         name,

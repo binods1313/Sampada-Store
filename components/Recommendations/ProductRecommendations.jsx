@@ -19,11 +19,11 @@ import Image from 'next/image';
 
 // GROQ query for recommendations
 const recommendationsQuery = `
-  *[_type == "product" && 
-    category._ref == $categoryId && 
+  *[_type == "product" &&
+    category._ref == $categoryId &&
     _id != $currentId &&
-    status == "active"
-  ] | order(_createdAt desc) [0...6] {
+    status in ["published", "active"]
+  ] | order(_createdAt desc) [0...10] {
     _id,
     name,
     "slug": slug.current,
@@ -44,12 +44,14 @@ export default function ProductRecommendations({
 
   useEffect(() => {
     if (!categoryId) return;
-    
+
     client.fetch(recommendationsQuery, {
       categoryId,
       currentId: currentProductId
     }).then(data => {
-      setProducts(data);
+      // Shuffle and pick up to 4 unique recommendations
+      const shuffled = [...data].sort(() => 0.5 - Math.random());
+      setProducts(shuffled.slice(0, 4));
       setLoading(false);
     });
   }, [categoryId, currentProductId]);
@@ -61,7 +63,7 @@ export default function ProductRecommendations({
         You May Also Like
       </h2>
       <div className="recommendations-scroll">
-        {[1,2,3,4,5,6].map(i => (
+        {[1,2,3,4].map(i => (
           <div key={i} className="rec-card">
             <div className="product-card-skeleton" 
                  style={{ aspectRatio: '1' }} />

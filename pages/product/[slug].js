@@ -1091,37 +1091,7 @@ const ProductDetails = ({ product, products, slug }) => {
         />
       </div>
 
-      {/* Related Products Section - Auto-scrolling carousel */}
-      {products && products.length > 0 && (
-        <div style={{
-          margin: '50px 0',
-          padding: '0 20px',
-          maxWidth: '1200px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}>
-          <h2 style={{
-            textAlign: 'center',
-            fontSize: '1.75rem',
-            fontWeight: 'bold',
-            marginBottom: '30px',
-          }}>
-            You may also like
-          </h2>
-
-          {/* Outer: clips overflow, hides scrollbar */}
-          <div style={{
-            overflow: 'hidden',
-            position: 'relative',
-            width: '100%',
-          }}>
-            {/* Inner: actual scrolling track */}
-            <RelatedProductsCarousel products={products} />
-          </div>
-        </div>
-      )}
-
-      {/* Product Recommendations - Same Category (NEW) */}
+      {/* Product Recommendations - Same Category */}
       {product.category?._ref && (
         <ProductRecommendations
           categoryId={product.category._ref}
@@ -1224,7 +1194,7 @@ const ProductDetails = ({ product, products, slug }) => {
 
 export const getStaticPaths = async () => {
   // Only generate paths for published products
-  const query = `*[_type == "product" && status == "published" && defined(slug.current)] { slug { current } }`;
+  const query = `*[_type == "product" && status in ["published", "active"] && defined(slug.current)] { slug { current } }`;
   const productsData = await client.fetch(query, {}, longCache());
 
   const paths = productsData
@@ -1243,8 +1213,8 @@ export const getStaticProps = async ({ params: { slug } }) => {
       return { notFound: true };
     }
 
-    // Query only published products
-    const currentProductQuery = `*[_type == "product" && status == "published" && slug.current == $slug][0]{
+    // Query published or active products (schema uses "active", legacy uses "published")
+    const currentProductQuery = `*[_type == "product" && status in ["published", "active"] && slug.current == $slug][0]{
       _id,
       name,
       details,
@@ -1279,8 +1249,8 @@ export const getStaticProps = async ({ params: { slug } }) => {
       specifications[]{_key, feature, value}
     }`;
 
-    // Only fetch published products for related products
-    const allProductsQuery = `*[_type == "product" && status == "published" && defined(slug.current)]{
+    // Only fetch published/active products for related products
+    const allProductsQuery = `*[_type == "product" && status in ["published", "active"] && defined(slug.current)]{
       _id,
       name,
       slug,

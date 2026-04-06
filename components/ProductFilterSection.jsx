@@ -15,7 +15,7 @@ export default function ProductFilterSection({ products, categories, title = "Fe
   const [filters, setFilters] = useState({
     searchQuery: '',
     selectedCategory: '',
-    priceRange: [0, 1000],
+    priceRange: [0, 5000],
     minDiscount: 0,
     sortBy: 'newest'
   });
@@ -34,7 +34,7 @@ export default function ProductFilterSection({ products, categories, title = "Fe
         case 'category':
           return { ...prev, selectedCategory: '' };
         case 'price':
-          return { ...prev, priceRange: [0, 1000] };
+          return { ...prev, priceRange: [0, 5000] };
         case 'discount':
           return { ...prev, minDiscount: 0 };
         default:
@@ -48,7 +48,7 @@ export default function ProductFilterSection({ products, categories, title = "Fe
     setFilters({
       searchQuery: '',
       selectedCategory: '',
-      priceRange: [0, 1000],
+      priceRange: [0, 5000],
       minDiscount: 0,
       sortBy: 'newest'
     });
@@ -77,7 +77,7 @@ export default function ProductFilterSection({ products, categories, title = "Fe
     }
 
     // Filter by price range (using discounted price)
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) {
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 5000) {
       result = result.filter(p => {
         const price = p.price || 0;
         const discount = p.discount || 0;

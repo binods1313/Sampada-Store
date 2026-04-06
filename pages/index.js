@@ -69,8 +69,8 @@ function HomeContent({ products, categories, bannerData }) {
 };
 
 export const getServerSideProps = async () => {
-  // GROQ queries with status == "published" filter to exclude drafts
-  const productQuery = `*[_type == "product" && status == "published"] {
+  // GROQ queries - accept both "published" (legacy) and "active" (current schema)
+  const productQuery = `*[_type == "product" && status in ["published", "active"]] {
     _id,
     _createdAt,
     name,
