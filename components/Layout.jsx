@@ -25,6 +25,12 @@ const VoiceAssistant = dynamic(
   { ssr: false }
 );
 
+// Cart Recovery Banner (client-side only)
+const CartRecoveryBanner = dynamic(
+  () => import('./CartRecoveryBanner'),
+  { ssr: false }
+);
+
 // Pages where the global Navbar and Footer are hidden
 const PAGES_WITHOUT_LAYOUT = ['/'];
 
@@ -169,6 +175,9 @@ const Layout = ({ children }) => {
           </button>
         </div>
       </div>
+
+      {/* Cart Recovery Banner */}
+      <CartRecoveryBanner />
     </div>
   );
 };

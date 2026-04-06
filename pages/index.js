@@ -27,6 +27,55 @@ function HomeContent({ products, categories, bannerData }) {
 
   return (
     <>
+      {/* SEO Meta Tags */}
+      <Head>
+        <title>Sampada — Wear Your Legacy, Prosper in Style | Premium Custom Apparel</title>
+        <meta name="description" content="Sampada offers premium custom apparel and print-on-demand products with prosperity-inspired designs. Shop t-shirts, hoodies, and more with worldwide shipping." />
+        <meta name="keywords" content="custom t-shirts, print on demand, premium apparel, Sampada, custom hoodies, prosperity designs, Indian fashion, sustainable clothing" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta name="author" content="Sampada" />
+        <link rel="canonical" href="https://sampada.store" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://sampada.store" />
+        <meta property="og:title" content="Sampada — Wear Your Legacy, Prosper in Style" />
+        <meta property="og:description" content="Premium custom apparel with prosperity-inspired designs. Shop t-shirts, hoodies & more." />
+        <meta property="og:image" content="https://sampada.store/og-image.jpg" />
+        <meta property="og:site_name" content="Sampada" />
+        <meta property="og:locale" content="en_US" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://sampada.store" />
+        <meta name="twitter:title" content="Sampada — Wear Your Legacy, Prosper in Style" />
+        <meta name="twitter:description" content="Premium custom apparel with prosperity-inspired designs." />
+        <meta name="twitter:image" content="https://sampada.store/og-image.jpg" />
+
+        {/* JSON-LD Structured Data */}
+        <JsonLd
+          type="organization"
+          data={{
+            name: 'Sampada',
+            url: 'https://sampada.store',
+            logo: 'https://sampada.store/logo.png',
+            description: 'Premium custom apparel and print-on-demand products with prosperity-inspired designs.',
+            sameAs: [
+              'https://www.instagram.com/sampada',
+              'https://www.facebook.com/sampada',
+            ],
+          }}
+        />
+        <JsonLd
+          type="website"
+          data={{
+            name: 'Sampada Store',
+            alternateName: 'Sampada Custom Print',
+            url: 'https://sampada.store',
+          }}
+        />
+      </Head>
+
       {/* ── 1. Navigation ── */}
       <SampadaNavbar
         session={session}

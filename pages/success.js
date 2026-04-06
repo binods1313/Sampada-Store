@@ -14,6 +14,7 @@ import { runFireworks } from '../lib/utils';
 // Import Analytics & Marketing
 import { trackPurchase } from '@/lib/analytics';
 import { subscribeUser, triggerPostPurchaseEmail } from '@/lib/mailchimp';
+import { clearAbandonedCart } from '@/utils/cartRecovery';
 
 const Success = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const Success = () => {
     if (clearCart && !hasCleared) {
       console.log('Success page mounted. Clearing cart...');
       clearCart();
+      clearAbandonedCart(); // Clear abandoned cart tracking
       setHasCleared(true);
     }
 

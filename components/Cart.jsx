@@ -19,6 +19,7 @@ import IFSCValidator from './IFSCValidator';
 import AddressValidator from './AddressValidator';
 import B2BCustomerDisplay from './B2BCustomerDisplay';
 import { trackBeginCheckout } from '../lib/analytics';
+import { trackAbandonedCart } from '../utils/cartRecovery';
 
 // Import your Stripe utility function
 import getStripe from '../lib/getStripe';
@@ -49,6 +50,23 @@ const Cart = () => {
 
   // State for Razorpay checkout loading
   const [isRazorpayProcessing, setIsRazorpayProcessing] = useState(false);
+
+  // Track cart abandonment when user leaves with items
+  useEffect(() => {
+    if (!cartItems || cartItems.length === 0) return;
+
+    const handleBeforeUnload = () => {
+      trackAbandonedCart({
+        items: cartItems,
+        totalPrice,
+        currency: selectedCurrency,
+        customerEmail: session?.user?.email || null,
+      });
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [cartItems, totalPrice, selectedCurrency, session]);
 
   // Load Razorpay checkout script dynamically
   useEffect(() => {
