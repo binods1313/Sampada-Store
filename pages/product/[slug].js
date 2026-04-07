@@ -20,6 +20,8 @@ import RelatedProductsCarousel from '../../components/RelatedProductsCarousel';
 import ProductRecommendations from '../../components/Recommendations/ProductRecommendations';
 import JsonLd from '../../components/JsonLd';
 import { trackViewItem, trackAddToCart } from '../../lib/analytics';
+import UrgencyTimer from '../../components/UrgencyTimer';
+import ProductShare from '../../components/ProductShare';
 import '../../styles/sampada-premium-brand.css';
 
 
@@ -793,6 +795,13 @@ const ProductDetails = ({ product, products, slug }) => {
             </div>
           )}
 
+          {/* Urgency Timer for Low Stock */}
+          {currentStock > 0 && currentStock <= 10 && (
+            <div style={{ marginBottom: '20px' }}>
+              <UrgencyTimer stock={currentStock} showCountdown={currentStock <= 5} />
+            </div>
+          )}
+
           {/* Quantity Controls with Premium Styling */}
           <div className="quantity-container" style={{
             display: 'inline-flex',
@@ -908,6 +917,11 @@ const ProductDetails = ({ product, products, slug }) => {
               product={{ _id, name, slug: { current: slug }, price, discount, image }}
               size="large"
             />
+          </div>
+
+          {/* Share Product */}
+          <div style={{ marginTop: '16px' }}>
+            <ProductShare product={{ _id, name, slug: { current: slug } }} />
           </div>
 
           {/* Enhanced Virtual Try-On - Temporarily disabled for debugging */}

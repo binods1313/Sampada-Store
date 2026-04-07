@@ -7,6 +7,8 @@ import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Sear
 import { motion, AnimatePresence } from "motion/react";
 import { getNavigationData } from '@/lib/client';
 import SmartSearch from '@/components/SmartSearch/SmartSearch';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 // ============================================================================
 // CONFIGURATION - Hardcoded Menu Items (Fallback if Sanity is unreachable)
