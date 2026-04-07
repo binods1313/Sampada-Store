@@ -2,12 +2,18 @@
 // Social sharing buttons for product pages
 // Share via WhatsApp, Twitter, Facebook, or copy link
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Share2, MessageCircle, Twitter, Facebook, Link, Check } from 'lucide-react';
 
 export default function ProductShare({ product, className = '' }) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [supportsNativeShare, setSupportsNativeShare] = useState(false);
+
+  // Detect native share support only on client
+  useEffect(() => {
+    setSupportsNativeShare(typeof navigator !== 'undefined' && !!navigator.share);
+  }, []);
 
   if (!product) return null;
 
@@ -59,7 +65,7 @@ export default function ProductShare({ product, className = '' }) {
 
   // Native share API (mobile browsers)
   const handleNativeShare = async () => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
           title,
@@ -88,8 +94,8 @@ export default function ProductShare({ product, className = '' }) {
           Share:
         </span>
 
-        {/* Native share button (mobile only) */}
-        {typeof navigator !== 'undefined' && navigator.share && (
+        {/* Native share button (mobile only, rendered after hydration) */}
+        {supportsNativeShare && (
           <button
             onClick={handleNativeShare}
             aria-label="Share product"
