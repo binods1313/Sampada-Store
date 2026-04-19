@@ -7,7 +7,7 @@
 
 /**
  * Load a specific font face
- * 
+ *
  * @param {string} fontFamily - Font family name
  * @param {string} fontWeight - Font weight (e.g., '400', '700')
  * @param {string} fontStyle - Font style ('normal', 'italic')
@@ -20,13 +20,20 @@ export async function loadFont(fontFamily, fontWeight = '400', fontStyle = 'norm
   }
 
   try {
-    const fontFace = new FontFace(fontFamily, `url(/fonts/${fontFamily}-${fontWeight}.woff2)`, {
-      weight: fontWeight,
-      style: fontStyle,
-    });
+    // Check if font is already loaded via Google Fonts CDN
+    const fontToCheck = `${fontWeight} ${fontStyle} 1em ${fontFamily}`;
+    if (document.fonts.check(fontToCheck)) {
+      // Font is already available, no need to load
+      return;
+    }
 
-    document.fonts.add(fontFace);
-    await fontFace.load();
+    // Wait for Google Fonts to load via document.fonts.ready
+    await document.fonts.ready;
+    
+    // Verify font is now available
+    if (!document.fonts.check(fontToCheck)) {
+      console.warn(`[loadFont] Font ${fontFamily} ${fontWeight} not available after ready`);
+    }
   } catch (error) {
     console.warn(`[loadFont] Failed to load ${fontFamily} ${fontWeight}:`, error);
   }
@@ -194,7 +201,10 @@ export const SAMPADA_FONTS = {
 /**
  * Initialize fonts for Sampada-Store
  * Call this in your root layout or _app.js
- * 
+ *
+ * Since fonts are loaded via Google Fonts CDN in _document.js,
+ * we just need to wait for them to be ready.
+ *
  * @returns {Promise<void>}
  */
 export async function initializeSampadaFonts() {
@@ -202,16 +212,13 @@ export async function initializeSampadaFonts() {
     return;
   }
 
-  // Load primary font (Inter)
-  await loadFonts([
-    { family: 'Inter', weight: '400' },
-    { family: 'Inter', weight: '500' },
-    { family: 'Inter', weight: '600' },
-    { family: 'Inter', weight: '700' },
-  ]);
-
-  // Wait for all fonts to be ready
-  await waitForFonts();
+  try {
+    // Wait for all Google Fonts to be loaded
+    await document.fonts.ready;
+    console.log('[initializeSampadaFonts] Fonts ready');
+  } catch (error) {
+    console.error('[initializeSampadaFonts] Font loading failed:', error);
+  }
 }
 
 export default {
