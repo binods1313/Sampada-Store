@@ -10,6 +10,22 @@ import { structure } from './structure'
 import { BulkEditTool } from './plugins/bulk-edit/BulkEditTool'
 import { BulkPriceUpdate } from './plugins/bulk-edit/BulkPriceUpdate'
 
+// Import Top 5 Sanity Plugins for E-Commerce Efficiency
+import { assist } from '@sanity/assist'
+import { smartAssetManager } from 'sanity-plugin-smart-asset-manager'
+import { blockStyles } from 'sanity-plugin-block-styles'
+import { googleAnalytics } from 'sanity-plugin-google-analytics'
+import { references } from 'sanity-plugin-references'
+
+// Import Next 5 Enterprise Plugins for Competitive Edge
+import { recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
+import { tabBlock } from '@multidots/sanity-plugin-tab-block'
+import { colorInput } from 'sanity-plugin-color-input'
+import { skynetAccessibility } from 'sanity-plugin-skynetaccessibility-scanner'
+
+// Note: Slack Publisher not yet available on npm
+// import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon
+
 // Define a consistent API version to use throughout the project
 const apiVersion = '2024-05-18'
 
@@ -34,6 +50,147 @@ export default defineConfig({
 
     // codeInput for code blocks in your content
     codeInput(),
+
+    // ============================================
+    // TOP 5 SANITY PLUGINS FOR E-COMMERCE
+    // ============================================
+
+    // 1. AI Assist - Auto-generate product content
+    assist(),
+
+    // 2. Smart Asset Manager - Optimize media library
+    smartAssetManager({
+      showFileSize: true,
+      showUsageCount: true,
+      showDimensions: true,
+      enableBulkDelete: true,
+      maxFileSizeMB: 5, // Warn if images > 5MB
+    }),
+
+    // 3. Block Styles - Rich content styling
+    blockStyles({
+      styles: [
+        {
+          name: 'callout',
+          title: '📢 Callout',
+          icon: '📣',
+          style: {
+            backgroundColor: 'rgba(201, 168, 76, 0.1)',
+            borderLeft: '4px solid #C9A84C',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        },
+        {
+          name: 'feature-list',
+          title: '✨ Feature List',
+          icon: '✅',
+          style: {
+            backgroundColor: '#1a1a1a',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        },
+        {
+          name: 'warning',
+          title: '⚠️ Warning',
+          icon: '⚠️',
+          style: {
+            backgroundColor: 'rgba(139, 26, 26, 0.1)',
+            borderLeft: '4px solid #8B1A1A',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        },
+        {
+          name: 'success',
+          title: '✅ Success',
+          icon: '✅',
+          style: {
+            backgroundColor: 'rgba(26, 139, 26, 0.1)',
+            borderLeft: '4px solid #1A8B1A',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        },
+        {
+          name: 'info-box',
+          title: 'ℹ️ Info Box',
+          icon: 'ℹ️',
+          style: {
+            backgroundColor: 'rgba(26, 26, 139, 0.1)',
+            borderLeft: '4px solid #1A1A8B',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        },
+        {
+          name: 'promo-banner',
+          title: '🎉 Promo Banner',
+          icon: '🎉',
+          style: {
+            backgroundColor: 'linear-gradient(135deg, rgba(201, 168, 76, 0.2), rgba(139, 26, 26, 0.2))',
+            border: '2px solid #C9A84C',
+            padding: '20px',
+            borderRadius: '12px',
+            textAlign: 'center',
+          },
+        },
+      ],
+    }),
+
+    // 4. Google Analytics - Traffic insights
+    googleAnalytics({
+      credentials: {
+        client_email: process.env.GA_CLIENT_EMAIL,
+        private_key: process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      },
+      viewId: process.env.GA_VIEW_ID,
+      dashboardDocument: true,
+    }),
+
+    // 5. References - Prevent broken links
+    references({
+      showInPane: true,
+      showBadge: true,
+      filterTypes: ['product', 'category', 'order', 'banner', 'collection'],
+    }),
+
+    // ============================================
+    // NEXT 5 ENTERPRISE PLUGINS FOR COMPETITIVE EDGE
+    // ============================================
+
+    // 6. Recursive Hierarchy - Amazon-level category management
+    recursiveHierarchy({
+      documentType: 'category',
+      titleField: 'name',
+      childrenField: 'children',
+      parentField: 'parent',
+      enableDragDrop: true,
+      showChildCount: true,
+    }),
+
+    // 7. Tab Block Plugin - Myntra-style product tabs
+    tabBlock(),
+
+    // 8. Color Input - Product variant colors
+    colorInput(),
+
+    // 9. Slack Publisher - COMING SOON (package not on npm yet)
+    // slackPublisher({
+    //   botToken: process.env.SLACK_BOT_TOKEN,
+    //   aiModel: 'claude-3-sonnet',
+    //   autoTranslate: ['hi', 'es', 'fr'],
+    //   allowedTypes: ['product', 'sale', 'blogPost', 'announcement'],
+    // }),
+
+    // 10. Skynet Accessibility Scanner - WCAG compliance
+    skynetAccessibility({
+      websiteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+      standards: ['WCAG2.2AA', 'ADA', 'Section508'],
+      scanFrequency: 'daily',
+      enableAutoFix: true,
+    }),
 
     // Media Library is enabled by default in Sanity v4+
     // Access it via the Media tab in the Studio or at sanity.io/manage

@@ -22,6 +22,11 @@
 .DS_Store
 *.pem
 
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.production
+
 # Typescript
 *.tsbuildinfo
 
