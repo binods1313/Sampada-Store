@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { signOut } from "next-auth/react";
 import { getNavigationData } from '@/lib/client';
 import SmartSearch from '@/components/SmartSearch/SmartSearch';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -541,7 +542,7 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
 // ============================================================================
 // TASK 4: MOBILE HAMBURGER MENU WITH ACCORDION
 // ============================================================================
-function MobileMenu({ isOpen, onClose, session }) {
+function MobileMenu({ isOpen, onClose, session, menuItems }) {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [expandedMore, setExpandedMore] = useState(false);
 
@@ -843,7 +844,7 @@ function MobileMenu({ isOpen, onClose, session }) {
                 </AnimatePresence>
               </div>
 
-              {/* Sign In Button (Prominent at Bottom) */}
+              {/* Sign In Button (When Not Logged In) */}
               {!session && (
                 <div style={{ marginTop: '24px', padding: '0 24px' }}>
                   <Link
@@ -876,6 +877,103 @@ function MobileMenu({ isOpen, onClose, session }) {
                   >
                     <User size={20} /> Sign In
                   </Link>
+                </div>
+              )}
+
+              {/* Account Section (When Logged In) */}
+              {session?.user && (
+                <div style={{ marginTop: '24px', paddingBottom: '16px', borderTop: '1px solid rgba(201, 168, 76, 0.3)', paddingTop: '16px' }}>
+                  {/* User Info */}
+                  <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    {session.user.image ? (
+                      <img
+                        src={session.user.image}
+                        alt={session.user.name}
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        backgroundColor: '#C9A84C',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <User size={24} color="#0a0a0a" />
+                      </div>
+                    )}
+                    <div style={{ color: '#ffffff' }}>
+                      <div style={{ fontWeight: 600, fontSize: '14px' }}>{session.user.name || 'User'}</div>
+                      <div style={{ fontSize: '12px', color: '#C9A84C' }}>{session.user.email}</div>
+                    </div>
+                  </div>
+
+                  {/* Account Link */}
+                  <Link
+                    href="/account"
+                    onClick={onClose}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '14px 24px',
+                      color: '#C9A84C',
+                      textDecoration: 'none',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      transition: 'all 0.2s ease',
+                      borderBottom: '1px solid rgba(201, 168, 76, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    📋 My Account
+                  </Link>
+
+                  {/* Sign Out Button */}
+                  <button
+                    onClick={() => {
+                      signOut();
+                      onClose();
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      width: '100%',
+                      padding: '14px 24px',
+                      color: '#ff6b6b',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    🚪 Sign out
+                  </button>
                 </div>
               )}
 
@@ -934,6 +1032,7 @@ export default function SampadaNavbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   // Keyboard shortcut: Ctrl+K or Cmd+K to open search
   useEffect(() => {
@@ -946,6 +1045,27 @@ export default function SampadaNavbar({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const userButton = document.querySelector('[data-user-dropdown-toggle]');
+      const userMenu = document.querySelector('[data-user-dropdown-menu]');
+      
+      if (
+        isUserDropdownOpen &&
+        userMenu &&
+        !userMenu.contains(event.target) &&
+        userButton &&
+        !userButton.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isUserDropdownOpen]);
   
   // Navigation data state - Initialize with hardcoded fallback for immediate render
   const [menuItems, setMenuItems] = useState(HARDCODED_MENU_ITEMS);
@@ -1163,7 +1283,7 @@ export default function SampadaNavbar({
             className="hidden lg:flex"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}
           >
-            {/* Sign In Button with Gold Border */}
+            {/* Sign In Button - Show when NOT logged in */}
             {!session && !loading && (
               <button
                 onClick={onSignIn}
@@ -1182,6 +1302,126 @@ export default function SampadaNavbar({
               >
                 <User size={16} /> Sign In
               </button>
+            )}
+
+            {/* Account Dropdown - Show when logged in */}
+            {session?.user && !loading && (
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                {/* User Avatar/Name - Clickable Toggle */}
+                <button
+                  data-user-dropdown-toggle
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid #C9A84C',
+                    borderRadius: '6px',
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    color: '#1f2937',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  {session.user.image && (
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                  {!session.user.image && <User size={16} />}
+                  <span>{session.user.name || session.user.email}</span>
+                  <ChevronDown size={16} style={{ marginLeft: '4px' }} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isUserDropdownOpen && (
+                  <div
+                    data-user-dropdown-menu
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      backgroundColor: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      zIndex: 1000,
+                      minWidth: '200px',
+                      marginTop: '8px',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <Link
+                      href="/account"
+                      onClick={() => setIsUserDropdownOpen(false)}
+                      style={{
+                        display: 'block',
+                        padding: '12px 16px',
+                        color: '#1f2937',
+                        textDecoration: 'none',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        borderBottom: '1px solid #f0f0f0',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f5f5f5';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      📋 My Account
+                    </Link>
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setIsUserDropdownOpen(false);
+                      }}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '12px 16px',
+                        color: '#dc2626',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fee2e2';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      🚪 Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Search Icon */}
@@ -1280,6 +1520,7 @@ export default function SampadaNavbar({
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         session={session}
+        menuItems={menuItems}
       />
 
       {/* Smart Search Overlay */}

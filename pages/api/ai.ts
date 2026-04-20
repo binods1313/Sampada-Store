@@ -188,7 +188,7 @@ export default async function handler(
 
 function buildProductDescriptionPrompt(
   productName: string,
-  context?: Record<string, unknown>
+  context?: Record<string, any>
 ): string {
   let prompt = `Write a compelling product description for: ${productName}`;
 
@@ -213,13 +213,22 @@ function buildProductDescriptionPrompt(
     if (context.tone) {
       details.push(`Tone: ${context.tone}`);
     }
+    if (context.template) {
+      details.push(`Style/Template: ${context.template}`);
+    }
+    if (context.length) {
+      details.push(`Target Length: ${context.length} words`);
+    }
 
     if (details.length > 0) {
       prompt += `\n\nAdditional context:\n${details.join('\n')}`;
     }
   }
 
-  prompt += '\n\nWrite a product description (150-200 words) that would convert browsers into buyers.';
+  const length = context?.length || '150-200';
+  const template = context?.template || 'standard';
+  
+  prompt += `\n\nWrite a ${template} product description (approx. ${length} words) that would convert browsers into buyers. Focus on being persuasive and highlight the unique value proposition.`;
   
   return prompt;
 }

@@ -128,37 +128,75 @@ function CategoriesContent() {
     <AdminLayout title="Categories">
       <Breadcrumbs items={breadcrumbs} />
 
-      {/* Header - Centered, balanced layout */}
+      {/* Header - Truly centered, balanced layout */}
       <div className="categories-header" style={{
         maxWidth: 'var(--admin-content-max-width)',
-        margin: '0 auto var(--admin-space-6)',
+        margin: '0 auto var(--admin-space-8)',
         padding: '0 var(--admin-space-8)',
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
         gap: 'var(--admin-space-4)'
       }}>
-        <div style={{ textAlign: 'center', flex: 1 }}>
-          <h2 className="admin-heading" style={{ margin: '0 0 var(--admin-space-1) 0', fontSize: 'var(--admin-text-2xl)' }}>
+        {/* Left spacer - to balance the button on the right */}
+        <div style={{ display: 'flex' }}>
+          <Link href="/admin" style={{
+            fontSize: '13px',
+            color: 'var(--admin-gold)',
+            textDecoration: 'none',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            ← Dashboard
+          </Link>
+        </div>
+
+        {/* Center - Title & Count */}
+        <div style={{ textAlign: 'center' }}>
+          <h2 className="admin-heading" style={{ margin: '0 0 var(--admin-space-1) 0', fontSize: 'var(--admin-text-3xl)', fontWeight: '800' }}>
             Categories
           </h2>
-          <p className="admin-text-secondary admin-text-sm" style={{ margin: 0 }}>
-            {categories?.length || 0} {categories?.length === 1 ? 'category' : 'categories'} — manage your product organization
-          </p>
-        </div>
-        <button
-          onClick={() => setEditingId('new')}
-          className="admin-btn admin-btn-primary"
-          style={{
-            padding: 'var(--admin-space-3) var(--admin-space-5)',
-            fontSize: 'var(--admin-text-sm)',
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
             gap: 'var(--admin-space-2)',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          ＋ Add Category
-        </button>
+            padding: '4px 12px',
+            background: 'var(--admin-surface-1)',
+            borderRadius: '20px',
+            border: '1px solid var(--admin-border-subtle)'
+          }}>
+            <span style={{
+              width: '8px',
+              height: '8px',
+              backgroundColor: 'var(--admin-gold)',
+              borderRadius: '50%',
+              display: 'inline-block'
+            }} />
+            <span className="admin-text-secondary admin-text-xs" style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              {categories?.length || 0} {categories?.length === 1 ? 'Category' : 'Categories'} Total
+            </span>
+          </div>
+        </div>
+
+        {/* Right - Action Button */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            onClick={() => setEditingId('new')}
+            className="admin-btn admin-btn-primary"
+            style={{
+              padding: '12px 24px',
+              fontSize: '14px',
+              fontWeight: '700',
+              gap: 'var(--admin-space-2)',
+              whiteSpace: 'nowrap',
+              boxShadow: 'var(--admin-shadow-gold)'
+            }}
+          >
+            ＋ Add Category
+          </button>
+        </div>
       </div>
 
       {/* Edit/Create Modal */}
@@ -269,22 +307,22 @@ function CategoriesContent() {
           {/* Table Header */}
           <div className="categories-table-header" style={{
             display: 'grid',
-            gridTemplateColumns: '50px 150px minmax(200px, 1fr) 80px 100px 140px',
+            gridTemplateColumns: '80px 180px minmax(200px, 1fr) 100px 120px 140px',
             gap: 'var(--admin-space-4)',
-            padding: 'var(--admin-space-3) var(--admin-space-5)',
+            padding: 'var(--admin-space-4) var(--admin-space-6)',
             background: 'var(--admin-surface-1)',
             borderBottom: 'var(--admin-border-width-sm) solid var(--admin-border-subtle)',
-            fontSize: 'var(--admin-text-xs)',
-            fontWeight: 'var(--admin-font-bold)',
+            fontSize: '11px',
+            fontWeight: '800',
             color: 'var(--admin-text-secondary)',
             textTransform: 'uppercase',
-            letterSpacing: 'var(--admin-tracking-wide)'
+            letterSpacing: '0.08em'
           }}>
-            <div>Order</div>
-            <div>Name</div>
+            <div style={{ textAlign: 'center' }}>Order</div>
+            <div>Category Name</div>
             <div>Description</div>
-            <div>Products</div>
-            <div>Status</div>
+            <div style={{ textAlign: 'center' }}>Products</div>
+            <div style={{ textAlign: 'center' }}>Status</div>
             <div style={{ textAlign: 'right' }}>Actions</div>
           </div>
 
@@ -309,9 +347,9 @@ function CategoriesContent() {
                   className="categories-table-row"
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '50px 150px minmax(200px, 1fr) 80px 100px 140px',
+                    gridTemplateColumns: '80px 180px minmax(200px, 1fr) 100px 120px 140px',
                     gap: 'var(--admin-space-4)',
-                    padding: 'var(--admin-space-4) var(--admin-space-5)',
+                    padding: 'var(--admin-space-5) var(--admin-space-6)',
                     borderBottom: 'var(--admin-border-width-sm) solid var(--admin-border-ghost)',
                     transition: 'var(--admin-transition-fast)',
                     alignItems: 'center'
@@ -319,37 +357,55 @@ function CategoriesContent() {
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--admin-bg-hover)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
-                  <div style={{ fontSize: 'var(--admin-text-sm)', fontWeight: 'var(--admin-font-medium)', color: 'var(--admin-gold)' }}>
+                  <div style={{ 
+                    fontSize: '14px', 
+                    fontWeight: '700', 
+                    color: 'var(--admin-gold)',
+                    textAlign: 'center',
+                    background: 'var(--admin-surface-1)',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto'
+                  }}>
                     {category.sortOrder || index + 1}
                   </div>
-                  <div style={{ fontSize: 'var(--admin-text-md)', fontWeight: 'var(--admin-font-bold)', color: 'var(--admin-text-primary)' }}>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--admin-text-primary)' }}>
                     {safeValue(category.name, 'Untitled')}
                   </div>
                   <div className="categories-description" style={{
-                    fontSize: 'var(--admin-text-sm)',
+                    fontSize: '13px',
                     color: 'var(--admin-text-secondary)',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
-                    maxWidth: '300px'
+                    maxWidth: '400px'
                   }}>
                     {safeValue(category.description, '—')}
                   </div>
-                  <div style={{ fontSize: 'var(--admin-text-sm)', fontWeight: 'var(--admin-font-semibold)', color: 'var(--admin-text-primary)', textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '14px', 
+                    fontWeight: '800', 
+                    color: 'var(--admin-text-primary)', 
+                    textAlign: 'center',
+                    fontVariantNumeric: 'tabular-nums'
+                  }}>
                     {getProductCount(category._id)}
                   </div>
-                  <div>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <StatusBadge
                       status={safeValue(category.isActive, true) ? 'active' : 'draft'}
                       label={safeValue(category.isActive, true) ? 'Active' : 'Inactive'}
-                      color={safeValue(category.isActive, true) ? '#4ade80' : '#888'}
                     />
                   </div>
                   <div className="categories-actions" style={{ display: 'flex', gap: 'var(--admin-space-2)', justifyContent: 'flex-end' }}>
                     <button
                       onClick={() => handleEdit(category)}
                       className="admin-btn admin-btn-secondary"
-                      style={{ padding: 'var(--admin-space-1)', minWidth: '32px', height: '32px', justifyContent: 'center' }}
+                      style={{ padding: '0', width: '36px', height: '36px', justifyContent: 'center', borderRadius: '8px' }}
                       title="Edit category"
                     >
                       ✏️
@@ -357,7 +413,7 @@ function CategoriesContent() {
                     <button
                       onClick={() => handleDelete(category._id, safeValue(category.name, 'category'))}
                       className="admin-btn admin-btn-danger"
-                      style={{ padding: 'var(--admin-space-1)', minWidth: '32px', height: '32px', justifyContent: 'center' }}
+                      style={{ padding: '0', width: '36px', height: '36px', justifyContent: 'center', borderRadius: '8px' }}
                       title="Delete category"
                     >
                       🗑️
@@ -370,16 +426,17 @@ function CategoriesContent() {
               {categories.filter(c => c.isActive === false).length > 0 && (
                 <>
                   <div style={{
-                    padding: 'var(--admin-space-3) var(--admin-space-5)',
-                    background: 'var(--admin-surface-1)',
+                    padding: 'var(--admin-space-4) var(--admin-space-6)',
+                    background: 'rgba(0,0,0,0.2)',
                     borderTop: 'var(--admin-border-width-sm) solid var(--admin-border-subtle)',
-                    fontSize: 'var(--admin-text-xs)',
-                    fontWeight: 'var(--admin-font-bold)',
+                    fontSize: '11px',
+                    fontWeight: '800',
                     color: 'var(--admin-text-muted)',
                     textTransform: 'uppercase',
-                    letterSpacing: 'var(--admin-tracking-wide)'
+                    letterSpacing: '0.1em',
+                    textAlign: 'center'
                   }}>
-                    Archived ({categories.filter(c => c.isActive === false).length})
+                    Archived Categories ({categories.filter(c => c.isActive === false).length})
                   </div>
                   {categories.filter(c => c.isActive === false).map((category, index) => (
                     <div
@@ -387,42 +444,51 @@ function CategoriesContent() {
                       className="categories-table-row categories-table-row-archived"
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: '50px 150px minmax(200px, 1fr) 80px 100px 140px',
+                        gridTemplateColumns: '80px 180px minmax(200px, 1fr) 100px 120px 140px',
                         gap: 'var(--admin-space-4)',
-                        padding: 'var(--admin-space-4) var(--admin-space-5)',
+                        padding: 'var(--admin-space-5) var(--admin-space-6)',
                         borderBottom: 'var(--admin-border-width-sm) solid var(--admin-border-ghost)',
-                        transition: 'var(--admin-transition-fast)',
                         alignItems: 'center',
-                        opacity: 0.5
+                        opacity: 0.6
                       }}
                     >
-                      <div style={{ fontSize: 'var(--admin-text-sm)', fontWeight: 'var(--admin-font-medium)', color: 'var(--admin-text-muted)' }}>
+                      <div style={{ 
+                        fontSize: '14px', 
+                        fontWeight: '700', 
+                        color: 'var(--admin-text-muted)',
+                        textAlign: 'center'
+                      }}>
                         {category.sortOrder || index + 1}
                       </div>
-                      <div style={{ fontSize: 'var(--admin-text-md)', fontWeight: 'var(--admin-font-bold)', color: 'var(--admin-text-secondary)' }}>
+                      <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--admin-text-secondary)' }}>
                         {safeValue(category.name, 'Untitled')}
                       </div>
                       <div className="categories-description" style={{
-                        fontSize: 'var(--admin-text-sm)',
+                        fontSize: '13px',
                         color: 'var(--admin-text-muted)',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
-                        maxWidth: '300px'
+                        maxWidth: '400px'
                       }}>
                         {safeValue(category.description, '—')}
                       </div>
-                      <div style={{ fontSize: 'var(--admin-text-sm)', fontWeight: 'var(--admin-font-semibold)', color: 'var(--admin-text-secondary)', textAlign: 'center' }}>
+                      <div style={{ 
+                        fontSize: '14px', 
+                        fontWeight: '800', 
+                        color: 'var(--admin-text-muted)', 
+                        textAlign: 'center' 
+                      }}>
                         {getProductCount(category._id)}
                       </div>
-                      <div>
-                        <StatusBadge status="archived" label="Archived" color="#888" />
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <StatusBadge status="archived" label="Archived" />
                       </div>
                       <div className="categories-actions" style={{ display: 'flex', gap: 'var(--admin-space-2)', justifyContent: 'flex-end' }}>
                         <button
                           onClick={() => handleEdit(category)}
                           className="admin-btn admin-btn-secondary"
-                          style={{ padding: 'var(--admin-space-1)', minWidth: '32px', height: '32px', justifyContent: 'center' }}
+                          style={{ padding: '0', width: '36px', height: '36px', justifyContent: 'center', borderRadius: '8px' }}
                           title="Edit category"
                         >
                           ✏️
@@ -430,7 +496,7 @@ function CategoriesContent() {
                         <button
                           onClick={() => handleDelete(category._id, safeValue(category.name, 'category'))}
                           className="admin-btn admin-btn-danger"
-                          style={{ padding: 'var(--admin-space-1)', minWidth: '32px', height: '32px', justifyContent: 'center' }}
+                          style={{ padding: '0', width: '36px', height: '36px', justifyContent: 'center', borderRadius: '8px' }}
                           title="Delete category"
                         >
                           🗑️

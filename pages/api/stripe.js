@@ -1,5 +1,6 @@
 // pages/api/stripe.js
 import Stripe from 'stripe';
+import { printifyAPI } from '../lib/printifyClient';
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
     console.log('\n--- Stripe API Request Handler Started ---');
     console.time('StripeApiRequest'); // Overall API request timer
     try {
-      const { cartItems, success_url, cancel_url, customerEmail, paymentMethodId, currency = 'usd' } = req.body;
+      const { cartItems, success_url, cancel_url, customerEmail, paymentMethodId, currency = 'usd', shippingAddress } = req.body;
 
       // Normalize currency (Stripe expects lowercase)
       const normalizedCurrency = currency.toLowerCase() || 'usd';
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
         paymentMethodId: paymentMethodId ? paymentMethodId.substring(0, 10) + '...' : 'Not provided'
       });
 
-      // Handle Google Pay payment method
+      // Handle Google Pay payment method (Synchronous confirmation)
       if (paymentMethodId) {
         // This is a Google Pay payment
         try {
@@ -64,6 +65,46 @@ export default async function handler(req, res) {
               orderItems: JSON.stringify(transformedCartItems),
             },
           });
+
+          // After successful payment, submit Printify items if any
+          const printifyItems = req.body.cartItems?.filter(item => item.isPrintifyProduct) || [];
+
+          if (printifyItems.length > 0 && shippingAddress) {
+            console.log('Detected Printify products in Google Pay order. Submitting to Printify...');
+            const printifyOrderData = {
+              external_id: `GPAY-${Date.now()}-${paymentIntent.id.substring(0, 8)}`,
+              line_items: printifyItems.map(item => ({
+                product_id: item.printifyProductId,
+                variant_id: item.printifyVariantId,
+                quantity: item.quantity
+              })),
+              shipping_method: 1,
+              send_shipping_notification: true,
+              address_to: {
+                first_name: shippingAddress.firstName || 'Customer',
+                last_name: shippingAddress.lastName || '',
+                email: req.body.userEmail || customerEmail || '',
+                phone: shippingAddress.phone || '',
+                country: shippingAddress.country || '',
+                region: shippingAddress.state || '',
+                address1: shippingAddress.address1 || '',
+                address2: shippingAddress.address2 || '',
+                city: shippingAddress.city || '',
+                zip: shippingAddress.zip || ''
+              }
+            };
+
+            try {
+              await printifyAPI.createOrder(
+                process.env.PRINTIFY_SHOP_ID,
+                printifyOrderData
+              );
+              console.log('Successfully submitted order to Printify');
+            } catch (printifyError) {
+              console.error('Error submitting to Printify:', printifyError.message);
+              // Note: This doesn't fail the payment, but should be logged for investigation
+            }
+          }
 
           return res.status(200).json({
             clientSecret: paymentIntent.client_secret

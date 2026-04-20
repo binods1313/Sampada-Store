@@ -55,9 +55,9 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
         padding: 'var(--admin-space-5)',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: 'var(--admin-space-4)',
+        gap: 'var(--admin-space-5)',
         cursor: onClick ? 'pointer' : 'default',
         overflow: 'hidden',
         color: 'var(--admin-text-primary)',
@@ -88,18 +88,19 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
 
       {/* Logo area - left side */}
       <div className="stat-card-logo-area" style={{
-        flex: '0 0 40%',
+        flex: '0 0 80px',
+        width: '80px',
+        height: '80px',
         position: 'relative',
         zIndex: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100px',
         backgroundImage: logoPath ? `url('${logoPath}')` : "url('/images/Logo_16.png')",
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'contain',
-        opacity: 0.65,
+        opacity: 0.7,
         transition: 'var(--admin-transition-base)'
       }} />
 
@@ -108,45 +109,64 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
         position: 'relative',
         zIndex: 1,
         flex: 1,
-        textAlign: 'right',
-        minWidth: 0
+        textAlign: 'left',
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
       }}>
-        {/* Icon + Label row */}
+        {/* Label row */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'flex-end',
           gap: 'var(--admin-space-2)',
-          marginBottom: 'var(--admin-space-2)'
+          marginBottom: 'var(--admin-space-1)'
         }}>
-          <div className="admin-text-xs admin-font-semibold" style={{ color: 'var(--admin-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--admin-tracking-wider)' }}>{label}</div>
+          <div className="admin-text-xs admin-font-semibold" style={{ 
+            color: 'var(--admin-text-secondary)', 
+            textTransform: 'uppercase', 
+            letterSpacing: 'var(--admin-tracking-wider)',
+            fontSize: '11px'
+          }}>
+            {label}
+          </div>
           <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: 'var(--admin-radius-md)',
+            width: '24px',
+            height: '24px',
+            borderRadius: 'var(--admin-radius-sm)',
             background: iconBg,
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 'var(--admin-text-lg)'
+            fontSize: '14px'
           }}>{icon}</div>
         </div>
 
         {/* Value */}
         {loading ? (
-          <Skeleton height="36px" width="100px" style={{ marginBottom: 'var(--admin-space-1)', marginLeft: 'auto' }} />
+          <Skeleton height="32px" width="80px" style={{ marginBottom: 'var(--admin-space-1)' }} />
         ) : (
-          <div className="admin-text-3xl admin-font-extrabold" style={{ color: 'var(--admin-text-primary)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+          <div className="admin-text-3xl admin-font-extrabold" style={{ 
+            color: 'var(--admin-text-primary)', 
+            lineHeight: 1.2, 
+            fontVariantNumeric: 'tabular-nums',
+            fontSize: '28px'
+          }}>
             {animated.toLocaleString()}
           </div>
         )}
 
         {/* Sub text */}
         {loading ? (
-          <Skeleton height="14px" width="120px" style={{ marginLeft: 'auto' }} />
+          <Skeleton height="12px" width="100px" />
         ) : (
-          <div className="admin-text-sm" style={{ color: 'var(--admin-gold)' }}>
+          <div className="admin-text-sm" style={{ 
+            color: 'var(--admin-gold)',
+            fontSize: '12px',
+            fontWeight: '500',
+            marginTop: '2px'
+          }}>
             {sub}
           </div>
         )}
@@ -198,7 +218,6 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
             padding: 18px !important;
           }
           .stat-card-logo-area {
-            flex: 0 0 35% !important;
             opacity: 0.6 !important;
           }
         }
@@ -208,7 +227,6 @@ export default function StatCard({ icon, iconBg, label, value, sub, borderColor,
             padding: 20px !important;
           }
           .stat-card-logo-area {
-            flex: 0 0 40% !important;
             opacity: 0.65 !important;
           }
         }

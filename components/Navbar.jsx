@@ -18,6 +18,7 @@ const Navbar = () => {
   const loading = status === "loading";
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [showStoriesLink, setShowStoriesLink] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   // Fetch published pages to show in navbar
   useEffect(() => {
@@ -32,6 +33,27 @@ const Navbar = () => {
     
     checkPublishedPages();
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const userMenuButton = document.querySelector('[class*="userToggleButton"]');
+      const userDropdown = document.querySelector('[class*="userDropdown"]');
+      
+      if (
+        isUserDropdownOpen &&
+        userDropdown &&
+        !userDropdown.contains(event.target) &&
+        userMenuButton &&
+        !userMenuButton.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isUserDropdownOpen]);
 
   return (
     <nav className={styles.navbarContainer}>
@@ -75,13 +97,12 @@ const Navbar = () => {
             </button>
           )}
           {session?.user && (
-            <div className={styles.userInfo}>
-              {/* Account Link */}
-              <Link href="/account" className={styles.navLink}>
-                Account
-              </Link>
-              {/* User Name with Profile Pic */}
-              <span className={styles.userName}>
+            <div className={styles.userMenuContainer}>
+              {/* User Avatar/Name - Clickable Toggle */}
+              <button
+                className={styles.userToggleButton}
+                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+              >
                 {session.user.image && (
                   <img
                     src={session.user.image}
@@ -89,12 +110,28 @@ const Navbar = () => {
                     className={styles.userAvatar}
                   />
                 )}
-                {session.user.name || session.user.email}
-              </span>
-              {/* Sign Out Button */}
-              <button onClick={() => signOut()} className={styles.btnSignout}>
-                Sign out
+                <span className={styles.userName}>
+                  {session.user.name || session.user.email}
+                </span>
               </button>
+
+              {/* Dropdown Menu */}
+              {isUserDropdownOpen && (
+                <div className={styles.userDropdown}>
+                  <Link href="/account" className={styles.dropdownItem}>
+                    📋 My Account
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setIsUserDropdownOpen(false);
+                    }}
+                    className={`${styles.dropdownItem} ${styles.signOutItem}`}
+                  >
+                    🚪 Sign out
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {loading && (

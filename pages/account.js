@@ -1,10 +1,10 @@
+
 // pages/account.js - Improved handling for order history with adaptive image containers
 import React, { useState, useEffect } from 'react';
 import { useSession, getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { format } from 'date-fns';
 import { authenticatedClient, writeClient, urlFor } from '../lib/client';
 import navStyles from '../components/NavbarStyles.module.css';
@@ -23,23 +23,31 @@ const Button = ({ children, className = '', ...props }) => (
 
 // Smart Image Container Component
 const ProductImage = ({ src, alt, productName }) => {
+  // Always render for consistency - hide with display:none if no src
+  if (!src) {
+    return (
+      <div className="order-product-image-container" style={{ display: 'none' }}>
+      </div>
+    );
+  }
+  
   return (
-    <div className="order-product-image-container">      <Image
-      src={src}
-      alt={alt || 'Product Image'}
-      width={800}
-      height={800}
-      style={{
-        objectFit: 'contain',
-        width: 'auto',
-        height: 'auto',
-        maxWidth: '100%',
-        maxHeight: '100%'
-      }}
-      priority={false}
-      placeholder="blur"
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChECCwkICRAFBAcQEAwABgcBBANTBQcUDgcJBQ0IEhMKFBcPGRESFBIFDhcWGBwYFBgRGA=="
-    />      <style jsx>{`
+    <div className="order-product-image-container">
+      <img
+        src={src}
+        alt={alt || 'Product Image'}
+        onError={(e) => {
+          e.target.style.display = 'none';
+        }}
+        style={{
+          objectFit: 'contain',
+          width: 'auto',
+          height: 'auto',
+          maxWidth: '100%',
+          maxHeight: '100%'
+        }}
+      />
+      <style jsx>{`
         .order-product-image-container {
           width: 140px;
           height: 180px;
@@ -109,81 +117,80 @@ const OrderItem = ({ order }) => {
           <td colSpan={5} style={pageStyles.detailsCell}>
             <div style={pageStyles.orderDetails}>
               <h4 style={pageStyles.detailsHeading}>Order Items</h4>
-              <div style={pageStyles.itemsGrid}>                {order.orderItems.map((item) => {
-                // Determine image source for display: variantImage first, then product's main image, then placeholder
-                const itemImageSrc = item.variantImage?.asset?.url
-                  ? urlFor(item.variantImage).width(800).url()
-                  : item.product?.image?.[0]
-                    ? urlFor(item.product.image[0]).width(800).url()
-                    : '/asset/placeholder-image.jpg';
+              <div style={pageStyles.itemsGrid}>
+                {Array.isArray(order.orderItems) ? (
+                  order.orderItems.map((item) => {
+                    // Ensure item is valid
+                    if (!item || !item._key) {
+                      console.warn('Invalid order item:', item);
+                      return null;
+                    }
 
-                return (
-                  <div key={item._key} style={pageStyles.orderItemCard}>
-                    <div className="order-product-image-container">                        <Image
-                      src={itemImageSrc}
-                      alt={item.product?.name || 'Product'}
-                      width={800}
-                      height={800}
-                      style={{
-                        objectFit: 'contain',
-                        width: 'auto',
-                        height: 'auto',
-                        maxWidth: '100%',
-                        maxHeight: '100%'
-                      }}
-                      priority={false}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChECCwkICRAFBAcQEAwABgcBBANTBQcUDgcJBQ0IEhMKFBcPGRESFBIFDhcWGBwYFBgRGA=="
-                    />
-                      <style jsx>{`                          .order-product-image-container {
-                            width: 140px;
-                            height: 180px;
-                            flex-shrink: 0;
-                            margin-right: 1rem;
-                            border-radius: 0.5rem;
-                            overflow: hidden;
-                            background: white;
-                            border: 1px solid #e5e7eb;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            position: relative;
-                          }
-                        `}</style>
-                    </div>
-                    <div style={pageStyles.itemInfo}>
-                      <h5 style={pageStyles.itemName}>
-                        {item.product?.name || 'Product'}
-                      </h5>
-                      {/* Display variant details if available */}
-                      {(item.variantColorName || item.variantSize) && (
-                        <p style={pageStyles.variantDetails}>
-                          {item.variantColorName && (
-                            <span style={pageStyles.variantBadge}>
-                              {item.variantColorName}
-                            </span>
+                    // Determine image source for display: variantImage first, then product's main image, then placeholder
+                    let itemImageSrc = '/asset/placeholder-image.jpg';
+                    
+                    try {
+                      if (item.variantImage?.asset?.url) {
+                        itemImageSrc = item.variantImage.asset.url;
+                      } else if (item.product?.image?.[0]) {
+                        const imgRef = item.product.image[0];
+                        // Check if it's already a URL (string) or a Sanity reference (object)
+                        if (typeof imgRef === 'string') {
+                          itemImageSrc = imgRef;
+                        } else if (imgRef?.asset?.url) {
+                          itemImageSrc = imgRef.asset.url;
+                        } else if (imgRef?._ref || imgRef?.asset) {
+                          itemImageSrc = urlFor(imgRef).width(800).url();
+                        }
+                      }
+                    } catch (error) {
+                      console.error('Error generating image URL:', error);
+                      itemImageSrc = '/asset/placeholder-image.jpg';
+                    }
+
+                    return (
+                      <div key={item._key} style={pageStyles.orderItemCard}>
+                        <ProductImage
+                          src={itemImageSrc}
+                          alt={item.product?.name || 'Product'}
+                          productName={item.product?.name}
+                        />
+                        <div style={pageStyles.itemInfo}>
+                          <h5 style={pageStyles.itemName}>
+                            {item.product?.name || 'Product'}
+                          </h5>
+                          {/* Display variant details if available */}
+                          {(item.variantColorName || item.variantSize) && (
+                            <p style={pageStyles.variantDetails}>
+                              {item.variantColorName && (
+                                <span style={pageStyles.variantBadge}>
+                                  {item.variantColorName}
+                                </span>
+                              )}
+                              {item.variantSize && (
+                                <span style={pageStyles.variantBadge}>
+                                  {item.variantSize}
+                                </span>
+                              )}
+                            </p>
                           )}
-                          {item.variantSize && (
-                            <span style={pageStyles.variantBadge}>
-                              {item.variantSize}
+                          <div style={pageStyles.itemPricing}>
+                            <span style={pageStyles.itemQuantity}>
+                              Qty: {item.quantity || 1}
                             </span>
-                          )}
-                        </p>
-                      )}
-                      <div style={pageStyles.itemPricing}>
-                        <span style={pageStyles.itemQuantity}>
-                          Qty: {item.quantity || 1}
-                        </span>
-                        {item.pricePerItem !== undefined && (
-                          <span style={pageStyles.itemPrice}>
-                            ${(item.pricePerItem * (item.quantity || 1)).toFixed(2)}
-                          </span>
-                        )}
+                            {item.pricePerItem !== undefined && (
+                              <span style={pageStyles.itemPrice}>
+                                ${(item.pricePerItem * (item.quantity || 1)).toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })
+                ) : (
+                  <p style={{ color: '#9ca3af' }}>No items found</p>
+                )}
               </div>
             </div>
           </td>
@@ -283,11 +290,9 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
   if (status === 'loading') {
     return (
       <main style={pageStyles.mainContainer}>
-        <LoadingFallback
-          message="Loading Your Account..."
-          size="medium"
-          details="Fetching account details and order history"
-        />
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#f9fafb', borderRadius: '0.5rem' }}>
+          <p style={{ color: '#6b7280' }}>Loading Your Account...</p>
+        </div>
       </main>
     );
   }
@@ -299,9 +304,9 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
         <Head><title>Sign In Required</title></Head>
         <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Access Denied</h2>
         <p style={{ marginBottom: '1.5rem' }}>Please sign in to view your account.</p>
-        <Button onClick={() => signIn('github')} className={navStyles.btnSignin}>
+        <button onClick={() => signIn('github')} className={navStyles.btnSignin} style={{ padding: '0.5rem 1rem', backgroundColor: '#2d3748', color: 'white', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>
           Sign In with GitHub
-        </Button>
+        </button>
       </main>
     );
   }
@@ -312,11 +317,12 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
       <main style={pageStyles.mainContainer}>
         <Head><title>Account Error</title></Head>
         <h1 style={pageStyles.mainHeading}>My Account</h1>
-        <NetworkErrorFallback
-          message="Unable to load your profile information. Please try again later."
-          onRetry={() => window.location.reload()}
-          showHomeButton={true}
-        />
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#fee2e2', borderRadius: '0.5rem', color: '#991b1b' }}>
+          <p>Unable to load your profile information. Please try again later.</p>
+          <button onClick={() => window.location.reload()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', backgroundColor: '#991b1b', color: 'white', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>
+            Reload Page
+          </button>
+        </div>
       </main>
     );
   }
@@ -408,7 +414,8 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
               </div>
             )}
 
-            {orders && orders.length > 0 ? (
+            {console.log('Orders data:', orders, 'Length:', orders?.length)}
+            {orders && Array.isArray(orders) && orders.length > 0 ? (
               <div style={{ overflowX: 'auto' }}>
                 <table style={pageStyles.orderTable}>
                   <thead>
@@ -421,21 +428,30 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {orders.map((order) => (
-                      <OrderItem key={order._id} order={order} />
-                    ))}
+                    {Array.isArray(orders) && orders.map((order) => {
+                      if (!order) {
+                        console.warn('Null order found');
+                        return null;
+                      }
+                      if (!order._id) {
+                        console.warn('Order without _id:', order);
+                        return null;
+                      }
+                      if (typeof OrderItem !== 'function') {
+                        console.error('OrderItem is not a function:', typeof OrderItem, OrderItem);
+                        return <tr key={Math.random()}><td>Error rendering order</td></tr>;
+                      }
+                      return <OrderItem key={order._id} order={order} />;
+                    })}
                   </tbody>
                 </table>
               </div>
             ) : (
               !serverError && !isRefreshing && router.query.from !== 'success' && (
-                <EmptyStateFallback
-                  title="No orders yet"
-                  message="You haven't placed any orders yet. Start exploring our amazing products!"
-                  actionLabel="Start Shopping"
-                  onAction={() => router.push('/')}
-                  icon="shopping"
-                />
+                <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#f9fafb', borderRadius: '0.5rem' }}>
+                  <p style={{ color: '#6b7280', marginBottom: '1rem' }}>No orders yet</p>
+                  <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>You haven't placed any orders yet. Start exploring our amazing products!</p>
+                </div>
               )
             )}
           </section>
@@ -486,12 +502,7 @@ export async function getServerSideProps(context) {
       product->{ // Fetch base product details
         name, 
         price, 
-        image[]{ // FIX: Explicitly fetch 'image' as an array of image objects
-          asset->{
-            _id,
-            url
-          }
-        } 
+        "image": image  // Fetch raw image array for urlFor processing
       }
     } 
   }`;
