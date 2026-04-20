@@ -86,8 +86,8 @@
 }
 
 @keyframes rotateLogo {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+  from { transform: translate(-50%, -50%) scale(1.1) rotate(0deg); }
+  to { transform: translate(-50%, -50%) scale(1.1) rotate(360deg); }
 }
 
 /* Enhanced styling for the product name (Aurora Sky Pulse™) */

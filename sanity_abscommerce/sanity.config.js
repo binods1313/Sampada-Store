@@ -14,14 +14,11 @@ import { BulkPriceUpdate } from './plugins/bulk-edit/BulkPriceUpdate'
 import { assist } from '@sanity/assist'
 import { smartAssetManager } from 'sanity-plugin-smart-asset-manager'
 import { blockStyles } from 'sanity-plugin-block-styles'
-import { googleAnalytics } from 'sanity-plugin-google-analytics'
 import { references } from 'sanity-plugin-references'
 
 // Import Next 5 Enterprise Plugins for Competitive Edge
 import { recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
-import { tabBlock } from '@multidots/sanity-plugin-tab-block'
 import { colorInput } from 'sanity-plugin-color-input'
-import { skynetAccessibility } from 'sanity-plugin-skynetaccessibility-scanner'
 
 // Note: Slack Publisher not yet available on npm
 // import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon
@@ -139,17 +136,7 @@ export default defineConfig({
       ],
     }),
 
-    // 4. Google Analytics - Traffic insights
-    googleAnalytics({
-      credentials: {
-        client_email: process.env.GA_CLIENT_EMAIL,
-        private_key: process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      },
-      viewId: process.env.GA_VIEW_ID,
-      dashboardDocument: true,
-    }),
-
-    // 5. References - Prevent broken links
+    // 4. References - Prevent broken links
     references({
       showInPane: true,
       showBadge: true,
@@ -170,27 +157,8 @@ export default defineConfig({
       showChildCount: true,
     }),
 
-    // 7. Tab Block Plugin - Myntra-style product tabs
-    tabBlock(),
-
-    // 8. Color Input - Product variant colors
+    // 7. Color Input - Product variant colors
     colorInput(),
-
-    // 9. Slack Publisher - COMING SOON (package not on npm yet)
-    // slackPublisher({
-    //   botToken: process.env.SLACK_BOT_TOKEN,
-    //   aiModel: 'claude-3-sonnet',
-    //   autoTranslate: ['hi', 'es', 'fr'],
-    //   allowedTypes: ['product', 'sale', 'blogPost', 'announcement'],
-    // }),
-
-    // 10. Skynet Accessibility Scanner - WCAG compliance
-    skynetAccessibility({
-      websiteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
-      standards: ['WCAG2.2AA', 'ADA', 'Section508'],
-      scanFrequency: 'daily',
-      enableAutoFix: true,
-    }),
 
     // Media Library is enabled by default in Sanity v4+
     // Access it via the Media tab in the Studio or at sanity.io/manage

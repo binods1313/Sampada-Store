@@ -1,3 +1,6 @@
+
+"use client";
+
 // components/FallbackUI.jsx
 // Comprehensive fallback UI components for different error scenarios
 import React, { useState, useEffect, useCallback } from 'react';

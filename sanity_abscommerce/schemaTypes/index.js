@@ -1,6 +1,7 @@
 // schemaTypes/index.js
 import blockContent from './blockContent'
 import category from './category'
+import story from './story'
 import product from './product'
 import order from './order'
 import user from './user'
@@ -19,6 +20,7 @@ import navigation from './navigation'
 export const schemaTypes = [
   product,
   category,
+  story,
   order,
   blockContent,
   user,

@@ -67,33 +67,55 @@ export default function Dashboard() {
     <AdminLayout title="Dashboard">
       <Breadcrumbs items={[{ label: 'Dashboard', current: true }]} />
 
-      {/* Welcome Header */}
+      {/* Welcome Header - Truly centered & balanced */}
       <div className="dashboard-header" style={{
-        marginBottom: 'var(--admin-space-6)',
-        display: 'flex',
+        maxWidth: 'var(--admin-content-max-width)',
+        margin: '0 auto var(--admin-space-8)',
+        padding: '0 var(--admin-space-4)',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
         gap: 'var(--admin-space-4)'
       }}>
-        <div>
-          <h2 className="admin-heading" style={{ fontSize: 'var(--admin-text-2xl)', margin: '0 0 var(--admin-space-1) 0' }}>
+        {/* Left Spacer - balance the right buttons */}
+        <div style={{ display: 'flex' }}>
+          <div style={{
+            padding: '4px 12px',
+            background: 'rgba(201,168,76,0.1)',
+            borderRadius: '20px',
+            border: '1px solid rgba(201,168,76,0.2)',
+            fontSize: '11px',
+            fontWeight: '600',
+            color: '#C9A84C',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>
+            Admin Dashboard
+          </div>
+        </div>
+
+        {/* Center - Greeting */}
+        <div style={{ textAlign: 'center' }}>
+          <h2 className="admin-heading" style={{ fontSize: 'var(--admin-text-3xl)', fontWeight: '800', margin: '0 0 var(--admin-space-1) 0' }}>
             {getGreeting()}, Admin 👋
           </h2>
-          <p className="admin-text-secondary admin-text-sm" style={{ margin: 0 }}>
-            Here's what's happening with your store today.
+          <p className="admin-text-secondary admin-text-sm" style={{ margin: 0, fontWeight: '500' }}>
+            Everything looks great today. You have <span style={{ color: '#C9A84C', fontWeight: '700' }}>{safeNumber(stats.totalProducts, 0)}</span> products live.
           </p>
         </div>
+
+        {/* Right - Actions */}
         <div className="dashboard-actions" style={{
           display: 'flex',
-          gap: 'var(--admin-space-2)'
+          gap: 'var(--admin-space-2)',
+          justifyContent: 'flex-end'
         }}>
           <Link href="/" target="_blank" style={{
             padding: '10px 18px',
-            background: 'rgba(201,168,76,0.1)',
-            border: '1px solid rgba(201,168,76,0.3)',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid var(--admin-border-subtle)',
             borderRadius: '8px',
-            color: '#C9A84C',
+            color: 'var(--admin-text-primary)',
             fontSize: '13px',
             fontWeight: '600',
             textDecoration: 'none',
@@ -103,16 +125,18 @@ export default function Dashboard() {
             gap: '6px'
           }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(201,168,76,0.2)'
+              e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+              e.currentTarget.style.borderColor = 'var(--admin-gold)'
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.background = 'rgba(201,168,76,0.1)'
+              e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+              e.currentTarget.style.borderColor = 'var(--admin-border-subtle)'
             }}
           >
-            ↗ View Store
+            View Store
           </Link>
           <Link href="/admin/products/add" style={{
-            padding: '10px 18px',
+            padding: '10px 22px',
             background: 'linear-gradient(135deg, #C9A84C, #a8882e)',
             border: 'none',
             borderRadius: '8px',
@@ -123,15 +147,16 @@ export default function Dashboard() {
             transition: 'all 0.2s',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px'
+            gap: '6px',
+            boxShadow: '0 4px 14px rgba(201, 168, 76, 0.3)'
           }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'translateY(-2px)'
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(201,168,76,0.3)'
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(201, 168, 76, 0.4)'
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = 'none'
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(201, 168, 76, 0.3)'
             }}
           >
             ＋ Add Product

@@ -20,7 +20,7 @@ const Success = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { clearCart } = useCartContext();
-  const { session_id } = router.query;
+  const { session_id, payment_id, source } = router.query;
   const [hasCleared, setHasCleared] = useState(false);
 
   useEffect(() => {
@@ -35,26 +35,28 @@ const Success = () => {
       runFireworks();
     }
 
-    // Track purchase with GA4
-    if (session_id) {
-      // Try to get order details from session storage (set by Stripe webhook or redirect)
+    // Track purchase with GA4 (Handle both Stripe and PayPal)
+    const transactionId = session_id || payment_id;
+    if (transactionId) {
+      // Try to get order details from session storage
       const orderData = typeof window !== 'undefined' ?
         JSON.parse(sessionStorage.getItem('lastOrder') || '{}') : {};
 
       trackPurchase({
-        id: session_id,
+        id: transactionId,
         total: orderData.total || 0,
         currency: orderData.currency || 'USD',
         tax: orderData.tax || 0,
         shipping: orderData.shipping || 0,
-        items: orderData.items || []
+        items: orderData.items || [],
+        source: source || 'stripe'
       });
 
       // Trigger Mailchimp post-purchase email
       if (session?.user?.email) {
         triggerPostPurchaseEmail({
           email: session.user.email,
-          orderId: session_id,
+          orderId: transactionId,
           orderTotal: orderData.total || 0,
           items: orderData.items || []
         }).catch(err => console.warn('Mailchimp post-purchase failed:', err));
@@ -67,27 +69,17 @@ const Success = () => {
       }
     }
 
+    // Manual order creation fallback for Stripe
     if (session_id && !hasCleared) {
       console.log('Creating order manually for session:', session_id);
-
       fetch('/api/orders/create-manual', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId: session_id }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('✅ Order created manually:', data.orderId);
-        } else {
-          console.error('❌ Failed to create order manually:', data.error);
-        }
-      })
-      .catch(error => {
-        console.error('❌ Error creating manual order:', error);
-      });
+      }).catch(err => console.error('Manual order creation error:', err));
     }
 
+    // Handle order linking for both Stripe and PayPal
     if (session?.user?.email && !hasCleared) {
       console.log('Fixing user links for orders with email:', session.user.email);
 

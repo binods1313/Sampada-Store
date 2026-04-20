@@ -18,10 +18,9 @@
     "sanity"
   ],
   "dependencies": {
-    "@multidots/sanity-plugin-tab-block": "^1.0.7",
     "@sanity/assist": "^6.0.4",
     "@sanity/cli": "^6.1.5",
-    "@sanity/code-input": "^5.1.2",
+    "@sanity/code-input": "^7.0.0",
     "@sanity/icons": "^3.7.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^5.18.0",
@@ -35,10 +34,7 @@
     "sanity": "^5.18.0",
     "sanity-plugin-block-styles": "^1.0.0",
     "sanity-plugin-color-input": "^1.1.0",
-    "sanity-plugin-google-analytics": "^0.2.6",
-    "sanity-plugin-recursive-hierarchy": "^2.0.4",
     "sanity-plugin-references": "^1.0.1",
-    "sanity-plugin-skynetaccessibility-scanner": "^1.0.0",
     "sanity-plugin-smart-asset-manager": "^1.0.0",
     "styled-components": "^6.1.15"
   },

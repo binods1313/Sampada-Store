@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             product->{ // Fetch base product details for fallback display
               name, // Use 'name' from product schema
               price, // Base price from product schema
-              image // Default images array from product schema
+              "image": image  // Raw image array for urlFor processing
             }
           }
         }`;
@@ -114,7 +114,7 @@ export default async function handler(req, res) {
             product->{
               name,
               price,
-              image
+              "image": image  // Raw image array for client-side processing
             }
           }
         }`;

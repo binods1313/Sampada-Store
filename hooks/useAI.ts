@@ -48,6 +48,8 @@ export function useProductDescription(options?: UseAIOptions) {
       priceRange?: string;
       keywords?: string[];
       tone?: string;
+      template?: string;
+      length?: string;
     }
   ) => {
     setState(s => ({ ...s, loading: true, error: null }));

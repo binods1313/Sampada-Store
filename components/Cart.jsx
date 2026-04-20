@@ -25,6 +25,7 @@ import { trackAbandonedCart } from '../utils/cartRecovery';
 import getStripe from '../lib/getStripe';
 import GooglePayButton from './GooglePayButton';
 import KlarnaPaymentButton from './KlarnaPaymentButton';
+import PayPalButton from './PayPalButton';
 
 const Cart = () => {
   const cartRef = useRef();
@@ -668,34 +669,43 @@ const Cart = () => {
                 onProcessorChange={setSelectedPaymentProcessor}
               />
 
-              {/* Main Checkout Button */}
-              <button
-                type="button"
-                className="btn checkout-btn"
-                onClick={handleCheckout}
-                disabled={isRazorpayProcessing}
-              >
-                {isRazorpayProcessing ? (
-                  <>
-                    <span className="spinner" />
-                    Processing Payment...
-                  </>
-                ) : selectedPaymentProcessor === 'razorpay' ? (
-                  <>
-                    🇮🇳 Pay with Razorpay
-                    <span className="payment-methods-hint">
-                      (UPI, Net Banking, Cards, Wallets, EMI)
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    💳 Pay with Stripe
-                    <span className="payment-methods-hint">
-                      (Cards, Google Pay, Apple Pay)
-                    </span>
-                  </>
-                )}
-              </button>
+              {/* Main Checkout Button or PayPal Button */}
+              {selectedPaymentProcessor === 'paypal' ? (
+                <PayPalButton
+                  cartItems={cartItems}
+                  totalPrice={totalPrice}
+                  currency={selectedCurrency}
+                  customerEmail={session?.user?.email}
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="btn checkout-btn"
+                  onClick={handleCheckout}
+                  disabled={isRazorpayProcessing}
+                >
+                  {isRazorpayProcessing ? (
+                    <>
+                      <span className="spinner" />
+                      Processing Payment...
+                    </>
+                  ) : selectedPaymentProcessor === 'razorpay' ? (
+                    <>
+                      🇮🇳 Pay with Razorpay
+                      <span className="payment-methods-hint">
+                        (UPI, Net Banking, Cards, Wallets, EMI)
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      💳 Pay with Stripe
+                      <span className="payment-methods-hint">
+                        (Cards, Google Pay, Apple Pay)
+                      </span>
+                    </>
+                  )}
+                </button>
+              )}
 
               {/* Google Pay button (shown alongside Stripe) */}
               {isGooglePayAvailable && selectedPaymentProcessor === 'stripe' && (
