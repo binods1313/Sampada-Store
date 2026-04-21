@@ -12,7 +12,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import AdminLayout from '@/components/Admin/AdminLayout';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { useAIGeneration } from '@/hooks/useAI';
 import { client } from '@/lib/sanity';
 import toast from 'react-hot-toast';

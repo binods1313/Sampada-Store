@@ -1,10 +1,10 @@
-import AdminLayout from '@/components/Admin/AdminLayout'
+import AdminLayout from '@/components/admin/AdminLayout'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
 import { useAdminData } from '@/hooks/useAdminData'
-import { ToastProvider, useToast } from '@/components/Admin/Toast'
-import StatusBadge from '@/components/Admin/StatusBadge'
+import { ToastProvider, useToast } from '@/components/admin/Toast'
+import StatusBadge from '@/components/admin/StatusBadge'
 import EmptyState from '@/components/admin/EmptyState'
 import Breadcrumbs, { useBreadcrumbs } from '@/components/admin/Breadcrumbs'
 

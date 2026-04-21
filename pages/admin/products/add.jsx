@@ -12,8 +12,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useToast } from '@/components/Admin/Toast';
-import AdminLayout from '@/components/Admin/AdminLayout';
+import { useToast } from '@/components/admin/Toast';
+import AdminLayout from '@/components/admin/AdminLayout';
 import ProductForm from '@/components/admin/ProductForm';
 import { client } from '@/lib/sanity';
 

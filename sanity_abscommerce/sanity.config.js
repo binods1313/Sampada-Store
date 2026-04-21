@@ -15,10 +15,12 @@ import { assist } from '@sanity/assist'
 import { smartAssetManager } from 'sanity-plugin-smart-asset-manager'
 import { blockStyles } from 'sanity-plugin-block-styles'
 import { references } from 'sanity-plugin-references'
+import { media } from 'sanity-plugin-media'
 
 // Import Next 5 Enterprise Plugins for Competitive Edge
 import { recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
 import { colorInput } from 'sanity-plugin-color-input'
+import { iframePane } from 'sanity-plugin-iframe-pane'
 
 // Note: Slack Publisher not yet available on npm
 // import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon
@@ -159,6 +161,21 @@ export default defineConfig({
 
     // 7. Color Input - Product variant colors
     colorInput(),
+
+    // 8. Media Library - Enhanced asset management (replaces basic media tab)
+    media(),
+
+    // 9. Accessibility Preview - Live site preview pane for WCAG checking
+    // (replaces incompatible skynet scanner — uses iframe to preview live site)
+    // Configured per-document in structure.js via iframePane
+
+    // Note: Google Analytics Dashboard (sanity-plugin-google-analytics) is v2 only.
+    // GA data is available at analytics.google.com — link added to Studio sidebar.
+
+    // Note: Tab Block (@multidots/sanity-plugin-tab-block) is v3/v4 only.
+    // Tabs are implemented via Sanity's native fieldGroups in product schema.
+
+    // Note: Slack Publisher not yet on npm — documented for future use.
 
     // Media Library is enabled by default in Sanity v4+
     // Access it via the Media tab in the Studio or at sanity.io/manage

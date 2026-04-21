@@ -336,6 +336,32 @@ export default defineType({
     
     // SEO Fields
     ...seoFields,
+
+    // ── Color Input Plugin — Visual color picker for product palette ──────────
+    defineField({
+      name: 'availableColors',
+      title: 'Available Colors (Visual Picker)',
+      type: 'array',
+      description: 'Use the color picker to define product color options. Complements the variant colorHex field.',
+      of: [
+        {
+          type: 'color',
+          options: {
+            disableAlpha: true,
+          },
+        },
+      ],
+    }),
+  ],
+  // ── Field Groups — Tab-like organization in Sanity Studio ─────────────────
+  groups: [
+    { name: 'basic',    title: '📦 Basic Info',    default: true },
+    { name: 'media',    title: '🖼️ Media' },
+    { name: 'pricing',  title: '💰 Pricing' },
+    { name: 'variants', title: '🎨 Variants & Colors' },
+    { name: 'content',  title: '📝 Content' },
+    { name: 'seo',      title: '🔍 SEO' },
+    { name: 'settings', title: '⚙️ Settings' },
   ],
   // --- FIX APPLIED HERE for main product preview ---
   preview: {

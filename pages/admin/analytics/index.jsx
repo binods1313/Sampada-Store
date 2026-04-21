@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import AdminLayout from '@/components/Admin/AdminLayout'
-import StatCard from '@/components/Admin/StatCard'
+import AdminLayout from '@/components/admin/AdminLayout'
+import StatCard from '@/components/admin/StatCard'
 import Breadcrumbs from '@/components/admin/Breadcrumbs'
 
 const DATE_RANGES = [

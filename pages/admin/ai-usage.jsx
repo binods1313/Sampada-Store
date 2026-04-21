@@ -11,7 +11,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '@/components/Admin/AdminLayout';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { getApiKeyStats } from '@/lib/openrouter';
 import { 
   Activity, 
