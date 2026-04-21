@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminLayout from '@/components/Admin/AdminLayout';
+import AdminLayout from '@/components/admin/AdminLayout';
 import Breadcrumbs from '@/components/admin/Breadcrumbs';
 import BulkAutoTag from '../../components/admin/BulkAutoTag';
 
