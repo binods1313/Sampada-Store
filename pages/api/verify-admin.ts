@@ -3,12 +3,6 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 
-const adminAuth = {
-  adminEmail: process.env.ADMIN_EMAIL || 'admin@sampada.com',
-  adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '',
-  jwtSecret: process.env.JWT_SECRET || '',
-}
-
 // In-memory rate limiter (for production, use Redis/Upstash)
 const attempts = new Map<string, { count: number; resetAt: number }>()
 
@@ -46,9 +40,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Email and password are required' })
   }
 
-  // Get credentials from config file
-  const adminEmail = adminAuth.adminEmail
-  const adminHash = adminAuth.adminPasswordHash
+  // Get credentials fresh from env on every request
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@sampada.com'
+  // Hash is hardcoded to avoid env $ parsing issues — for Sampada@2026
+  const adminHash = '$2b$10$iEEJ.UE5rXbDkqxXXZowWeEU51jVtXlmkJEpZuHA1QYzNRYbfYkPS'
+  const jwtSecret = process.env.JWT_SECRET || 'ebFXdBotIUWzmK9IFlc2GTfGY3iUAUbE05NPb1QIELk='
 
   // Verify credentials
   const validEmail = email === adminEmail
@@ -67,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Generate JWT token
   const token = jwt.sign(
     { email, role: 'admin', iat: Date.now() },
-    adminAuth.jwtSecret,
+    jwtSecret,
     { expiresIn: '7d' }
   )
 

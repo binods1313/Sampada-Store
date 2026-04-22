@@ -1,0 +1,207 @@
+/* components/stories/SelectedWorksGallery.module.css */
+
+.section {
+  background: #0d1126;
+  padding: 80px 32px 96px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 40px;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  font-weight: 700;
+  margin: 0 0 14px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.heading {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  color: #f5f0eb;
+  margin: 0 0 14px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-family: 'Playfair Display', serif;
+}
+
+.sub {
+  font-size: 0.95rem;
+  color: rgba(245, 240, 235, 0.5);
+  margin: 0;
+  line-height: 1.65;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Filter tabs ─────────────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.filterBtn {
+  background: transparent;
+  border: 1.5px solid rgba(201, 169, 110, 0.35);
+  color: rgba(245, 240, 235, 0.55);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.filterBtn:hover {
+  border-color: #c9a96e;
+  color: #c9a96e;
+}
+
+.filterBtnActive {
+  background: #c9a96e;
+  border-color: #c9a96e;
+  color: #0d1126;
+}
+
+/* ── Masonry grid ────────────────────────────────────────────────────────── */
+.masonry {
+  columns: 2;
+  column-gap: 16px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .masonry {
+    columns: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry {
+    columns: 4;
+  }
+}
+
+/* ── Gallery item ────────────────────────────────────────────────────────── */
+.item {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1a1f3a;
+}
+
+.itemImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.item:hover .itemImg {
+  transform: scale(1.04);
+}
+
+/* ── Hover overlay ───────────────────────────────────────────────────────── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(201, 169, 110, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlayVisible {
+  opacity: 1;
+}
+
+.overlayCollection {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0d1126;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.overlayTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0d1126;
+  margin: 0;
+  text-align: center;
+  line-height: 1.2;
+  font-family: 'Playfair Display', serif;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  color: rgba(245, 240, 235, 0.4);
+  font-size: 0.9rem;
+  padding: 48px 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── CTA ─────────────────────────────────────────────────────────────────── */
+.cta {
+  text-align: center;
+  margin-top: 52px;
+}
+
+.ctaBtn {
+  display: inline-block;
+  border: 1.5px solid #c9a96e;
+  color: #c9a96e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.ctaBtn:hover {
+  background: #c9a96e;
+  color: #0d1126;
+}
+
+/* ── Responsive padding ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .section {
+    padding: 60px 16px 72px;
+  }
+
+  .masonry {
+    column-gap: 12px;
+  }
+
+  .item {
+    margin-bottom: 12px;
+  }
+}

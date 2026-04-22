@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { client, urlFor } from '@/lib/client'
 import { getLocalKavyaImages } from '@/lib/getLocalStories'
 import styles from './Stories.module.css'
+import SpotlightReveal from '@/components/spotlight/SpotlightReveal'
+import SelectedWorksGallery from '@/components/stories/SelectedWorksGallery'
 
 // ─── Collections data ─────────────────────────────────────────────────────────
 const COLLECTIONS = [
@@ -314,15 +316,11 @@ export default function StoriesIndex({ stories }) {
       </Head>
 
       <main>
-        {/* 1. Hero */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <p className={styles.heroEyebrow}>Behind the Lens</p>
-            <h1 className={styles.heroTitle}>Sampada Stories</h1>
-            <p className={styles.heroSub}>Lookbooks, collections &amp; the faces of Sampada.</p>
-          </div>
-          <div className={styles.heroFade} />
-        </section>
+        {/* 1. Hero — Spotlight Reveal */}
+        <SpotlightReveal
+          imageA="/images/Kavya/kavya-1.jpg"
+          imageB="/images/Kavya/kavya-3.jpg"
+        />
 
         {/* 2. Meet the Face */}
         {heroImage && <MeetTheFace heroImage={heroImage} total={stories.length} />}
@@ -360,6 +358,9 @@ export default function StoriesIndex({ stories }) {
 
         {/* 6. Collection Banners */}
         <CollectionBanners />
+
+        {/* 7. Selected Works Gallery */}
+        <SelectedWorksGallery stories={stories} />
       </main>
 
       {/* Lightbox */}
