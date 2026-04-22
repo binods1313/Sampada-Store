@@ -19,8 +19,7 @@ import { media } from 'sanity-plugin-media'
 
 // Import Next 5 Enterprise Plugins for Competitive Edge
 import { recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
-import { colorInput } from 'sanity-plugin-color-input'
-import { iframePane } from 'sanity-plugin-iframe-pane'
+import { customColorPicker as colorInput } from 'sanity-plugin-color-input'
 
 // Note: Slack Publisher not yet available on npm
 // import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon

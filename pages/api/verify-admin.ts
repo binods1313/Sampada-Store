@@ -2,7 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
-import adminAuth from '../../config/admin-auth.json'
+
+const adminAuth = {
+  adminEmail: process.env.ADMIN_EMAIL || 'admin@sampada.com',
+  adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '',
+  jwtSecret: process.env.JWT_SECRET || '',
+}
 
 // In-memory rate limiter (for production, use Redis/Upstash)
 const attempts = new Map<string, { count: number; resetAt: number }>()

@@ -12,13 +12,14 @@ const nextConfigCore = {
   // Fix slow filesystem warning on Windows/network drives
   outputFileTracingRoot: path.join(__dirname, './'),
 
+  watchOptions: {
+    ignored: /node_modules|\.next|System Volume Information/,
+  },
+
   // Production build optimizations
   poweredByHeader: false, // Remove X-Powered-By header
   compress: true, // Enable gzip compression
   generateEtags: true, // Enable ETag headers for caching
-
-  // Turbopack config (required for Next.js 16+)
-  turbopack: {},
 
   // ISR and build optimizations
   experimental: {
@@ -130,9 +131,7 @@ const nextConfigCore = {
 
     if (dev && !isServer) {
       config.watchOptions = {
-        ...config.watchOptions,
-        poll: 500,
-        ignored: /node_modules/,
+        ignored: /node_modules|\.next|\.git|System Volume Information/,
         aggregateTimeout: 300,
       };
       config.optimization.moduleIds = 'named';
