@@ -18,6 +18,17 @@ const COLLECTIONS = [
 
 const FILTERS = ['All', 'Casual', 'Festive', 'Premium', 'Summer', 'Winter']
 
+// ─── Section Divider ─────────────────────────────────────────────────────────
+function SectionDivider() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 24px' }}>
+      <div style={{ height: '1px', background: 'rgba(201,169,110,0.2)', flex: 1, maxWidth: '240px' }} />
+      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(201,169,110,0.4)', margin: '0 16px' }} />
+      <div style={{ height: '1px', background: 'rgba(201,169,110,0.2)', flex: 1, maxWidth: '240px' }} />
+    </div>
+  )
+}
+
 // ─── Meet the Face ────────────────────────────────────────────────────────────
 function MeetTheFace({ heroImage, total }) {
   return (
@@ -93,13 +104,13 @@ function StoryCard({ story, index, featured, onOpen, openTip, onToggleTip, voted
     : urlFor(story.coverImage).width(600).height(900).fit('crop').url()
 
   return (
-    <div id={`story-card-${index}`} className={`${styles.cardWrap} ${featured ? styles.cardWrapFeatured : ''}`}>
+    <div id={`story-card-${index}`} className={`${styles.cardWrap} ${featured ? styles.cardWrapFeatured : ''} story-card`}>
       <div className={`${styles.card} ${featured ? styles.cardFeatured : ''}`}>
 
         {/* Image */}
         <button className={styles.cardImgBtn} onClick={() => onOpen(index)} aria-label={`View ${story.title}`}>
           <div className={styles.cardImageWrap}>
-            <img src={imgSrc} alt={story.title} className={styles.cardImage} loading="lazy" />
+            <img src={imgSrc} alt={`Kavya wearing ${story.tag || 'Sampada'} — ${story.title}`} className={styles.cardImage} loading="lazy" />
             <div className={styles.cardGradient} />
             <span className={styles.modelBadge}>{story.model}</span>
             {story.tag && <span className={styles.tagPill}>{story.tag}</span>}
@@ -213,17 +224,46 @@ function Lightbox({ stories, currentIndex, onClose, onPrev, onNext }) {
 
 // ─── Behind the Shoot ─────────────────────────────────────────────────────────
 function BehindTheShoot({ total }) {
+  const stats = [
+    { value: `${total} Looks`, label: 'Captured' },
+    { value: '4 Collections', label: 'Featured' },
+    { value: '100%', label: 'Heritage Design' },
+  ]
   return (
-    <section className={styles.behindSection}>
-      <div className={styles.behindInner}>
-        <p className={styles.behindEyebrow}>The Sampada Promise</p>
-        <h2 className={styles.behindHeading}>Every look tells a story.</h2>
-        <p className={styles.behindSub}>Our models wear what we make.<br />Real people. Real style. Real Sampada.</p>
-        <div className={styles.behindStats}>
-          <div className={styles.behindStat}><span className={styles.behindIcon}>📸</span><span className={styles.behindStatLabel}>{total} Looks Captured</span></div>
-          <div className={styles.behindStat}><span className={styles.behindIcon}>👗</span><span className={styles.behindStatLabel}>4 Collections Featured</span></div>
-          <div className={styles.behindStat}><span className={styles.behindIcon}>✨</span><span className={styles.behindStatLabel}>100% Heritage Design</span></div>
-        </div>
+    <section style={{
+      background: '#0d1126',
+      padding: '96px 24px',
+      textAlign: 'center',
+      borderTop: '1px solid rgba(201,169,110,0.15)',
+      borderBottom: '1px solid rgba(201,169,110,0.15)',
+    }}>
+      <p style={{
+        fontSize: '0.7rem', letterSpacing: '0.4em', textTransform: 'uppercase',
+        color: '#c9a96e', fontFamily: "'Montserrat', sans-serif", fontWeight: 700, margin: '0 0 16px',
+      }}>The Sampada Promise</p>
+      <h2 style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: 'clamp(2.2rem, 6vw, 3.8rem)',
+        fontWeight: 900, color: '#f5f0eb', margin: '0 0 20px', lineHeight: 1.1,
+      }}>Every look tells a story.</h2>
+      <p style={{
+        fontSize: '0.9rem', color: 'rgba(245,240,235,0.5)',
+        maxWidth: '360px', margin: '0 auto 40px', lineHeight: 1.7,
+        fontFamily: "'Montserrat', sans-serif",
+      }}>Real models, real wear, real Sampada.</p>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap' }}>
+        {stats.map(stat => (
+          <div key={stat.label} style={{ textAlign: 'center' }}>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '1.6rem', fontWeight: 900, color: '#c9a96e', margin: '0 0 6px',
+            }}>{stat.value}</p>
+            <p style={{
+              fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase',
+              color: 'rgba(245,240,235,0.4)', fontFamily: "'Montserrat', sans-serif", margin: 0,
+            }}>{stat.label}</p>
+          </div>
+        ))}
       </div>
     </section>
   )
@@ -231,23 +271,87 @@ function BehindTheShoot({ total }) {
 
 // ─── Collection Banners ───────────────────────────────────────────────────────
 function CollectionBanners() {
+  const kavyaShowcase = [
+    '/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 07.44.36.jpeg',
+    '/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg',
+    '/images/kavya-portfolio/WhatsApp Image 2026-02-27 at 12.21.41 (2).jpeg',
+    '/images/kavya-portfolio/WhatsApp Image 2026-02-27 at 12.21.50 (2).jpeg',
+  ]
+
   return (
-    <section className={styles.collectionsSection}>
-      <div className={styles.collectionsHeader}>
-        <p className={styles.collectionsEyebrow}>Shop the Collection</p>
-        <h2 className={styles.collectionsHeading}>Wear What Kavya Wears</h2>
+    <section style={{
+      background: '#0d1126',
+      borderTop: '1px solid rgba(201,169,110,0.1)',
+    }}>
+      {/* Text block */}
+      <div style={{ padding: '64px 24px 48px', textAlign: 'center' }}>
+        <p style={{
+          fontSize: '0.7rem',
+          letterSpacing: '0.4em',
+          textTransform: 'uppercase',
+          color: '#c9a96e',
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: 700,
+          margin: '0 0 12px',
+        }}>
+          Shop the Collection
+        </p>
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'clamp(2rem, 5vw, 3rem)',
+          fontWeight: 900,
+          color: '#f5f0eb',
+          margin: '0 0 24px',
+          lineHeight: 1.1,
+        }}>
+          Wear What Kavya Wears
+        </h2>
+        <div style={{
+          width: '64px',
+          height: '1px',
+          background: '#c9a96e',
+          margin: '0 auto',
+          opacity: 0.4,
+        }} />
       </div>
-      <div className={styles.collectionsGrid}>
-        {COLLECTIONS.map(col => (
-          <Link key={col.id} href={col.href} className={styles.colCard}>
-            <img src={col.image} alt={col.label} className={styles.colImage}
-              style={{ objectPosition: col.objectPosition }} loading="lazy" />
-            <div className={styles.colOverlay} />
-            <div className={styles.colContent}>
-              <h3 className={styles.colLabel}>{col.label}</h3>
-              <span className={styles.colBtn}>{col.btnText}</span>
-            </div>
-          </Link>
+
+      {/* 4-image row from Kavya Archive */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '2px',
+        maxWidth: '1320px',
+        margin: '0 auto',
+        padding: '0 0 2px',
+      }}>
+        {kavyaShowcase.map((src, i) => (
+          <div key={i} style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3/4' }}>
+            <img
+              src={src}
+              alt={`Kavya look ${i + 1}`}
+              loading="lazy"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                display: 'block',
+                transition: 'transform 0.5s cubic-bezier(0.23,1,0.32,1)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
+            />
+            {/* Subtle gold bottom fade */}
+            <div style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '80px',
+              background: 'linear-gradient(to top, rgba(13,17,38,0.6), transparent)',
+              pointerEvents: 'none',
+            }} />
+          </div>
         ))}
       </div>
     </section>
@@ -318,15 +422,16 @@ export default function StoriesIndex({ stories }) {
       <main>
         {/* 1. Hero — Spotlight Reveal */}
         <SpotlightReveal
-          imageA="/images/Kavya/kavya-1.jpg"
-          imageB="/images/Kavya/kavya-3.jpg"
+          baseImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17.jpeg"
+          revealImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg"
         />
 
-        {/* 2. Meet the Face */}
-        {heroImage && <MeetTheFace heroImage={heroImage} total={stories.length} />}
+        <SectionDivider />
 
-        {/* 3. Timeline */}
+        {/* 2. Timeline */}
         {stories.length > 0 && <StoryTimeline stories={stories} />}
+
+        <SectionDivider />
 
         {/* 4. Filter + Grid */}
         <section className={styles.gridSection} id="stories-grid">
@@ -353,14 +458,20 @@ export default function StoriesIndex({ stories }) {
           )}
         </section>
 
+        <SectionDivider />
+
         {/* 5. Behind the Shoot */}
         <BehindTheShoot total={stories.length} />
+
+        <SectionDivider />
 
         {/* 6. Collection Banners */}
         <CollectionBanners />
 
+        <SectionDivider />
+
         {/* 7. Selected Works Gallery */}
-        <SelectedWorksGallery stories={stories} />
+        <SelectedWorksGallery />
       </main>
 
       {/* Lightbox */}

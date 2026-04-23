@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import EchoCanvas from './EchoCanvas'
 
 const LERP_FACTOR = 0.08
-const SPOTLIGHT_RADIUS = 220 // px
+const SPOTLIGHT_RADIUS = 116 // px — 25% smaller than original 155
 
 /**
  * Mouse-following spotlight reveal hero.
@@ -13,7 +13,10 @@ const SPOTLIGHT_RADIUS = 220 // px
  * Uses CSS clip-path on the top layer for the reveal effect.
  * Lerp smoothing applied via requestAnimationFrame.
  */
-export default function SpotlightReveal({ imageA, imageB }) {
+export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage }) {
+  // Support both prop naming conventions
+  const base = baseImage || imageA
+  const reveal = revealImage || imageB
   const containerRef = useRef(null)
   const rafRef = useRef(null)
 
@@ -88,9 +91,11 @@ export default function SpotlightReveal({ imageA, imageB }) {
       ref={containerRef}
       style={{
         position: 'relative',
-        height: '85vh',
-        minHeight: '600px',
-        background: '#0d1126',
+        width: '100vw',
+        height: '100vh',
+        minHeight: '100vh',
+        marginLeft: 'calc(-50vw + 50%)',
+        backgroundColor: '#0a0a0a',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
@@ -98,39 +103,37 @@ export default function SpotlightReveal({ imageA, imageB }) {
         cursor: 'none',
       }}
     >
-      {/* Base image — always visible */}
+      {/* Base layer — object-fit contain, full image always visible */}
       <img
-        src={imageA}
-        alt="Kavya — base"
+        src={base}
+        alt="Kavya"
         style={{
           position: 'absolute',
           inset: 0,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center top',
+          objectFit: 'contain',
+          objectPosition: 'center center',
           zIndex: 0,
           filter: 'brightness(0.45) saturate(0.7)',
         }}
       />
 
-      {/* Revealed image — clipped to spotlight */}
+      {/* Reveal layer — same contain framing, clipped to spotlight */}
       <img
-        src={imageB}
-        alt="Kavya — revealed"
+        src={reveal}
+        alt="Kavya — reveal"
         style={{
           position: 'absolute',
           inset: 0,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center top',
+          objectFit: 'contain',
+          objectPosition: 'center center',
           zIndex: 1,
-          clipPath: hasPointer
-            ? clipPath
-            : `circle(40% at 50% 40%)`,
+          clipPath: hasPointer ? clipPath : `circle(40% at 50% 40%)`,
           transition: 'clip-path 0ms linear',
-          filter: 'brightness(0.85)',
+          filter: 'saturate(1.1) contrast(1.04)',
         }}
       />
 
@@ -140,7 +143,7 @@ export default function SpotlightReveal({ imageA, imageB }) {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse at center, transparent 30%, rgba(13,17,38,0.7) 100%)',
+            'linear-gradient(to bottom, rgba(13,17,38,0.3) 0%, transparent 20%, transparent 70%, rgba(13,17,38,0.92) 100%)',
           zIndex: 2,
           pointerEvents: 'none',
         }}
@@ -148,6 +151,164 @@ export default function SpotlightReveal({ imageA, imageB }) {
 
       {/* Echo rings canvas */}
       <EchoCanvas />
+
+      {/* Left dark vignette — behind quote text */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '26%',
+          background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)',
+          zIndex: 20,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Right dark vignette — behind quote text */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          height: '100%',
+          width: '26%',
+          background: 'linear-gradient(to left, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)',
+          zIndex: 20,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Left quote panel */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '26%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 30,
+          pointerEvents: 'none',
+          padding: '0 2rem',
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            color: 'rgba(255,255,255,0.12)',
+            fontSize: '4rem',
+            lineHeight: 1,
+            margin: '0 0 12px',
+          }}>"</p>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            color: 'rgba(255,255,255,0.65)',
+            fontSize: '1rem',
+            lineHeight: 1.6,
+            margin: 0,
+          }}>
+            Grace is not just how you look —
+          </p>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            color: 'rgba(255,255,255,0.65)',
+            fontSize: '1rem',
+            lineHeight: 1.6,
+            margin: '4px 0 0',
+          }}>
+            it&apos;s how you carry your story.
+          </p>
+          <div style={{
+            width: '32px',
+            height: '1px',
+            background: '#c9a96e',
+            margin: '16px auto 0',
+            opacity: 0.6,
+          }} />
+          <p style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '0.6rem',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#c9a96e',
+            margin: '12px 0 0',
+          }}>
+            Sampada Originals™
+          </p>
+        </div>
+      </div>
+
+      {/* Right quote panel */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          height: '100%',
+          width: '26%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 30,
+          pointerEvents: 'none',
+          padding: '0 2rem',
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            color: 'rgba(255,255,255,0.12)',
+            fontSize: '4rem',
+            lineHeight: 1,
+            margin: '0 0 12px',
+          }}>"</p>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            color: 'rgba(255,255,255,0.65)',
+            fontSize: '1rem',
+            lineHeight: 1.6,
+            margin: 0,
+          }}>
+            Every look is a legacy
+          </p>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            color: 'rgba(255,255,255,0.65)',
+            fontSize: '1rem',
+            lineHeight: 1.6,
+            margin: '4px 0 0',
+          }}>
+            worn with intention.
+          </p>
+          <div style={{
+            width: '32px',
+            height: '1px',
+            background: '#c9a96e',
+            margin: '16px auto 0',
+            opacity: 0.6,
+          }} />
+          <p style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '0.6rem',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#c9a96e',
+            margin: '12px 0 0',
+          }}>
+            Winter Drop 2026
+          </p>
+        </div>
+      </div>
 
       {/* Text content */}
       <div
