@@ -509,6 +509,81 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
             </Link>
             <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
             <Link
+              href="/company"
+              onClick={onClose}
+              style={{
+                padding: '12px 20px',
+                fontSize: '14px',
+                color: '#e5e5e5',
+                textDecoration: 'none',
+                display: 'block',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
+                e.currentTarget.style.color = '#C9A84C';
+                e.currentTarget.style.paddingLeft = '24px';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#e5e5e5';
+                e.currentTarget.style.paddingLeft = '20px';
+              }}
+            >
+              Company
+            </Link>
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <Link
+              href="/team"
+              onClick={onClose}
+              style={{
+                padding: '12px 20px',
+                fontSize: '14px',
+                color: '#e5e5e5',
+                textDecoration: 'none',
+                display: 'block',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
+                e.currentTarget.style.color = '#C9A84C';
+                e.currentTarget.style.paddingLeft = '24px';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#e5e5e5';
+                e.currentTarget.style.paddingLeft = '20px';
+              }}
+            >
+              Team
+            </Link>
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <Link
+              href="/support"
+              onClick={onClose}
+              style={{
+                padding: '12px 20px',
+                fontSize: '14px',
+                color: '#e5e5e5',
+                textDecoration: 'none',
+                display: 'block',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
+                e.currentTarget.style.color = '#C9A84C';
+                e.currentTarget.style.paddingLeft = '24px';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#e5e5e5';
+                e.currentTarget.style.paddingLeft = '20px';
+              }}
+            >
+              Support
+            </Link>
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <Link
               href="/contact"
               onClick={onClose}
               style={{
@@ -825,6 +900,42 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                           }}
                         >
                           About Us
+                        </Link>
+                        <Link
+                          href="/company"
+                          onClick={onClose}
+                          className="mobile-submenu-item"
+                          style={{
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            display: 'block'
+                          }}
+                        >
+                          Company
+                        </Link>
+                        <Link
+                          href="/team"
+                          onClick={onClose}
+                          className="mobile-submenu-item"
+                          style={{
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            display: 'block'
+                          }}
+                        >
+                          Team
+                        </Link>
+                        <Link
+                          href="/support"
+                          onClick={onClose}
+                          className="mobile-submenu-item"
+                          style={{
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            display: 'block'
+                          }}
+                        >
+                          Support
                         </Link>
                         <Link
                           href="/contact"

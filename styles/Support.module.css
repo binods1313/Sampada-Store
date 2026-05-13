@@ -1,0 +1,581 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SAMPADA CUSTOMER SUPPORT PAGE — FULL REBUILD
+   Hero: 50/50 Split with Kavya Full Body Display
+   Cards: Homepage Style with Gold Borders
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Main Container ───────────────────────────────────────────────────────── */
+.main {
+  background: #0A0A0A;
+  min-height: 100vh;
+  color: #E8E0D0;
+}
+
+/* ─── Hero Section: SpotlightReveal Container ──────────────────────────────── */
+.heroSpotlight {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #0A0A0A;
+}
+
+/* Quote overlay on left side */
+.heroQuoteOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 26%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 40;
+  pointer-events: none;
+  padding: 0 60px;
+}
+
+.heroLabel {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: #C9A96E;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.heroQuote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  max-width: 420px;
+  border-left: 3px solid #C9A96E;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.heroQuote em {
+  color: #C9A96E;
+  font-style: italic;
+}
+
+/* ─── Global Spacing ───────────────────────────────────────────────────────── */
+.section {
+  padding: 72px 0;
+}
+
+.container {
+  max-width: 1100px;
+  padding: 0 24px;
+  margin: 0 auto;
+}
+
+/* ─── Section Headers ──────────────────────────────────────────────────────── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.sectionLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C9A96E;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.sectionTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #E8E0D0;
+  margin: 0 0 8px;
+}
+
+.sectionUnderline {
+  width: 48px;
+  height: 2px;
+  background: #C9A96E;
+  margin: 8px auto 0;
+  display: block;
+}
+
+.sectionDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #9A9080;
+  margin: 12px auto 0;
+  max-width: 600px;
+}
+
+/* ─── Card Base Style (Applied to All Cards) ───────────────────────────────── */
+.card {
+  background: #0f0f16;
+  border: 1px solid rgba(201, 169, 110, 0.22);
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(201, 169, 110, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(139, 26, 26, 0.15);
+  border: 1px solid rgba(139, 26, 26, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: #C9A96E;
+  font-size: 18px;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  color: #E8E0D0;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.cardHighlight {
+  font-size: 0.9rem;
+  color: #C9A96E;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.cardBody {
+  font-size: 0.82rem;
+  color: #9A9080;
+  line-height: 1.65;
+}
+
+/* ─── Contact Cards Section ────────────────────────────────────────────────── */
+.contactSection {
+  background: #0A0A0A;
+  padding: 72px 0;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.contactCard {
+  composes: card;
+  text-align: center;
+}
+
+.contactIconCircle {
+  composes: cardIcon;
+  margin: 0 auto 1rem;
+}
+
+.contactIcon {
+  font-size: 18px;
+  color: #C9A96E;
+}
+
+.contactMethod {
+  composes: cardTitle;
+  margin: 0 0 6px;
+}
+
+.contactValue {
+  composes: cardHighlight;
+  margin: 0 0 8px;
+}
+
+.contactDesc {
+  composes: cardBody;
+  margin: 0;
+}
+
+/* ─── Business Hours Section ───────────────────────────────────────────────── */
+.hoursSection {
+  background: #0A0A0A;
+  padding: 72px 0;
+}
+
+.hoursGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  padding: 0 24px;
+}
+
+.hoursCard {
+  composes: card;
+  text-align: center;
+}
+
+.hoursLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C9A96E;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.hoursTime {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #E8E0D0;
+  margin: 0 0 8px;
+}
+
+.hoursDays {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: #9A9080;
+}
+
+.hoursNote {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  background: rgba(139, 26, 26, 0.08);
+  border-left: 3px solid #8B1A1A;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: #9A9080;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hoursIcon {
+  font-size: 1rem;
+}
+
+/* ─── FAQ Section: Bordered Card Style ─────────────────────────────────────── */
+.faqSection {
+  background: #0A0A0A;
+  padding: 72px 0;
+}
+
+.faqList {
+  max-width: 740px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.faqItem {
+  background: linear-gradient(135deg, rgba(201, 169, 110, 0.05), rgba(139, 26, 26, 0.04));
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 8px;
+  border-left: 3px solid #8B1A1A;
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+
+.faqItemOpen {
+  border-color: rgba(201, 169, 110, 0.45);
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  color: #E8E0D0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.faqQuestion:hover {
+  color: #C9A96E;
+}
+
+.faqToggle {
+  color: #C9A96E;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 12px;
+  font-size: 1rem;
+}
+
+.faqItemOpen .faqToggle {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  padding: 0 1.25rem;
+  color: #9A9080;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.faqAnswerOpen {
+  max-height: 300px;
+  padding-bottom: 1rem;
+}
+
+.faqAnswer p {
+  margin: 0;
+}
+
+/* ─── Helpful Resources Section ────────────────────────────────────────────── */
+.resourcesSection {
+  background: #0A0A0A;
+  padding: 72px 0;
+}
+
+.resourcesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.resourceCard {
+  composes: card;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.resourceCard:hover .resourceArrow {
+  opacity: 1;
+  transform: translate(4px, 4px);
+}
+
+.resourceIcon {
+  font-size: 24px;
+  color: #C9A96E;
+  margin-bottom: 12px;
+}
+
+.resourceTitle {
+  composes: cardTitle;
+  margin: 0 0 8px;
+}
+
+.resourceDesc {
+  composes: cardBody;
+  margin: 0;
+}
+
+.resourceArrow {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 1rem;
+  color: #C9A96E;
+  opacity: 0;
+  transition: all 0.25s ease;
+}
+
+/* ─── Still Need Help CTA Section ──────────────────────────────────────────── */
+.ticketSection {
+  background: linear-gradient(160deg, #0A0A0A 60%, #1a0505 100%);
+  padding: 72px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.ticketSection::before {
+  content: 'स';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 300px;
+  font-family: 'Cormorant Garamond', serif;
+  color: rgba(201, 169, 110, 0.03);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ticketCard {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 24px;
+}
+
+.ticketTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #E8E0D0;
+  margin: 0 0 16px;
+}
+
+.ticketDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #9A9080;
+  margin: 0 0 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ticketBtn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: #8B1A1A;
+  color: #E8E0D0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid #A52020;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.ticketBtn:hover {
+  background: #A52020;
+  box-shadow: 0 0 20px rgba(139, 26, 26, 0.4);
+  transform: scale(1.02);
+}
+
+/* ─── Empty State ──────────────────────────────────────────────────────────── */
+.empty {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  text-align: center;
+}
+
+.empty h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  color: #E8E0D0;
+  margin: 0 0 16px;
+}
+
+.empty p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #9A9080;
+  margin: 0;
+}
+
+/* ─── Responsive Design ────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .resourcesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hero: Full viewport on mobile */
+  .heroSpotlight {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  .heroQuoteOverlay {
+    width: 100%;
+    padding: 40px 24px;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
+  }
+
+  .heroQuote {
+    font-size: 1.2rem;
+    max-width: 100%;
+    border-left: none;
+    padding-left: 0;
+    border-top: 3px solid #C9A96E;
+    padding-top: 16px;
+  }
+
+  /* Grids: Single column on mobile */
+  .contactGrid,
+  .hoursGrid,
+  .resourcesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+
+  .ticketTitle {
+    font-size: 1.6rem;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+  /* Mobile optimization */
+  .card {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* Desktop optimization */
+  .contactGrid,
+  .hoursGrid,
+  .resourcesGrid {
+    max-width: 1100px;
+  }
+}
+
+@media (min-width: 1440px) {
+  /* Large desktop optimization */
+  .heroLeft {
+    padding: 100px 80px;
+  }
+}

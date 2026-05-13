@@ -286,6 +286,8 @@ export default defineType({
       name: 'printifyIntegration',
       title: 'Printify Integration',
       type: 'object',
+      description: 'Configure Printify fulfillment settings for this product',
+      group: 'printify',
       fields: [
         defineField({
           name: 'isPrintifyProduct',
@@ -314,7 +316,88 @@ export default defineType({
           type: 'string',
           description: 'Name of the print provider (e.g., Gooten, Printful)',
           hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printifyVariantId',
+          title: 'Printify Variant ID',
+          type: 'string',
+          description: 'The variant ID from Printify (if applicable)',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printifyMockupUrl',
+          title: 'Printify Mockup URL',
+          type: 'url',
+          description: 'URL to the product mockup image from Printify',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printifyPrice',
+          title: 'Printify Base Price',
+          type: 'number',
+          description: 'Base price from Printify (before markup)',
+          validation: Rule => Rule.min(0).error('Price must be non-negative'),
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
+        }),
+        defineField({
+          name: 'printifyShipping',
+          title: 'Printify Shipping Info',
+          type: 'text',
+          rows: 3,
+          description: 'Shipping details and estimated delivery times from Printify',
+          hidden: ({ document }) => !document?.printifyIntegration?.isPrintifyProduct
         })
+      ]
+    }),
+    
+    // ── Product Tabs — Tab Block Plugin for organized content display ──────────
+    defineField({
+      name: 'productTabs',
+      title: 'Product Tabs',
+      type: 'array',
+      description: 'Organize product information into tabs (Description, Features, Specs, Shipping, Returns, Reviews)',
+      group: 'tabs',
+      of: [
+        {
+          type: 'object',
+          name: 'productTab',
+          title: 'Product Tab',
+          fields: [
+            defineField({
+              name: 'tabTitle',
+              title: 'Tab Title',
+              type: 'string',
+              description: 'e.g., "Description", "Features", "Specifications", "Shipping", "Returns", "Reviews"',
+              validation: Rule => Rule.required().error('Tab title is required')
+            }),
+            defineField({
+              name: 'tabIcon',
+              title: 'Tab Icon (emoji or text)',
+              type: 'string',
+              description: 'Optional icon or emoji to display with the tab title',
+              initialValue: '📄'
+            }),
+            defineField({
+              name: 'tabContent',
+              title: 'Tab Content',
+              type: 'array',
+              of: [{ type: 'block' }],
+              description: 'Rich text content for this tab'
+            })
+          ],
+          preview: {
+            select: {
+              title: 'tabTitle',
+              icon: 'tabIcon'
+            },
+            prepare({ title, icon }) {
+              return {
+                title: `${icon || '📄'} ${title || 'Untitled Tab'}`,
+                subtitle: 'Product Tab'
+              }
+            }
+          }
+        }
       ]
     }),
 
@@ -355,13 +438,15 @@ export default defineType({
   ],
   // ── Field Groups — Tab-like organization in Sanity Studio ─────────────────
   groups: [
-    { name: 'basic',    title: '📦 Basic Info',    default: true },
-    { name: 'media',    title: '🖼️ Media' },
-    { name: 'pricing',  title: '💰 Pricing' },
-    { name: 'variants', title: '🎨 Variants & Colors' },
-    { name: 'content',  title: '📝 Content' },
-    { name: 'seo',      title: '🔍 SEO' },
-    { name: 'settings', title: '⚙️ Settings' },
+    { name: 'basic',     title: '📦 Basic Info',     default: true },
+    { name: 'media',     title: '🖼️ Media' },
+    { name: 'pricing',   title: '💰 Pricing' },
+    { name: 'variants',  title: '🎨 Variants & Colors' },
+    { name: 'content',   title: '📝 Content' },
+    { name: 'tabs',      title: '📑 Product Tabs' },
+    { name: 'printify',  title: '🖨️ Printify' },
+    { name: 'seo',       title: '🔍 SEO' },
+    { name: 'settings',  title: '⚙️ Settings' },
   ],
   // --- FIX APPLIED HERE for main product preview ---
   preview: {

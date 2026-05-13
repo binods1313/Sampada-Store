@@ -1,0 +1,238 @@
+/* sampada-brand.css — Global Brand Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Backgrounds */
+  --s-cream:          #FAF6F0;   /* warm cream — light sections */
+  --s-cream-mid:      #F5EFE6;   /* slightly deeper cream */
+  --s-dark:           #1A0A08;   /* warm dark brown-black */
+  --s-dark-mid:       #2A1208;   /* slightly lighter dark */
+
+  /* Brand Colors */
+  --s-crimson:        #8B1A1A;   /* primary CTA, accents */
+  --s-crimson-hover:  #A52020;
+  --s-gold:           #C9A96E;   /* icons, underlines, labels */
+  --s-gold-light:     #E8C98A;
+
+  /* Text — Light Backgrounds */
+  --s-text-heading:   #1C1008;   /* deep warm black */
+  --s-text-body:      #5C4A3A;   /* warm brown-grey */
+  --s-text-muted:     #8C7A6A;
+
+  /* Text — Dark Backgrounds */
+  --s-text-light:     #F5EFE6;
+  --s-text-mid:       #C4B49A;
+  --s-text-dim:       #9A8A7A;
+
+  /* Spacing */
+  --s-section-pad:    80px;
+  --s-container:      1100px;
+  --s-card-pad:       1.75rem;
+  --s-gap:            16px;
+
+  /* Typography */
+  --s-serif:          'Cormorant Garamond', Georgia, serif;
+  --s-sans:           'Inter', system-ui, sans-serif;
+}
+
+/* ── Section Backgrounds ───────────────────── */
+.section-light   { background: var(--s-cream); }
+.section-mid     { background: var(--s-cream-mid); }
+.section-dark    { background: var(--s-dark); }
+.section-crimson { background: var(--s-crimson); }
+
+/* ── Container ─────────────────────────────── */
+.s-container {
+  max-width: var(--s-container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Section Padding ───────────────────────── */
+.s-section { padding: var(--s-section-pad) 0; }
+
+/* ── Section Label (e.g. "GET IN TOUCH") ───── */
+.s-label {
+  display: block;
+  font-family: var(--s-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--s-gold);
+  margin-bottom: 12px;
+}
+
+/* ── Section Heading ───────────────────────── */
+.s-heading {
+  font-family: var(--s-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.section-light .s-heading,
+.section-mid .s-heading   { color: var(--s-text-heading); }
+.section-dark .s-heading  { color: var(--s-text-light); }
+.section-crimson .s-heading { color: var(--s-cream); }
+
+/* ── Gold Underline Bar ────────────────────── */
+.s-bar {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--s-gold);
+  margin: 10px auto 48px;
+}
+
+/* ── Body Text ─────────────────────────────── */
+.section-light p, .section-mid p { color: var(--s-text-body); }
+.section-dark p                  { color: var(--s-text-mid); }
+.section-crimson p               { color: rgba(250,246,240,0.85); }
+
+/* ── Card — Light Background ───────────────── */
+.s-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(139,26,26,0.12);
+  border-radius: 8px;
+  padding: var(--s-card-pad);
+  box-shadow: 0 2px 12px rgba(139,26,26,0.05);
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.s-card:hover {
+  border-color: rgba(139,26,26,0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(139,26,26,0.1);
+}
+.s-card .s-card-icon  { color: var(--s-crimson); font-size: 20px; margin-bottom: 1rem; }
+.s-card .s-card-title { font-family: var(--s-serif); font-size: 1.1rem; color: var(--s-text-heading); font-weight: 600; margin-bottom: 6px; }
+.s-card .s-card-hi    { color: var(--s-crimson); font-size: 0.9rem; display: block; margin-bottom: 8px; }
+.s-card .s-card-body  { color: var(--s-text-body); font-size: 0.85rem; line-height: 1.7; }
+
+/* ── Card — Dark Background ────────────────── */
+.s-card-dark {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 8px;
+  padding: var(--s-card-pad);
+  transition: border-color .25s ease, transform .25s ease;
+}
+.s-card-dark:hover {
+  border-color: rgba(201,169,110,0.55);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.s-card-dark .s-card-icon  { color: var(--s-gold); font-size: 20px; margin-bottom: 1rem; }
+.s-card-dark .s-card-title { font-family: var(--s-serif); font-size: 1.1rem; color: var(--s-text-light); font-weight: 600; margin-bottom: 6px; }
+.s-card-dark .s-card-hi    { color: var(--s-gold); font-size: 0.9rem; display: block; margin-bottom: 8px; }
+.s-card-dark .s-card-body  { color: var(--s-text-mid); font-size: 0.85rem; line-height: 1.7; }
+
+/* ── CTA Button ────────────────────────────── */
+.s-btn {
+  display: inline-block;
+  background: var(--s-crimson);
+  color: var(--s-cream);
+  padding: 13px 36px;
+  border-radius: 4px;
+  font-family: var(--s-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 2px solid var(--s-crimson);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .25s, color .25s;
+}
+.s-btn:hover { background: var(--s-crimson-hover); border-color: var(--s-crimson-hover); }
+.s-btn-outline {
+  background: transparent;
+  color: var(--s-cream);
+  border: 2px solid var(--s-cream);
+}
+.s-btn-outline:hover { background: var(--s-cream); color: var(--s-crimson); }
+
+/* ── Primary CTA Button (Homepage SHOP NOW style) ────────────────────────────── */
+.btn-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s-gold);
+  color: var(--s-text-heading);
+  padding: 14px 40px;
+  border-radius: 4px;
+  font-family: var(--s-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 2px solid var(--s-gold);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+.btn-cta-primary .arrow {
+  display: inline-block;
+  transition: transform .3s ease;
+}
+.btn-cta-primary:hover {
+  background: transparent;
+  color: var(--s-cream);
+  border-color: var(--s-cream);
+}
+.btn-cta-primary:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ── Primary CTA Button on Light Sections (better contrast) ────────────────── */
+.section-light .btn-cta-primary:hover,
+.section-mid .btn-cta-primary:hover {
+  background: var(--s-crimson);
+  color: var(--s-cream);
+  border-color: var(--s-crimson);
+}
+
+/* ── Primary CTA Button on Crimson Sections (dark background for contrast) ────────────────── */
+.section-crimson .btn-cta-primary:hover {
+  background: var(--s-dark);
+  color: var(--s-cream);
+  border-color: var(--s-dark);
+}
+
+/* ── Warm radial glow on dark sections ────────────────── */
+.section-dark {
+  background: var(--s-dark);
+  position: relative;
+}
+.section-dark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+.section-dark > * { position: relative; z-index: 1; }
+
+/* ── Paper texture on light sections ────────────────── */
+.section-light::before,
+.section-mid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.section-light, .section-mid { position: relative; }
+.section-light > *, .section-mid > * { position: relative; z-index: 1; }
+
+/* ── Responsive ────────────────────────────── */
+@media (max-width: 768px) {
+  .s-section { padding: 56px 0; }
+  .s-heading { font-size: 1.8rem; }
+}
+@media (max-width: 480px) {
+  .s-section { padding: 40px 0; }
+  .s-heading { font-size: 1.5rem; }
+}

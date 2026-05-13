@@ -230,40 +230,33 @@ function BehindTheShoot({ total }) {
     { value: '100%', label: 'Heritage Design' },
   ]
   return (
-    <section style={{
-      background: '#0d1126',
-      padding: '96px 24px',
-      textAlign: 'center',
+    <section className="section-dark s-section" style={{
       borderTop: '1px solid rgba(201,169,110,0.15)',
       borderBottom: '1px solid rgba(201,169,110,0.15)',
     }}>
-      <p style={{
-        fontSize: '0.7rem', letterSpacing: '0.4em', textTransform: 'uppercase',
-        color: '#c9a96e', fontFamily: "'Montserrat', sans-serif", fontWeight: 700, margin: '0 0 16px',
-      }}>The Sampada Promise</p>
-      <h2 style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: 'clamp(2.2rem, 6vw, 3.8rem)',
-        fontWeight: 900, color: '#f5f0eb', margin: '0 0 20px', lineHeight: 1.1,
-      }}>Every look tells a story.</h2>
-      <p style={{
-        fontSize: '0.9rem', color: 'rgba(245,240,235,0.5)',
-        maxWidth: '360px', margin: '0 auto 40px', lineHeight: 1.7,
-        fontFamily: "'Montserrat', sans-serif",
-      }}>Real models, real wear, real Sampada.</p>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap' }}>
-        {stats.map(stat => (
-          <div key={stat.label} style={{ textAlign: 'center' }}>
-            <p style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '1.6rem', fontWeight: 900, color: '#c9a96e', margin: '0 0 6px',
-            }}>{stat.value}</p>
-            <p style={{
-              fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase',
-              color: 'rgba(245,240,235,0.4)', fontFamily: "'Montserrat', sans-serif", margin: 0,
-            }}>{stat.label}</p>
-          </div>
-        ))}
+      <div className="s-container" style={{ textAlign: 'center' }}>
+        <p className="s-label">THE SAMPADA PROMISE</p>
+        <h2 className="s-heading" style={{ fontSize: 'clamp(2.2rem, 6vw, 3.8rem)' }}>
+          Every look tells a story.
+        </h2>
+        <p style={{
+          fontSize: '0.9rem', color: 'var(--s-text-mid)',
+          maxWidth: '360px', margin: '20px auto 40px', lineHeight: 1.7,
+        }}>Real models, real wear, real Sampada.</p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap' }}>
+          {stats.map(stat => (
+            <div key={stat.label} style={{ textAlign: 'center' }}>
+              <p style={{
+                fontFamily: 'var(--s-serif)',
+                fontSize: '1.6rem', fontWeight: 900, color: 'var(--s-gold)', margin: '0 0 6px',
+              }}>{stat.value}</p>
+              <p style={{
+                fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase',
+                color: 'var(--s-text-dim)', margin: 0,
+              }}>{stat.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -279,40 +272,17 @@ function CollectionBanners() {
   ]
 
   return (
-    <section style={{
-      background: '#0d1126',
+    <section className="section-dark" style={{
       borderTop: '1px solid rgba(201,169,110,0.1)',
+      padding: 0,
     }}>
       {/* Text block */}
       <div style={{ padding: '64px 24px 48px', textAlign: 'center' }}>
-        <p style={{
-          fontSize: '0.7rem',
-          letterSpacing: '0.4em',
-          textTransform: 'uppercase',
-          color: '#c9a96e',
-          fontFamily: "'Montserrat', sans-serif",
-          fontWeight: 700,
-          margin: '0 0 12px',
-        }}>
-          Shop the Collection
-        </p>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(2rem, 5vw, 3rem)',
-          fontWeight: 900,
-          color: '#f5f0eb',
-          margin: '0 0 24px',
-          lineHeight: 1.1,
-        }}>
+        <p className="s-label">SHOP THE COLLECTION</p>
+        <h2 className="s-heading" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
           Wear What Kavya Wears
         </h2>
-        <div style={{
-          width: '64px',
-          height: '1px',
-          background: '#c9a96e',
-          margin: '0 auto',
-          opacity: 0.4,
-        }} />
+        <span className="s-bar" />
       </div>
 
       {/* 4-image row from Kavya Archive */}
@@ -348,7 +318,7 @@ function CollectionBanners() {
               left: 0,
               right: 0,
               height: '80px',
-              background: 'linear-gradient(to top, rgba(13,17,38,0.6), transparent)',
+              background: 'linear-gradient(to top, rgba(26,10,8,0.6), transparent)',
               pointerEvents: 'none',
             }} />
           </div>
@@ -370,7 +340,7 @@ function EmptyState() {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default function StoriesIndex({ stories }) {
+export default function StoriesIndex({ stories, banner }) {
   const [activeFilter, setActiveFilter] = useState('All')
   const [openTip, setOpenTip] = useState(null)
   const [lightboxIndex, setLightboxIndex] = useState(null)
@@ -427,6 +397,25 @@ export default function StoriesIndex({ stories }) {
         />
 
         <SectionDivider />
+
+        {/* Stories Quote */}
+        {banner?.collectionQuote?.storiesQuote && (
+          <section className="section-light s-section">
+            <div className="s-container" style={{ textAlign: 'center', maxWidth: '800px' }}>
+              <p style={{
+                fontFamily: 'var(--s-serif)',
+                fontSize: '1.8rem',
+                fontStyle: 'italic',
+                color: 'var(--s-crimson)',
+                lineHeight: '1.4'
+              }}>
+                "{banner.collectionQuote.storiesQuote}"
+              </p>
+            </div>
+          </section>
+        )}
+
+        {banner?.collectionQuote?.storiesQuote && <SectionDivider />}
 
         {/* 2. Timeline */}
         {stories.length > 0 && <StoryTimeline stories={stories} />}
@@ -493,8 +482,29 @@ export async function getStaticProps() {
     _id, title, slug, model, tag, publishedAt,
     coverImage { alt, asset->{ _ref } }
   }`
+  
+  const bannerQuery = `*[_type == "banner"][0]{
+    collectionQuote
+  }`
+  
   let sanityStories = []
-  try { sanityStories = await client.fetch(query) } catch (e) { console.error(e) }
+  let banner = null
+  
+  try { 
+    [sanityStories, banner] = await Promise.all([
+      client.fetch(query),
+      client.fetch(bannerQuery)
+    ])
+  } catch (e) { 
+    console.error(e) 
+  }
+  
   const localStories = getLocalKavyaImages()
-  return { props: { stories: [...sanityStories, ...localStories] }, revalidate: 60 }
+  return { 
+    props: { 
+      stories: [...sanityStories, ...localStories],
+      banner: banner || null
+    }, 
+    revalidate: 60 
+  }
 }

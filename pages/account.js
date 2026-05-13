@@ -547,10 +547,10 @@ export async function getServerSideProps(context) {
 
 // --- Styles (Updated for adaptive image containers) ---
 const pageStyles = {
-  accountLayout: { display: 'flex', flexDirection: 'column', minHeight: '100vh' },
-  mainContainer: { flexGrow: 1, maxWidth: '1000px', width: '90%', margin: '30px auto', padding: '0 15px' },
-  mainHeading: { fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' },
-  tabContainer: { display: 'flex', gap: '10px', marginBottom: '2rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '0px' },
+  accountLayout: { display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--s-cream)' },
+  mainContainer: { flexGrow: 1, maxWidth: '1000px', width: '90%', margin: '80px auto', padding: '0 15px' },
+  mainHeading: { fontFamily: 'var(--s-serif)', fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem', borderBottom: '1px solid rgba(139,26,26,0.15)', paddingBottom: '1rem', color: 'var(--s-text-heading)' },
+  tabContainer: { display: 'flex', gap: '10px', marginBottom: '2rem', borderBottom: '1px solid rgba(139,26,26,0.15)', paddingBottom: '0px' },
   tabButton: { padding: '0.75rem 1rem', background: 'transparent', border: 'none', borderBottom: '3px solid transparent', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', color: '#6b7280', transition: 'all 0.2s ease', marginBottom: '-1px' },
   tabActive: { borderBottom: '3px solid #ef4444', color: '#111827', fontWeight: '600' },
   contentBox: { backgroundColor: 'white', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)', borderRadius: '0.5rem', padding: '1.5rem', marginBottom: '2rem' },

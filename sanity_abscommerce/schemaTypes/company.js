@@ -172,8 +172,15 @@ export default {
           type: 'object',
           fields: [
             { name: 'value', title: 'Value', type: 'string' },
-            { name: 'label', title: 'Label', type: 'string' }
-          ]
+            { name: 'label', title: 'Label', type: 'string' },
+            { name: 'description', title: 'Description', type: 'string' }
+          ],
+          preview: {
+            select: {
+              title: 'label',
+              subtitle: 'value'
+            }
+          }
         }
       ]
     },
@@ -192,11 +199,13 @@ export default {
           fields: [
             { name: 'name', title: 'Name', type: 'string' },
             { name: 'logo', title: 'Logo', type: 'image', options: { hotspot: true } },
+            { name: 'description', title: 'Description', type: 'string' },
             { name: 'website', title: 'Website', type: 'url' }
           ],
           preview: {
             select: {
               title: 'name',
+              subtitle: 'description',
               media: 'logo'
             }
           }

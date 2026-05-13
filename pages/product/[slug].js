@@ -22,6 +22,8 @@ import JsonLd from '../../components/JsonLd';
 import { trackViewItem, trackAddToCart } from '../../lib/analytics';
 import UrgencyTimer from '../../components/UrgencyTimer';
 import ProductShare from '../../components/ProductShare';
+import PrintifyBadge from '../../components/PrintifyBadge';
+import ProductTabs from '../../components/ProductTabs';
 import '../../styles/sampada-premium-brand.css';
 
 
@@ -364,14 +366,13 @@ const ProductDetails = ({ product, products, slug }) => {
 
       {/* Main product container with consistent spacing */}
       <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
-      <div className="product-detail-container" style={{
+      <div className="section-light" style={{ minHeight: '100vh', padding: '80px 0' }}>
+      <div className="s-container" style={{
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: '40px',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '40px 20px'
+        maxWidth: '1200px'
       }}>
         {/* Left side - Product image */}
         <div style={{
@@ -606,6 +607,14 @@ const ProductDetails = ({ product, products, slug }) => {
             <span style={{ fontSize: '16px' }}>📦</span>
             <span><strong>Ships via Printify</strong> | <strong>Stripe Secure Checkout</strong></span>
           </div>
+
+          {/* Printify Badge - Detailed Information */}
+          {product.printifyIntegration?.isPrintifyProduct && (
+            <PrintifyBadge 
+              printifyIntegration={product.printifyIntegration}
+              variant="detailed"
+            />
+          )}
 
           {/* Product Variants (Colors & Sizes) */}
           {variants && variants.length > 0 && (
@@ -1084,6 +1093,19 @@ const ProductDetails = ({ product, products, slug }) => {
         </div>
       </div>
 
+      {/* Product Tabs Section */}
+      {product.productTabs && product.productTabs.length > 0 && (
+        <div style={{ 
+          marginTop: '50px', 
+          padding: '0 20px',
+          maxWidth: '1200px',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}>
+          <ProductTabs tabs={product.productTabs} />
+        </div>
+      )}
+
       {/* Product Reviews Section */}
       <div style={{
         maxWidth: '1200px',
@@ -1290,7 +1312,15 @@ export const getStaticProps = async ({ params: { slug } }) => {
       sizeChart{
         _key, asset->{_id, url}
       },
-      specifications[]{_key, feature, value}
+      specifications[]{_key, feature, value},
+      printifyIntegration,
+      productTabs[]{
+        _key,
+        tabTitle,
+        tabIcon,
+        tabContent
+      },
+      availableColors
     }`;
 
     // Only fetch published/active products for related products

@@ -37,7 +37,7 @@ export default function EchoCanvas() {
       lastPosRef.current = { x, y }
 
       // Velocity-scaled radius, capped at 60
-      const baseRadius = Math.min(8 + speed * 0.8, 60)
+      const baseRadius = Math.max(8, Math.min(8 + speed * 0.8, 60))
 
       particlesRef.current.push({
         x,
@@ -64,11 +64,14 @@ export default function EchoCanvas() {
         const currentRadius = p.radius + (p.maxRadius - p.radius) * progress
         const alpha = p.alpha * (1 - progress)
 
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2)
-        ctx.strokeStyle = `rgba(201, 169, 110, ${alpha})`
-        ctx.lineWidth = 1.5
-        ctx.stroke()
+        // Safety check: only draw if radius is positive
+        if (currentRadius > 0 && alpha > 0) {
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2)
+          ctx.strokeStyle = `rgba(201, 169, 110, ${alpha})`
+          ctx.lineWidth = 1.5
+          ctx.stroke()
+        }
 
         return true
       })

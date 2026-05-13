@@ -63,22 +63,18 @@ const HomeHeroBanner = ({ heroBanner }) => {
           {product ? (
             <Link
               href={`/product/${product}`}
-              className="shop-now-btn"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              className="btn-cta-primary"
               aria-label={`Shop ${product}`}
             >
-              Shop Now
-              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+              Shop Now <span className="arrow">→</span>
             </Link>
           ) : (
             <Link
               href="/collections/mens-tshirts"
-              className="shop-now-btn"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              className="btn-cta-primary"
               aria-label="Shop men's t-shirts"
             >
-              Shop Now
-              <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+              Shop Now <span className="arrow">→</span>
             </Link>
           )}
         </div>

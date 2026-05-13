@@ -212,6 +212,104 @@ export default {
       type: 'text',
       hidden: ({ document }) => !document?.ticketSystemEnabled
     },
+    // ✨ BONUS ELEMENTS
+    {
+      name: 'supportPromise',
+      title: 'Support Promise',
+      type: 'text',
+      description: 'A short promise statement that appears prominently on the support page',
+      rows: 3,
+      initialValue: 'Your satisfaction is our legacy. Every inquiry is treated with the care and attention that defines the Sampada experience.'
+    },
+    {
+      name: 'trustBadges',
+      title: 'Trust Badges',
+      type: 'array',
+      description: 'Display trust badges to build customer confidence',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { 
+              name: 'icon', 
+              title: 'Icon', 
+              type: 'string',
+              description: 'Emoji or icon identifier (e.g., 🔒, 📦, 🔄)',
+              validation: Rule => Rule.required()
+            },
+            { 
+              name: 'title', 
+              title: 'Title', 
+              type: 'string',
+              validation: Rule => Rule.required()
+            },
+            { 
+              name: 'description', 
+              title: 'Description', 
+              type: 'string',
+              description: 'Optional short description'
+            }
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              subtitle: 'icon'
+            }
+          }
+        }
+      ],
+      initialValue: [
+        { icon: '🔒', title: 'Secure Payments', description: 'SSL encrypted transactions' },
+        { icon: '📦', title: 'Free Shipping on Orders Above ₹2,999', description: 'Pan-India delivery' },
+        { icon: '🔄', title: '7-Day Easy Returns', description: 'Hassle-free returns' },
+        { icon: '✨', title: '100% Authentic Products', description: 'Genuine heritage designs' },
+        { icon: '🇮🇳', title: 'Made in India with Pride', description: 'Supporting local artisans' }
+      ]
+    },
+    {
+      name: 'heroStyling',
+      title: 'Hero Section Styling',
+      type: 'object',
+      description: 'Customize the hero section appearance',
+      fields: [
+        {
+          name: 'backgroundColor',
+          title: 'Background Color',
+          type: 'string',
+          description: 'Hex color code (e.g., #0d1126)',
+          initialValue: '#0d1126'
+        },
+        {
+          name: 'textColor',
+          title: 'Text Color',
+          type: 'string',
+          description: 'Hex color code (e.g., #f5f0eb)',
+          initialValue: '#f5f0eb'
+        },
+        {
+          name: 'accentColor',
+          title: 'Accent Color',
+          type: 'string',
+          description: 'Hex color code for highlights (e.g., #c9a96e)',
+          initialValue: '#c9a96e'
+        },
+        {
+          name: 'overlayOpacity',
+          title: 'Image Overlay Opacity',
+          type: 'number',
+          description: 'Value between 0 and 1 (e.g., 0.7)',
+          validation: Rule => Rule.min(0).max(1),
+          initialValue: 0.7
+        },
+        {
+          name: 'height',
+          title: 'Hero Height',
+          type: 'string',
+          description: 'CSS height value (e.g., 60vh, 500px)',
+          initialValue: '60vh'
+        }
+      ]
+    },
     {
       name: 'seo',
       title: 'SEO Settings',
