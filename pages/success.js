@@ -117,13 +117,12 @@ const Success = () => {
         <meta name="description" content="Your order has been successfully placed!" />
       </Head>
 
-      <div style={{
+      <div className="section-crimson" style={{
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px 20px',
-        background: 'linear-gradient(135deg, #f8f4ef 0%, #ffffff 100%)'
+        padding: '80px 20px'
       }}>
         <div style={{
           maxWidth: '600px',
@@ -131,8 +130,8 @@ const Success = () => {
           background: '#ffffff',
           borderRadius: '12px',
           padding: '48px 40px',
-          boxShadow: '0 12px 48px rgba(139, 26, 26, 0.15)',
-          border: '2px solid rgba(201, 168, 76, 0.3)',
+          boxShadow: '0 12px 48px rgba(139, 26, 26, 0.25)',
+          border: '2px solid var(--s-gold)',
           textAlign: 'center'
         }}>
           {/* Success Icon */}
@@ -141,13 +140,13 @@ const Success = () => {
             height: '80px',
             margin: '0 auto 24px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #8B1A1A, #6B1414)',
+            background: 'var(--s-gold)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 8px 24px rgba(139, 26, 26, 0.3)'
+            boxShadow: '0 8px 24px rgba(201,169,110,0.4)'
           }}>
-            <CheckCircle size={40} color="#ffffff" />
+            <CheckCircle size={40} color="var(--s-dark)" />
           </div>
 
           {/* Heading */}

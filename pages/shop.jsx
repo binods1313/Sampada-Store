@@ -129,99 +129,86 @@ export default function ShopPage() {
   }, [products]);
 
   return (
-    <div className="shop-page" style={{ 
-      maxWidth: '1400px', 
-      margin: '0 auto', 
-      padding: '40px 20px',
-      fontFamily: 'Inter, system-ui, sans-serif'
-    }}>
-      {/* Header with Sampada brand styling */}
-      <header style={{ 
-        marginBottom: '40px',
-        textAlign: 'center',
-        position: 'relative'
+    <div className="section-light" style={{ minHeight: '100vh' }}>
+      <div className="s-container" style={{ 
+        maxWidth: '1400px', 
+        padding: '80px 20px'
       }}>
-        <h1 style={{ 
-          fontSize: '36px', 
-          fontWeight: '800', 
-          marginBottom: '12px',
-          color: '#1a1a1a',
-          letterSpacing: '-0.02em',
-          position: 'relative',
-          display: 'inline-block'
+        {/* Header with Sampada brand styling */}
+        <header style={{ 
+          marginBottom: '48px',
+          textAlign: 'center'
         }}>
-          Shop All Products
-        </h1>
-        <div style={{
-          width: '60px',
-          height: '3px',
-          background: 'linear-gradient(90deg, #8B1A1A, #C9A84C)',
-          margin: '16px auto',
-          borderRadius: '2px'
-        }} />
-        <p style={{ 
-          color: '#666', 
-          fontSize: '15px',
-          marginTop: '16px'
-        }}>
+          <p className="s-label">DISCOVER</p>
+          <h1 className="s-heading" style={{ fontSize: '2.5rem' }}>
+            Shop All Products
+          </h1>
+          <span className="s-bar" />
+          <p style={{ 
+            color: 'var(--s-text-body)', 
+            fontSize: '1rem',
+            marginTop: '24px'
+          }}>
+            {loading ? (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '16px', height: '16px', border: '2px solid var(--s-gold)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+                Loading products...
+              </span>
+            ) : (
+              `${filteredProducts.length} products`
+            )}
+          </p>
+        </header>
+
+        {/* Filters with premium styling */}
+        <ProductFilterSection
+          products={filteredProducts}
+          categories={categories}
+          filters={filters}
+          onFilterChange={setFilters}
+          title="Shop All Products"
+        />
+
+        {/* Virtual Product List */}
+        <div style={{ marginTop: '32px' }}>
           {loading ? (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '16px', height: '16px', border: '2px solid #C9A84C', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
-              Loading products...
-            </span>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '24px',
+            }}>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '80px 20px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '8px',
+              border: '1px solid rgba(139,26,26,0.12)',
+              boxShadow: '0 2px 12px rgba(139,26,26,0.05)'
+            }}>
+              <p style={{ fontFamily: 'var(--s-serif)', fontSize: '1.3rem', fontWeight: '600', marginBottom: '8px', color: 'var(--s-text-heading)' }}>No products found</p>
+              <p style={{ fontSize: '0.9rem', color: 'var(--s-text-body)' }}>Try adjusting your filters or search criteria</p>
+            </div>
           ) : (
-            `${filteredProducts.length} products`
+            <VirtualProductList
+              products={filteredProducts}
+              columns={4}
+              cardWidth={280}
+              loading={loading}
+            />
           )}
-        </p>
-      </header>
+        </div>
 
-      {/* Filters with premium styling */}
-      <ProductFilterSection
-        products={filteredProducts}
-        categories={categories}
-        filters={filters}
-        onFilterChange={setFilters}
-        title="Shop All Products"
-      />
-
-      {/* Virtual Product List */}
-      <div style={{ marginTop: '32px' }}>
-        {loading ? (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '24px',
-          }}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : filteredProducts.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '80px 20px',
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            border: '1px solid rgba(201, 168, 76, 0.2)'
-          }}>
-            <p style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: '#1a1a1a' }}>No products found</p>
-            <p style={{ fontSize: '14px', color: '#666' }}>Try adjusting your filters or search criteria</p>
-          </div>
-        ) : (
-          <VirtualProductList
-            products={filteredProducts}
-            columns={4}
-            cardWidth={280}
-            loading={loading}
-          />
-        )}
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
-
-      <style jsx>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

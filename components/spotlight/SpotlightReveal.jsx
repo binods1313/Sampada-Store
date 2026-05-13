@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import EchoCanvas from './EchoCanvas'
 
 const LERP_FACTOR = 0.08
-const SPOTLIGHT_RADIUS = 116 // px — 25% smaller than original 155
+const SPOTLIGHT_RADIUS = 80 // Stories page spotlight radius
 
 /**
  * Mouse-following spotlight reveal hero.

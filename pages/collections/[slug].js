@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { client, fetchOptions, longCache } from '../../lib/client';
 import { logger, logFetchError } from '../../lib/logger';
-import { Product } from '@/components';
+import Product from '../../components/Product';
 import FilterBar from '@/components/FilterBar';
 import ActiveFilters from '@/components/ActiveFilters';
 
-const CollectionPage = ({ products, categories }) => {
+const CollectionPage = ({ products, categories, banner }) => {
     const router = useRouter();
     const { slug } = router.query;
     
@@ -22,6 +22,22 @@ const CollectionPage = ({ products, categories }) => {
 
     // Format slug for title
     const title = slug ? slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Collection';
+
+    // Helper function to get collection quote
+    const getCollectionQuote = (collectionName, quotes) => {
+        if (!quotes) return 'Crafted for You, Printed to Perfection.';
+        const name = collectionName.toLowerCase();
+        if (name.includes('men') && !name.includes('women')) {
+            return quotes.mensQuote || 'Crafted for You, Printed to Perfection.';
+        }
+        if (name.includes('women')) {
+            return quotes.womensQuote || 'Crafted for You, Printed to Perfection.';
+        }
+        if (name.includes('his') || name.includes('hers')) {
+            return quotes.hisHersQuote || 'Crafted for You, Printed to Perfection.';
+        }
+        return 'Crafted for You, Printed to Perfection.';
+    };
 
     // Handle filter changes from FilterBar component
     const handleFilterChange = (newFilters) => {
@@ -144,59 +160,92 @@ const CollectionPage = ({ products, categories }) => {
     }, [products, slug, filters]);
 
     return (
-        <div className="collection-page-container" style={{ padding: '60px 20px', maxWidth: '1400px', margin: '0 auto' }}>
-            <h1 style={{ textAlign: 'center', fontSize: '40px', marginBottom: '10px' }}>{title}</h1>
-            <p style={{ textAlign: 'center', marginBottom: '60px', color: '#666' }}>
-                Explore our latest {title} collection
-            </p>
-
-            {/* FilterBar Component */}
-            <FilterBar
-                categories={categories}
-                onFilterChange={handleFilterChange}
-                totalProducts={filteredAndSortedProducts.length}
-            />
-
-            {/* ActiveFilters Component */}
-            <ActiveFilters
-                filters={filters}
-                onRemoveFilter={handleRemoveFilter}
-                onClearAll={handleClearAll}
-            />
-
-            {filteredAndSortedProducts.length > 0 ? (
-                <div className="products-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
-                    {filteredAndSortedProducts.map((product) => (
-                        <Product key={product._id} product={product} />
-                    ))}
-                </div>
-            ) : (
-                <div style={{ textAlign: 'center', padding: '40px' }}>
-                    <h3>No products found matching your filters</h3>
-                    <p style={{ color: '#666', marginTop: '8px', marginBottom: '24px' }}>
-                        Try adjusting your search or filter criteria
-                    </p>
-                    <button 
-                        onClick={handleClearAll}
-                        className="btn" 
-                        style={{ 
-                            marginTop: '20px',
-                            padding: '12px 24px',
-                            fontSize: '14px',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Clear All Filters
-                    </button>
-                </div>
+        <>
+            {/* Collection Quote Section */}
+            {banner?.collectionQuote && (
+                <section className="section-light s-section" style={{
+                    textAlign: 'center',
+                    padding: '60px 20px',
+                    background: 'var(--s-cream)',
+                    borderBottom: '1px solid rgba(139,26,26,0.1)'
+                }}>
+                    <div className="s-container" style={{ maxWidth: '800px' }}>
+                        <p style={{
+                            fontFamily: 'var(--s-serif)',
+                            fontSize: '1.8rem',
+                            fontStyle: 'italic',
+                            color: 'var(--s-crimson)',
+                            lineHeight: '1.4',
+                            margin: 0
+                        }}>
+                            "{getCollectionQuote(title, banner.collectionQuote)}"
+                        </p>
+                    </div>
+                </section>
             )}
-        </div>
+
+            <div className="section-light" style={{ minHeight: '100vh', padding: '80px 0' }}>
+                <div className="s-container" style={{ maxWidth: '1400px' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                        <p className="s-label">COLLECTION</p>
+                        <h1 className="s-heading" style={{ fontSize: '2.5rem' }}>{title}</h1>
+                        <span className="s-bar" />
+                        <p style={{ color: 'var(--s-text-body)', fontSize: '1rem', marginTop: '24px' }}>
+                            Explore our latest {title} collection
+                        </p>
+                    </div>
+
+                {/* FilterBar Component */}
+                <FilterBar
+                    categories={categories}
+                    onFilterChange={handleFilterChange}
+                    totalProducts={filteredAndSortedProducts.length}
+                />
+
+                {/* ActiveFilters Component */}
+                <ActiveFilters
+                    filters={filters}
+                    onRemoveFilter={handleRemoveFilter}
+                    onClearAll={handleClearAll}
+                />
+
+                {filteredAndSortedProducts.length > 0 ? (
+                    <div className="products-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
+                        {filteredAndSortedProducts.map((product) => (
+                            <Product key={product._id} product={product} />
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{ 
+                        textAlign: 'center', 
+                        padding: '80px 20px',
+                        background: '#FFFFFF',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(139,26,26,0.12)',
+                        boxShadow: '0 2px 12px rgba(139,26,26,0.05)'
+                    }}>
+                        <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '1.5rem', color: 'var(--s-text-heading)', marginBottom: '8px' }}>
+                            No products found matching your filters
+                        </h3>
+                        <p style={{ color: 'var(--s-text-body)', marginTop: '8px', marginBottom: '24px' }}>
+                            Try adjusting your search or filter criteria
+                        </p>
+                        <button 
+                            onClick={handleClearAll}
+                            className="btn-cta-primary"
+                        >
+                            Clear All Filters <span className="arrow">→</span>
+                        </button>
+                    </div>
+                )}
+                </div>
+            </div>
+        </>
     );
 };
 
 export const getServerSideProps = async () => {
-    // Fetch only published products
+    // Fetch only published products with printifyIntegration
     const productsQuery = `*[_type == "product" && status in ["published", "active"]]{
         _id,
         _createdAt,
@@ -210,7 +259,8 @@ export const getServerSideProps = async () => {
             _id,
             name,
             slug
-        }
+        },
+        printifyIntegration
     } | order(_createdAt desc)`;
 
     // Fetch only categories with defined slugs
@@ -220,10 +270,16 @@ export const getServerSideProps = async () => {
         slug
     } | order(name asc)`;
 
+    // Fetch banner data for quotes
+    const bannerQuery = `*[_type == "banner"][0]{
+        collectionQuote
+    }`;
+
     try {
-        const [products, categories] = await Promise.all([
+        const [products, categories, banner] = await Promise.all([
             client.fetch(productsQuery, {}, fetchOptions(3600)),
             client.fetch(categoriesQuery, {}, longCache()),
+            client.fetch(bannerQuery, {}, longCache()),
         ]);
 
         logger.debug('Collection page data fetched', {
@@ -235,6 +291,7 @@ export const getServerSideProps = async () => {
             props: {
                 products: products || [],
                 categories: categories || [],
+                banner: banner || null,
             },
         };
     } catch (error) {
@@ -243,6 +300,7 @@ export const getServerSideProps = async () => {
             props: {
                 products: [],
                 categories: [],
+                banner: null,
             },
         };
     }

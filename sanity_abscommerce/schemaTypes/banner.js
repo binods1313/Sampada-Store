@@ -98,6 +98,49 @@ export default {
         validation: Rule => Rule.required()
       },
       {
+        name: 'collectionQuote',
+        title: 'Collection Quote',
+        type: 'object',
+        description: 'Brand quotes for different collection types (Printify theme)',
+        fields: [
+          {
+            name: 'mensQuote',
+            title: "Men's Collection Quote",
+            type: 'string',
+            initialValue: 'Crafted for You, Printed to Perfection.',
+            description: 'Quote for men\'s collection pages'
+          },
+          {
+            name: 'womensQuote',
+            title: "Women's Collection Quote",
+            type: 'string',
+            initialValue: 'Crafted for You, Printed to Perfection.',
+            description: 'Quote for women\'s collection pages'
+          },
+          {
+            name: 'hisHersQuote',
+            title: 'His & Hers Collection Quote',
+            type: 'string',
+            initialValue: 'Crafted for You, Printed to Perfection.',
+            description: 'Quote for his & hers collection pages'
+          },
+          {
+            name: 'supportQuote',
+            title: 'Support Page Quote',
+            type: 'string',
+            initialValue: 'Your satisfaction is our legacy.',
+            description: 'Quote for support page'
+          },
+          {
+            name: 'storiesQuote',
+            title: 'Stories Page Quote',
+            type: 'string',
+            initialValue: 'Every design tells a story of heritage and innovation.',
+            description: 'Quote for stories page'
+          }
+        ]
+      },
+      {
         name: 'seo',
         title: 'SEO Settings',
         type: 'object',
