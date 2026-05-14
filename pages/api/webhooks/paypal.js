@@ -65,7 +65,7 @@ export default async function handler(req, res) {
         // Check for Printify items in the order metadata/description
         // This assumes we stored info in purchase_units
         const purchaseUnit = orderDetails.purchase_units?.[0];
-        const printifyItems = purchaseUnit?.items?.filter((item: any) => {
+        const printifyItems = purchaseUnit?.items?.filter((item) => {
             // Check if we can identify this as a Printify item
             // This is harder with PayPal as metadata is limited compared to Stripe
             // We usually rely on the SKU or name if mapped correctly
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             const shipping = purchaseUnit.shipping?.address;
             const printifyOrderData = {
               external_id: orderId,
-              line_items: printifyItems.map((item: any) => ({
+              line_items: printifyItems.map((item) => ({
                 product_id: item.sku?.split('-')[1], // Assumes SKU format PF-PRODUCTID-VARIANTID
                 variant_id: item.sku?.split('-')[2],
                 quantity: parseInt(item.quantity)
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({ received: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error('--- PayPal Webhook Error ---');
     console.error(error.message);
     // Don't return 500 so PayPal doesn't keep retrying if it's a known non-critical error
