@@ -1253,6 +1253,7 @@ const ProductDetails = ({ product, products, slug }) => {
           </div>
         </div>
       )}
+      </div>{/* end section-light */}
       </main>
     </div>
   )
