@@ -12,10 +12,6 @@ const nextConfigCore = {
   // Fix slow filesystem warning on Windows/network drives
   outputFileTracingRoot: path.join(__dirname, './'),
 
-  watchOptions: {
-    ignored: /node_modules|\.next|System Volume Information/,
-  },
-
   // Production build optimizations
   poweredByHeader: false, // Remove X-Powered-By header
   compress: true, // Enable gzip compression

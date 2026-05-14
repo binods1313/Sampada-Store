@@ -2,8 +2,9 @@
  * Gemini Vision — AI Product Description Generator
  * POST /api/ai/describe-product
  *
- * Accepts multipart/form-data:
- *   image: File  (jpg/png/webp, max 10MB)
+ * Accepts JSON body:
+ *   imageBase64: string  — base64 image data (strip data:image/...;base64, prefix)
+ *   mimeType?: string    — e.g. "image/jpeg" (default)
  *   productName?: string
  *   category?: string
  *   priceRange?: string
@@ -13,11 +14,14 @@
  */
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import formidable from 'formidable'
-import fs from 'fs'
 
-// Disable Next.js body parser — formidable handles the stream directly
-export const config = { api: { bodyParser: false } }
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+}
 
 const genAI = new GoogleGenerativeAI(
   process.env.GEMINI_API_KEY ||
@@ -46,94 +50,52 @@ Rules:
 - Tags should be short (1-2 words each)
 - Return ONLY the JSON object, nothing else`
 
-// Parse multipart form using formidable v3
-function parseForm(req) {
-  return new Promise((resolve, reject) => {
-    const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, // 10MB
-      keepExtensions: true,
-      filter: ({ mimetype }) => mimetype && mimetype.startsWith('image/'),
-    })
-    form.parse(req, (err, fields, files) => {
-      if (err) reject(err)
-      else resolve({ fields, files })
-    })
-  })
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' })
   }
 
-  let tempFilePath = null
-
   try {
-    const { fields, files } = await parseForm(req)
+    const { imageBase64, mimeType = 'image/jpeg', productName, category, priceRange } = req.body
 
-    // formidable v3 returns arrays for all values
-    const imageFile = Array.isArray(files.image) ? files.image[0] : files.image
-    if (!imageFile) {
-      return res.status(400).json({ success: false, error: 'No image file provided' })
+    if (!imageBase64) {
+      return res.status(400).json({ success: false, error: 'imageBase64 is required' })
     }
 
-    tempFilePath = imageFile.filepath
-
-    // Read image as base64 for Gemini inlineData
-    const imageBuffer = fs.readFileSync(tempFilePath)
-    const base64Image = imageBuffer.toString('base64')
-    const mimeType = imageFile.mimetype || 'image/jpeg'
-
-    // Extract optional context fields (formidable v3 returns arrays)
-    const get = (key) => {
-      const v = fields[key]
-      return Array.isArray(v) ? v[0] : v
-    }
-    const productName = get('productName')
-    const category = get('category')
-    const priceRange = get('priceRange')
+    // Strip data URI prefix if present
+    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '')
 
     let contextNote = ''
     if (productName) contextNote += `\nProduct name hint: ${productName}`
     if (category) contextNote += `\nCategory hint: ${category}`
     if (priceRange) contextNote += `\nPrice range: ${priceRange}`
 
-    // Call Gemini Vision (gemini-1.5-flash — fast + multimodal)
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
     const result = await model.generateContent([
       SYSTEM_PROMPT + contextNote,
       {
         inlineData: {
-          data: base64Image,
+          data: base64Data,
           mimeType,
         },
       },
     ])
 
     const text = result.response.text().trim()
-
-    // Strip any accidental markdown fences
-    const jsonText = text
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/```\s*$/i, '')
       .trim()
 
-    const parsed = JSON.parse(jsonText)
+    const parsed = JSON.parse(text)
 
     return res.status(200).json({ success: true, ...parsed })
-
   } catch (error) {
     console.error('[describe-product]', error)
     return res.status(500).json({
       success: false,
       error: error.message || 'Failed to generate description',
     })
-  } finally {
-    // Always clean up temp file
-    if (tempFilePath) {
-      try { fs.unlinkSync(tempFilePath) } catch (_) {}
-    }
   }
 }
