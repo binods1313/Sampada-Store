@@ -8,13 +8,13 @@
 ## ✅ WHAT WAS DONE
 
 ### API Key Updated
-**New Google API Key**: `AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk`
+**New Google API Key**: `YOUR_GOOGLE_API_KEY_HERE`
 
 **Updated in `.env` file**:
 ```env
-GOOGLE_AI_API_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
-GOOGLE_AI_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
-GOOGLE_VISION_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
+GOOGLE_AI_API_KEY=YOUR_GOOGLE_API_KEY_HERE
+GOOGLE_AI_KEY=YOUR_GOOGLE_API_KEY_HERE
+GOOGLE_VISION_KEY=YOUR_GOOGLE_API_KEY_HERE
 ```
 
 **Why 3 Variables?**
@@ -59,7 +59,7 @@ node scripts/test-api-keys.js
 ```bash
 # Test Google AI API
 curl -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk" \
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=YOUR_GOOGLE_API_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
 ```

@@ -7,9 +7,9 @@
 ## ✅ CONFIGURED API KEYS
 
 ### Google AI Services
-- **GOOGLE_AI_API_KEY**: `AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk` ✅
-- **GOOGLE_AI_KEY**: `AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk` ✅ (alias for compatibility)
-- **GOOGLE_VISION_KEY**: `AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk` ✅ (same key works for Vision API)
+- **GOOGLE_AI_API_KEY**: `YOUR_GOOGLE_API_KEY_HERE` ✅
+- **GOOGLE_AI_KEY**: `YOUR_GOOGLE_API_KEY_HERE` ✅ (alias for compatibility)
+- **GOOGLE_VISION_KEY**: `YOUR_GOOGLE_API_KEY_HERE` ✅ (same key works for Vision API)
 
 **Usage**:
 - Mockup generation (Imagen 3)
@@ -137,7 +137,7 @@ Run this twice to get two different secrets.
 ## 📊 API KEY USAGE TRACKING
 
 ### Google AI API
-**Current Key**: `AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk`
+**Current Key**: `YOUR_GOOGLE_API_KEY_HERE`
 
 **Services Enabled**:
 - ✅ Generative Language API (Gemini)
@@ -192,7 +192,7 @@ Run this twice to get two different secrets.
 ### Test Google AI API
 ```bash
 curl -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk" \
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=YOUR_GOOGLE_API_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
 ```
@@ -215,7 +215,7 @@ curl -X GET \
 ### Test Google Vision API
 ```bash
 curl -X POST \
-  "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk" \
+  "https://vision.googleapis.com/v1/images:annotate?key=YOUR_GOOGLE_API_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{
     "requests": [{

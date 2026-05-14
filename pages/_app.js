@@ -15,6 +15,7 @@ import { CurrencyProvider } from '../context/CurrencyContext';
 import { WishlistProvider } from '../components/WishlistSystem';
 import { useEffect } from 'react';
 import { initGA } from '@/lib/analytics';
+import StyleAssistant from '@/components/StyleAssistant/StyleAssistant';
 
 // Preload fonts for accurate text measurement (Pretext)
 // DISABLED: Inter font already loads via Google Fonts in Layout
@@ -106,6 +107,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
                     <Component {...pageProps} />
                     {/* Dev Tools Panel - Admin/Dev Only */}
                     <DevToolsPanel />
+                    {/* Style Assistant — floating chat widget */}
+                    <StyleAssistant />
                   </Layout>
                 </OfflineWrapper>
               </WishlistProvider>
