@@ -21,6 +21,9 @@ const nextConfigCore = {
   compress: true, // Enable gzip compression
   generateEtags: true, // Enable ETag headers for caching
 
+  // Explicitly use webpack (not Turbopack) — required because we have a custom webpack config
+  turbopack: {},
+
   // ISR and build optimizations
   experimental: {
     scrollRestoration: true,
