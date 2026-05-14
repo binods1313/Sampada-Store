@@ -8,6 +8,11 @@
 .env.test
 .env
 
+# Secret key files — NEVER commit these
+gcs-service-account.json
+*.service-account.json
+*-service-account.json
+
 # Dependency Directories
 node_modules/
 /.pnp
