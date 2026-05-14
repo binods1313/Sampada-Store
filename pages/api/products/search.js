@@ -5,7 +5,7 @@
  * Used by Voice Assistant and other search features
  */
 
-import { client } from '../../../lib/sanity/client';
+import { client } from '../../../lib/client';
 
 // Common product fields projection
 const PRODUCT_FIELDS = `
