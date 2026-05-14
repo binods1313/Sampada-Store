@@ -124,15 +124,24 @@ function AIToolsContent() {
     setResult(null)
 
     try {
-      const formData = new FormData()
-      formData.append('image', image.file)
-      if (productName) formData.append('productName', productName)
-      if (category) formData.append('category', category)
-      if (priceRange) formData.append('priceRange', priceRange)
+      // Convert to base64 — no formidable needed, works on Vercel serverless
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(image.file)
+      })
 
       const res = await fetch('/api/ai/describe-product', {
         method: 'POST',
-        body: formData, // multipart — no Content-Type header needed, browser sets it
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: base64,
+          mimeType: image.file.type || 'image/jpeg',
+          productName: productName || undefined,
+          category: category || undefined,
+          priceRange: priceRange || undefined,
+        }),
       })
       const data = await res.json()
 
