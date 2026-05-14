@@ -1,4 +1,4 @@
-const { extractColors } = require('../../services/colorExtractionService');
+const { extractColors } = require('../../../services/colorExtractionService');
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {

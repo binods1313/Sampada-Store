@@ -1,4 +1,4 @@
-const { moderateImage } = require('../../services/contentModerationService');
+const { moderateImage } = require('../../../services/contentModerationService');
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
