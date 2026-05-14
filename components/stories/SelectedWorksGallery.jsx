@@ -1,5 +1,5 @@
 // components/stories/SelectedWorksGallery.jsx
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { kavyaPortfolioImages } from '@/data/kavyaPortfolioImages'
 
 const CATEGORIES = ['Casual', 'Festive', 'Premium', 'Summer', 'Winter', 'Campus']
@@ -18,6 +18,13 @@ export default function SelectedWorksGallery() {
   const [hovered, setHovered] = useState(null)
   const [page, setPage] = useState(1)
 
+  // RAG search state
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searching, setSearching] = useState(false)
+  const [searchMessage, setSearchMessage] = useState('')
+  const [searchMood, setSearchMood] = useState('')
+  const inputRef = useRef(null)
+
   const filtered = useMemo(
     () => (active === 'All' ? works : works.filter(w => w.category === active)),
     [active]
@@ -26,12 +33,46 @@ export default function SelectedWorksGallery() {
   const paginated = filtered.slice(0, page * PAGE_SIZE)
   const hasMore = paginated.length < filtered.length
 
-  const handleFilter = (f) => { setActive(f); setPage(1) }
+  const handleFilter = (f) => { setActive(f); setPage(1); setSearchMessage(''); setSearchMood('') }
+
+  const handleSearch = async (e) => {
+    e?.preventDefault()
+    if (!searchQuery.trim() || searching) return
+    setSearching(true)
+    setSearchMessage('')
+    try {
+      const res = await fetch('/api/ai/lookbook-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: searchQuery.trim() }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setActive(data.category)
+        setPage(1)
+        setSearchMessage(data.message)
+        setSearchMood(data.mood)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSearching(false)
+    }
+  }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+    setSearchMessage('')
+    setSearchMood('')
+    setActive('All')
+    setPage(1)
+    inputRef.current?.focus()
+  }
 
   return (
     <section style={{ background: '#0d1126', padding: '80px 24px 96px' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <p style={{
           fontSize: '0.7rem', letterSpacing: '0.35em', textTransform: 'uppercase',
           color: '#c9a96e', fontFamily: "'Montserrat', sans-serif", fontWeight: 700, margin: '0 0 14px',
@@ -46,6 +87,62 @@ export default function SelectedWorksGallery() {
           maxWidth: '400px', margin: '0 auto', fontFamily: "'Montserrat', sans-serif",
         }}>Every frame, a story. Every look, a legacy.</p>
       </div>
+
+      {/* AI Search bar */}
+      <form onSubmit={handleSearch} style={{
+        maxWidth: '520px', margin: '0 auto 32px', display: 'flex', gap: '8px',
+      }}>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <input
+            ref={inputRef}
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder='Try "casual earthy tones" or "festive looks"...'
+            style={{
+              width: '100%', background: 'rgba(255,255,255,0.06)',
+              border: '1.5px solid rgba(201,169,110,0.3)', borderRadius: '28px',
+              color: '#f5f0eb', padding: '11px 44px 11px 18px',
+              fontSize: '0.85rem', fontFamily: "'Montserrat', sans-serif",
+              outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s',
+            }}
+            onFocus={e => e.target.style.borderColor = '#c9a96e'}
+            onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.3)'}
+          />
+          {searchQuery && (
+            <button type="button" onClick={clearSearch} style={{
+              position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+              background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+              cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '2px',
+            }}>×</button>
+          )}
+        </div>
+        <button type="submit" disabled={!searchQuery.trim() || searching} style={{
+          padding: '11px 20px', borderRadius: '28px', flexShrink: 0,
+          background: searchQuery.trim() && !searching ? '#c9a96e' : 'rgba(201,169,110,0.2)',
+          border: 'none', color: searchQuery.trim() && !searching ? '#0d1126' : 'rgba(201,169,110,0.4)',
+          fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+          fontFamily: "'Montserrat', sans-serif", cursor: searchQuery.trim() && !searching ? 'pointer' : 'not-allowed',
+          transition: 'all 0.2s',
+        }}>
+          {searching ? '...' : '✦ Search'}
+        </button>
+      </form>
+
+      {/* AI search result message */}
+      {searchMessage && (
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <p style={{
+            fontSize: '0.85rem', color: '#c9a96e', fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic', margin: '0 0 4px',
+          }}>{searchMessage}</p>
+          {searchMood && (
+            <p style={{
+              fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.3)', fontFamily: "'Montserrat', sans-serif", margin: 0,
+            }}>Mood: {searchMood}</p>
+          )}
+        </div>
+      )}
 
       {/* Filter tabs */}
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginBottom: '40px' }}>

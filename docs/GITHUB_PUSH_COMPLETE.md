@@ -51,9 +51,9 @@ Create `.env` file in root directory:
 # Copy from your secure location or use these placeholders
 
 # Google AI API
-GOOGLE_AI_API_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
-GOOGLE_AI_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
-GOOGLE_VISION_KEY=AIzaSyBbc1Dp2FWmyEWPqUq9recBwAjgkvS_LZk
+GOOGLE_AI_API_KEY=YOUR_GOOGLE_API_KEY_HERE
+GOOGLE_AI_KEY=YOUR_GOOGLE_API_KEY_HERE
+GOOGLE_VISION_KEY=YOUR_GOOGLE_API_KEY_HERE
 
 # Printify API
 PRINTIFY_API_KEY=your_printify_api_key_here
