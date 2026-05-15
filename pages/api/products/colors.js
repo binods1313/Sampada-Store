@@ -1,4 +1,4 @@
-const { client } = require('../../lib/client');
+import { client } from '../../../lib/client.js';
 
 export default async function handler(req, res) {
     try {
