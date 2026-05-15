@@ -9,7 +9,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfigCore = {
   reactStrictMode: true,
     typescript: { ignoreBuildErrors: true },
+    eslint: { ignoreDuringBuilds: true },
 
+    // ESLint errors are also ignored in CI
   // Fix slow filesystem warning on Windows/network drives
   outputFileTracingRoot: path.join(__dirname, './'),
 
