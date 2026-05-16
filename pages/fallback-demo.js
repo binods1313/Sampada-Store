@@ -8,7 +8,7 @@ import {
   EmptyStateFallback, 
   MaintenanceFallback, 
   OfflineFallback 
-} from '../components/FallbackUI';
+} from '../components/FallbackUI.jsx';
 
 const FallbackDemo = () => {
   const [activeDemo, setActiveDemo] = useState('loading');

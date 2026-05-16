@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { authenticatedClient, writeClient, urlFor } from '../lib/client';
 import navStyles from '../components/NavbarStyles.module.css';
-import { LoadingFallback, NetworkErrorFallback, EmptyStateFallback } from '../components/FallbackUI';
+import { LoadingFallback, NetworkErrorFallback, EmptyStateFallback } from '../components/FallbackUI.jsx';
 
 // Simple Button component
 const Button = ({ children, className = '', ...props }) => (

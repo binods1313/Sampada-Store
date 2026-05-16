@@ -22,8 +22,8 @@ export {
   EmptyStateFallback,
   MaintenanceFallback,
   OfflineFallback
-} from './FallbackUI';
-export { default as FallbackShowcase } from './FallbackUI';
+} from './FallbackUI.jsx';
+export { default as FallbackShowcase } from './FallbackUI.jsx';
 export { OfflineWrapper } from './FallbackUI-Examples';
 export { LoadingSkeletons, ProductCardSkeleton, ProductsGridSkeleton, HeroBannerSkeleton, FilterSkeleton, PageLoadingSkeleton, TextSkeleton, ImageSkeleton, ButtonSkeleton } from './LoadingSkeletons';
 export { ReviewSystem, StarRating, RatingSummary, ReviewCard, ReviewForm } from './ReviewSystem';
