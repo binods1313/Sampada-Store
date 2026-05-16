@@ -157,6 +157,12 @@
 }
 
 html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+html,
 body,
 * {
   padding: 0;

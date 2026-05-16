@@ -91,10 +91,9 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
       ref={containerRef}
       style={{
         position: 'relative',
-        width: '100vw',
+        width: '100%',
         height: '100vh',
         minHeight: '100vh',
-        marginLeft: 'calc(-50vw + 50%)',
         backgroundColor: '#0a0a0a',
         overflow: 'hidden',
         display: 'flex',
