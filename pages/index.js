@@ -29,6 +29,7 @@ function HomeContent({ products, categories, bannerData }) {
     <>
       {/* SEO Meta Tags */}
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Sampada — Wear Your Legacy, Prosper in Style | Premium Custom Apparel</title>
         <meta name="description" content="Sampada offers premium custom apparel and print-on-demand products with prosperity-inspired designs. Shop t-shirts, hoodies, and more with worldwide shipping." />
         <meta name="keywords" content="custom t-shirts, print on demand, premium apparel, Sampada, custom hoodies, prosperity designs, Indian fashion, sustainable clothing" />

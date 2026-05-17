@@ -165,10 +165,10 @@
 }
 
 /* Responsive */
-@media (max-width: 960px) {
+@media (max-width: 768px) {
   .inner {
     flex-direction: column;
-    padding: 40px 32px;
+    padding: 40px 24px;
     text-align: center;
   }
   .left, .right {
@@ -179,8 +179,8 @@
     align-items: center;
   }
   .logoRotator {
-    width: 258px; /* Tablet: 230px × 1.12 = 258px */
-    height: 258px;
+    width: 200px;
+    height: 200px;
   }
 }
 
