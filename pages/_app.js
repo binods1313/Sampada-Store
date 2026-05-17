@@ -14,6 +14,7 @@ import { CartProvider } from '../context/CartContext';
 import { CurrencyProvider } from '../context/CurrencyContext';
 import { WishlistProvider } from '../components/WishlistSystem';
 import { useEffect } from 'react';
+import Head from 'next/head';
 import { initGA } from '@/lib/analytics';
 import StyleAssistant from '@/components/StyleAssistant/StyleAssistant';
 
@@ -85,6 +86,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
   // All other pages: use main site layout
   return (
     <ErrorBoundaryWithFallback>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <SessionProvider session={session}>
         <UIProvider>
           <CartProvider>

@@ -164,7 +164,13 @@ body,
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   box-sizing: border-box;
+}
 
+html,
+body {
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -196,11 +202,22 @@ a {
   max-width: 1400px;
   margin: auto;
   width: 100%;
+  /* Ensure content doesn't touch screen edges on mobile */
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
 
+@media (max-width: 768px) {
+  .main-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .layout {
-  padding: 10px;
+  /* Removed padding: 10px — was causing left-shift and overflow on mobile */
+  padding: 0;
 }
 
 

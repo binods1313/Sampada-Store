@@ -1240,10 +1240,11 @@ export default function SampadaNavbar({
       {showMarquee && <MarqueeBar />}
 
       <div
+        className="sampada-nav-inner"
         style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 32px',
+          padding: '0 clamp(12px, 4vw, 32px)',
           height: '72px',
           display: 'flex',
           flexDirection: 'row',
@@ -1269,14 +1270,13 @@ export default function SampadaNavbar({
 
         {/* CENTER — Navigation with Mega Dropdowns */}
         <nav
+          className="hidden lg:flex"
           style={{
-            display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
             gap: '4px'
           }}
-          className="hidden lg:flex"
         >
           <Link
             href="/"
@@ -1392,7 +1392,7 @@ export default function SampadaNavbar({
           {/* Desktop Actions */}
           <div
             className="hidden lg:flex"
-            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: '12px' }}
           >
             {/* Sign In Button - Show when NOT logged in */}
             {!session && !loading && (
