@@ -220,6 +220,12 @@ a {
   padding: 0;
 }
 
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
 
 /* Add any other global styles needed */
 .navbar-container {

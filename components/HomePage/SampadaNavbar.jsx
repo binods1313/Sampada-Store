@@ -1270,7 +1270,7 @@ export default function SampadaNavbar({
 
         {/* CENTER — Navigation with Mega Dropdowns */}
         <nav
-          className="hidden lg:flex"
+          className="hidden lg:flex desktop-nav"
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -1391,7 +1391,7 @@ export default function SampadaNavbar({
         >
           {/* Desktop Actions */}
           <div
-            className="hidden lg:flex"
+            className="hidden lg:flex desktop-nav"
             style={{ flexDirection: 'row', alignItems: 'center', gap: '12px' }}
           >
             {/* Sign In Button - Show when NOT logged in */}
