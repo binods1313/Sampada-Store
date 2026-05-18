@@ -213,6 +213,7 @@ const WhySampada = () => {
 
       {/* Cards Grid - Credit card aspect ratio */}
       <div
+        className="pillars-grid"
         style={{
           width: '100%',
           maxWidth: '1280px',
@@ -224,6 +225,7 @@ const WhySampada = () => {
           boxSizing: 'border-box',
         }}
       >
+
         {features.map((feature, index) => (
           // Outer wrapper with hover effects
           <div
