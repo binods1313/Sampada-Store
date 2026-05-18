@@ -3355,98 +3355,176 @@ img {
    SAMPADA LATEST UNIFIED HEADER SYSTEM
    ============================================================================ */
 .site-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important;           /* NEVER wrap */
-  width: 100% !important;
-  padding: 0 24px !important;
-  height: 72px !important;
-  background: white !important;
-  border-bottom: 1px solid #eee !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 100 !important;
-  transition: all 0.3s ease !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  height: 60px;
+  padding: 0 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-
 .header-logo {
-  flex-shrink: 0 !important;
-  margin-right: 24px !important;
+  font-size: 22px;
+  font-weight: 700;
+  color: #8B1A1A;
+  flex-shrink: 0;
+  margin-right: 32px;
 }
-
 .header-nav {
-  display: flex !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-  gap: 4px !important;
-  flex: 1 !important;                     /* takes available space between logo and actions */
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 2px;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
-
-.header-nav a, 
-.header-nav .nav-link, 
-.header-nav button {
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  white-space: nowrap !important;
-  padding: 6px 10px !important;
-  color: #222 !important;
-  text-decoration: none !important;
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  transition: color 0.2s ease !important;
+.header-nav a,
+.header-nav .nav-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 6px 10px;
+  white-space: nowrap;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-
-.header-nav a:hover, 
-.header-nav .nav-link:hover, 
-.header-nav button:hover {
-  color: #8B1A1A !important;
+.header-nav a.active,
+.header-nav .nav-link-active {
+  color: #8B1A1A;
+  border-bottom: 2px solid #C9A84C;
+  padding-bottom: 4px;
 }
+.header-nav a:hover,
+.header-nav .nav-link:hover { color: #C9A84C; }
 
 .header-actions {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  flex-shrink: 0 !important;              /* never shrink or wrap */
-  flex-wrap: nowrap !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
-
-.icon-btn {
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  padding: 8px !important;
-  color: #1f2937 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: color 0.2s ease !important;
-}
-
-.icon-btn:hover {
-  color: #8B1A1A !important;
-}
-
 .signin-btn {
-  border: 1.5px solid #8B1A1A !important;
-  color: #8B1A1A !important;
-  background: transparent !important;
-  padding: 6px 14px !important;
-  border-radius: 4px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #C9A84C;
+  color: #1a1a1a;
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: transparent;
+  white-space: nowrap;
+  cursor: pointer;
 }
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hamburger-btn {
+  color: #C9A84C;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .header-nav { display: none; }
+  .signin-btn { display: none; }
+  .hamburger-btn { display: block; }
+}
+
+/* Dropdown menus */
+.dropdown-menu,
+.nav-dropdown {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 180px;
+  padding: 8px 0;
+  z-index: 1000;
+}
+.dropdown-menu a,
+.nav-dropdown a,
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+/* Hover state — gold tint background with gold text and accent bar */
+.dropdown-menu a:hover,
+.nav-dropdown a:hover,
+.dropdown-menu li a:hover {
+  background-color: #FBF3DC;
+  color: #C9A84C;
+  font-weight: 600;
+  border-left: 3px solid #C9A84C;
+  padding-left: 13px;
+}
+
+/* Active/currently selected item — deep gold tint with dark red */
+.dropdown-menu a.active,
+.dropdown-menu li.active a,
+.nav-dropdown a.active {
+  background-color: #F5E6B8;
+  color: #8B1A1A;
+  font-weight: 700;
+  border-left: 3px solid #8B1A1A;
+  padding-left: 13px;
+}
+
+/* Dropdown section headers (SHOP BY PRODUCT, MORE) stay lighter */
+.dropdown-section-header,
+.dropdown-menu .section-label,
+.nav-dropdown h3 {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #888888;
+  text-transform: uppercase;
+}
+
+
+/* Three Pillars Section Mobile */
+@media (max-width: 768px) {
+  .pillars-grid,
+  .three-pillars .cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  .pillar-card {
+    width: 100%;
+    min-height: 120px;
+  }
+  .pillar-card h3,
+  .pillar-card p {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+  }
+}
+
 
 .signin-btn:hover {
   background: #8B1A1A !important;

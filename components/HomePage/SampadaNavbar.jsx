@@ -168,6 +168,7 @@ function MarqueeBar() {
 // TASK 3: MEGA DROPDOWN MENU COMPONENT
 // ============================================================================
 function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
+  const pathname = usePathname();
   const dropdownRef = useRef(null);
   const timeoutRef = useRef(null);
 
@@ -275,18 +276,16 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
+            className="nav-dropdown"
             style={{
               position: 'absolute',
               top: '100%',
               left: '50%',
               x: '-50%',
-              backgroundColor: '#0a0a0a',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
               padding: '20px 28px',
               zIndex: 9999,
               borderTop: '2px solid #C9A84C',
-              borderBottomLeftRadius: '12px',
-              borderBottomRightRadius: '12px',
               width: Object.keys(data.sections).length === 1 ? '220px' : '480px',
               maxWidth: '720px'
             }}
@@ -303,20 +302,15 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
                   key={sectionTitle}
                   style={{
                     paddingLeft: index === 1 && Object.keys(data.sections).length === 2 ? '24px' : '0',
-                    borderLeft: index === 1 && Object.keys(data.sections).length === 2 ? '1px solid rgba(201, 168, 76, 0.3)' : 'none',
+                    borderLeft: index === 1 && Object.keys(data.sections).length === 2 ? '1px solid rgba(201, 168, 76, 0.1)' : 'none',
                     minWidth: 0
                   }}
                 >
                   <h3
                     style={{
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      color: '#C9A84C',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.15em',
                       marginBottom: '12px',
                       paddingBottom: '8px',
-                      borderBottom: '1px solid rgba(201, 168, 76, 0.4)'
+                      borderBottom: '1px solid rgba(201, 168, 76, 0.2)'
                     }}
                   >
                     {sectionTitle}
@@ -328,33 +322,21 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
                       margin: 0,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '10px'
+                      gap: '4px'
                     }}
                   >
                     {items.map(item => {
-                      // Use item.href if available (from Sanity), otherwise construct from label
                       const itemHref = item.href || `${data.href}/${generateSlug(typeof item === 'string' ? item : item.label)}`;
                       const itemLabel = typeof item === 'string' ? item : item.label;
+                      const isActive = pathname === itemHref;
                       
                       return (
                         <li key={itemLabel}>
                           <Link
                             href={itemHref}
+                            className={isActive ? 'active' : ''}
                             style={{
-                              fontSize: '13px',
-                              color: '#e0e0e0',
-                              textDecoration: 'none',
-                              transition: 'all 0.15s ease',
-                              display: 'block',
-                              padding: '6px 0'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = '#C9A84C';
-                              e.currentTarget.style.paddingLeft = '6px';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.color = '#e0e0e0';
-                              e.currentTarget.style.paddingLeft = '0px';
+                              display: 'block'
                             }}
                           >
                             {itemLabel}
@@ -363,12 +345,14 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
                       );
                     })}
                   </ul>
+
                 </div>
               ))}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }
@@ -377,6 +361,7 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
 // TASK 3 (continued): MORE DROPDOWN
 // ============================================================================
 function MoreDropdown({ isOpen, onOpen, onClose }) {
+  const pathname = usePathname();
   const dropdownRef = useRef(null);
   const timeoutRef = useRef(null);
 
@@ -477,148 +462,70 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
+            className="nav-dropdown"
             style={{
               position: 'absolute',
               top: '100%',
               right: 0,
-              backgroundColor: '#0a0a0a',
-              borderTop: '2px solid #C9A84C',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
               borderRadius: '6px',
               padding: '12px 0',
               display: 'flex',
               flexDirection: 'column',
               zIndex: 9999,
-              minWidth: '180px'
+              minWidth: '180px',
+              borderTop: '2px solid #C9A84C'
             }}
           >
             <Link
               href="/about"
               onClick={onClose}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                color: '#e5e5e5',
-                textDecoration: 'none',
-                display: 'block',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                e.currentTarget.style.color = '#C9A84C';
-                e.currentTarget.style.paddingLeft = '24px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#e5e5e5';
-                e.currentTarget.style.paddingLeft = '20px';
-              }}
+              className={pathname === '/about' ? 'active' : ''}
+              style={{ display: 'block' }}
             >
               About Us
             </Link>
-            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
             <Link
               href="/company"
               onClick={onClose}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                color: '#e5e5e5',
-                textDecoration: 'none',
-                display: 'block',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                e.currentTarget.style.color = '#C9A84C';
-                e.currentTarget.style.paddingLeft = '24px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#e5e5e5';
-                e.currentTarget.style.paddingLeft = '20px';
-              }}
+              className={pathname === '/company' ? 'active' : ''}
+              style={{ display: 'block' }}
             >
               Company
             </Link>
-            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
             <Link
               href="/team"
               onClick={onClose}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                color: '#e5e5e5',
-                textDecoration: 'none',
-                display: 'block',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                e.currentTarget.style.color = '#C9A84C';
-                e.currentTarget.style.paddingLeft = '24px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#e5e5e5';
-                e.currentTarget.style.paddingLeft = '20px';
-              }}
+              className={pathname === '/team' ? 'active' : ''}
+              style={{ display: 'block' }}
             >
               Team
             </Link>
-            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
             <Link
               href="/support"
               onClick={onClose}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                color: '#e5e5e5',
-                textDecoration: 'none',
-                display: 'block',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                e.currentTarget.style.color = '#C9A84C';
-                e.currentTarget.style.paddingLeft = '24px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#e5e5e5';
-                e.currentTarget.style.paddingLeft = '20px';
-              }}
+              className={pathname === '/support' ? 'active' : ''}
+              style={{ display: 'block' }}
             >
               Support
             </Link>
-            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.3)', margin: '8px 0' }} />
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
             <Link
               href="/contact"
               onClick={onClose}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                color: '#e5e5e5',
-                textDecoration: 'none',
-                display: 'block',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                e.currentTarget.style.color = '#C9A84C';
-                e.currentTarget.style.paddingLeft = '24px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#e5e5e5';
-                e.currentTarget.style.paddingLeft = '20px';
-              }}
+              className={pathname === '/contact' ? 'active' : ''}
+              style={{ display: 'block' }}
             >
               Contact
             </Link>
+
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }
@@ -1237,15 +1144,10 @@ export default function SampadaNavbar({
       {/* TASK 1: Marquee Announcement Bar - only if showMarquee is true */}
       {showMarquee && <MarqueeBar />}
 
-      <header
-        className="site-header"
-        style={{
-          borderBottom: isScrolled ? '1px solid rgba(201, 168, 76, 0.3)' : '1px solid #eee'
-        }}
-      >
+      <header className="site-header">
         {/* Zone 1: Logo */}
         <div className="header-logo">
-          <Link href="/" className="sampada-logo" style={{ textDecoration: 'none' }}>
+          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             Sampada
           </Link>
         </div>
@@ -1255,31 +1157,8 @@ export default function SampadaNavbar({
           <Link
             href="/"
             className={`nav-link ${pathname === '/' ? 'nav-link-active' : ''}`}
-            onMouseEnter={(e) => {
-              const underline = e.currentTarget.querySelector('.home-underline');
-              if (underline) underline.style.width = '100%';
-            }}
-            onMouseLeave={(e) => {
-              const underline = e.currentTarget.querySelector('.home-underline');
-              if (underline) underline.style.width = '0%';
-            }}
           >
             Home
-            <span
-              className="home-underline"
-              style={{
-                position: 'absolute',
-                bottom: '12px',
-                left: '12px',
-                right: '12px',
-                height: '2px',
-                backgroundColor: '#C9A84C',
-                transform: 'scaleX(0)',
-                transformOrigin: 'left',
-                transition: 'transform 0.3s ease',
-                width: '0%'
-              }}
-            />
           </Link>
 
           {/* Mega Dropdowns for each category */}
@@ -1296,32 +1175,9 @@ export default function SampadaNavbar({
 
           <Link
             href="/stories"
-            className="nav-link"
-            onMouseEnter={(e) => {
-              const underline = e.currentTarget.querySelector('.stories-underline');
-              if (underline) underline.style.width = '100%';
-            }}
-            onMouseLeave={(e) => {
-              const underline = e.currentTarget.querySelector('.stories-underline');
-              if (underline) underline.style.width = '0%';
-            }}
+            className={`nav-link ${pathname === '/stories' ? 'nav-link-active' : ''}`}
           >
             Sampada Stories
-            <span
-              className="stories-underline"
-              style={{
-                position: 'absolute',
-                bottom: '12px',
-                left: '12px',
-                right: '12px',
-                height: '2px',
-                backgroundColor: '#C9A84C',
-                transform: 'scaleX(0)',
-                transformOrigin: 'left',
-                transition: 'transform 0.3s ease',
-                width: '0%'
-              }}
-            />
           </Link>
 
           <MoreDropdown
@@ -1339,38 +1195,35 @@ export default function SampadaNavbar({
               onClick={onSignIn}
               className="signin-btn"
             >
-              <User size={16} style={{ marginRight: '6px' }} /> Sign In
+              <User size={14} /> Sign In
             </button>
           ) : session?.user && !loading ? (
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <button
                 data-user-dropdown-toggle
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                className="user-dropdown-btn"
+                className="icon-btn"
+                style={{ fontSize: '14px', gap: '5px' }}
               >
                 {session.user.image && (
                   <img
                     src={session.user.image}
                     alt={session.user.name}
                     className="user-avatar"
+                    style={{ width: '24px', height: '24px', borderRadius: '50%' }}
                   />
                 )}
-                {!session.user.image && <User size={16} />}
-                <span>{session.user.name || session.user.email}</span>
-                <ChevronDown size={16} />
+                {!session.user.image && <User size={18} />}
+                <ChevronDown size={14} />
               </button>
               {isUserDropdownOpen && (
                 <div
                   data-user-dropdown-menu
+                  className="nav-dropdown"
                   style={{
                     position: 'absolute',
                     top: '100%',
                     right: 0,
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    zIndex: 1000,
                     minWidth: '200px',
                     marginTop: '8px',
                     overflow: 'hidden'
@@ -1382,14 +1235,14 @@ export default function SampadaNavbar({
                     style={{
                       display: 'block',
                       padding: '12px 16px',
-                      color: '#1f2937',
+                      color: '#1a1a1a',
                       textDecoration: 'none',
                       fontSize: '14px',
                       fontWeight: 500,
                       borderBottom: '1px solid #f0f0f0',
                       transition: 'background-color 0.2s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fdf6e3'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     📋 My Account
@@ -1426,20 +1279,39 @@ export default function SampadaNavbar({
           <button
             onClick={() => setSearchOpen(true)}
             aria-label="Search products"
-            className="icon-btn search-btn"
+            className="icon-btn"
           >
-            <Search size={22} />
+            <Search size={18} />
           </button>
 
           {/* Cart Icon */}
           <button
             onClick={() => setShowCart(true)}
             aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
-            className="icon-btn cart-btn"
+            className="icon-btn"
+            style={{ position: 'relative' }}
           >
-            <ShoppingCart size={22} />
+            <ShoppingCart size={18} />
             {(totalQuantities || 0) > 0 && (
-              <span className="cart-badge">{totalQuantities}</span>
+              <span 
+                style={{
+                  position: 'absolute',
+                  top: '-5px',
+                  right: '-5px',
+                  backgroundColor: '#8B1A1A',
+                  color: 'white',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {totalQuantities}
+              </span>
             )}
           </button>
 
@@ -1449,10 +1321,11 @@ export default function SampadaNavbar({
             aria-label="Toggle menu"
             className="icon-btn hamburger-btn"
           >
-            <Menu size={26} />
+            <Menu size={24} />
           </button>
         </div>
       </header>
+
 
       {/* TASK 4: Mobile Menu Slide-in Panel */}
       <MobileMenu
