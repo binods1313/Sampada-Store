@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Search } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import { getNavigationData } from '@/lib/client';
 import SmartSearch from '@/components/SmartSearch/SmartSearch';
@@ -224,8 +224,8 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
         aria-haspopup="true"
         className={`nav-link ${isOpen ? 'nav-link-active' : ''}`}
         style={{
-          padding: '20px 12px',
-          fontSize: '14px',
+          padding: '20px 10px',
+          fontSize: '13px',
           fontWeight: 700,
           background: 'none',
           border: 'none',
@@ -437,8 +437,8 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
         aria-haspopup="true"
         aria-label="More options"
         style={{
-          padding: '20px 12px',
-          fontSize: '14px',
+          padding: '20px 10px',
+          fontSize: '13px',
           fontWeight: 700,
           color: '#1f2937',
           background: 'none',
@@ -1242,14 +1242,16 @@ export default function SampadaNavbar({
       <div
         className="sampada-nav-inner"
         style={{
+          width: '100%',
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 clamp(12px, 4vw, 32px)',
+          padding: '0 24px',
           height: '72px',
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          flexWrap: 'nowrap'
         }}
       >
         {/* LEFT — Logo with Premium Typography */}
@@ -1274,6 +1276,7 @@ export default function SampadaNavbar({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            flexWrap: 'nowrap',
             flex: 1,
             gap: '4px'
           }}
@@ -1282,8 +1285,8 @@ export default function SampadaNavbar({
             href="/"
             className={`nav-link ${pathname === '/' ? 'nav-link-active' : ''}`}
             style={{
-              padding: '20px 12px',
-              fontSize: '14px',
+              padding: '20px 10px',
+              fontSize: '13px',
               fontWeight: 700,
               textDecoration: 'none',
               whiteSpace: 'nowrap',
@@ -1334,8 +1337,8 @@ export default function SampadaNavbar({
           <Link
             href="/stories"
             style={{
-              padding: '20px 12px',
-              fontSize: '14px',
+              padding: '20px 10px',
+              fontSize: '13px',
               fontWeight: 700,
               color: '#1f2937',
               textDecoration: 'none',
@@ -1392,7 +1395,7 @@ export default function SampadaNavbar({
           {/* Desktop Actions */}
           <div
             className="hidden lg:flex desktop-nav"
-            style={{ flexDirection: 'row', alignItems: 'center', gap: '12px' }}
+            style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'nowrap', gap: '12px' }}
           >
             {/* Sign In Button - Show when NOT logged in */}
             {!session && !loading && (
@@ -1400,9 +1403,10 @@ export default function SampadaNavbar({
                 onClick={onSignIn}
                 className="signin-btn"
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '8px',
-                  fontSize: '14px',
+                  padding: '6px 14px',
+                  borderRadius: '4px',
+                  fontSize: '13px',
+                  border: '1px solid #8B1A1A',
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                   display: 'flex',
@@ -1606,9 +1610,8 @@ export default function SampadaNavbar({
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Toggle menu"
-            className="lg:hidden"
+            className="flex lg:hidden"
             style={{
-              display: 'flex',
               background: 'none',
               border: 'none',
               padding: '8px',
