@@ -224,9 +224,6 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
         aria-haspopup="true"
         className={`nav-link ${isOpen ? 'nav-link-active' : ''}`}
         style={{
-          padding: '20px 10px',
-          fontSize: '13px',
-          fontWeight: 700,
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -237,12 +234,10 @@ function MegaDropdown({ label, data, isOpen, onOpen, onClose }) {
           position: 'relative'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.color = '#8B1A1A';
           const underline = e.currentTarget.querySelector('.nav-underline');
           if (underline) underline.style.width = '100%';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.color = '#1f2937';
           const underline = e.currentTarget.querySelector('.nav-underline');
           if (underline) underline.style.width = '0%';
         }}
@@ -436,11 +431,8 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label="More options"
+        className={`nav-link ${isOpen ? 'nav-link-active' : ''}`}
         style={{
-          padding: '20px 10px',
-          fontSize: '13px',
-          fontWeight: 700,
-          color: '#1f2937',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -452,13 +444,30 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
           position: 'relative'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.color = '#8B1A1A';
+          const underline = e.currentTarget.querySelector('.more-underline');
+          if (underline) underline.style.width = '100%';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.color = '#1f2937';
+          const underline = e.currentTarget.querySelector('.more-underline');
+          if (underline) underline.style.width = '0%';
         }}
       >
         More <MoreVertical size={14} />
+        <span
+          className="more-underline"
+          style={{
+            position: 'absolute',
+            bottom: '12px',
+            left: '12px',
+            right: '12px',
+            height: '2px',
+            backgroundColor: '#C9A84C',
+            transform: 'scaleX(0)',
+            transformOrigin: 'left',
+            transition: 'transform 0.3s ease',
+            width: '0%'
+          }}
+        />
       </button>
 
       <AnimatePresence>
@@ -1224,82 +1233,33 @@ export default function SampadaNavbar({
   }, []);
 
   return (
-    <header
-      className={isScrolled ? 'navbar-scrolled' : 'navbar-top'}
-      style={{
-        width: '100%',
-        backgroundColor: 'white',
-        borderBottom: isScrolled ? '1px solid rgba(201, 168, 76, 0.3)' : '1px solid #e5e7eb',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        transition: 'all 0.3s ease'
-      }}
-    >
+    <>
       {/* TASK 1: Marquee Announcement Bar - only if showMarquee is true */}
       {showMarquee && <MarqueeBar />}
 
-      <div
-        className="sampada-nav-inner"
+      <header
+        className="site-header"
         style={{
-          width: '100%',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0 24px',
-          height: '72px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'nowrap'
+          borderBottom: isScrolled ? '1px solid rgba(201, 168, 76, 0.3)' : '1px solid #eee'
         }}
       >
-        {/* LEFT — Logo with Premium Typography */}
-        <Link
-          href="/"
-          className="sampada-logo"
-          style={{
-            flexShrink: 0,
-            marginRight: '40px',
-            textDecoration: 'none',
-            transition: 'opacity 0.2s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-        >
-          Sampada
-        </Link>
+        {/* Zone 1: Logo */}
+        <div className="header-logo">
+          <Link href="/" className="sampada-logo" style={{ textDecoration: 'none' }}>
+            Sampada
+          </Link>
+        </div>
 
-        {/* CENTER — Navigation with Mega Dropdowns */}
-        <nav
-          className="hidden lg:flex desktop-nav"
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            flexWrap: 'nowrap',
-            flex: 1,
-            gap: '4px'
-          }}
-        >
+        {/* Zone 2: Nav links — all in one flex row */}
+        <nav className="header-nav">
           <Link
             href="/"
             className={`nav-link ${pathname === '/' ? 'nav-link-active' : ''}`}
-            style={{
-              padding: '20px 10px',
-              fontSize: '13px',
-              fontWeight: 700,
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-              position: 'relative',
-              transition: 'color 0.2s ease'
-            }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#8B1A1A';
               const underline = e.currentTarget.querySelector('.home-underline');
               if (underline) underline.style.width = '100%';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#1f2937';
               const underline = e.currentTarget.querySelector('.home-underline');
               if (underline) underline.style.width = '0%';
             }}
@@ -1336,23 +1296,12 @@ export default function SampadaNavbar({
 
           <Link
             href="/stories"
-            style={{
-              padding: '20px 10px',
-              fontSize: '13px',
-              fontWeight: 700,
-              color: '#1f2937',
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-              position: 'relative',
-              transition: 'color 0.2s ease'
-            }}
+            className="nav-link"
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#8B1A1A';
               const underline = e.currentTarget.querySelector('.stories-underline');
               if (underline) underline.style.width = '100%';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#1f2937';
               const underline = e.currentTarget.querySelector('.stories-underline');
               if (underline) underline.style.width = '0%';
             }}
@@ -1382,252 +1331,128 @@ export default function SampadaNavbar({
           />
         </nav>
 
-        {/* RIGHT — Actions */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: '16px',
-            flexShrink: 0
-          }}
-        >
-          {/* Desktop Actions */}
-          <div
-            className="hidden lg:flex desktop-nav"
-            style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'nowrap', gap: '12px' }}
-          >
-            {/* Sign In Button - Show when NOT logged in */}
-            {!session && !loading && (
-              <button
-                onClick={onSignIn}
-                className="signin-btn"
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '4px',
-                  fontSize: '13px',
-                  border: '1px solid #8B1A1A',
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  cursor: 'pointer'
-                }}
-              >
-                <User size={16} /> Sign In
-              </button>
-            )}
-
-            {/* Account Dropdown - Show when logged in */}
-            {session?.user && !loading && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                {/* User Avatar/Name - Clickable Toggle */}
-                <button
-                  data-user-dropdown-toggle
-                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    backgroundColor: 'transparent',
-                    border: '1px solid #C9A84C',
-                    borderRadius: '6px',
-                    padding: '8px 12px',
-                    cursor: 'pointer',
-                    color: '#1f2937',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(201, 168, 76, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  {session.user.image && (
-                    <img
-                      src={session.user.image}
-                      alt={session.user.name}
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        objectFit: 'cover'
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  )}
-                  {!session.user.image && <User size={16} />}
-                  <span>{session.user.name || session.user.email}</span>
-                  <ChevronDown size={16} style={{ marginLeft: '4px' }} />
-                </button>
-
-                {/* Dropdown Menu */}
-                {isUserDropdownOpen && (
-                  <div
-                    data-user-dropdown-menu
-                    style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: 0,
-                      backgroundColor: 'white',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                      zIndex: 1000,
-                      minWidth: '200px',
-                      marginTop: '8px',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    <Link
-                      href="/account"
-                      onClick={() => setIsUserDropdownOpen(false)}
-                      style={{
-                        display: 'block',
-                        padding: '12px 16px',
-                        color: '#1f2937',
-                        textDecoration: 'none',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        borderBottom: '1px solid #f0f0f0',
-                        transition: 'background-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#f5f5f5';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
-                    >
-                      📋 My Account
-                    </Link>
-                    <button
-                      onClick={() => {
-                        signOut();
-                        setIsUserDropdownOpen(false);
-                      }}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        padding: '12px 16px',
-                        color: '#dc2626',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#fee2e2';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
-                    >
-                      🚪 Sign out
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Search Icon */}
+        {/* Zone 3: Right actions — all inline */}
+        <div className="header-actions">
+          {/* Sign In / Account Dropdown */}
+          {!session && !loading ? (
             <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search products"
-              style={{
-                color: '#1f2937',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                transition: 'color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#8B1A1A'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#1f2937'}
+              onClick={onSignIn}
+              className="signin-btn"
             >
-              <Search size={24} />
+              <User size={16} style={{ marginRight: '6px' }} /> Sign In
             </button>
-
-            {/* Cart Icon */}
-            <button
-              onClick={() => setShowCart(true)}
-              aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
-              style={{
-                color: '#1f2937',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                position: 'relative',
-                transition: 'color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#8B1A1A'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#1f2937'}
-            >
-              <ShoppingCart size={24} />
-              {(totalQuantities || 0) > 0 && (
-                <span
+          ) : session?.user && !loading ? (
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <button
+                data-user-dropdown-toggle
+                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                className="user-dropdown-btn"
+              >
+                {session.user.image && (
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name}
+                    className="user-avatar"
+                  />
+                )}
+                {!session.user.image && <User size={16} />}
+                <span>{session.user.name || session.user.email}</span>
+                <ChevronDown size={16} />
+              </button>
+              {isUserDropdownOpen && (
+                <div
+                  data-user-dropdown-menu
                   style={{
                     position: 'absolute',
-                    top: '0px',
-                    right: '0px',
-                    backgroundColor: '#8B1A1A',
-                    color: 'white',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '2px solid white'
+                    top: '100%',
+                    right: 0,
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    zIndex: 1000,
+                    minWidth: '200px',
+                    marginTop: '8px',
+                    overflow: 'hidden'
                   }}
-                  aria-label={`${totalQuantities} items in cart`}
                 >
-                  {totalQuantities}
-                </span>
+                  <Link
+                    href="/account"
+                    onClick={() => setIsUserDropdownOpen(false)}
+                    style={{
+                      display: 'block',
+                      padding: '12px 16px',
+                      color: '#1f2937',
+                      textDecoration: 'none',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      borderBottom: '1px solid #f0f0f0',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    📋 My Account
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setIsUserDropdownOpen(false);
+                    }}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      padding: '12px 16px',
+                      color: '#dc2626',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fee2e2'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    🚪 Sign out
+                  </button>
+                </div>
               )}
-            </button>
-          </div>
+            </div>
+          ) : null}
+
+          {/* Search Icon */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search products"
+            className="icon-btn search-btn"
+          >
+            <Search size={22} />
+          </button>
+
+          {/* Cart Icon */}
+          <button
+            onClick={() => setShowCart(true)}
+            aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
+            className="icon-btn cart-btn"
+          >
+            <ShoppingCart size={22} />
+            {(totalQuantities || 0) > 0 && (
+              <span className="cart-badge">{totalQuantities}</span>
+            )}
+          </button>
 
           {/* Mobile Menu Toggle (Gold Hamburger) */}
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Toggle menu"
-            className="flex lg:hidden"
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: '8px',
-              cursor: 'pointer',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#C9A84C',
-              transition: 'opacity 0.2s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            className="icon-btn hamburger-btn"
           >
-            <Menu size={28} />
+            <Menu size={26} />
           </button>
         </div>
-      </div>
+      </header>
 
       {/* TASK 4: Mobile Menu Slide-in Panel */}
       <MobileMenu
@@ -1642,6 +1467,6 @@ export default function SampadaNavbar({
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
       />
-    </header>
+    </>
   );
 }
