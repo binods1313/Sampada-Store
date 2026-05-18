@@ -3350,3 +3350,169 @@ img {
   .fade-in-up { animation: none; opacity: 1; }
   .story-card:hover img { transform: none; }
 }
+
+/* ============================================================================
+   SAMPADA LATEST UNIFIED HEADER SYSTEM
+   ============================================================================ */
+.site-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;           /* NEVER wrap */
+  width: 100% !important;
+  padding: 0 24px !important;
+  height: 72px !important;
+  background: white !important;
+  border-bottom: 1px solid #eee !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  transition: all 0.3s ease !important;
+}
+
+.header-logo {
+  flex-shrink: 0 !important;
+  margin-right: 24px !important;
+}
+
+.header-nav {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  flex: 1 !important;                     /* takes available space between logo and actions */
+  justify-content: center !important;
+}
+
+.header-nav a, 
+.header-nav .nav-link, 
+.header-nav button {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  padding: 6px 10px !important;
+  color: #222 !important;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: color 0.2s ease !important;
+}
+
+.header-nav a:hover, 
+.header-nav .nav-link:hover, 
+.header-nav button:hover {
+  color: #8B1A1A !important;
+}
+
+.header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;              /* never shrink or wrap */
+  flex-wrap: nowrap !important;
+}
+
+.icon-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  color: #1f2937 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.2s ease !important;
+}
+
+.icon-btn:hover {
+  color: #8B1A1A !important;
+}
+
+.signin-btn {
+  border: 1.5px solid #8B1A1A !important;
+  color: #8B1A1A !important;
+  background: transparent !important;
+  padding: 6px 14px !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.signin-btn:hover {
+  background: #8B1A1A !important;
+  color: white !important;
+}
+
+/* User Account Button */
+.user-dropdown-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: transparent !important;
+  border: 1px solid #C9A84C !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+  color: #1f2937 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+  white-space: nowrap !important;
+}
+
+.user-avatar {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.cart-btn {
+  position: relative !important;
+}
+
+.cart-badge {
+  position: absolute !important;
+  top: 0px !important;
+  right: 0px !important;
+  background-color: #8B1A1A !important;
+  color: white !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid white !important;
+}
+
+/* Desktop: hide hamburger */
+.hamburger-btn {
+  display: none !important;
+}
+
+/* Mobile: hide nav, show hamburger */
+@media (max-width: 1023px) {
+  .header-nav {
+    display: none !important;
+  }
+  .signin-btn {
+    display: none !important;
+  }
+  .hamburger-btn {
+    display: flex !important;
+    color: #C9A84C !important;
+  }
+}
