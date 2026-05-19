@@ -556,99 +556,76 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
   };
 
   return (
-    <AnimatePresence>
+    <>
+      {/* Overlay — OUTSIDE header, sibling to it */}
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
-            className="mobile-menu-overlay"
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 9998
-            }}
-          />
+        <div
+          className="drawer-overlay"
+          onClick={onClose}
+        />
+      )}
 
-          {/* Slide-in Panel */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="mobile-menu-panel mobile-menu-panel-open"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation menu"
+      {/* Drawer — OUTSIDE header, sibling to it */}
+      <div 
+        className={`mobile-drawer ${isOpen ? 'open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
+        {/* Header with Close Button */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '20px 24px',
+            borderBottom: '1px solid rgba(201, 168, 76, 0.3)'
+          }}
+        >
+          <span
+            className="sampada-logo"
             style={{
-              position: 'fixed',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: '85%',
-              maxWidth: '360px',
-              backgroundColor: '#0a0a0a',
-              zIndex: 9999,
-              overflowY: 'auto'
+              fontSize: '18px',
+              fontWeight: 800,
+              color: '#C9A84C',
+              letterSpacing: '1px'
             }}
           >
-            {/* Header with Close Button */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '20px 24px',
-                borderBottom: '1px solid rgba(201, 168, 76, 0.3)'
-              }}
-            >
-              <span
-                className="sampada-logo"
-                style={{
-                  fontSize: '18px',
-                  fontWeight: 800,
-                  color: '#C9A84C',
-                  letterSpacing: '1px'
-                }}
-              >
-                Sampada
-              </span>
-              <button
-                onClick={onClose}
-                aria-label="Close menu"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#C9A84C',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: '48px',
-                  minWidth: '48px',
-                  transition: 'opacity 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-              >
-                <X size={24} />
-              </button>
-            </div>
+            Sampada
+          </span>
+          <button
+            onClick={onClose}
+            aria-label="Close menu"
+            className="drawer-close"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#C9A84C',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '48px',
+              minWidth: '48px',
+              transition: 'opacity 0.2s ease',
+              fontSize: '22px'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+          >
+            ✕
+          </button>
+        </div>
 
-            {/* Menu Items */}
-            <div
-              style={{
-                padding: '0',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-            >
+        {/* Menu Items */}
+        <div
+          style={{
+            padding: '0',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
               {/* Home Link */}
               <Link
                 href="/"
@@ -690,24 +667,19 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                       }}
                     >
                       {label}
-                      <motion.span
+                      <span
                         className="mobile-nav-item-arrow"
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
+                        style={{
+                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease'
+                        }}
                       >
                         {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                      </motion.span>
+                      </span>
                     </button>
 
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 1 }}
-                          transition={{ duration: 0.3 }}
-                          className="mobile-submenu mobile-submenu-open"
-                        >
+                    {isExpanded && (
+                      <div className="mobile-submenu mobile-submenu-open">
                           <div
                             style={{
                               display: 'flex',
@@ -740,12 +712,11 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                               </>
                             ))}
                           </div>
-                        </motion.div>
+                        </div>
                       )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
 
               {/* Sampada Stories */}
               <Link
@@ -765,8 +736,7 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
               </Link>
 
               {/* More Dropdown (Mobile) */}
-              <div
-              >
+              <div>
                 <button
                   onClick={() => setExpandedMore(!expandedMore)}
                   aria-expanded={expandedMore}
@@ -781,24 +751,19 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                   }}
                 >
                   More
-                  <motion.span
+                  <span
                     className="mobile-nav-item-arrow"
-                    animate={{ rotate: expandedMore ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
+                    style={{
+                      transform: expandedMore ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s ease'
+                    }}
                   >
                     {expandedMore ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                  </motion.span>
+                  </span>
                 </button>
 
-                <AnimatePresence>
-                  {expandedMore && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="mobile-submenu mobile-submenu-open"
-                    >
+                {expandedMore && (
+                  <div className="mobile-submenu mobile-submenu-open">
                       <div
                         style={{
                           display: 'flex',
@@ -866,10 +831,9 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                           Contact
                         </Link>
                       </div>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
-              </div>
+                </div>
 
               {/* Sign In Button (When Not Logged In) */}
               {!session && (
@@ -1005,9 +969,10 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
               )}
 
               {/* Cart Link */}
-              <div style={{ marginTop: '16px' }}>
+              <div style={{ marginTop: '16px', padding: '0 24px' }}>
                 <Link
                   href="/cart"
+                  onClick={onClose}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -1034,11 +999,9 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                   <ShoppingCart size={20} /> Cart
                 </Link>
               </div>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        </div>
+      </div>
+    </>
   );
 }
 
