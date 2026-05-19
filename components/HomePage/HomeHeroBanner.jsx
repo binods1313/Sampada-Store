@@ -1,12 +1,12 @@
 // components/HomePage/HomeHeroBanner.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { urlFor } from '../../lib/client';
 import styles from './HomeHeroBanner.module.css';
 
 const HomeHeroBanner = ({ heroBanner }) => {
-  const desc = heroBanner?.desc || 'Beyond Fabric: A T-shirt collection crafted to embody grace, grit, and generational wealth!';
+  const [isClient, setIsClient] = useState(false);
   const product = heroBanner?.product || '';
   const image = heroBanner?.image;
 
@@ -15,14 +15,45 @@ const HomeHeroBanner = ({ heroBanner }) => {
     ? urlFor(image).width(500).height(500).url()
     : null;
 
+  // Ensure animation only runs after client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <section className={styles.hero} aria-label="Hero section">
-      {/* Description ticker / announcement bar */}
-      {desc && (
-        <div className={styles.announcementBar} role="status" aria-live="polite">
-          <p>{desc}</p>
+      {/* Enhanced Premium Tagline Banner */}
+      <div className={styles.taglineBanner}>
+        <div className={styles.shimmerLine}></div>
+        <div className={styles.taglineFadeLeft}></div>
+        <div className={styles.taglineFadeRight}></div>
+        <span className={`${styles.taglineOrnament} ${styles.ornamentLeft}`}>✦</span>
+        <span className={`${styles.taglineOrnament} ${styles.ornamentRight}`}>✦</span>
+        
+        <div 
+          className={styles.taglineTrack}
+          style={{
+            animation: isClient ? 'tagline-marquee 35s linear infinite' : 'none'
+          }}
+        >
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <div key={i} className={styles.taglineContent}>
+              <span className={styles.taglinePrimary}>Beyond Fabric</span>
+              <div className={styles.taglineDiamond}></div>
+              <span className={styles.taglineSecondary}>A T-shirt collection crafted to embody</span>
+              <div className={styles.taglineDiamond}></div>
+              <span className={styles.taglineAccent}>Grace · Grit · Generational Wealth</span>
+              <span className={styles.taglineDivider}>&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+              <span className={styles.taglinePrimary}>Sampada Originals™</span>
+              <div className={styles.taglineDiamond}></div>
+              <span className={styles.taglineSecondary}>Wear your legacy, prosper in style</span>
+              <div className={styles.taglineDiamond}></div>
+              <span className={styles.taglineAccent}>Winter Drop 2026 — Now Live</span>
+              <span className={styles.taglineDivider}>&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
       <div className={styles.heroInner}>
         {/* Left: Text Content */}

@@ -34,19 +34,181 @@
   pointer-events: none;
 }
 
-/* Announcement / desc bar */
+/* ============================================================================
+   ENHANCED PREMIUM TAGLINE BANNER - Continuous Marquee
+   ============================================================================ */
+
+/* Premium fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+.taglineBanner {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #B03030 0%, #C0392B 40%, #B03535 100%);
+  border-top: 1px solid rgba(212,175,55,0.35);
+  border-bottom: 1px solid rgba(212,175,55,0.35);
+}
+
+/* Gold shimmer sweep across top edge */
+.shimmerLine {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent);
+  animation: shimmer-sweep 4s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes shimmer-sweep {
+  0%   { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* Fade masks — 28% each side */
+.taglineFadeLeft,
+.taglineFadeRight {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 28%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.taglineFadeLeft {
+  left: 0;
+  background: linear-gradient(to right, #B03535 0%, #B03535 10%, rgba(176,53,53,0) 100%);
+}
+
+.taglineFadeRight {
+  right: 0;
+  background: linear-gradient(to left, #C0392B 0%, #B03535 10%, rgba(176,53,53,0) 100%);
+}
+
+/* Corner ornaments */
+.taglineOrnament {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  color: rgba(212,175,55,0.5);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.ornamentLeft {
+  left: 14px;
+}
+
+.ornamentRight {
+  right: 14px;
+}
+
+/* Marquee track — matches announcement bar pattern */
+.taglineTrack {
+  display: flex;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  animation-fill-mode: forwards;
+  will-change: transform;
+  width: max-content;
+  min-width: 100%;
+}
+
+.taglineBanner:hover .taglineTrack {
+  animation-play-state: paused;
+}
+
+/* Animation — matches announcement bar pattern */
+@keyframes tagline-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Content row */
+.taglineContent {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 15px 56px;
+  white-space: nowrap;
+}
+
+/* Typography */
+.taglinePrimary {
+  font-family: 'Playfair Display', serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  position: relative;
+}
+
+.taglinePrimary::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent);
+}
+
+.taglineSecondary {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(255, 245, 230, 0.88);
+  font-style: italic;
+}
+
+.taglineAccent {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #D4AF37;
+}
+
+.taglineDivider {
+  color: rgba(212,175,55,0.55);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.taglineDiamond {
+  width: 5px;
+  height: 5px;
+  background: rgba(212,175,55,0.45);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  border: 0.5px solid rgba(212,175,55,0.3);
+}
+
+/* Announcement / desc bar - DEPRECATED (replaced by taglineBanner) */
 .announcementBar {
-  background: rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 10px 40px;
-  text-align: center;
+  display: none;
 }
 
 .announcementBar p {
-  font-size: 14px;
-  color: #333;
-  margin: 0;
-  font-style: italic;
+  display: none;
+}
+
+.announcementBar strong {
+  display: none;
 }
 
 /* Right visual column: emblem/image + Shop Now button */
