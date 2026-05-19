@@ -31,15 +31,16 @@ const HomeHeroBanner = ({ heroBanner }) => {
         <span className={`${styles.taglineOrnament} ${styles.ornamentRight}`}>✦</span>
         
         <div 
-          className={styles.taglineTrack}
-          style={{
-            animation: isClient ? 'tagline-marquee 35s linear infinite' : 'none'
+          className={`sampada-marquee-track ${styles.taglineTrack}`}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.animationPlayState = 'paused';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.animationPlayState = 'running';
           }}
         >
           {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
             <div key={i} className={styles.taglineContent}>
-              <span className={styles.taglinePrimary}>Beyond Fabric</span>
-              <div className={styles.taglineDiamond}></div>
               <span className={styles.taglineSecondary}>A T-shirt collection crafted to embody</span>
               <div className={styles.taglineDiamond}></div>
               <span className={styles.taglineAccent}>Grace · Grit · Generational Wealth</span>
@@ -47,8 +48,6 @@ const HomeHeroBanner = ({ heroBanner }) => {
               <span className={styles.taglinePrimary}>Sampada Originals™</span>
               <div className={styles.taglineDiamond}></div>
               <span className={styles.taglineSecondary}>Wear your legacy, prosper in style</span>
-              <div className={styles.taglineDiamond}></div>
-              <span className={styles.taglineAccent}>Winter Drop 2026 — Now Live</span>
               <span className={styles.taglineDivider}>&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
             </div>
           ))}
@@ -94,18 +93,22 @@ const HomeHeroBanner = ({ heroBanner }) => {
           {product ? (
             <Link
               href={`/product/${product}`}
-              className="btn-cta-primary"
+              className={styles.shopNowLink}
               aria-label={`Shop ${product}`}
             >
-              Shop Now <span className="arrow">→</span>
+              <button type="button" className="shop-now-btn-reversed">
+                Shop Now <span className="arrow">→</span>
+              </button>
             </Link>
           ) : (
             <Link
               href="/collections/mens-tshirts"
-              className="btn-cta-primary"
+              className={styles.shopNowLink}
               aria-label="Shop men's t-shirts"
             >
-              Shop Now <span className="arrow">→</span>
+              <button type="button" className="shop-now-btn-reversed">
+                Shop Now <span className="arrow">→</span>
+              </button>
             </Link>
           )}
         </div>

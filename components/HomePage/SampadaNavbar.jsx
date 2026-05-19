@@ -145,7 +145,7 @@ function MarqueeBar() {
       <div
         className="sampada-marquee-track"
         style={{
-          animation: isClient ? 'sampada-marquee 15s linear infinite' : 'none'
+          animation: isClient ? 'sampada-marquee 22.5s linear infinite' : 'none' // Updated duration to 22.5s
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.animationPlayState = 'paused';

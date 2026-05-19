@@ -45,7 +45,7 @@
   width: 100%;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #B03030 0%, #C0392B 40%, #B03535 100%);
+  background: #8B1A1A;
   border-top: 1px solid rgba(212,175,55,0.35);
   border-bottom: 1px solid rgba(212,175,55,0.35);
 }
@@ -80,12 +80,12 @@
 
 .taglineFadeLeft {
   left: 0;
-  background: linear-gradient(to right, #B03535 0%, #B03535 10%, rgba(176,53,53,0) 100%);
+  background: linear-gradient(to right, #8B1A1A 0%, #8B1A1A 10%, rgba(139,26,26,0) 100%);
 }
 
 .taglineFadeRight {
   right: 0;
-  background: linear-gradient(to left, #C0392B 0%, #B03535 10%, rgba(176,53,53,0) 100%);
+  background: linear-gradient(to left, #8B1A1A 0%, #8B1A1A 10%, rgba(139,26,26,0) 100%);
 }
 
 /* Corner ornaments */
@@ -94,7 +94,7 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 5;
-  color: rgba(212,175,55,0.5);
+  color: #C9A84C;
   font-size: 14px;
   pointer-events: none;
 }
@@ -107,31 +107,14 @@
   right: 14px;
 }
 
-/* Marquee track — matches announcement bar pattern */
+/* Marquee track — matches announcement bar pattern (handled by global sampada-marquee-track class) */
+
+/* Override duration to 90s (50% slower than the current 45s speed) */
 .taglineTrack {
-  display: flex;
-  white-space: nowrap;
-  position: relative;
-  z-index: 2;
-  animation-fill-mode: forwards;
-  will-change: transform;
-  width: max-content;
-  min-width: 100%;
+  animation-duration: 90s !important;
 }
 
-.taglineBanner:hover .taglineTrack {
-  animation-play-state: paused;
-}
-
-/* Animation — matches announcement bar pattern */
-@keyframes tagline-marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
+/* Animation — moved to globals.css to avoid CSS Modules "pure mode" conflict */
 
 /* Content row */
 .taglineContent {
@@ -140,6 +123,7 @@
   gap: 24px;
   padding: 15px 56px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Typography */
@@ -149,7 +133,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #D4AF37;
+  color: #C9A84C;
   position: relative;
 }
 
@@ -168,7 +152,7 @@
   font-size: 13px;
   font-weight: 300;
   letter-spacing: 0.1em;
-  color: rgba(255, 245, 230, 0.88);
+  color: #C9A84C;
   font-style: italic;
 }
 
@@ -178,11 +162,11 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #D4AF37;
+  color: #C9A84C;
 }
 
 .taglineDivider {
-  color: rgba(212,175,55,0.55);
+  color: #C9A84C;
   font-size: 16px;
   font-weight: 300;
   line-height: 1;
@@ -192,10 +176,10 @@
 .taglineDiamond {
   width: 5px;
   height: 5px;
-  background: rgba(212,175,55,0.45);
+  background: #C9A84C;
   transform: rotate(45deg);
   flex-shrink: 0;
-  border: 0.5px solid rgba(212,175,55,0.3);
+  border: 0.5px solid rgba(201, 168, 76, 0.3);
 }
 
 /* Announcement / desc bar - DEPRECATED (replaced by taglineBanner) */

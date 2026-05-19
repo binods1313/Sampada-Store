@@ -140,6 +140,30 @@
   }
 }
 
+/* Standard Left-to-Right Marquee (Used by hero tagline) */
+@keyframes tagline-marquee {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.tagline-marquee-slow {
+  display: flex;
+  white-space: nowrap;
+  animation: tagline-marquee var(--marquee-duration, 60s) linear infinite;
+  animation-fill-mode: forwards;
+  will-change: transform;
+  width: max-content;
+  min-width: 100%;
+}
+
+.tagline-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
 /* ============================================================================
    MARQUEE ANIMATION - For announcement bar
    ============================================================================ */
@@ -468,6 +492,89 @@ span.text-red {
   white-space: normal;
   /* Ensures line wrapping */
   z-index: 10;
+}
+
+/* ============================================================================
+   PREMIUM SHOP NOW BUTTON - REVERSED (Gold to Maroon)
+   Used in Hero Banner
+   ============================================================================ */
+.shop-now-btn-reversed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #D4AF37 0%, #C9A84C 100%); /* Initial Gold */
+  color: #8B1A1A; /* Initial Maroon text */
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border: 2px solid #C9A84C; /* Gold border — matches footer button */
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+}
+
+/* Shimmer effect for reversed button */
+.shop-now-btn-reversed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.5s ease-in-out;
+}
+
+/* Underline for reversed button */
+.shop-now-btn-reversed::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: #C9A84C; /* Gold underline */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover State: Maroon background, Gold text */
+.shop-now-btn-reversed:hover {
+  background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+  color: #D4AF37;
+  border-color: #C9A84C;
+  box-shadow: 0 6px 20px rgba(139, 26, 26, 0.4);
+  transform: translateY(-2px);
+}
+
+.shop-now-btn-reversed:hover::after {
+  transform: scaleX(1);
+}
+
+.shop-now-btn-reversed:hover::before {
+  left: 100%;
+}
+
+.shop-now-btn-reversed:hover span {
+  transform: translateX(4px);
+  color: #D4AF37;
+}
+
+.shop-now-btn-reversed span {
+  display: inline-block;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 /* ============================================================================
