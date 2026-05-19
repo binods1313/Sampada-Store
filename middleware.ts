@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { jwtVerify } from 'jose'
+import { jwtVerify } from 'next-auth/jwt'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -27,10 +27,9 @@ export async function middleware(request: NextRequest) {
 
   try {
     // Verify token
-    await jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_SECRET || 'change-this-secret')
-    )
+    const secret = process.env.JWT_SECRET || 'change-this-secret'
+    const verifiedToken = await jwtVerify(token, secret)
+
     // Valid token = allow access
     return NextResponse.next()
   } catch {
