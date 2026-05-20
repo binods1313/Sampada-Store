@@ -285,13 +285,13 @@ const WhySampada = () => {
                 className="pillar-card-image"
               />
 
-              {/* LAYER 2: Minimal bottom gradient ONLY for text readability */}
+              {/* LAYER 2: Rich multi-stop dark overlay for extreme readability */}
               <div
                 className="pillar-card-overlay"
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 70%)',
+                  background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.25) 40%, rgba(0, 0, 0, 0.75) 80%, rgba(0, 0, 0, 0.95) 100%)',
                   pointerEvents: 'none',
                   transition: 'background 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
                   zIndex: 1,
@@ -335,6 +335,7 @@ const WhySampada = () => {
               >
                 <h3
                   id={`feature-title-${index}`}
+                  className="pillar-card-title"
                   style={{
                     color: '#FFE8A3',
                     fontSize: '1.2rem',
@@ -361,6 +362,7 @@ const WhySampada = () => {
                 }}
               >
                 <p
+                  className="pillar-card-tagline"
                   style={{
                     color: '#FFE8A3',
                     fontSize: '13px',
@@ -373,6 +375,7 @@ const WhySampada = () => {
                   {feature.tagline}
                 </p>
                 <div
+                  className="pillar-card-divider"
                   style={{
                     width: '32px',
                     height: '2px',
@@ -382,6 +385,7 @@ const WhySampada = () => {
                   }}
                 />
                 <p
+                  className="pillar-card-quote"
                   style={{
                     color: '#FFE8A3',
                     fontSize: '11px',
@@ -403,7 +407,7 @@ const WhySampada = () => {
                 transform: scale(1.12);
               }
               .pillar-card-wrapper:hover .pillar-card-overlay {
-                background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.25) 40%, transparent 70%);
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.85) 80%, rgba(0, 0, 0, 0.98) 100%);
               }
             `}</style>
           </div>
@@ -413,7 +417,7 @@ const WhySampada = () => {
       {/* Animations & Responsive */}
       <style>{`
         @media (max-width: 1024px) {
-          section[aria-labelledby="why-sampada-title"] > div:last-child {
+          .pillars-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             padding: 0 16px !important;
             gap: 16px !important;
@@ -421,10 +425,27 @@ const WhySampada = () => {
         }
 
         @media (max-width: 768px) {
-          section[aria-labelledby="why-sampada-title"] > div:last-child {
+          .pillars-grid {
             grid-template-columns: 1fr !important;
             padding: 0 20px !important;
-            gap: 16px !important;
+            gap: 20px !important;
+          }
+          .pillar-card {
+            aspect-ratio: 1.4 !important; /* Slightly taller aspect ratio on mobile for proper text fitting */
+          }
+          /* High contrast text legibility tweaks on mobile screens */
+          .pillar-card-title {
+            font-size: 1.1rem !important;
+          }
+          .pillar-card-tagline {
+            font-size: 12px !important;
+            margin-bottom: 6px !important;
+          }
+          .pillar-card-divider {
+            margin-bottom: 6px !important;
+          }
+          .pillar-card-quote {
+            font-size: 10px !important;
           }
         }
 
