@@ -3502,8 +3502,8 @@ img {
   z-index: 100;
 }
 .header-logo {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   color: #8B1A1A;
   flex-shrink: 0;
   margin-right: 32px;
@@ -3518,9 +3518,10 @@ img {
 }
 .header-nav a,
 .header-nav .nav-link {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: #1a1a1a;
+  letter-spacing: 0.01em;
   padding: 6px 10px;
   white-space: nowrap;
   text-decoration: none;
@@ -3533,6 +3534,7 @@ img {
 }
 .header-nav a.active,
 .header-nav .nav-link-active {
+  font-weight: 700;
   color: #8B1A1A;
   border-bottom: 2px solid #C9A84C;
   padding-bottom: 4px;
