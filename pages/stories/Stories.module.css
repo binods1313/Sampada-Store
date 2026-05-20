@@ -2,12 +2,21 @@
 
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
 .hero {
-  position: relative; background: #1a1f3a;
-  padding: 110px 24px 90px; text-align: center; overflow: hidden;
+  position: relative;
+  background: #1a1f3a;
+  padding: 110px 24px 90px;
+  text-align: center;
+  overflow: hidden;
+  margin-top: 0 !important; /* Kill black gap above hero on mobile */
 }
 .hero::before {
-  content: ''; position: absolute; top: -60px; left: 50%;
-  transform: translateX(-50%); width: 600px; height: 400px;
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
   background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
@@ -192,15 +201,43 @@
   .lbImage { max-height: 55vw; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 80px 20px 70px; }
-  .timeline { padding: 24px 16px 28px; }
-  .gridSection { padding: 48px 16px 56px; }
-  .grid { grid-template-columns: 1fr; gap: 20px; }
-  .cardWrapFeatured { grid-column: span 1; }
-  .filterBar { flex-direction: column; align-items: flex-start; }
-  .behindSection { padding: 60px 20px; }
-  .behindStats { gap: 24px; }
-  .collectionsSection { padding: 56px 16px 64px; }
-  .collectionsGrid { grid-template-columns: 1fr; gap: 16px; }
-  .colCard { height: 280px; }
+  .hero {
+    padding: 80px 20px 70px;
+    margin-top: 0 !important; /* Kill black gap above hero on mobile */
+    padding-top: 0 !important;
+    min-height: 420px;
+  }
+  .timeline {
+    padding: 24px 16px 28px;
+  }
+  .gridSection {
+    padding: 48px 16px 56px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .cardWrapFeatured {
+    grid-column: span 1;
+  }
+  .filterBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .behindSection {
+    padding: 60px 20px;
+  }
+  .behindStats {
+    gap: 24px;
+  }
+  .collectionsSection {
+    padding: 56px 16px 64px;
+  }
+  .collectionsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .colCard {
+    height: 280px;
+  }
 }

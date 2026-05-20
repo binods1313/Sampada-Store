@@ -1168,11 +1168,9 @@ span.text-red {
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 100;
-
+  z-index: 9998;
   /* will-change: transform; */
   transition: all 1s ease-in-out;
-
 }
 
 .cart-container {
@@ -1182,7 +1180,83 @@ span.text-red {
   float: right;
   padding: 40px 10px;
   position: relative;
+  z-index: 9999;
+  color-scheme: light; /* Force light mode - kills dark inputs */
+  overflow-y: auto;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+}
 
+/* Force white inputs inside cart - override dark mode */
+.cart-container input,
+.cart-container select,
+.cart-container textarea {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  border: 1px solid #ddd !important;
+  border-radius: 6px;
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Prevent background scroll when cart is open */
+body.cart-open {
+  overflow: hidden;
+}
+
+/* ── Stories Hero Banner Fixes ─────────────────────────────────────────────── */
+/* Mobile — hide side quotes on stories page to prevent overlap */
+@media (max-width: 768px) {
+  /* Hide side quote panels on mobile */
+  section[style*="height: 100vh"] > div[style*="width: 26%"] {
+    display: none !important;
+  }
+  
+  /* Ensure hero sections have no top margin/padding on mobile */
+  .stories-hero,
+  .hero-banner,
+  [class*="hero"] {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Stories hero specific */
+  section[style*="height: 100vh"][style*="backgroundColor: #0a0a0a"] {
+    min-height: 420px !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* ── Footer & Banner Logo Rotation ─────────────────────────────────────────── */
+/* Apply globally to all logo/emblem rotators - no breakpoint restriction */
+.footer-logo-rotator,
+.emblem-rotate,
+[class*="logoRotator"],
+[class*="emblemRotate"] {
+  animation: emblemSpin 60s linear infinite !important;
+  display: inline-block;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@keyframes emblemSpin {
+  from {
+    transform: scale(1.25) rotate(0deg);
+  }
+  to {
+    transform: scale(1.25) rotate(360deg);
+  }
+}
+
+/* Force animation even with reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .footer-logo-rotator,
+  .emblem-rotate,
+  [class*="logoRotator"],
+  [class*="emblemRotate"] {
+    animation: emblemSpin 60s linear infinite !important;
+  }
 }
 
 .footer-container {

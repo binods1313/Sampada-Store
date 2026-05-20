@@ -69,37 +69,39 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="layout">
-      <Head>
-        <title>Sampada Store</title>
-      </Head>
+    <>
+      <div className="layout">
+        <Head>
+          <title>Sampada Store</title>
+        </Head>
+        
+        {/* Only show global Navbar on non-homepage pages */}
+        {!hideLayout && (
+          <header>
+            <SampadaNavbar
+              session={session}
+              loading={loading}
+              onSignIn={() => window.location.href = '/api/auth/signin'}
+              totalQuantities={totalQuantities}
+              setShowCart={setShowCart}
+              showMarquee={true}
+            />
+          </header>
+        )}
+        
+        <main className={hideLayout ? '' : 'main-container'}>
+          {children}
+        </main>
+        
+        {/* Only show global Footer on non-homepage pages */}
+        {!hideLayout && (
+          <footer>
+            <Footer />
+          </footer>
+        )}
+      </div>
       
-      {/* Only show global Navbar on non-homepage pages */}
-      {!hideLayout && (
-        <header>
-          <SampadaNavbar
-            session={session}
-            loading={loading}
-            onSignIn={() => window.location.href = '/api/auth/signin'}
-            totalQuantities={totalQuantities}
-            setShowCart={setShowCart}
-            showMarquee={true}
-          />
-        </header>
-      )}
-      
-      <main className={hideLayout ? '' : 'main-container'}>
-        {children}
-      </main>
-      
-      {/* Only show global Footer on non-homepage pages */}
-      {!hideLayout && (
-        <footer>
-          <Footer />
-        </footer>
-      )}
-      
-      {/* CartSlider is always available globally */}
+      {/* CartSlider is OUTSIDE layout - direct child of body */}
       {showCart && <CartSlider isOpen={showCart} />}
       
       {/* AI Widgets - Always available on client side */}
@@ -178,7 +180,7 @@ const Layout = ({ children }) => {
 
       {/* Cart Recovery Banner */}
       <CartRecoveryBanner />
-    </div>
+    </>
   );
 };
 

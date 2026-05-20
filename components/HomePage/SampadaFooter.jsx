@@ -68,6 +68,32 @@ const SampadaFooter = ({ footerData }) => {
       <div className={styles.topRow}>
         {/* Brand Column */}
         <div className={styles.brandCol}>
+          {/* Rotating Emblem */}
+          <div className={styles.footerLogoRotator} style={{ width: '48px', height: '48px', marginBottom: '8px' }}>
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 300 300"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Sampada emblem"
+            >
+              <circle cx="150" cy="150" r="140" fill="none" stroke="#C9A84C" strokeWidth="3" opacity="0.3" />
+              <circle cx="150" cy="150" r="120" fill="none" stroke="#C9A84C" strokeWidth="2" opacity="0.5" />
+              <text
+                x="150"
+                y="170"
+                fontFamily="'Playfair Display', serif"
+                fontSize="120"
+                fontWeight="900"
+                fill="#C9A84C"
+                textAnchor="middle"
+              >
+                स
+              </text>
+              <circle cx="150" cy="150" r="100" fill="none" stroke="#C9A84C" strokeWidth="1.5" opacity="0.4" />
+            </svg>
+          </div>
+          
           <h3 className={styles.brandName}>{brandName}</h3>
           <p className={styles.brandDesc}>{brandTagline}</p>
 

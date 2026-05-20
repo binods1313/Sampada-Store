@@ -52,6 +52,14 @@ const Cart = () => {
   // State for Razorpay checkout loading
   const [isRazorpayProcessing, setIsRazorpayProcessing] = useState(false);
 
+  // Prevent body scroll when cart is open
+  useEffect(() => {
+    document.body.classList.add('cart-open');
+    return () => {
+      document.body.classList.remove('cart-open');
+    };
+  }, []);
+
   // Track cart abandonment when user leaves with items
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) return;

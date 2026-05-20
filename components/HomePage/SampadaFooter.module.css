@@ -30,6 +30,23 @@
   color: #ffffff;
   margin: 0;
   letter-spacing: -0.3px;
+  display: inline-block; /* Required for transform to work */
+}
+
+/* Footer logo/emblem rotation animation */
+.footerLogoRotator,
+.emblemRotate {
+  animation: emblemSpin 60s linear infinite !important;
+  display: inline-block; /* Required for transform to work */
+}
+
+@keyframes emblemSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .brandDesc {

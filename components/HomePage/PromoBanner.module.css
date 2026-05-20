@@ -81,16 +81,9 @@
   /* Hardware acceleration for smooth GPU-rendered rotation */
   will-change: transform;
   backface-visibility: hidden;
-}
-
-/* Apply rotation with scale only when user hasn't requested reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-  .logoRotator {
-    /* Slow, elegant rotation - 60 seconds per rotation (visible but not distracting) */
-    /* Combined scale(1.25) with rotation for 25% larger display */
-    animation: emblemSpin 60s linear infinite;
-    transform-origin: center;
-  }
+  /* Apply animation globally - no media query restriction */
+  animation: emblemSpin 60s linear infinite !important;
+  transform-origin: center;
 }
 
 /* Logo image styling (uploaded from Sanity) */
