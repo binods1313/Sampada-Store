@@ -72,6 +72,15 @@ export const getExchangeRate = async (from = 'USD', to = 'INR') => {
   }
 };
 
+export const CURRENCY_LOCALES = {
+  INR: 'en-IN',
+  USD: 'en-US',
+  EUR: 'de-DE',
+  GBP: 'en-GB',
+  AED: 'ar-AE',
+  SGD: 'en-SG'
+};
+
 /**
  * Convert amount from one currency to another
  * @param {number} amount - Amount to convert
@@ -80,10 +89,20 @@ export const getExchangeRate = async (from = 'USD', to = 'INR') => {
  * @returns {Promise<number>} Converted amount
  */
 export const convertPrice = async (amount, from = 'USD', to = 'INR') => {
-  if (from === to) return amount;
-  
+  // If source and target are the same, just format the amount
+  if (from === to) {
+    return new Intl.NumberFormat(CURRENCY_LOCALES[to] || 'en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  }
+
   const rate = await getExchangeRate(from, to);
-  return parseFloat((amount * rate).toFixed(2));
+  const converted = amount * rate;
+  return new Intl.NumberFormat(CURRENCY_LOCALES[to] || 'en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(converted);
 };
 
 /**

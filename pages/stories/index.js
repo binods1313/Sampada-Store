@@ -4,8 +4,10 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/client'
 import { getLocalKavyaImages } from '@/lib/getLocalStories'
+import '../../styles/hero-banner.css';
+import SpotlightReveal from '@/components/spotlight/SpotlightReveal';
+import JourneyStats from '@/components/JourneyStats';
 import styles from './Stories.module.css'
-import SpotlightReveal from '@/components/spotlight/SpotlightReveal'
 import SelectedWorksGallery from '@/components/stories/SelectedWorksGallery'
 
 // ─── Collections data ─────────────────────────────────────────────────────────
@@ -21,10 +23,8 @@ const FILTERS = ['All', 'Casual', 'Festive', 'Premium', 'Summer', 'Winter']
 // ─── Section Divider ─────────────────────────────────────────────────────────
 function SectionDivider() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 24px' }}>
-      <div style={{ height: '1px', background: 'rgba(201,169,110,0.2)', flex: 1, maxWidth: '240px' }} />
-      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(201,169,110,0.4)', margin: '0 16px' }} />
-      <div style={{ height: '1px', background: 'rgba(201,169,110,0.2)', flex: 1, maxWidth: '240px' }} />
+    <div className="brand-divider">
+      <img className="brand-divider-emblem" src="/sampada-emblem.png" alt="Sampada Emblem" />
     </div>
   )
 }
@@ -385,8 +385,10 @@ export default function StoriesIndex({ stories, banner }) {
       <Head>
         <title>Sampada Stories — Lookbooks &amp; Collections</title>
         <meta name="description" content="Explore Sampada's lookbooks, model stories, and curated collections. Featuring Kavya in Winter Drop 2026." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {heroImage && <link rel="preload" href={heroImage} as="image" />}
         {heroImage && <meta property="og:image" content={heroImage} />}
-        <meta property="og:title" content="Sampada Stories — Lookbooks & Collections" />
+        <meta property="og:title" content="Sampada Stories — Lookbooks &amp; Collections" />
       </Head>
 
       <main>
@@ -394,11 +396,10 @@ export default function StoriesIndex({ stories, banner }) {
         <SpotlightReveal
           baseImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17.jpeg"
           revealImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg"
+          aria-label="Featured story hero image"
         />
 
-        <SectionDivider />
 
-        {/* Stories Quote */}
         {banner?.collectionQuote?.storiesQuote && (
           <section className="section-light s-section">
             <div className="s-container" style={{ textAlign: 'center', maxWidth: '800px' }}>
@@ -416,6 +417,7 @@ export default function StoriesIndex({ stories, banner }) {
         )}
 
         {banner?.collectionQuote?.storiesQuote && <SectionDivider />}
+<JourneyStats />
 
         {/* 2. Timeline */}
         {stories.length > 0 && <StoryTimeline stories={stories} />}

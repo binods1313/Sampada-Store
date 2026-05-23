@@ -1,0 +1,80 @@
+/* components/ShareButtons.module.css */
+
+/* Container for the share buttons */
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--sampada-charcoal);
+  margin-right: 8px;
+}
+
+/* Native share button (mobile only) */
+.nativeBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.nativeBtn:hover {
+  transform: translateY(-4px);
+}
+
+/* Individual share button */
+.shareBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--share-color, #6B7280);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shareBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure icons inherit currentColor */
+.shareBtn svg {
+  fill: currentColor;
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile sizing – override for touch‑only devices */
+@media (max-width: 375px) {
+  .shareBtn,
+  .nativeBtn {
+    width: 32px;
+    height: 32px;
+  }
+  .shareBtn svg,
+  .nativeBtn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Disable hover lift on pure touch devices */
+@media (hover: none) {
+  .shareBtn:hover,
+  .nativeBtn:hover {
+    transform: none;
+  }
+}

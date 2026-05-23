@@ -18,14 +18,10 @@ export const CartProvider = ({ children }) => {
   const [qty, setQty] = useState(1);
 
   const calculateItemPrice = useCallback((item) => {
-    if (item.variantPrice !== undefined && item.variantPrice !== null) {
-      const price = item.variantPrice;
-      const discount = item.variantDiscount !== undefined && item.variantDiscount !== null ? item.variantDiscount : (item.baseDiscount || 0);
-      return price * (1 - (discount / 100));
-    }
-    const price = item.basePrice || item.price;
-    const discount = item.baseDiscount || item.discount || 0;
-    return price * (1 - (discount / 100));
+    // Safely coerce price and discount values, defaulting to 0 if missing.
+    const price = Number(item.variantPrice ?? item.basePrice ?? item.price ?? 0);
+    const discount = Number(item.variantDiscount ?? item.baseDiscount ?? item.discount ?? 0);
+    return price * (1 - discount / 100);
   }, []);
 
   // Recalculate totals and persist to localStorage whenever cartItems change

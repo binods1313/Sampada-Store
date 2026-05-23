@@ -28,12 +28,16 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
   const [clipPath, setClipPath] = useState(
     `circle(${SPOTLIGHT_RADIUS}px at 50% 40%)`
   )
-  const [hasPointer, setHasPointer] = useState(false)
+  const [hasPointer, setHasPointer] = useState(true)
 
   useEffect(() => {
-    // Detect pointer capability
-    const mq = window.matchMedia('(pointer: fine)')
-    setHasPointer(mq.matches)
+    // Detect pointer capability and touch devices
+    const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    setHasPointer(!isTouch)
+    if (isTouch) {
+      setClipPath('none')
+      return
+    }
 
     const container = containerRef.current
     if (!container) return
@@ -87,41 +91,47 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
   }, [])
 
   return (
-    <section
-      ref={containerRef}
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100vh',
-        minHeight: '100vh',
-        backgroundColor: '#0a0a0a',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'none',
-      }}
-    >
-      {/* Base layer — object-fit contain, full image always visible */}
-      <img
-        src={base}
-        alt="Kavya"
+    <>
+      <section
+        ref={containerRef}
+        className="stories-hero"
         style={{
-          position: 'absolute',
-          inset: 0,
+          position: 'relative',
           width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          objectPosition: 'center center',
-          zIndex: 0,
-          filter: 'brightness(0.45) saturate(0.7)',
+          height: hasPointer ? '100vh' : '100svh',
+          minHeight: hasPointer ? '100vh' : '100svh',
+          backgroundColor: '#0a0a0a',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: hasPointer ? 'none' : 'default',
         }}
-      />
+      >
+        {/* Base layer — object-fit contain, full image always visible */}
+        {hasPointer && (
+          <img
+            src={base}
+            alt="Kavya"
+            className="hero-bg-image"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              objectPosition: 'center center',
+              zIndex: 0,
+              filter: 'brightness(0.45) saturate(0.7)',
+            }}
+          />
+        )}
 
       {/* Reveal layer — same contain framing, clipped to spotlight */}
       <img
         src={reveal}
         alt="Kavya — reveal"
+        className="hero-bg-image"
         style={{
           position: 'absolute',
           inset: 0,
@@ -130,7 +140,7 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
           objectFit: 'contain',
           objectPosition: 'center center',
           zIndex: 1,
-          clipPath: hasPointer ? clipPath : `circle(40% at 50% 40%)`,
+          clipPath: hasPointer ? clipPath : 'none',
           transition: 'clip-path 0ms linear',
           filter: 'saturate(1.1) contrast(1.04)',
         }}
@@ -181,6 +191,7 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
 
       {/* Left quote panel */}
       <div
+        className="hero-quote-left desktop-only-quote"
         style={{
           position: 'absolute',
           top: 0,
@@ -246,6 +257,7 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
 
       {/* Right quote panel */}
       <div
+        className="hero-quote-right desktop-only-quote"
         style={{
           position: 'absolute',
           top: 0,
@@ -380,5 +392,18 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
         }}
       />
     </section>
+
+    {/* Mobile quotes wrapper */}
+    <div className="hero-quotes-mobile-wrapper">
+      <div className="hero-quote-left mobile-quote">
+        <p className="quote-text">"Grace is not just how you look — it's how you carry your story."</p>
+        <p className="quote-author">Sampada Originals™</p>
+      </div>
+      <div className="hero-quote-right mobile-quote">
+        <p className="quote-text">"Every look is a legacy worn with intention."</p>
+        <p className="quote-author">Winter Drop 2026</p>
+      </div>
+    </div>
+    </>
   )
 }

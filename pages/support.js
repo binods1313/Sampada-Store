@@ -4,7 +4,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/client'
 import styles from '../styles/Support.module.css'
-import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean'
+import '../styles/hero-banner.css';
+import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
 
 // ─── Main Support Page ────────────────────────────────────────────────────────
 export default function SupportPage({ supportData, banner }) {
@@ -89,7 +90,7 @@ export default function SupportPage({ supportData, banner }) {
 
       <main>
         {/* Hero Section: DARK - Spotlight Reveal */}
-        <section className="section-dark" style={{ padding: 0, minHeight: '100vh' }}>
+        <section className="section-dark" style={{ padding: 0, minHeight: '100svh' }}>
           <div className={styles.heroSpotlight}>
             <SpotlightRevealClean
               baseImage="/images/Kavya/Kav1.jpeg"
@@ -135,26 +136,34 @@ export default function SupportPage({ supportData, banner }) {
                 <span className="s-bar" />
               </div>
               <div className={styles.contactGrid}>
-                {contactMethods.map((method, index) => (
-                  <div key={index} className="s-card">
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      background: 'rgba(139,26,26,0.08)',
-                      border: '1px solid rgba(139,26,26,0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: '0 auto 1rem'
-                    }}>
-                      <span className="s-card-icon" style={{ margin: 0 }}>{getMethodIcon(method.method)}</span>
-                    </div>
-                    <h3 className="s-card-title">{getMethodLabel(method.method)}</h3>
-                    <p className="s-card-hi">{method.value}</p>
-                    {method.description && <p className="s-card-body">{method.description}</p>}
-                  </div>
-                ))}
+                {contactMethods.map((method, index) => {
+                  let href = '#';
+                  if (method.method === 'email') href = 'mailto:support@sampada.com';
+                  else if (method.method === 'phone') href = 'tel:+911149411900';
+                  else if (method.method === 'whatsapp') href = 'https://wa.me/911149411900';
+                  else if (method.method === 'chat') href = '#liveChat';
+                  return (
+                    <a key={index} href={href} className="s-card" style={{ textDecoration: 'none' }}>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: 'rgba(139,26,26,0.08)',
+                        border: '1px solid rgba(139,26,26,0.12)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem'
+                      }}>
+                        <span className="s-card-icon" style={{ margin: 0 }}>{getMethodIcon(method.method)}</span>
+                      </div>
+                      <h3 className="s-card-title">{getMethodLabel(method.method)}</h3>
+                      <p className="s-card-hi">{method.value}</p>
+                      {method.description && <p className="s-card-body">{method.description}</p>}
+                      {method.method === 'chat' && <span className={styles.liveDot} />}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </section>

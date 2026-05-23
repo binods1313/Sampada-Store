@@ -1,8 +1,36 @@
 # Sampada Store - Complete Project Structure Reference
 
-**Generated**: May 10, 2026  
+**Generated**: May 21, 2026  
+**Last Updated**: May 21, 2026  
 **Location**: E:\Sampada-Store  
 **Purpose**: Comprehensive reference for developers working on the project
+
+---
+
+## 🆕 LATEST UPDATES (May 21, 2026)
+
+### Cart Drawer System - Complete Overhaul
+- **Status**: ✅ Production Ready
+- **Changes**:
+  - Fixed cart opening by default (now starts closed)
+  - Replaced back arrow with ✕ close button
+  - Removed payment widgets (moved to checkout page)
+  - Quantity controls now match product detail page style (gold-bordered)
+  - Enhanced buttons with Sampada brand styling (crimson gradient)
+  - Removed all duplicate CSS causing conflicts
+  - Cart slides smoothly from right with proper z-index
+
+### Homepage Enhancements
+- **Tagline Banner**: Fixed scrolling animation (JavaScript-free CSS)
+- **Footer Logo**: Added rotating Sampada emblem
+- **Promo Banner**: Added rotating logo animation
+- **Stories Hero**: Fixed mobile display issues
+
+### Documentation
+- Added comprehensive cart drawer documentation
+- Created context transfer completion summary
+- Updated all technical references
+- Added phase 3 completion report
 
 ---
 
@@ -18,18 +46,59 @@ E:\Sampada-Store/
 │   └── api/                        # Some API routes
 ├── components/                     # React components (main UI)
 │   ├── HomePage/                   # Homepage-specific components
+│   │   ├── SampadaNavbar.jsx       # Main navigation
+│   │   ├── SampadaFooter.jsx       # Footer with rotating logo
+│   │   ├── HomeHeroBanner.jsx      # Hero with scrolling tagline
+│   │   ├── PromoBanner.jsx         # Promo banner with rotating logo
+│   │   ├── CollectionsSection.jsx  # Collections showcase
+│   │   └── [various].module.css
 │   ├── Product/                    # Product-related components
+│   │   ├── ProductCard.jsx         # Product card
+│   │   ├── ProductCarousel.jsx     # Product carousel
+│   │   └── ProductFilters.jsx      # Filter UI
 │   ├── admin/                      # Admin dashboard components
+│   │   ├── AdminDashboard.jsx
+│   │   ├── ProductManager.jsx
+│   │   └── OrderManager.jsx
 │   ├── stories/                    # Stories page components
+│   │   ├── StoriesGrid.jsx
+│   │   └── StoryCard.jsx
 │   ├── ui/                         # Reusable UI components
-│   └── [various components].jsx
+│   │   ├── Button.jsx
+│   │   ├── Card.jsx
+│   │   └── Modal.jsx
+│   ├── Cart.jsx                    # Shopping cart drawer (clean, no payment widgets)
+│   ├── CartSlider.jsx              # Cart wrapper component
+│   ├── Layout.jsx                  # Main layout wrapper
+│   ├── Navbar.jsx                  # Alternative navbar
+│   ├── Footer.jsx                  # Alternative footer
+│   ├── ProductFilterSection.jsx    # Product filtering
+│   ├── NewsletterSection.jsx       # Newsletter signup
+│   ├── WhySampada.jsx              # Value propositions
+│   ├── TrustStrip.jsx              # Trust badges
+│   └── [100+ other components]
 ├── config/                         # Configuration files
 ├── context/                        # React Context providers
-│   ├── CartContext.js
-│   ├── CurrencyContext.js
-│   ├── StateContext.js
-│   └── ThemeContext.js
+│   ├── CartContext.js              # Cart state management (MAIN)
+│   ├── StateContext.js             # UI state (showCart, etc.)
+│   ├── CurrencyContext.js          # Currency selection
+│   └── ThemeContext.js             # Theme switching
 ├── docs/                           # Documentation
+│   ├── BRAND_CONSISTENCY_COMPLETE.md
+│   ├── ADMIN_DASHBOARD.md
+│   ├── PUBLIC_APIS_IMPLEMENTATION.md
+│   ├── DEPLOYMENT_GUIDE_HOSTINGER.md
+│   ├── PROJECT_STRUCTURE_REFERENCE.md
+│   ├── CART_DRAWER_5_FIXES_COMPLETE.md
+│   ├── CART_QUANTITY_CONTROLS_COMPLETE.md
+│   ├── CONTEXT_TRANSFER_COMPLETION_SUMMARY.md
+│   ├── URLS_REFERENCE.md
+│   ├── SUPPORT_PAGE_CONTENT.md
+│   ├── COMPANY_PAGE_CONTENT_FILL.md
+│   ├── COMPANY_TEAM_PAGES_CREATED.md
+│   ├── PHASE3_COMPLETION_REPORT.md
+│   ├── API_KEY_STATUS.md
+│   └── AGENCY_AGENTS_REFERENCE.md
 ├── hooks/                          # Custom React hooks
 ├── lib/                            # Utility libraries
 │   ├── client.js                   # Sanity client
@@ -64,8 +133,9 @@ E:\Sampada-Store/
 ├── scripts/                        # Build and utility scripts
 ├── services/                       # Business logic services
 ├── styles/                         # CSS and styling
-│   ├── globals.css                 # Global styles
-│   ├── sampada-brand.css           # Brand system (MAIN)
+│   ├── globals.css                 # Global styles (MAIN)
+│   ├── sampada-brand.css           # Brand system
+│   ├── sampada-premium-brand.css   # Premium components (quantity controls, etc.)
 │   └── [various module.css]
 ├── utils/                          # Utility functions
 ├── .env                            # Environment variables (DO NOT COMMIT)
@@ -613,23 +683,155 @@ Email Confirmation (SendGrid)
 
 ---
 
+## 🛒 CART DRAWER IMPLEMENTATION
+
+### Current Architecture
+
+**Main Files**:
+- `components/Cart.jsx` - Cart drawer component (clean, no payment widgets)
+- `components/CartSlider.jsx` - Cart wrapper with slide animation
+- `components/Layout.jsx` - Layout wrapper (cart rendered outside main)
+- `context/CartContext.js` - Cart state management
+- `context/StateContext.js` - UI state (showCart toggle)
+
+### Cart Features
+
+**Display**:
+- Slides in from right side
+- Dark overlay closes cart
+- Close button (✕) in header
+- Item count badge
+- Scrollable items list
+- Sticky header and footer
+
+**Cart Items**:
+- Product image (120x160px)
+- Product name
+- Variant info (color, size)
+- Price (with discount if applicable)
+- Quantity controls (gold-bordered, crimson buttons)
+- Remove button
+
+**Cart Footer**:
+- Subtotal display
+- Tax note
+- "Proceed to Checkout" button (crimson gradient)
+- "Continue Shopping" button (outlined crimson)
+
+### Quantity Controls Style
+
+**Matches product detail page style:**
+
+```css
+.cart-qty-control {
+  border: 1.5px solid #C9A84C;        /* Gold border */
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.cart-qty-btn {
+  width: 40px;
+  height: 40px;
+  color: #8B1A1A;                      /* Crimson */
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cart-qty-btn:hover {
+  background: #8B1A1A;                 /* Fill crimson */
+  color: #ffffff;
+}
+
+.cart-qty-value {
+  width: 48px;
+  height: 40px;
+  border-left: 1px solid rgba(201, 168, 76, 0.4);
+  border-right: 1px solid rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.05);  /* Light gold tint */
+}
+```
+
+### Cart State Management
+
+**CartContext** (`context/CartContext.js`):
+- `cartItems` - Array of cart items
+- `totalPrice` - Calculated total
+- `totalQuantities` - Total item count
+- `addToCart(product, quantity)` - Add item
+- `removeFromCart(cartUniqueId)` - Remove item
+- `updateCartItemQuantity(cartUniqueId, quantity)` - Update quantity
+- `calculateItemPrice(item)` - Calculate price with discount
+
+**StateContext** (`context/StateContext.js`):
+- `showCart` - Boolean for cart visibility
+- `setShowCart(boolean)` - Toggle cart
+
+### Cart Item Structure
+
+```javascript
+{
+  cartUniqueId: "product-id_color_size",  // Unique identifier
+  _id: "product-id",
+  name: "Product Name",
+  basePrice: 29.99,
+  variantPrice: 29.99,
+  baseDiscount: 10,
+  variantDiscount: 0,
+  quantity: 2,
+  colorName: "Black",
+  size: "M",
+  variantImage: { asset: {...} },
+  baseImage: [{ asset: {...} }],
+  variantStock: 50,
+  inventory: 100
+}
+```
+
+### Recent Fixes (May 2026)
+
+**Task 5 - Cart Drawer 5 Critical Fixes**:
+1. ✅ Cart starts CLOSED on page load (not open by default)
+2. ✅ Replaced back arrow with ✕ close button
+3. ✅ Removed rogue circle icon from quantity controls
+4. ✅ Styled "Continue Shopping" button (outlined crimson)
+5. ✅ Overlay closes cart on click
+
+**Task 6 - Quantity Controls Style Match**:
+1. ✅ Gold border (1.5px solid #C9A84C)
+2. ✅ Crimson buttons (#8B1A1A) with hover fill
+3. ✅ Light gold background tint on quantity number
+4. ✅ Gold separators between buttons
+5. ✅ Removed duplicate CSS styles
+
+**Documentation**:
+- `docs/CART_DRAWER_5_FIXES_COMPLETE.md`
+- `docs/CART_QUANTITY_CONTROLS_COMPLETE.md`
+- `docs/CONTEXT_TRANSFER_COMPLETION_SUMMARY.md`
+
+---
+
 ## 🎨 STYLING SYSTEM
 
 ### Brand System
 
-**Main File**: `styles/sampada-brand.css`
+**Main Files**: 
+- `styles/sampada-brand.css` - Core brand system
+- `styles/sampada-premium-brand.css` - Premium components (quantity controls, size selectors)
+- `styles/globals.css` - Global styles and utilities
 
 **Colors**:
-- Cream: `#FAF6F0` (light backgrounds)
-- Crimson: `#8B1A1A` (primary brand color)
-- Gold: `#C9A96E` (accents, buttons)
-- Dark: `#1A0A08` (dark backgrounds, text)
+- **Cream**: `#FAF6F0` (light backgrounds)
+- **Crimson**: `#8B1A1A` (primary brand color)
+- **Gold**: `#C9A84C` (accents, borders)
+- **Dark Red**: `#A52A2A` (gradient end)
+- **Light Gold**: `#D4AF37` (gradient end)
+- **Dark**: `#1A0A08` (dark backgrounds, text)
 
 **Typography**:
-- Headings: Cormorant Garamond (serif)
-- Body: Inter (sans-serif)
+- **Headings**: Cormorant Garamond (serif)
+- **Body**: Inter (sans-serif)
 
-**Components**:
+**Component Classes**:
 - `.section-light` - Cream background
 - `.section-dark` - Dark background
 - `.section-crimson` - Crimson background
@@ -637,6 +839,13 @@ Email Confirmation (SendGrid)
 - `.s-label` - Uppercase labels
 - `.s-card` - White cards
 - `.btn-cta-primary` - Gold button
+
+**Cart-Specific Classes**:
+- `.cart-drawer` - Main cart container
+- `.cart-overlay` - Dark overlay
+- `.cart-qty-control` - Quantity controls (gold-bordered)
+- `.cart-checkout-btn` - Checkout button (crimson gradient)
+- `.cart-continue-btn` - Continue shopping button (outlined crimson)
 
 ---
 
@@ -714,11 +923,30 @@ npm run build
 ## 📚 DOCUMENTATION FILES
 
 Key documentation in `docs/` folder:
+
+### Core Documentation
+- `PROJECT_STRUCTURE_REFERENCE.md` - This file (complete project structure)
 - `BRAND_CONSISTENCY_COMPLETE.md` - Brand system documentation
-- `ADMIN_DASHBOARD.md` - Admin features
+- `ADMIN_DASHBOARD.md` - Admin features and dashboard
 - `PUBLIC_APIS_IMPLEMENTATION.md` - API integrations
 - `DEPLOYMENT_GUIDE_HOSTINGER.md` - Deployment guide
-- `PROJECT_STRUCTURE_REFERENCE.md` - This file
+
+### Recent Updates (May 2026)
+- `CART_DRAWER_5_FIXES_COMPLETE.md` - Cart drawer fixes documentation
+- `CART_QUANTITY_CONTROLS_COMPLETE.md` - Quantity controls style match
+- `CONTEXT_TRANSFER_COMPLETION_SUMMARY.md` - All tasks completion summary
+- `PHASE3_COMPLETION_REPORT.md` - Phase 3 project completion
+
+### Content Documentation
+- `URLS_REFERENCE.md` - All site URLs and routes
+- `SUPPORT_PAGE_CONTENT.md` - Support page content
+- `SUPPORT_PAGE_QUICK_FILL.md` - Support page quick reference
+- `COMPANY_PAGE_CONTENT_FILL.md` - Company page content
+- `COMPANY_TEAM_PAGES_CREATED.md` - Team pages documentation
+
+### Technical Reference
+- `API_KEY_STATUS.md` - API keys and integration status
+- `AGENCY_AGENTS_REFERENCE.md` - Agent templates reference
 
 ---
 
@@ -743,6 +971,36 @@ For questions about this project structure, refer to:
 
 ---
 
-**Last Updated**: May 10, 2026  
+**Last Updated**: May 21, 2026  
 **Maintained By**: Development Team  
-**Version**: 1.0.0
+**Version**: 2.0.0
+
+---
+
+## 📝 RECENT CHANGES (May 2026)
+
+### Cart Drawer Improvements
+- ✅ Fixed cart opening by default on page load
+- ✅ Replaced back arrow with ✕ close button
+- ✅ Removed rogue icons from quantity controls
+- ✅ Styled buttons to match Sampada brand
+- ✅ Quantity controls now match product detail page (gold-bordered)
+- ✅ Removed all duplicate CSS styles
+- ✅ Enhanced checkout button with gradient and shadow
+
+### Homepage Improvements
+- ✅ Fixed tagline banner scrolling animation
+- ✅ Added rotating logo to footer and promo banner
+- ✅ Fixed stories hero banner on mobile
+
+### Documentation Updates
+- ✅ Added comprehensive cart drawer documentation
+- ✅ Updated project structure reference
+- ✅ Added context transfer completion summary
+- ✅ Created phase 3 completion report
+
+### Code Quality
+- ✅ Removed duplicate CSS styles
+- ✅ Consolidated cart-related styles
+- ✅ Improved component organization
+- ✅ Enhanced code comments and documentation

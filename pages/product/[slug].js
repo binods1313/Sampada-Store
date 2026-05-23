@@ -25,6 +25,8 @@ import ProductShare from '../../components/ProductShare';
 import PrintifyBadge from '../../components/PrintifyBadge';
 import ProductTabs from '../../components/ProductTabs';
 import '../../styles/sampada-premium-brand.css';
+import StickyAddToCartBar from '../../components/Product/StickyAddToCartBar';
+import SizeGuideModal from '../../components/Product/SizeGuideModal';
 
 
 const ProductDetails = ({ product, products, slug }) => {
@@ -725,25 +727,36 @@ const ProductDetails = ({ product, products, slug }) => {
                 </div>
               </div>
 
-              {/* Size Chart Button */}
+              {/* Size Guide Button */}
               {sizeChart && sizeChart.asset && (
                 <button
                   type="button"
                   onClick={() => setShowSizeChartModal(true)}
-                  className="size-chart-link"
                   style={{
-                    marginTop: '12px',
-                    background: 'none',
-                    border: 'none',
-                    color: '#C9A84C',
-                    fontSize: '12px',
+                    background: 'transparent',
+                    border: '1px solid #C9A84C',
+                    borderRadius: '4px',
+                    padding: '8px 16px',
+                    fontSize: '13px',
                     fontWeight: '600',
-                    textDecoration: 'underline',
+                    color: '#8B1A1A',
                     cursor: 'pointer',
-                    letterSpacing: '0.05em'
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    marginTop: '12px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(201, 168, 76, 0.1)';
+                    e.currentTarget.style.borderColor = '#8B1A1A';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.borderColor = '#C9A84C';
                   }}
                 >
-                  Size Chart
+                  📏 Size Guide
                 </button>
               )}
 
@@ -1165,96 +1178,28 @@ const ProductDetails = ({ product, products, slug }) => {
         />
       )}
 
-      {/* Size Chart Modal */}
-      {showSizeChartModal && sizeChart && sizeChart.asset && (
-        <div
-          className="size-chart-modal-overlay"
-          onClick={() => setShowSizeChartModal(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setShowSizeChartModal(false);
-            }
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Product size chart"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)'
-          }}
-        >
-          <div
-            className="size-chart-modal-content"
-            onClick={e => e.stopPropagation()}
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              position: 'relative',
-              maxWidth: '90%',
-              maxHeight: '90%',
-              overflow: 'auto',
-              boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-            }}
-          >
-            <button
-              className="close-modal-btn"
-              aria-label="Close size chart"
-              onClick={() => setShowSizeChartModal(false)}
-              style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                background: 'none',
-                border: 'none',
-                fontSize: '1.5rem',
-                cursor: 'pointer',
-                color: '#333',
-                padding: '8px',
-                minWidth: '44px',
-                minHeight: '44px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '4px'
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.outline = '2px solid #C9A84C';
-                e.currentTarget.style.outlineOffset = '2px';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.outline = 'none';
-              }}
-            >
-              <IoClose />
-            </button>
-            <h3 id="size-chart-title" style={{ marginBottom: '15px', color: '#333', textAlign: 'center' }}>Size Chart</h3>
-            <Image
-              src={urlFor(sizeChart).url()}
-              alt={`${name || 'Product'} size chart showing measurements for all sizes`}
-              width={800}
-              height={600}
-              style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
-              onError={(e) => {
-                console.error('Size chart image load failed for:', name, 'from URL:', e.target.src);
-                e.target.src = '/asset/placeholder-size-chart.jpg';
-              }}
-            />
-          </div>
-        </div>
-      )}
       </div>{/* end section-light */}
       </main>
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={showSizeChartModal}
+        onClose={() => setShowSizeChartModal(false)}
+        sizeChart={sizeChart}
+        productName={name}
+      />
+
+      {/* Sticky Add to Cart Bar (Mobile Only) */}
+      <div className="mobile-only">
+        <StickyAddToCartBar
+          productName={name}
+          displayPrice={displayPrice}
+          currentDiscount={currentDiscount}
+          currentPrice={currentPrice}
+          onAddToCart={handleAddToCart}
+          isOutOfStock={currentStock === 0}
+        />
+      </div>
     </div>
   )
 };

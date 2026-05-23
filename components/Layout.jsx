@@ -10,8 +10,8 @@ import Footer from './Footer';
 import { useUIContext } from '../context/StateContext';
 import { useCartContext } from '../context/CartContext';
 
-// Dynamically import CartSlider
-const CartSlider = dynamic(() => import('./CartSlider'), { ssr: false });
+// Dynamically import Cart
+const Cart = dynamic(() => import('./Cart'), { ssr: false });
 
 // Dynamically import Support Chat Widget (client-side only)
 const SupportChatWidget = dynamic(
@@ -101,8 +101,8 @@ const Layout = ({ children }) => {
         )}
       </div>
       
-      {/* CartSlider is OUTSIDE layout - direct child of body */}
-      {showCart && <CartSlider isOpen={showCart} />}
+      {/* Cart is OUTSIDE layout - direct child of body */}
+      <Cart />
       
       {/* AI Widgets - Always available on client side */}
       {/* On mobile (<768px), only one widget shows at a time via activeWidget state */}

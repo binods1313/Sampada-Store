@@ -16,6 +16,8 @@ import { smartAssetManager } from 'sanity-plugin-smart-asset-manager'
 import { blockStyles } from 'sanity-plugin-block-styles'
 import { references } from 'sanity-plugin-references'
 import { media } from 'sanity-plugin-media'
+// import { scheduledPublishing } from '@sanity/scheduled-publishing'
+import { documentInternationalization } from '@sanity/document-internationalization'
 
 // Import Next 5 Enterprise Plugins for Competitive Edge
 import { recursiveHierarchyPlugin as recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
@@ -164,7 +166,19 @@ export default defineConfig({
     // 8. Media Library - Enhanced asset management (replaces basic media tab)
     media(),
 
-    // 9. Accessibility Preview - Live site preview pane for WCAG checking
+    // 9. Releases - Scheduled publishing management (Temporarily disabled due to build issues)
+    // scheduledPublishing(),
+
+    // 10. Document Internationalization
+    documentInternationalization({
+      supportedLanguages: [
+        { id: 'en', title: 'English' },
+        { id: 'hi', title: 'Hindi' },
+      ],
+      schemaTypes: ['product', 'category', 'banner'],
+    }),
+
+    // 11. Accessibility Preview - Live site preview pane for WCAG checking
     // (replaces incompatible skynet scanner — uses iframe to preview live site)
     // Configured per-document in structure.js via iframePane
 
