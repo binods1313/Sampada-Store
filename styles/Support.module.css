@@ -400,16 +400,16 @@
   padding: 1rem 1.25rem;
   background: transparent;
   border: none;
-  color: #E8E0D0;
+  color: #1A0A08; /* Changed to dark color for visibility on light background */
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600; /* Increased from 500 to 600 for better readability */
   cursor: pointer;
   text-align: left;
   transition: color 0.2s ease;
 }
 
 .faqQuestion:hover {
-  color: #C9A96E;
+  color: #8B1A1A; /* Changed to crimson on hover for Sampada brand consistency */
 }
 
 .faqToggle {
