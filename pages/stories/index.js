@@ -24,7 +24,9 @@ const FILTERS = ['All', 'Casual', 'Festive', 'Premium', 'Summer', 'Winter']
 function SectionDivider() {
   return (
     <div className="brand-divider">
-      <img className="brand-divider-emblem" src="/sampada-emblem.png" alt="Sampada Emblem" />
+      <div className="brand-divider-line" />
+      <div className="brand-divider-diamond" />
+      <div className="brand-divider-line" />
     </div>
   )
 }

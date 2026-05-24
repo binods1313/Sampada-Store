@@ -99,13 +99,13 @@ PAYPAL_MODE=sandbox
 **Status**: PENDING KYC COMPLETION
 
 **Current Configuration**:
-- Test Key ID: `rzp_test_SZvnDujsYQM8Gt`
+- Test Key ID: Available in .env file
 - Key Secret: Available in dashboard
 - Webhook: Cannot configure until KYC approved
 
 **Environment Variables** (already set):
 ```bash
-NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_SZvnDujsYQM8Gt
+NEXT_PUBLIC_RAZORPAY_KEY_ID=<added_to_env_file>
 RAZORPAY_KEY_SECRET=<check .env or regenerate>
 ```
 

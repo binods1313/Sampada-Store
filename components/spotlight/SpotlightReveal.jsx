@@ -161,221 +161,85 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
       {/* Echo rings canvas */}
       <EchoCanvas />
 
-      {/* Left dark vignette — behind quote text */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: '100%',
-          width: '26%',
-          background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)',
-          zIndex: 20,
-          pointerEvents: 'none',
-        }}
-      />
+      {/* 2. Hero Quotes Section (Instructions 5) */}
+      <div className="hero-quotes-section">
 
-      {/* Right dark vignette — behind quote text */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          height: '100%',
-          width: '26%',
-          background: 'linear-gradient(to left, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)',
-          zIndex: 20,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Left quote panel */}
-      <div
-        className="hero-quote-left desktop-only-quote"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: '100%',
-          width: '26%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 30,
-          pointerEvents: 'none',
-          padding: '0 2rem',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            color: 'rgba(255,255,255,0.12)',
-            fontSize: '4rem',
-            lineHeight: 1,
-            margin: '0 0 12px',
-          }}>"</p>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            color: 'rgba(255,255,255,0.65)',
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            margin: 0,
-          }}>
-            Grace is not just how you look —
-          </p>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            color: 'rgba(255,255,255,0.65)',
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            margin: '4px 0 0',
-          }}>
+        {/* Left quote */}
+        <div className="hero-quote-block left">
+          <span className="quote-mark">"</span>
+          <p className="quote-text">
+            Grace is not just how you look —<br />
             it&apos;s how you carry your story.
           </p>
-          <div style={{
-            width: '32px',
-            height: '1px',
-            background: '#c9a96e',
-            margin: '16px auto 0',
-            opacity: 0.6,
-          }} />
-          <p style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: '0.6rem',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#c9a96e',
-            margin: '12px 0 0',
-          }}>
-            Sampada Originals™
-          </p>
+          <div className="quote-rule" />
+          <span className="quote-brand">SAMPADA ORIGINALS™</span>
         </div>
-      </div>
 
-      {/* Right quote panel */}
-      <div
-        className="hero-quote-right desktop-only-quote"
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          height: '100%',
-          width: '26%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 30,
-          pointerEvents: 'none',
-          padding: '0 2rem',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            color: 'rgba(255,255,255,0.12)',
-            fontSize: '4rem',
-            lineHeight: 1,
-            margin: '0 0 12px',
-          }}>"</p>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            color: 'rgba(255,255,255,0.65)',
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            margin: 0,
-          }}>
-            Every look is a legacy
-          </p>
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            color: 'rgba(255,255,255,0.65)',
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            margin: '4px 0 0',
-          }}>
+        {/* Center — where the hero text sits */}
+        <div className="hero-quote-center">
+          <div
+            style={{
+              textAlign: 'center',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: '0.72rem',
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+                color: '#c9a96e',
+                margin: '0 0 18px',
+                fontWeight: 600,
+              }}
+            >
+              Meet the Face
+            </p>
+
+            <h1
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 'clamp(5rem, 12vw, 8rem)',
+                fontWeight: 900,
+                color: '#f5f0eb',
+                margin: '0 0 20px',
+                lineHeight: 0.95,
+                letterSpacing: '-0.02em',
+                textShadow: '0 4px 32px rgba(13,17,38,0.6)',
+              }}
+            >
+              Kavya
+            </h1>
+
+            <p
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: '0.8rem',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: 'rgba(245,240,235,0.65)',
+                margin: 0,
+                fontWeight: 500,
+              }}
+            >
+              Sampada Originals™
+            </p>
+          </div>
+        </div>
+
+        {/* Right quote */}
+        <div className="hero-quote-block right">
+          <span className="quote-mark">"</span>
+          <p className="quote-text">
+            Every look is a legacy<br />
             worn with intention.
           </p>
-          <div style={{
-            width: '32px',
-            height: '1px',
-            background: '#c9a96e',
-            margin: '16px auto 0',
-            opacity: 0.6,
-          }} />
-          <p style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: '0.6rem',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#c9a96e',
-            margin: '12px 0 0',
-          }}>
-            Winter Drop 2026
-          </p>
+          <div className="quote-rule" />
+          <span className="quote-season">WINTER DROP 2026</span>
         </div>
-      </div>
 
-      {/* Text content */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 4,
-          textAlign: 'center',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      >
-        {/* Eyebrow */}
-        <p
-          style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: '0.72rem',
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: '#c9a96e',
-            margin: '0 0 18px',
-            fontWeight: 600,
-          }}
-        >
-          Meet the Face
-        </p>
-
-        {/* Hero name */}
-        <h1
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(5rem, 12vw, 8rem)',
-            fontWeight: 900,
-            color: '#f5f0eb',
-            margin: '0 0 20px',
-            lineHeight: 0.95,
-            letterSpacing: '-0.02em',
-            textShadow: '0 4px 32px rgba(13,17,38,0.6)',
-          }}
-        >
-          Kavya
-        </h1>
-
-        {/* Brand label */}
-        <p
-          style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: '0.8rem',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(245,240,235,0.65)',
-            margin: 0,
-            fontWeight: 500,
-          }}
-        >
-          Sampada Originals™
-        </p>
       </div>
 
       {/* Bottom fade */}
@@ -392,18 +256,6 @@ export default function SpotlightReveal({ imageA, imageB, baseImage, revealImage
         }}
       />
     </section>
-
-    {/* Mobile quotes wrapper */}
-    <div className="hero-quotes-mobile-wrapper">
-      <div className="hero-quote-left mobile-quote">
-        <p className="quote-text">"Grace is not just how you look — it's how you carry your story."</p>
-        <p className="quote-author">Sampada Originals™</p>
-      </div>
-      <div className="hero-quote-right mobile-quote">
-        <p className="quote-text">"Every look is a legacy worn with intention."</p>
-        <p className="quote-author">Winter Drop 2026</p>
-      </div>
-    </div>
     </>
   )
 }

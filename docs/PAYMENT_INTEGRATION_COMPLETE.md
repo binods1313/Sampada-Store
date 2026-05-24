@@ -70,7 +70,7 @@ This generates a temporary `whsec_...` for local testing.
 
 **API Keys** (Already Available):
 ```bash
-NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_SZvnDujsYQM8Gt
+NEXT_PUBLIC_RAZORPAY_KEY_ID=<added_to_env_file>
 RAZORPAY_KEY_SECRET=<check your .env or regenerate from dashboard>
 ```
 
@@ -193,7 +193,7 @@ STRIPE_WEBHOOK_SECRET=<added_to_env_file>
 # ═══════════════════════════════════════════════
 # RAZORPAY CONFIGURATION
 # ═══════════════════════════════════════════════
-NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_SZvnDujsYQM8Gt
+NEXT_PUBLIC_RAZORPAY_KEY_ID=<added_to_env_file>
 RAZORPAY_KEY_SECRET=<regenerate from dashboard if lost>
 # RAZORPAY_WEBHOOK_SECRET=<add after KYC completion>
 # ↑ Uncomment and add after completing KYC

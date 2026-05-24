@@ -6,343 +6,158 @@ export default {
   fields: [
     {
       name: 'title',
-      title: 'Page Title',
+      title: 'Internal Document Title',
       type: 'string',
-      validation: Rule => Rule.required()
+      description: 'Internal reference name, not shown on site'
     },
+    // 1. Hero Section
+    { name: 'heroImage', title: 'Hero Background Image (Base)', type: 'image', options: { hotspot: true } },
+    { name: 'heroRevealImage', title: 'Hero Reveal Image (Spotlight)', type: 'image', options: { hotspot: true } },
+    { name: 'heroTagline', title: 'Hero Tagline', type: 'string', description: 'Small text above heading' },
+    { name: 'heroHeading', title: 'Hero Heading', type: 'string', description: 'Large display text' },
+
+    // 2. Contact Cards (Connect With Us)
     {
-      name: 'heroTitle',
-      title: 'Hero Title',
-      type: 'string',
-      validation: Rule => Rule.required()
-    },
-    {
-      name: 'heroDescription',
-      title: 'Hero Description',
-      type: 'text',
-      validation: Rule => Rule.required()
-    },
-    {
-      name: 'heroImage',
-      title: 'Hero Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-        storeDimensions: true,
-        metadata: ['blurhash', 'palette']
-      },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string',
-          description: 'Important for accessibility and SEO',
-          validation: Rule => Rule.required().error('Alt text is required'),
-        },
-      ],
-    },
-    {
-      name: 'contactMethodsTitle',
-      title: 'Contact Methods Title',
-      type: 'string',
-    },
-    {
-      name: 'contactMethods',
-      title: 'Contact Methods',
+      name: 'contactCards',
+      title: 'Contact Cards',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { 
-              name: 'method', 
-              title: 'Method', 
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Email', value: 'email' },
-                  { title: 'Phone', value: 'phone' },
-                  { title: 'WhatsApp', value: 'whatsapp' },
-                  { title: 'Live Chat', value: 'chat' },
-                  { title: 'Contact Form', value: 'form' }
-                ]
-              }
-            },
-            { name: 'value', title: 'Contact Value', type: 'string' },
-            { name: 'description', title: 'Description', type: 'string' },
-            { name: 'icon', title: 'Icon', type: 'string' }
-          ],
-          preview: {
-            select: {
-              title: 'method',
-              subtitle: 'value'
-            }
+      of: [{
+        type: 'object',
+        name: 'contactCard',
+        preview: {
+          select: {
+            title: 'title',
+            subtitle: 'subtitle'
           }
-        }
-      ]
+        },
+        fields: [
+          { name: 'title', type: 'string', title: 'Card Title' },
+          { name: 'subtitle', type: 'string', title: 'Card Subtitle (Value)', description: 'e.g. email@sampada.com or +91...' },
+          { name: 'icon', type: 'image', title: 'Card Icon' },
+          { name: 'description', type: 'text', title: 'Short Description' },
+          {
+            name: 'actionType',
+            type: 'string',
+            title: 'Action Type',
+            options: {
+              list: [
+                { title: 'Email', value: 'email' },
+                { title: 'Phone', value: 'phone' },
+                { title: 'WhatsApp', value: 'whatsapp' },
+                { title: 'External Link', value: 'link' },
+                { title: 'Open Modal', value: 'modal' }
+              ]
+            }
+          },
+          { name: 'actionValue', type: 'string', title: 'Action Value', description: 'Email address, phone number, URL, or modal ID' },
+        ]
+      }]
     },
+
+    // 3. Business Hours
     {
-      name: 'faqTitle',
-      title: 'FAQ Section Title',
-      type: 'string',
+      name: 'businessHours',
+      title: 'Business Hours',
+      type: 'array',
+      of: [{
+        type: 'object',
+        name: 'hourEntry',
+        preview: {
+          select: {
+            title: 'label',
+            subtitle: 'hours'
+          }
+        },
+        fields: [
+          { name: 'label', type: 'string', title: 'Label (e.g. Weekdays)' },
+          { name: 'hours', type: 'string', title: 'Hours (e.g. 9:00 AM – 9:00 PM)' },
+          { name: 'days', type: 'string', title: 'Days (e.g. Monday – Friday)' },
+        ]
+      }]
     },
-    {
-      name: 'faqDescription',
-      title: 'FAQ Description',
-      type: 'text',
-    },
+    { name: 'holidayNote', title: 'Holiday Closure Note', type: 'string', description: 'e.g. Closed on major Indian holidays' },
+
+    // 4. FAQ
     {
       name: 'faqs',
-      title: 'Frequently Asked Questions',
+      title: 'FAQs',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { name: 'question', title: 'Question', type: 'string' },
-            { name: 'answer', title: 'Answer', type: 'text' },
-            { 
-              name: 'category', 
-              title: 'Category', 
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'General', value: 'general' },
-                  { title: 'Orders', value: 'orders' },
-                  { title: 'Shipping', value: 'shipping' },
-                  { title: 'Returns', value: 'returns' },
-                  { title: 'Products', value: 'products' },
-                  { title: 'Payment', value: 'payment' }
-                ]
-              }
-            }
-          ],
-          preview: {
-            select: {
-              title: 'question',
-              subtitle: 'category'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'supportHoursTitle',
-      title: 'Support Hours Title',
-      type: 'string',
-    },
-    {
-      name: 'supportHours',
-      title: 'Support Hours',
-      type: 'object',
-      fields: [
-        {
-          name: 'weekdays',
-          title: 'Weekdays (Mon-Fri)',
-          type: 'string'
+      of: [{
+        type: 'object',
+        name: 'faqEntry',
+        preview: {
+          select: { title: 'question' }
         },
-        {
-          name: 'weekend',
-          title: 'Weekend (Sat-Sun)',
-          type: 'string'
-        },
-        {
-          name: 'holidays',
-          title: 'Holidays',
-          type: 'string'
-        },
-        {
-          name: 'timezone',
-          title: 'Timezone',
-          type: 'string',
-          description: 'e.g., IST (Indian Standard Time)'
-        }
-      ]
+        fields: [
+          { name: 'question', type: 'string', title: 'Question' },
+          { name: 'answer', type: 'text', title: 'Answer' },
+        ]
+      }]
     },
+
+    // 5. Helpful Resources
     {
-      name: 'helpfulResourcesTitle',
-      title: 'Helpful Resources Title',
-      type: 'string',
-    },
-    {
-      name: 'helpfulResources',
+      name: 'resources',
       title: 'Helpful Resources',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { name: 'title', title: 'Title', type: 'string' },
-            { name: 'description', title: 'Description', type: 'text' },
-            { name: 'url', title: 'URL', type: 'string' },
-            { 
-              name: 'type', 
-              title: 'Resource Type', 
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Guide', value: 'guide' },
-                  { title: 'Tutorial', value: 'tutorial' },
-                  { title: 'Blog Post', value: 'blog' },
-                  { title: 'Video', value: 'video' },
-                  { title: 'Documentation', value: 'docs' }
-                ]
-              }
-            }
-          ],
-          preview: {
-            select: {
-              title: 'title',
-              subtitle: 'type'
-            }
-          }
-        }
-      ]
+      of: [{
+        type: 'object',
+        name: 'resourceEntry',
+        preview: {
+          select: { title: 'title' }
+        },
+        fields: [
+          { name: 'title', type: 'string', title: 'Resource Title' },
+          { name: 'description', type: 'text', title: 'Description' },
+          { name: 'icon', type: 'image', title: 'Icon' },
+          { name: 'link', type: 'url', title: 'Link URL' },
+        ]
+      }]
     },
+
+    // 6. Print-on-Demand Section
     {
-      name: 'ticketSystemEnabled',
-      title: 'Enable Ticket System',
-      type: 'boolean',
-      description: 'Show support ticket submission form',
-      initialValue: true
-    },
-    {
-      name: 'ticketDescription',
-      title: 'Ticket System Description',
-      type: 'text',
-      hidden: ({ document }) => !document?.ticketSystemEnabled
-    },
-    // ✨ BONUS ELEMENTS
-    {
-      name: 'supportPromise',
-      title: 'Support Promise',
-      type: 'text',
-      description: 'A short promise statement that appears prominently on the support page',
-      rows: 3,
-      initialValue: 'Your satisfaction is our legacy. Every inquiry is treated with the care and attention that defines the Sampada experience.'
-    },
-    {
-      name: 'trustBadges',
-      title: 'Trust Badges',
+      name: 'podCards',
+      title: 'Print-on-Demand Info Cards',
       type: 'array',
-      description: 'Display trust badges to build customer confidence',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { 
-              name: 'icon', 
-              title: 'Icon', 
-              type: 'string',
-              description: 'Emoji or icon identifier (e.g., 🔒, 📦, 🔄)',
-              validation: Rule => Rule.required()
-            },
-            { 
-              name: 'title', 
-              title: 'Title', 
-              type: 'string',
-              validation: Rule => Rule.required()
-            },
-            { 
-              name: 'description', 
-              title: 'Description', 
-              type: 'string',
-              description: 'Optional short description'
-            }
-          ],
-          preview: {
-            select: {
-              title: 'title',
-              subtitle: 'icon'
-            }
-          }
-        }
-      ],
-      initialValue: [
-        { icon: '🔒', title: 'Secure Payments', description: 'SSL encrypted transactions' },
-        { icon: '📦', title: 'Free Shipping on Orders Above ₹2,999', description: 'Pan-India delivery' },
-        { icon: '🔄', title: '7-Day Easy Returns', description: 'Hassle-free returns' },
-        { icon: '✨', title: '100% Authentic Products', description: 'Genuine heritage designs' },
-        { icon: '🇮🇳', title: 'Made in India with Pride', description: 'Supporting local artisans' }
-      ]
+      of: [{
+        type: 'object',
+        name: 'podEntry',
+        preview: {
+          select: { title: 'title' }
+        },
+        fields: [
+          { name: 'title', type: 'string', title: 'Card Title' },
+          { name: 'description', type: 'text', title: 'Description' },
+          { name: 'icon', type: 'image', title: 'Icon' },
+        ]
+      }]
     },
-    {
-      name: 'heroStyling',
-      title: 'Hero Section Styling',
-      type: 'object',
-      description: 'Customize the hero section appearance',
-      fields: [
-        {
-          name: 'backgroundColor',
-          title: 'Background Color',
-          type: 'string',
-          description: 'Hex color code (e.g., #0d1126)',
-          initialValue: '#0d1126'
-        },
-        {
-          name: 'textColor',
-          title: 'Text Color',
-          type: 'string',
-          description: 'Hex color code (e.g., #f5f0eb)',
-          initialValue: '#f5f0eb'
-        },
-        {
-          name: 'accentColor',
-          title: 'Accent Color',
-          type: 'string',
-          description: 'Hex color code for highlights (e.g., #c9a96e)',
-          initialValue: '#c9a96e'
-        },
-        {
-          name: 'overlayOpacity',
-          title: 'Image Overlay Opacity',
-          type: 'number',
-          description: 'Value between 0 and 1 (e.g., 0.7)',
-          validation: Rule => Rule.min(0).max(1),
-          initialValue: 0.7
-        },
-        {
-          name: 'height',
-          title: 'Hero Height',
-          type: 'string',
-          description: 'CSS height value (e.g., 60vh, 500px)',
-          initialValue: '60vh'
-        }
-      ]
-    },
+
+    // 7. Still Need Help CTA
+    { name: 'ctaHeading', title: 'CTA Heading', type: 'string' },
+    { name: 'ctaSubtext', title: 'CTA Subtext', type: 'text' },
+    { name: 'ctaButtonLabel', title: 'CTA Button Label', type: 'string' },
+    
+    // SEO Settings
     {
       name: 'seo',
       title: 'SEO Settings',
       type: 'object',
-      icon: '🔍',
       fields: [
-        {
-          name: 'metaTitle',
-          title: 'Meta Title',
-          type: 'string',
-          description: 'Recommended: 50-60 characters',
-          validation: Rule => Rule.max(60),
-        },
-        {
-          name: 'metaDescription',
-          title: 'Meta Description',
-          type: 'text',
-          rows: 3,
-          description: 'Recommended: 150-160 characters',
-          validation: Rule => Rule.max(160),
-        },
-      ],
-    },
+        { name: 'metaTitle', title: 'Meta Title', type: 'string' },
+        { name: 'metaDescription', title: 'Meta Description', type: 'text' },
+      ]
+    }
   ],
   preview: {
     select: {
       title: 'title',
-      heroTitle: 'heroTitle'
+      heroHeading: 'heroHeading'
     },
-    prepare({ title, heroTitle }) {
+    prepare({ title, heroHeading }) {
       return {
-        title: title || 'Support Page',
-        subtitle: heroTitle || 'Configure support page content'
+        title: title || heroHeading || 'Support Page'
       }
     }
   }

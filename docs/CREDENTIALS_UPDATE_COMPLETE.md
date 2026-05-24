@@ -78,15 +78,15 @@ Your `.env` file now contains:
 
 ```bash
 # Stripe (Checkout - Production)
-STRIPE_WEBHOOK_SECRET=whsec_QJptOlAIEWPJl9XGUZDBJP92cUMw59q0
+STRIPE_WEBHOOK_SECRET=<your_new_webhook_secret_here>
 
 # Razorpay (Test Mode - Pending KYC)
-NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_SZvnDujsYQM8Gt
+NEXT_PUBLIC_RAZORPAY_KEY_ID=<added_to_env_file>
 RAZORPAY_KEY_SECRET=<regenerate_from_dashboard_if_needed>
 
 # PayPal (Sandbox Mode)
-NEXT_PUBLIC_PAYPAL_CLIENT_ID=AfSK6oqexqxFUYv2VpFsc_HqyoPJpy5HifsTB62E
-PAYPAL_CLIENT_SECRET=ELu5znT5ZvfJ21sbAGZPfVxs_xktpAU3dizguPvhdVsqEvf9oUyKQ9JkNLyKmqAl3vdUKSfLSL1wKHBz
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=<added_to_env_file>
+PAYPAL_CLIENT_SECRET=<added_to_env_file>
 PAYPAL_MODE=sandbox
 ```
 

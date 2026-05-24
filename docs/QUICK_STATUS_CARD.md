@@ -54,12 +54,12 @@
 
 Verify these exist in `.env`:
 ```bash
-✅ STRIPE_WEBHOOK_SECRET=whsec_...
-✅ NEXT_PUBLIC_PAYPAL_CLIENT_ID=AfSK6...
-✅ PAYPAL_CLIENT_SECRET=ELu5z...
+✅ STRIPE_WEBHOOK_SECRET=<your_webhook_secret>
+✅ NEXT_PUBLIC_PAYPAL_CLIENT_ID=<your_paypal_client_id>
+✅ PAYPAL_CLIENT_SECRET=<your_paypal_secret>
 ✅ PAYPAL_MODE=sandbox
-⏳ NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_...
-⏳ RAZORPAY_KEY_SECRET=...
+⏳ NEXT_PUBLIC_RAZORPAY_KEY_ID=<your_razorpay_key>
+⏳ RAZORPAY_KEY_SECRET=<your_razorpay_secret>
 ```
 
 ---
