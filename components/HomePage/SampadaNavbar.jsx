@@ -521,6 +521,84 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
             >
               Contact
             </Link>
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
+            {/* Creative Studio — premium entry in More dropdown */}
+            <a
+              href="/creative-studio"
+              onClick={onClose}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '8px 14px',
+                borderRadius: 10,
+                background: 'linear-gradient(135deg, rgba(139,26,26,0.12) 0%, rgba(201,168,76,0.08) 100%)',
+                border: '1px solid rgba(201,168,76,0.3)',
+                textDecoration: 'none',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.2s ease',
+                marginTop: 4,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139,26,26,0.25) 0%, rgba(201,168,76,0.18) 100%)';
+                e.currentTarget.style.border = '1px solid rgba(201,168,76,0.6)';
+                e.currentTarget.style.boxShadow = '0 0 18px rgba(201,168,76,0.15)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139,26,26,0.12) 0%, rgba(201,168,76,0.08) 100%)';
+                e.currentTarget.style.border = '1px solid rgba(201,168,76,0.3)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {/* Animated shimmer sweep */}
+              <span style={{
+                position: 'absolute', top: 0, left: '-100%', width: '60%', height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(201,168,76,0.12), transparent)',
+                animation: 'studioShimmer 3s infinite',
+                pointerEvents: 'none',
+              }} />
+
+              {/* Icon */}
+              <span style={{
+                width: 28, height: 28, borderRadius: 7, flexShrink: 0,
+                background: 'linear-gradient(135deg, #8B1A1A, #C9A84C)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 14, color: '#FAF6F0',
+                boxShadow: '0 0 8px rgba(201,168,76,0.3)',
+              }}>
+                ✦
+              </span>
+
+              {/* Label block */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <span style={{
+                  fontSize: 13, fontWeight: 700, color: '#1A0A08',
+                  fontFamily: 'inherit', letterSpacing: '0.2px', lineHeight: 1.2,
+                }}>
+                  Creative Studio
+                </span>
+                <span style={{
+                  fontSize: 10, color: '#8B1A1A', fontWeight: 600,
+                  letterSpacing: '1px', textTransform: 'uppercase',
+                }}>
+                  AI-Powered · Beta
+                </span>
+              </div>
+
+              {/* NEW badge */}
+              <span style={{
+                marginLeft: 'auto', padding: '2px 7px', borderRadius: 20,
+                background: 'linear-gradient(135deg, #8B1A1A, #C9A84C)',
+                color: '#FAF6F0', fontSize: 9, fontWeight: 700,
+                letterSpacing: '0.8px', textTransform: 'uppercase',
+                animation: 'studioPulse 2.5s ease-in-out infinite',
+                flexShrink: 0,
+              }}>
+                NEW
+              </span>
+            </a>
+
 
           </motion.div>
         )}
@@ -829,6 +907,21 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                           }}
                         >
                           Contact
+                        </Link>
+                        <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
+                        <Link
+                          href="/creative-studio"
+                          onClick={onClose}
+                          className="mobile-submenu-item"
+                          style={{
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            display: 'block',
+                            fontWeight: '600',
+                            color: '#C9A84C'
+                          }}
+                        >
+                          🎨 Creative Studio
                         </Link>
                       </div>
                     </div>

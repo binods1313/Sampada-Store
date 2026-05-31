@@ -112,6 +112,7 @@
 /* Override duration to 90s (50% slower than the current 45s speed) */
 .taglineTrack {
   animation-duration: 90s !important;
+  animation-direction: reverse !important;
 }
 
 /* Animation — moved to globals.css to avoid CSS Modules "pure mode" conflict */

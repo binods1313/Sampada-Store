@@ -97,6 +97,50 @@ export default {
         type: 'string',
         validation: Rule => Rule.required()
       },
+
+      // ── NEW FIELDS ──────────────────────────────────────────────
+      {
+        name: 'heroQuote',
+        title: 'Hero Vedic Quote',
+        type: 'string',
+        description: 'Short powerful Vedic/brand quote shown below the headline. Keep it under 180 characters. E.g. "Woven from the earth. Worn across generations."',
+        validation: Rule => Rule.max(180)
+      },
+      {
+        name: 'heroStats',
+        title: 'Hero Feature Cards',
+        type: 'array',
+        description: 'Up to 3 minimalistic stat/feature cards shown below the quote (e.g. 100% | Premium Combed)',
+        of: [
+          {
+            type: 'object',
+            name: 'statCard',
+            title: 'Feature Card',
+            fields: [
+              {
+                name: 'value',
+                title: 'Value / Highlight',
+                type: 'string',
+                description: 'Bold top line — e.g. "100%", "Teak Wood", "Complimentary"',
+                validation: Rule => Rule.required().max(30)
+              },
+              {
+                name: 'label',
+                title: 'Label / Sub-text',
+                type: 'string',
+                description: 'Smaller descriptor — e.g. "Premium Combed", "Engraved Reliefs"',
+                validation: Rule => Rule.required().max(40)
+              }
+            ],
+            preview: {
+              select: { title: 'value', subtitle: 'label' }
+            }
+          }
+        ],
+        validation: Rule => Rule.max(3)
+      },
+      // ── END NEW FIELDS ──────────────────────────────────────────
+
       {
         name: 'collectionQuote',
         title: 'Collection Quote',

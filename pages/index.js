@@ -150,7 +150,12 @@ export const getServerSideProps = async () => {
     largeText1,
     largeText2,
     discount,
-    saleTime
+    saleTime,
+    heroQuote,
+    heroStats[] {
+      value,
+      label
+    }
   }`;
 
   const categoriesQuery = `*[_type == "category" && defined(slug.current)] {

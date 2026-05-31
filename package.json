@@ -48,6 +48,7 @@
     "google-gax": "^5.0.6",
     "groq": "^3.88.3",
     "helmet": "^8.1.0",
+    "html2canvas": "^1.4.1",
     "http-proxy-agent": "^8.0.0",
     "isomorphic-dompurify": "^2.26.0",
     "jose": "^6.2.2",

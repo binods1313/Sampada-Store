@@ -66,6 +66,21 @@ const HomeHeroBanner = ({ heroBanner }) => {
             <span className={styles.heroLine2}>LEGACY</span>
             <span className={styles.heroLine3}>PROSPER IN STYLE</span>
           </h1>
+
+          {heroBanner?.heroQuote && (
+            <p className="hero-quote">{heroBanner.heroQuote}</p>
+          )}
+
+          {heroBanner?.heroStats?.length > 0 && (
+            <div className="hero-stats">
+              {heroBanner.heroStats.map((card, i) => (
+                <div className="hero-stat-card" key={i}>
+                  <span className="stat-value">{card.value}</span>
+                  <span className="stat-label">{card.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: Banner Image + Shop Now Button (vertical stack) */}
