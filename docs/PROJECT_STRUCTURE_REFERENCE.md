@@ -1,6 +1,6 @@
 # Sampada Store — Project Structure Reference
 
-**Last updated:** May 2026  
+**Last updated:** June 2026  
 **Framework:** Next.js 16 (Pages Router)  
 **Live URL:** https://sampada.online  
 **GitHub:** https://github.com/binods1313/Sampada-Store  
@@ -8,7 +8,17 @@
 
 ---
 
-## Brand Colors
+## Recent Changes (June 2026)
+
+- **Hero Feature Cards redesigned** — `components/HeroBanner.jsx` now uses `.sampada-cards` / `.s-card` structure with `Tiro Devanagari Sanskrit` font for subtext, `Libre Baskerville` for titles, beige background, gold borders, hover lift animation, corner accent marks
+- **Fonts added** — `pages/_document.js` now loads `Libre Baskerville` + `Tiro Devanagari Sanskrit` from Google Fonts
+- **Mobile overflow fixed** — `components/spotlight/SpotlightReveal.jsx` no longer uses `width: 100vw` + `marginLeft: calc(-50vw + 50%)` which caused horizontal scroll on mobile
+- **GitHub OAuth fixed** — new OAuth App created, callback URL updated to `https://sampada.online/api/auth/callback/github`
+- **Google OAuth fixed** — redirect URI updated to `https://sampada.online/api/auth/callback/google`
+- **Sanity CORS fixed** — `https://sampada.online` and `https://www.sampada.online` added to Sanity CORS origins
+
+---
+
 
 ```css
 --sampada-crimson: #8B1A1A;
@@ -122,13 +132,20 @@ E:\Sampada-Store\
 
 | File | Purpose |
 |---|---|
-| `styles/globals.css` | Global reset + animations + story card styles |
+| `styles/globals.css` | Global reset + animations + story card styles + `.sampada-cards` / `.s-card` hero feature card styles |
 | `styles/sampada-brand.css` | Core brand CSS variables + button classes |
 | `styles/sampada-brand-global.css` | Global brand overrides |
 | `styles/sampada-premium-brand.css` | Premium brand styles |
 | `styles/admin-tokens.css` | Admin panel design tokens |
 | `styles/Support.module.css` | Support page styles |
 | `styles/HomePage.module.css` | Homepage module styles |
+
+### Google Fonts loaded (in `pages/_document.js`)
+- `Inter` — main UI font
+- `Libre Baskerville` (700) — hero card titles
+- `Tiro Devanagari Sanskrit` (400) — hero card subtext (Vedic calligraphic feel)
+- `Playfair Display` — Stories page headings (loaded via Sanity/global CSS)
+- `Montserrat` — Stories page labels (loaded via Sanity/global CSS)
 
 ### Key CSS Variables (from `sampada-brand.css`)
 ```css

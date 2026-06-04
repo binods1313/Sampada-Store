@@ -6,10 +6,42 @@ export default {
     fields: [
       {
         name: 'image',
-        title: 'Image',
+        title: 'Banner Image',
         type: 'image',
-        options: { hotspot: true },
+        options: { 
+          hotspot: true,
+          storeDimensions: true,
+          metadata: ['blurhash', 'palette']
+        },
+        fields: [
+          {
+            name: 'alt',
+            title: 'Alt Text',
+            type: 'string',
+            description: 'Important for accessibility and SEO',
+            validation: Rule => Rule.required().error('Alt text is required'),
+          },
+        ],
         validation: Rule => Rule.required()
+      },
+      {
+        name: 'logo',
+        title: 'Logo Image',
+        type: 'image',
+        options: { 
+          hotspot: true,
+          storeDimensions: true,
+          metadata: ['blurhash', 'palette']
+        },
+        fields: [
+          {
+            name: 'alt',
+            title: 'Alt Text',
+            type: 'string',
+            description: 'Important for accessibility and SEO',
+          },
+        ],
+        description: 'Optional logo for footer banner (defaults to Sampada emblem if not provided)'
       },
       {
         name: 'buttonText',

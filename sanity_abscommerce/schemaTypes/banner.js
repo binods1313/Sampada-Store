@@ -1,4 +1,6 @@
 // sanity_abscommerce/schemaTypes/banner.js
+import React from 'react';
+
 export default {
     name: 'banner',
     title: 'Banner',
@@ -8,10 +10,22 @@ export default {
         name: 'image',
         title: 'Banner Image',
         type: 'image',
+        description: 'Hero emblem. Upload as square PNG with transparent background. Recommended: 512×512px or 1024×1024px.',
         options: { 
-          hotspot: true,
+          hotspot: false,
           storeDimensions: true,
-          metadata: ['blurhash', 'palette']
+          metadata: ['blurhash', 'palette'],
+        },
+        components: {
+          preview: (props) => React.createElement('img', {
+            src: props?.value?.asset?.url,
+            style: {
+              objectFit: 'contain',
+              width: '100%',
+              height: 'auto',
+              background: 'transparent'
+            }
+          })
         },
         fields: [
           {
@@ -22,16 +36,32 @@ export default {
             validation: Rule => Rule.required().error('Alt text is required'),
           },
         ],
-        validation: Rule => Rule.required()
+        validation: Rule => Rule.required().custom((image) => {
+          if (image?.asset?._ref && image?.asset?.metadata?.dimensions?.aspectRatio !== 1) {
+            return 'Logo must be square (1:1 aspect ratio)';
+          }
+          return true;
+        })
       },
       {
         name: 'logo',
         title: 'Logo Image',
         type: 'image',
         options: { 
-          hotspot: true,
+          hotspot: false,
           storeDimensions: true,
           metadata: ['blurhash', 'palette']
+        },
+        components: {
+          preview: (props) => React.createElement('img', {
+            src: props?.value?.asset?.url,
+            style: {
+              objectFit: 'contain',
+              width: '100%',
+              height: 'auto',
+              background: 'transparent'
+            }
+          })
         },
         fields: [
           {

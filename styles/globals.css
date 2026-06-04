@@ -1,5 +1,6 @@
 /* Heritage Serif Font for Premium Brand Typography (Cinzel for luxury/heritage feel) */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Tiro+Devanagari+Sanskrit:ital,wght@0,400;1,400&display=swap');
 
 /* Import Product Card Styles */
 @import './ProductCard.css';
@@ -1981,6 +1982,14 @@ body.cart-open {
 /* Add these styles to your global.css or the appropriate styles file */
 
 
+/* ============================================================================
+   SAMPADA EMBLEM ROTATION
+   ============================================================================ */
+@keyframes rotatering {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 .maylike-products-wrapper {
   margin: 40px 0;
   text-align: center;
@@ -2758,7 +2767,7 @@ img {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     border-radius: 15px;
     margin-bottom: 40px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .hero-banner-content {
@@ -3969,11 +3978,21 @@ img {
   z-index: 100;
 }
 .header-logo {
-  font-size: 24px;
-  font-weight: 800;
-  color: #8B1A1A;
   flex-shrink: 0;
   margin-right: 32px;
+}
+.navLogo {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #8B1A1A;          /* sampada-crimson */
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+.navLogo:hover {
+  color: #C9A84C;          /* sampada-gold on hover */
 }
 .header-nav {
   display: flex;
@@ -4324,5 +4343,276 @@ img {
   }
   .hero-stats {
     max-width: 100%;
+  }
+}
+
+/* ─── Sampada Hero Feature Cards ──────────────────────────────────────────── */
+
+.sampada-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 520px;
+  margin-left: 0;
+  margin-top: 1.75rem;
+  text-align: center;
+}
+
+.s-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem 0.75rem;
+  min-height: 90px;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(237, 224, 207, 0.55);
+  border: 1px solid rgba(197, 154, 42, 0.30);
+  border-radius: 8px;
+  cursor: default;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  animation: cardRise 0.5s ease both;
+}
+
+.s-card:nth-child(1) { animation-delay: 0.1s; }
+.s-card:nth-child(2) { animation-delay: 0.22s; }
+.s-card:nth-child(3) { animation-delay: 0.34s; }
+
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Corner accent marks */
+.s-card::before,
+.s-card::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(197, 154, 42, 0.45);
+  border-style: solid;
+}
+.s-card::before {
+  top: 6px;
+  left: 6px;
+  border-width: 1px 0 0 1px;
+}
+.s-card::after {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Watermark */
+.s-card__watermark {
+  position: absolute;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 5rem;
+  color: #7A2B2B;
+  opacity: 0.06;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.s-card__title,
+.s-card__divider,
+.s-card__sub {
+  position: relative;
+  z-index: 1;
+}
+
+.s-card__title {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  font-weight: 700;
+  color: #C59A2A;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.s-card__divider {
+  width: 38%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #C59A2A 30%,
+    #C59A2A 70%,
+    transparent
+  );
+  margin: 0.5rem auto;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* Bug 1 fix: Tiro Devanagari Sanskrit, no uppercase */
+.s-card__sub {
+  font-family: 'Tiro Devanagari Sanskrit', serif !important;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none !important;   /* removes the ALL CAPS */
+  letter-spacing: 0.03em;
+  font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+  color: #C59A2A;
+  text-shadow: 0 1px 6px rgba(122, 43, 43, 0.2);
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* Bug 3 fix: hover lift */
+.s-card:hover {
+  border-color: rgba(197, 154, 42, 0.65);
+  transform: translateY(-2px);
+}
+
+.s-card:active {
+  transform: translateY(0);
+}
+
+.s-card:focus-visible {
+  outline: 2px solid #C59A2A;
+  outline-offset: 3px;
+}
+
+/* Tablet */
+@media (max-width: 767px) {
+  .sampada-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    max-width: 100%;
+  }
+  .s-card__watermark { font-size: 3.5rem; }
+}
+
+/* Mobile — Bug: cards touching border */
+@media (max-width: 480px) {
+  .sampada-cards {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    padding: 0 1rem;
+    gap: 0.6rem;
+  }
+  .s-card {
+    min-height: 64px;
+    padding: 0.85rem 1rem;
+  }
+  .s-card__watermark { font-size: 4rem; }
+}
+
+/* ============================================================================
+   RESPONSIVE HERO BANNER EMBLEM STYLES
+   ============================================================================ */
+.hero-emblem-section {
+  width: 460px;
+  min-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow: visible;
+  position: relative;
+}
+
+.hero-emblem-outer-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 380px;
+  height: 380px;
+  overflow: visible;
+}
+
+.hero-emblem-glow {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-ring-primary {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 2px dashed rgba(201,168,76,0.7);
+  animation: rotatering 12s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.hero-ring-secondary {
+  position: absolute;
+  width: 410px;
+  height: 410px;
+  border-radius: 50%;
+  border: 1px dashed rgba(201,168,76,0.25);
+  animation: rotatering 22s linear infinite reverse;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.hero-emblem-img {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 50%;
+  z-index: 2;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.hero-emblem-placeholder {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  background: #eee;
+  border-radius: 50%;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-emblem-section {
+    width: 100%;
+    min-width: unset;
+    padding: 20px;
+  }
+  .hero-emblem-outer-wrapper {
+    width: 280px;
+    height: 280px;
+  }
+  .hero-ring-primary {
+    width: 280px;
+    height: 280px;
+  }
+  .hero-ring-secondary {
+    width: 300px;
+    height: 300px;
+  }
+  .hero-emblem-img {
+    width: 240px;
+    height: 240px;
+  }
+  .hero-emblem-placeholder {
+    width: 240px;
+    height: 240px;
   }
 }

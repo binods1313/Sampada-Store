@@ -115,8 +115,6 @@
   animation-direction: reverse !important;
 }
 
-/* Animation — moved to globals.css to avoid CSS Modules "pure mode" conflict */
-
 /* Content row */
 .taglineContent {
   display: flex;
@@ -188,29 +186,24 @@
   display: none;
 }
 
-.announcementBar p {
-  display: none;
-}
-
-.announcementBar strong {
-  display: none;
-}
-
 /* Right visual column: emblem/image + Shop Now button */
 .heroVisual {
   flex-shrink: 0;
+  width: 580px;
+  min-width: 580px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
 }
 
-/* Shop Now button - centered below the logo */
+/* Shop Now button - centered below logo */
 .shopNowLink {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  top: -0.5cm;
   z-index: 1;
 }
 
@@ -286,33 +279,16 @@
   margin-top: 8px;
 }
 
-/* Right emblem/image wrapper */
+/* Right emblem/image wrapper — explicit 450×450 (10% reduced from 500) */
 .imageWrapper {
   flex-shrink: 0;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 400px;
-  height: 400px;
-}
-
-.bannerImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-}
-
-.imagePlaceholder {
-  width: 100%;
-  height: 100%;
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  font-size: 14px;
+  width: 450px;
+  height: 450px;
+  overflow: visible;
 }
 
 /* Responsive */
@@ -324,7 +300,10 @@
     gap: 28px;
   }
   .heroVisual {
-    gap: 20px;
+    width: 100%;
+    min-width: unset;
+    gap: 32px;
+    transform: translateX(0) !important;
   }
   .shopNowLink {
     justify-content: center;
@@ -339,14 +318,219 @@
   .heroInner {
     padding: 24px 20px 16px;
   }
-  .announcementBar {
-    padding: 8px 16px;
-  }
   .heroVisual {
-    gap: 16px;
+    gap: 24px;
   }
   .imageWrapper {
-    width: 250px;
-    height: 250px;
+    width: 230px;
+    height: 230px;
   }
+}
+
+/* Outer wrapper */
+.heroStats {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 2rem;
+}
+
+/* The two horizontal gold rules (top and bottom lines) */
+.statRule {
+  border: none;
+  border-top: 1px solid rgba(197, 154, 42, 0.40);
+  margin: 0;
+}
+
+/* 3-column grid row between the two rules */
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+}
+
+/* Each column */
+.statCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  position: relative;
+  cursor: default;
+}
+
+/* Thin vertical divider between columns (not after last) */
+.statCol:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: rgba(197, 154, 42, 0.30);
+}
+
+/* Title — maroon, serif, uppercase */
+.statValue {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+  font-weight: 700;
+  color: #7A2B2B;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+  transition: color 0.2s ease, text-shadow 0.25s ease;
+}
+
+/* Hover: maroon flash + physics spring effect */
+.statCol:hover .statValue {
+  color: #9B3535;
+  text-shadow:
+    0 0 8px rgba(122, 43, 43, 0.50),
+    0 0 20px rgba(122, 43, 43, 0.20);
+  animation: maroonPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Physics spring keyframe (elastic overshoot = "physics effect") */
+@keyframes maroonPulse {
+  0%   { transform: scale(1);    }
+  35%  { transform: scale(1.08); }
+  65%  { transform: scale(0.97); }
+  85%  { transform: scale(1.02); }
+  100% { transform: scale(1);    }
+}
+
+/* Subtext — Devanagari, dark maroon/black */
+.statLabel {
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: clamp(0.68rem, 1vw, 0.80rem);
+  font-weight: 400;
+  color: #3B2E2B;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  display: block;
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+/* Mobile: stack into single column */
+@media (max-width: 480px) {
+  .heroStats  { max-width: 100%; }
+  .statRow    { grid-template-columns: 1fr; }
+  .statCol    { padding: 0.6rem 0; text-align: left; align-items: flex-start; }
+  .statCol:not(:last-child)::after { display: none; }
+  .statCol:not(:last-child) {
+    border-bottom: 1px solid rgba(197, 154, 42, 0.25);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SAMPADA HERO LOGO — STRIPPED-DOWN FOR DEBUG
+   ═══════════════════════════════════════════ */
+
+/* ── Stripped-down logo container (no rings, no effects) ── */
+.heroLogoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.heroLogoImg {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Outer wrapper: grid-centered, never stretches ── */
+.logoRingContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Rotating rings removed per design update */
+
+/* ── Static logo container: centered ── */
+.logoImageStatic {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  overflow: visible;
+  z-index: 2;
+  transform: none;
+  background: none;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Hover: spring zoom only — no ring, no shadow ── */
+.imageWrapper:hover .logoImageStatic {
+  transform: scale(1.08);
+}
+
+.logoImg {
+  object-fit: contain !important;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* spinCW / spinCCW keyframes removed — rings no longer in use */
+
+@media (max-width: 1024px) {
+  .heroVisual {
+    width: 460px;
+    min-width: 460px;
+  }
+  .imageWrapper {
+    width: 360px;
+    height: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroVisual {
+    width: 100%;
+    min-width: unset;
+  }
+  .imageWrapper {
+    width: 270px;
+    height: 270px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   END SAMPADA HERO LOGO BLOCK
+   ═══════════════════════════════════════════ */
+
+/* Custom Hover styles specifically for Hero Banner Shop Now button */
+.heroShopBtn:hover {
+  background: #800000 !important; /* Maroon background */
+  color: #D4AF37 !important; /* Yellow/Gold text */
+  border-color: #D4AF37 !important; /* Yellow/Gold border */
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5) !important;
+}
+
+.heroShopBtn:hover::after {
+  background: #D4AF37 !important; /* Yellow/Gold underline */
+}
+
+.heroShopBtn:hover span {
+  color: #D4AF37 !important; /* Yellow/Gold arrow */
 }

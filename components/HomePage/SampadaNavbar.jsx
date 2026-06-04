@@ -9,6 +9,7 @@ import { signOut } from "next-auth/react";
 import { getNavigationData } from '@/lib/client';
 import SmartSearch from '@/components/SmartSearch/SmartSearch';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import SampadaMedallion from './SampadaMedallion';
 
 // ============================================================================
 // CONFIGURATION - Hardcoded Menu Items (Fallback if Sanity is unreachable)
@@ -1201,9 +1202,9 @@ export default function SampadaNavbar({
       {showMarquee && <MarqueeBar />}
 
       <header className="site-header">
-        {/* Zone 1: Logo */}
+        {/* Zone 1: Text Wordmark Logo */}
         <div className="header-logo">
-          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href="/" className="navLogo" aria-label="Sampada Home">
             Sampada
           </Link>
         </div>

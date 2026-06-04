@@ -2,26 +2,35 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Head from 'next/head';
 import { urlFor } from '../../lib/client';
 import styles from './HomeHeroBanner.module.css';
 
 const HomeHeroBanner = ({ heroBanner }) => {
   const [isClient, setIsClient] = useState(false);
   const product = heroBanner?.product || '';
-  const image = heroBanner?.image;
-
-  // Generate image URL from Sanity
-  const imageUrl = image?.asset 
-    ? urlFor(image).width(500).height(500).url()
+  
+  // LOGO DATA - Use 'image' field for Hero Banner (Mandala Emblem)
+  const logoImage = heroBanner?.image;
+  // Bypass crop/hotspot by omitting them
+  const logoImageUncropped = logoImage ? { ...logoImage, crop: undefined, hotspot: undefined } : null;
+  const logoUrl = logoImageUncropped?.asset 
+    ? urlFor(logoImageUncropped).fit('max').auto('format').url()
     : null;
 
   // Ensure animation only runs after client-side hydration
   useEffect(() => {
     setIsClient(true);
-  }, []);
+  }, [heroBanner, logoUrl]);
 
   return (
     <section className={styles.hero} aria-label="Hero section">
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Tiro+Devanagari+Sanskrit:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+      </Head>
+
       {/* Enhanced Premium Tagline Banner */}
       <div className={styles.taglineBanner}>
         <div className={styles.shimmerLine}></div>
@@ -71,36 +80,53 @@ const HomeHeroBanner = ({ heroBanner }) => {
             <p className="hero-quote">{heroBanner.heroQuote}</p>
           )}
 
-          {heroBanner?.heroStats?.length > 0 && (
-            <div className="hero-stats">
-              {heroBanner.heroStats.map((card, i) => (
-                <div className="hero-stat-card" key={i}>
-                  <span className="stat-value">{card.value}</span>
-                  <span className="stat-label">{card.label}</span>
+          {/* New Clean Stat Row — sits between two thin gold rules */}
+          {(() => {
+            const heroStats = [
+              { value: "Legacy Stitch",  label: "Crafted for Generations" },
+              { value: "Gold Thread",    label: "Embroidered Prosperity"   },
+              { value: "Sampada Seal",   label: "Authentic Heritage Mark"  },
+            ];
+
+            return (
+              <div className={styles.heroStats}>
+                <hr className={styles.statRule} />
+                <div className={styles.statRow}>
+                  {heroStats.map((stat, i) => (
+                    <div className={styles.statCol} key={i}>
+                      <span className={styles.statValue}>{stat.value}</span>
+                      <span className={styles.statLabel}>{stat.label}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+                <hr className={styles.statRule} />
+              </div>
+            );
+          })()}
         </div>
 
         {/* Right: Banner Image + Shop Now Button (vertical stack) */}
         <div className={styles.heroVisual}>
-          {imageUrl ? (
+          {logoUrl ? (
             <div className={styles.imageWrapper}>
-              <Image
-                src={imageUrl}
-                alt={heroBanner?.altText || heroBanner?.midText || 'Sampada winter collection banner image'}
-                width={400}
-                height={400}
-                className={styles.bannerImage}
-                priority
-              />
+              <div className={styles.logoImageStatic}>
+                <Image
+                  src={logoUrl}
+                  alt={logoImage?.alt || 'Sampada emblem'}
+                  fill
+                  className={styles.logoImg}
+                  priority
+                  style={{
+                    objectFit: 'contain',
+                    background: 'transparent',
+                    backgroundColor: 'transparent',
+                  }}
+                />
+              </div>
             </div>
           ) : (
-            <div className={styles.imageWrapper} aria-hidden="true">
-              <div className={styles.imagePlaceholder}>
-                <p>No image set</p>
-              </div>
+            <div className={styles.heroLogoContainer} aria-hidden="true">
+              <p>No image set</p>
             </div>
           )}
 
@@ -111,8 +137,8 @@ const HomeHeroBanner = ({ heroBanner }) => {
               className={styles.shopNowLink}
               aria-label={`Shop ${product}`}
             >
-              <button type="button" className="shop-now-btn-reversed">
-                Shop Now <span className="arrow">→</span>
+              <button type="button" className={`shop-now-btn-light ${styles.heroShopBtn}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
               </button>
             </Link>
           ) : (
@@ -121,8 +147,8 @@ const HomeHeroBanner = ({ heroBanner }) => {
               className={styles.shopNowLink}
               aria-label="Shop men's t-shirts"
             >
-              <button type="button" className="shop-now-btn-reversed">
-                Shop Now <span className="arrow">→</span>
+              <button type="button" className={`shop-now-btn-light ${styles.heroShopBtn}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
               </button>
             </Link>
           )}

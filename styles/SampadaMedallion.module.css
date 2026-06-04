@@ -1,0 +1,46 @@
+@keyframes rotateBorder { 
+  from { transform: rotate(0deg); } 
+  to { transform: rotate(360deg); } 
+}
+
+.wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotatingRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px dashed rgba(197,155,39,0.7); /* use --sampada-gold fallback */
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: 50% 50%;
+  animation: rotateBorder 10s linear infinite;
+  box-sizing: border-box;
+}
+
+.medallion {
+  position: relative;
+  z-index: 10;
+  width: 84%;
+  height: 84%;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sampada-cream, #FAF6F0);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  isolation: isolate;
+}
+
+.logo {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  display: block;
+  border-radius: 50%;
+}
