@@ -37,8 +37,11 @@ export default {
           },
         ],
         validation: Rule => Rule.required().custom((image) => {
-          if (image?.asset?._ref && image?.asset?.metadata?.dimensions?.aspectRatio !== 1) {
-            return 'Logo must be square (1:1 aspect ratio)';
+          if (image?.asset?._ref && image?.asset?.metadata?.dimensions?.aspectRatio) {
+            const ratio = image.asset.metadata.dimensions.aspectRatio;
+            if (Math.abs(ratio - 1) > 0.05) {
+              return 'Logo must be square (1:1 aspect ratio)';
+            }
           }
           return true;
         })
