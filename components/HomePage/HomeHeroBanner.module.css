@@ -203,7 +203,9 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  top: -1.3cm;
+  /* Remove large upward offset for mobile, use margin for spacing */
+  top: -0.5cm;
+  margin-left: 0.3cm;
   z-index: 1;
 }
 
