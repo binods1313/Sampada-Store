@@ -1161,6 +1161,8 @@ span.text-red {
   .shop-now-btn-reversed {
     padding-left: 24px !important;
     padding-right: 24px !important;
+    justify-content: center !important;
+    display: inline-flex !important;
   }
 }
 

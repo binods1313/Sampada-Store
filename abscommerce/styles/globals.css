@@ -340,12 +340,100 @@ span.text-red {
   margin-top: 20px;
 }
 
-.footer-cta .shop-now-btn {
-  position: static !important;
-  /* Override the absolute positioning from the original class */
+.footer-cta .shop-now-btn-light {
+  position: static !important; /* Override absolute positioning */
   background-color: white !important;
   color: #ef4444 !important;
-  padding: 0.75rem 1.5rem !important;
+  padding: 0.75rem 1.5rem !important; /* Same size as standard button */
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  text-transform: uppercase !important;
+}
+  position: static !important; /* Override absolute positioning */
+  background-color: white !important;
+  color: #ef4444 !important;
+  padding: 0.75rem 1.5rem !important; /* Same size as standard button */
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+  position: static !important; /* Override absolute positioning */
+  background-color: white !important;
+  color: #ef4444 !important;
+  padding: 0.75rem 1.5rem !important; /* Same size as standard button */
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  text-transform: uppercase !important;
+}
+  position: static !important; /* Override absolute positioning */
+  background-color: white !important;
+  color: #ef4444 !important;
+  padding: 0.75rem 1.5rem !important; /* Same size as standard button */
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important; /* Same weight as standard button */
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+  position: static !important; /* Override absolute positioning */
+  background-color: white !important;
+  color: #ef4444 !important;
+  padding: 0.75rem 1.5rem !important; /* Match standard button size */
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important; /* Same weight as standard button */
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+  /* Duplicate footer button styles removed */
+  font-size: 1rem !important;
+  border: 2px solid #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+  min-width: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+  position: static !important; /* Override absolute positioning */
+  background-color: white !important;
+  color: #ef4444 !important;
+  padding: 0.75rem 1.5rem !important; /* Match standard button size */
   border-radius: 0.5rem !important;
   font-weight: 700 !important;
   /* Stronger bold text */
