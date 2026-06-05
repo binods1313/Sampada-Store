@@ -664,10 +664,12 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
           <span
             className="sampada-logo"
             style={{
-              fontSize: '18px',
-              fontWeight: 800,
+              fontFamily: "'Pinyon Script', 'Cinzel', cursive",
+              fontSize: '28px',
+              fontWeight: 700,
               color: '#C9A84C',
-              letterSpacing: '1px'
+              letterSpacing: '1px',
+              lineHeight: 1
             }}
           >
             Sampada

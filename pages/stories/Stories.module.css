@@ -1,6 +1,21 @@
 /* pages/stories/Stories.module.css */
 
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
+.heroSpotlight {
+  position: relative;
+  width: 100%;
+  height: 1350px;
+  min-height: 1350px;
+  overflow: hidden;
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .heroSpotlight {
+    height: 700px;
+    min-height: 700px;
+  }
+}
 .hero {
   position: relative;
   background: #1a1f3a;

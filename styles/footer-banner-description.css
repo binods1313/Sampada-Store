@@ -140,7 +140,7 @@
   .shop-now-btn,
   .shop-now-btn-light {
     width: 100%; /* Make button full width on mobile */
-    max-width: 200px; /* Limit max width */
+    max-width: 185px; /* Limit max width (reduced by 15px/0.4cm total) */
     margin-top: 10px;
   }
 }

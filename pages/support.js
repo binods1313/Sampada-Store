@@ -1,7 +1,7 @@
 // pages/support.js - SAMPADA CUSTOMER SUPPORT WITH SANITY INTEGRATION
 import { useState } from 'react'
 import Head from 'next/head'
-import { client } from '@/lib/client'
+import { client, urlFor } from '@/lib/client'
 import styles from '../styles/Support.module.css'
 import '../styles/hero-banner.css';
 import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
@@ -39,7 +39,23 @@ export default function SupportPage({ pageData }) {
     ctaHeading,
     ctaSubtext,
     ctaButtonLabel,
-    seo
+    seo,
+    contactMethodsTitle,
+    contactMethods,
+    faqTitle,
+    faqDescription,
+    helpfulResourcesTitle,
+    helpfulResources,
+    heroTitle,
+    heroDescription,
+    heroDescription2,
+    heroStyling,
+    supportPromise,
+    supportHoursTitle,
+    supportHours,
+    ticketDescription,
+    ticketSystemEnabled,
+    trustBadges
   } = pageData
 
   const handleOpenModal = (modalId) => {
@@ -48,45 +64,102 @@ export default function SupportPage({ pageData }) {
     }
   }
 
+  // Dynamic mappings for data from the 16 missing fields or original fields
+  const displayHeroTitle = heroTitle || heroHeading || 'Your satisfaction is our legacy.'
+  const displayHeroTagline = heroTagline || 'CUSTOMER SUPPORT'
+  
+  // Mapped Contact Cards (prioritize database contactMethods)
+  const displayContactCards = contactCards && contactCards.length > 0
+    ? contactCards
+    : (contactMethods || []).map(method => ({
+        title: method.title || (method.method === 'email' ? 'Email Support' : method.method === 'phone' ? 'Call Us' : method.method === 'whatsapp' ? 'WhatsApp' : 'Live Chat'),
+        subtitle: method.value,
+        description: method.description,
+        icon: method.icon, // string or image
+        actionType: method.method,
+        actionValue: method.value
+      }))
+
+  const contactSectionTitle = contactMethodsTitle || 'Connect With Us'
+
+  // Mapped Business Hours
+  const displayHours = businessHours && businessHours.length > 0
+    ? businessHours
+    : (supportHours ? [
+        { label: 'Weekdays', hours: supportHours.weekdays, days: 'Monday – Friday' },
+        { label: 'Weekend', hours: supportHours.weekend, days: 'Saturday – Sunday' },
+        { label: 'Timezone', hours: supportHours.timezone, days: 'Standard Time' }
+      ].filter(h => h.hours) : [])
+
+  const hoursSectionTitle = supportHoursTitle || "When We're Available"
+  const displayHolidayNote = holidayNote || supportHours?.holidays
+
+  // Mapped FAQs
+  const displayFaqTitle = faqTitle || 'Frequently Asked Questions'
+  const displayFaqDesc = faqDescription || 'Find quick answers to common questions about orders, shipping, returns, and our heritage collections.'
+
+  // Mapped Helpful Resources
+  const displayResourcesTitle = helpfulResourcesTitle || 'Helpful Resources'
+  const displayResources = resources && resources.length > 0
+    ? resources
+    : (helpfulResources || []).map(res => ({
+        title: res.title,
+        description: res.description,
+        link: res.url,
+        icon: null
+      }))
+
+  // Resolve hero section height dynamically (1350px to show Kavya's full body)
+  const heroHeight = '1350px'
+
+  // Resolve hero image URLs using urlFor to apply hotspots/cropping configured in Sanity Studio
+  const baseImgUrl = heroImage?.asset ? urlFor(heroImage).url() : (heroImage?.asset?.url || "/images/Kavya/Kav1.jpeg")
+  const revealImgUrl = heroRevealImage?.asset ? urlFor(heroRevealImage).url() : (heroRevealImage?.asset?.url || "/images/Kavya/Kav2.jpeg")
+
   return (
     <>
       <Head>
-        <title>{seo?.metaTitle || heroHeading || 'Customer Support - Sampada'}</title>
-        <meta name="description" content={seo?.metaDescription || ctaSubtext} />
+        <title>{seo?.metaTitle || displayHeroTitle || 'Customer Support - Sampada'}</title>
+        <meta name="description" content={seo?.metaDescription || ctaSubtext || displayHeroDescription} />
         {heroImage?.asset?.url && <meta property="og:image" content={heroImage.asset.url} />}
       </Head>
 
       <main>
         {/* 1. Hero Section: DARK - Spotlight Reveal */}
-        <section className="section-dark" style={{ padding: 0, minHeight: '100svh' }}>
-          <div className={styles.heroSpotlight}>
+        <section className="section-dark" style={{ padding: 0, minHeight: heroHeight }}>
+          <div className={styles.heroSpotlight} style={{ height: heroHeight, minHeight: heroHeight }}>
             <SpotlightRevealClean
-              baseImage={heroImage?.asset?.url || "/images/Kavya/Kav1.jpeg"}
-              revealImage={heroRevealImage?.asset?.url || "/images/Kavya/Kav2.jpeg"}
+              baseImage={baseImgUrl}
+              revealImage={revealImgUrl}
             />
             
             {/* Quote/Heading overlay on left side */}
             <div className={styles.heroQuoteOverlay}>
-              <span className="s-label">{heroTagline || 'CUSTOMER SUPPORT'}</span>
+              <span className="s-label">{displayHeroTagline}</span>
               <h1 className={styles.heroQuote} style={{ borderLeft: 'none', fontStyle: 'normal', fontSize: '2.5rem', fontWeight: 700 }}>
-                {heroHeading || 'Your satisfaction is our legacy.'}
+                {displayHeroTitle}
               </h1>
+              {(heroDescription || heroDescription2) && (
+                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', marginTop: '12px', lineHeight: '1.6' }}>
+                  {heroDescription || heroDescription2}
+                </p>
+              )}
             </div>
           </div>
         </section>
 
         {/* 2. Contact Cards: LIGHT */}
-        {contactCards && contactCards.length > 0 && (
+        {displayContactCards && displayContactCards.length > 0 && (
           <section className="section-light s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">GET IN TOUCH</p>
-                <h2 className="s-heading">Connect With Us</h2>
+                <h2 className="s-heading">{contactSectionTitle}</h2>
                 <span className="s-bar" />
               </div>
               
               <div className="support-cards">
-                {contactCards.map((card, index) => (
+                {displayContactCards.map((card, index) => (
                   <SupportContactCard 
                     key={index} 
                     card={card} 
@@ -99,17 +172,17 @@ export default function SupportPage({ pageData }) {
         )}
 
         {/* 3. Business Hours: DARK */}
-        {businessHours && businessHours.length > 0 && (
+        {displayHours && displayHours.length > 0 && (
           <section className="section-dark s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">AVAILABILITY</p>
-                <h2 className="s-heading">When We&apos;re Available</h2>
+                <h2 className="s-heading">{hoursSectionTitle}</h2>
                 <span className="s-bar" />
               </div>
               
               <div className={styles.hoursGrid}>
-                {businessHours.map((entry, index) => (
+                {displayHours.map((entry, index) => (
                   <div key={index} className="s-card-dark">
                     <h3 className="s-card-title">{entry.label}</h3>
                     <p className="s-card-hi">{entry.hours}</p>
@@ -118,10 +191,10 @@ export default function SupportPage({ pageData }) {
                 ))}
               </div>
               
-              {holidayNote && (
+              {displayHolidayNote && (
                 <p className={styles.hoursNote}>
                   <span className={styles.hoursIcon}>🗓️</span>
-                  {holidayNote}
+                  {displayHolidayNote}
                 </p>
               )}
             </div>
@@ -134,7 +207,8 @@ export default function SupportPage({ pageData }) {
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">COMMON QUESTIONS</p>
-                <h2 className="s-heading">Frequently Asked Questions</h2>
+                <h2 className="s-heading">{displayFaqTitle}</h2>
+                {displayFaqDesc && <p style={{ color: '#5c4a3a', fontSize: '0.95rem', marginTop: '8px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>{displayFaqDesc}</p>}
                 <span className="s-bar" />
               </div>
               
@@ -159,17 +233,17 @@ export default function SupportPage({ pageData }) {
         )}
 
         {/* 5. Helpful Resources: DARK */}
-        {resources && resources.length > 0 && (
+        {displayResources && displayResources.length > 0 && (
           <section className="section-dark s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">LEARN MORE</p>
-                <h2 className="s-heading">Helpful Resources</h2>
+                <h2 className="s-heading">{displayResourcesTitle}</h2>
                 <span className="s-bar" />
               </div>
               
               <div className={styles.resourcesGrid}>
-                {resources.map((resource, index) => (
+                {displayResources.map((resource, index) => (
                   <a 
                     key={index} 
                     href={resource.link} 
@@ -203,7 +277,7 @@ export default function SupportPage({ pageData }) {
                 <h2 className="s-heading">Print-on-Demand Products</h2>
                 <span className="s-bar" />
               </div>
-
+ 
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -262,8 +336,8 @@ export default function SupportPage({ pageData }) {
 // ─── Get Server Side Props ───────────────────────────────────────────────────
 export async function getServerSideProps() {
   const query = `*[_type == "support"][0]{
-    heroImage{ asset->{ url } },
-    heroRevealImage{ asset->{ url } },
+    heroImage,
+    heroRevealImage,
     heroTagline,
     heroHeading,
     contactCards[]{
@@ -277,7 +351,23 @@ export async function getServerSideProps() {
     resources[]{ title, description, link, icon{ asset->{ url } } },
     podCards[]{ title, description, icon{ asset->{ url } } },
     ctaHeading, ctaSubtext, ctaButtonLabel,
-    seo
+    seo,
+    contactMethodsTitle,
+    contactMethods,
+    faqTitle,
+    faqDescription,
+    helpfulResourcesTitle,
+    helpfulResources,
+    heroTitle,
+    heroDescription,
+    heroDescription2,
+    heroStyling,
+    supportPromise,
+    supportHoursTitle,
+    supportHours,
+    ticketDescription,
+    ticketSystemEnabled,
+    trustBadges
   }`;
 
   try {

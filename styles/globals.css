@@ -587,6 +587,7 @@ span.text-red {
 .shop-now-btn-reversed {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: linear-gradient(135deg, #D4AF37 0%, #C9A84C 100%); /* Initial Gold */
   color: #8B1A1A; /* Initial Maroon text */
@@ -671,6 +672,7 @@ span.text-red {
 .shop-now-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
   color: #D4AF37; /* Premium gold text */
@@ -777,6 +779,7 @@ span.text-red {
 .shop-now-btn-light {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: linear-gradient(135deg, #C9A84C 0%, #a88535 100%);
   color: #1a0a00;
@@ -1152,6 +1155,12 @@ span.text-red {
     margin-top: 1rem;
     text-align: center;
     color: #000000;
+  }
+  .shop-now-btn,
+  .shop-now-btn-light,
+  .shop-now-btn-reversed {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
   }
 }
 
@@ -3982,13 +3991,13 @@ img {
   margin-right: 32px;
 }
 .navLogo {
-  font-family: 'Libre Baskerville', Georgia, serif;
-  font-size: 1.6rem;
+  font-family: 'Pinyon Script', 'Cinzel', cursive;
+  font-size: 2.7rem;
   font-weight: 700;
   color: #8B1A1A;          /* sampada-crimson */
   letter-spacing: 0.02em;
   text-decoration: none;
-  line-height: 1;
+  line-height: 0.9;
   transition: color 0.2s ease;
 }
 .navLogo:hover {

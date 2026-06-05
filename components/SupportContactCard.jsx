@@ -46,11 +46,29 @@ export default function SupportContactCard({ card, onOpenModal }) {
       }}
       aria-label={`${title}: ${subtitle}`}
     >
-      {icon?.asset?.url && (
-        <div className="card-icon-wrap">
-          <img src={icon.asset.url} alt="" aria-hidden="true" />
-        </div>
-      )}
+      {(() => {
+        if (icon && typeof icon === 'object' && icon.asset?.url) {
+          return (
+            <div className="card-icon-wrap">
+              <img src={icon.asset.url} alt="" aria-hidden="true" />
+            </div>
+          )
+        }
+        
+        const iconName = (typeof icon === 'string' ? icon : actionType || '').toLowerCase()
+        let emoji = '✉️'
+        if (iconName.includes('phone') || iconName.includes('call')) emoji = '📞'
+        else if (iconName.includes('whatsapp')) emoji = '💬'
+        else if (iconName.includes('chat') || iconName.includes('envelope')) emoji = '✉️'
+        else if (iconName.includes('ticket') || iconName.includes('modal')) emoji = '🎫'
+        else if (iconName.includes('link')) emoji = '🔗'
+        
+        return (
+          <div className="card-icon-wrap" style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {emoji}
+          </div>
+        )
+      })()}
       <h3 className="card-title">{title}</h3>
       <p className="card-subtitle">{subtitle}</p>
       <p className="card-desc">{description}</p>

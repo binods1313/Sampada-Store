@@ -83,9 +83,9 @@ const HomeHeroBanner = ({ heroBanner }) => {
           {/* New Clean Stat Row — sits between two thin gold rules */}
           {(() => {
             const heroStats = [
-              { value: "Legacy Stitch",  label: "Crafted for Generations" },
-              { value: "Gold Thread",    label: "Embroidered Prosperity"   },
-              { value: "Sampada Seal",   label: "Authentic Heritage Mark"  },
+              { value: "Legacy Stitch",  label: "पीढ़ी-दर-पीढ़ी निर्मित" },
+              { value: "Gold Thread",    label: "कढ़ाईदार समृद्धि"   },
+              { value: "Sampada Seal",   label: "प्रामाणिक विरासत चिह्न"  },
             ];
 
             return (
@@ -134,22 +134,20 @@ const HomeHeroBanner = ({ heroBanner }) => {
           {product ? (
             <Link
               href={`/product/${product}`}
-              className={styles.shopNowLink}
+              className={`${styles.shopNowLink} shop-now-btn-light ${styles.heroShopBtn}`}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: 'auto' }}
               aria-label={`Shop ${product}`}
             >
-              <button type="button" className={`shop-now-btn-light ${styles.heroShopBtn}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-              </button>
+              Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
             </Link>
           ) : (
             <Link
               href="/collections/mens-tshirts"
-              className={styles.shopNowLink}
+              className={`${styles.shopNowLink} shop-now-btn-light ${styles.heroShopBtn}`}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: 'auto' }}
               aria-label="Shop men's t-shirts"
             >
-              <button type="button" className={`shop-now-btn-light ${styles.heroShopBtn}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-              </button>
+              Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
             </Link>
           )}
         </div>

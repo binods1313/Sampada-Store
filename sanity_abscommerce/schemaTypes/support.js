@@ -138,6 +138,86 @@ export default {
     { name: 'ctaHeading', title: 'CTA Heading', type: 'string' },
     { name: 'ctaSubtext', title: 'CTA Subtext', type: 'text' },
     { name: 'ctaButtonLabel', title: 'CTA Button Label', type: 'string' },
+
+    // 8. 16 Missing Fields from Database
+    { name: 'contactMethodsTitle', title: 'Contact Methods Title', type: 'string' },
+    {
+      name: 'contactMethods',
+      title: 'Contact Methods (Detailed)',
+      type: 'array',
+      of: [{
+        type: 'object',
+        name: 'contactMethod',
+        fields: [
+          { name: 'method', type: 'string', title: 'Method (e.g. email, phone, whatsapp)' },
+          { name: 'value', type: 'string', title: 'Value' },
+          { name: 'icon', type: 'string', title: 'Icon name (e.g. envelope, phone, whatsapp)' },
+          { name: 'description', type: 'text', title: 'Description' }
+        ]
+      }]
+    },
+    { name: 'faqTitle', title: 'FAQ Title', type: 'string' },
+    { name: 'faqDescription', title: 'FAQ Description', type: 'text' },
+    { name: 'helpfulResourcesTitle', title: 'Helpful Resources Title', type: 'string' },
+    {
+      name: 'helpfulResources',
+      title: 'Helpful Resources (Detailed)',
+      type: 'array',
+      of: [{
+        type: 'object',
+        name: 'helpfulResourceEntry',
+        fields: [
+          { name: 'title', type: 'string', title: 'Title' },
+          { name: 'description', type: 'text', title: 'Description' },
+          { name: 'type', type: 'string', title: 'Type (e.g. guide, docs, blog)' },
+          { name: 'url', type: 'string', title: 'URL' }
+        ]
+      }]
+    },
+    { name: 'heroTitle', title: 'Hero Title (Text)', type: 'string' },
+    { name: 'heroDescription', title: 'Hero Description', type: 'text' },
+    { name: 'heroDescription2', title: 'Hero Description 2 (Secondary)', type: 'text' },
+    {
+      name: 'heroStyling',
+      title: 'Hero Styling Settings',
+      type: 'object',
+      fields: [
+        { name: 'accentColor', type: 'string', title: 'Accent Color' },
+        { name: 'backgroundColor', type: 'string', title: 'Background Color' },
+        { name: 'height', type: 'string', title: 'Height (e.g. 60vh)' },
+        { name: 'overlayOpacity', type: 'number', title: 'Overlay Opacity' },
+        { name: 'textColor', type: 'string', title: 'Text Color' }
+      ]
+    },
+    { name: 'supportPromise', title: 'Support Promise Text', type: 'string' },
+    { name: 'supportHoursTitle', title: 'Support Hours Title', type: 'string' },
+    {
+      name: 'supportHours',
+      title: 'Support Hours Config',
+      type: 'object',
+      fields: [
+        { name: 'weekdays', type: 'string', title: 'Weekdays' },
+        { name: 'weekend', type: 'string', title: 'Weekend' },
+        { name: 'timezone', type: 'string', title: 'Timezone' },
+        { name: 'holidays', type: 'string', title: 'Holidays' }
+      ]
+    },
+    { name: 'ticketDescription', title: 'Ticket Description', type: 'text' },
+    { name: 'ticketSystemEnabled', title: 'Ticket System Enabled', type: 'boolean' },
+    {
+      name: 'trustBadges',
+      title: 'Trust Badges',
+      type: 'array',
+      of: [{
+        type: 'object',
+        name: 'trustBadgeEntry',
+        fields: [
+          { name: 'title', type: 'string', title: 'Title' },
+          { name: 'description', type: 'string', title: 'Description' },
+          { name: 'icon', type: 'string', title: 'Icon (Emoji or text)' }
+        ]
+      }]
+    },
     
     // SEO Settings
     {

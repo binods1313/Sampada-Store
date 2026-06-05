@@ -196,15 +196,13 @@ const HeroBanner = ({ heroBanner }) => {
               {/* Shop Now button */}
               <div className="hero-cta mt-8" style={{ zIndex: 3, transform: 'translateY(-0.5cm)' }}>
                 {product ? (
-                  <Link href={`/product/${product}`}>
-                    <button type="button" className="heroShopBtn">
-                      {buttonText}
-                    </button>
+                  <Link href={`/product/${product}`} className="heroShopBtn" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {buttonText}
                   </Link>
                 ) : (
-                  <button type="button" className="heroShopBtn" disabled>
+                  <span className="heroShopBtn disabled" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5, cursor: 'not-allowed' }}>
                     {buttonText}
-                  </button>
+                  </span>
                 )}
               </div>
             </div>

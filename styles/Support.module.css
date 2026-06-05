@@ -15,26 +15,33 @@
 .heroSpotlight {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 100vh;
+  height: 1350px;
+  min-height: 1350px;
   overflow: hidden;
-  background: #0A0A0A;
+  background: transparent;
 }
 
-/* Quote overlay on left side */
+/* Quote overlay — editorial text floating on hero image */
 .heroQuoteOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 26%;
+  top: 8%;
+  left: 4%;
+  width: auto;
+  max-width: 260px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   z-index: 40;
   pointer-events: none;
-  padding: 0 60px;
+  padding: 0;
+  background: none;
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .heroLabel {
@@ -46,18 +53,20 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
+  text-shadow: 0px 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 .heroQuote {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.7;
-  max-width: 420px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+  max-width: 100%;
   border-left: 3px solid #C9A96E;
   padding-left: 20px;
   margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .heroQuote em {
@@ -605,19 +614,21 @@
 }
 
 @media (max-width: 768px) {
-  /* Hero: Full viewport on mobile */
+  /* Hero: Fixed height on mobile to prevent cropping */
   .heroSpotlight {
-    height: 100vh;
-    min-height: 100vh;
+    height: 700px;
+    min-height: 700px;
   }
 
   .heroQuoteOverlay {
-    width: 100%;
-    padding: 40px 24px;
-    justify-content: flex-end;
-    align-items: center;
-    text-align: center;
-    background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
+    top: 5%;
+    left: 4%;
+    right: auto;
+    width: auto;
+    max-width: 220px;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
   }
 
   .heroQuote {
