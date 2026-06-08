@@ -132,21 +132,12 @@ const HomeHeroBanner = ({ heroBanner }) => {
 
           {/* Shop Now Button - mirrors FooterBanner structure exactly for mobile centering */}
           <div style={{ textAlign: 'center' }}>
-            {product ? (
-              <Link href={`/product/${product}`} aria-label={`Shop ${product}`}>
-                <button type="button" className="shop-now-btn-light">
-                  {heroBanner?.buttonText || 'Shop Now'}
-                  <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-                </button>
-              </Link>
-            ) : (
-              <Link href="/collections/mens-tshirts" aria-label="Shop men's t-shirts">
-                <button type="button" className="shop-now-btn-light">
-                  Shop Now
-                  <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-                </button>
-              </Link>
-            )}
+            <Link href={product ? `/product/${product}` : '/shop'} aria-label="Shop the collection">
+              <button type="button" className="shop-now-btn-light">
+                {heroBanner?.buttonText || 'Shop Now'}
+                <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
