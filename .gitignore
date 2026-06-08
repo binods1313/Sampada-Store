@@ -13,6 +13,9 @@ gcs-service-account.json
 *.service-account.json
 *-service-account.json
 
+# Claude local settings (contains API keys)
+.claude/
+
 # Dependency Directories
 node_modules/
 /.pnp

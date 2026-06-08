@@ -4,10 +4,10 @@ import Head from 'next/head'
 import { client, urlFor } from '@/lib/client'
 import styles from '../styles/Support.module.css'
 import '../styles/hero-banner.css';
-import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
 import SupportContactCard from '@/components/SupportContactCard';
 import Modal from '@/components/Modal';
 import SupportTicketForm from '@/components/SupportTicketForm';
+import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
 
 // ─── Main Support Page ────────────────────────────────────────────────────────
 export default function SupportPage({ pageData }) {
@@ -26,58 +26,58 @@ export default function SupportPage({ pageData }) {
   }
 
   const {
-    heroImage,
-    heroRevealImage,
-    heroTagline,
-    heroHeading,
-    contactCards,
-    businessHours,
-    holidayNote,
-    faqs,
-    resources,
-    podCards,
-    ctaHeading,
-    ctaSubtext,
-    ctaButtonLabel,
-    seo,
-    contactMethodsTitle,
-    contactMethods,
-    faqTitle,
-    faqDescription,
-    helpfulResourcesTitle,
-    helpfulResources,
     heroTitle,
     heroDescription,
     heroDescription2,
     heroStyling,
     supportPromise,
+    heroImage,
+    heroRevealImage,
+    contactMethodsTitle,
+    contactMethods,
     supportHoursTitle,
     supportHours,
+    faqTitle,
+    faqDescription,
+    faqs,
+    helpfulResourcesTitle,
+    helpfulResources,
+    trustBadges,
     ticketDescription,
     ticketSystemEnabled,
-    trustBadges
+    ctaHeading,
+    ctaButtonLabel,
+    seo,
+    heroTagline,
+    heroHeading,
+    contactCards,
+    businessHours,
+    holidayNote,
+    resources,
+    podCards,
+    ctaSubtext
   } = pageData
 
   const handleOpenModal = (modalId) => {
-    if (modalId === 'ticket' || modalId === 'support-ticket') {
+    if (modalId === 'ticket' || modalId === 'support-ticket' || modalId === 'chat') {
       setIsTicketModalOpen(true)
     }
   }
 
-  // Dynamic mappings for data from the 16 missing fields or original fields
+  // Dynamic mappings for data
   const displayHeroTitle = heroTitle || heroHeading || 'Your satisfaction is our legacy.'
   const displayHeroTagline = heroTagline || 'CUSTOMER SUPPORT'
   
-  // Mapped Contact Cards (prioritize database contactMethods)
+  // Mapped Contact Cards
   const displayContactCards = contactCards && contactCards.length > 0
     ? contactCards
     : (contactMethods || []).map(method => ({
         title: method.title || (method.method === 'email' ? 'Email Support' : method.method === 'phone' ? 'Call Us' : method.method === 'whatsapp' ? 'WhatsApp' : 'Live Chat'),
         subtitle: method.value,
         description: method.description,
-        icon: method.icon, // string or image
-        actionType: method.method,
-        actionValue: method.value
+        icon: method.icon,
+        method: method.method,
+        value: method.value
       }))
 
   const contactSectionTitle = contactMethodsTitle || 'Connect With Us'
@@ -105,14 +105,14 @@ export default function SupportPage({ pageData }) {
     : (helpfulResources || []).map(res => ({
         title: res.title,
         description: res.description,
-        link: res.url,
-        icon: null
+        url: res.url,
+        type: res.type
       }))
 
-  // Resolve hero section height dynamically (1350px to show Kavya's full body)
+  // Resolve hero section height
   const heroHeight = '1350px'
 
-  // Resolve hero image URLs using urlFor to apply hotspots/cropping configured in Sanity Studio
+  // Resolve hero image URLs
   const baseImgUrl = heroImage?.asset ? urlFor(heroImage).url() : (heroImage?.asset?.url || "/images/Kavya/Kav1.jpeg")
   const revealImgUrl = heroRevealImage?.asset ? urlFor(heroRevealImage).url() : (heroRevealImage?.asset?.url || "/images/Kavya/Kav2.jpeg")
 
@@ -120,7 +120,7 @@ export default function SupportPage({ pageData }) {
     <>
       <Head>
         <title>{seo?.metaTitle || displayHeroTitle || 'Customer Support - Sampada'}</title>
-        <meta name="description" content={seo?.metaDescription || ctaSubtext || displayHeroDescription} />
+        <meta name="description" content={seo?.metaDescription || ctaSubtext || displayHeroDescription || heroDescription} />
         {heroImage?.asset?.url && <meta property="og:image" content={heroImage.asset.url} />}
       </Head>
 
@@ -144,6 +144,11 @@ export default function SupportPage({ pageData }) {
                   {heroDescription || heroDescription2}
                 </p>
               )}
+              {supportPromise && (
+                <p className="hero-support-promise" style={{ marginTop: '20px', color: 'var(--s-gold)' }}>
+                  {supportPromise}
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -161,7 +166,7 @@ export default function SupportPage({ pageData }) {
               <div className="support-cards">
                 {displayContactCards.map((card, index) => (
                   <SupportContactCard 
-                    key={index} 
+                    key={card._key || index} 
                     card={card} 
                     onOpenModal={handleOpenModal}
                   />
@@ -171,35 +176,56 @@ export default function SupportPage({ pageData }) {
           </section>
         )}
 
-        {/* 3. Business Hours: DARK */}
-        {displayHours && displayHours.length > 0 && (
-          <section className="section-dark s-section">
-            <div className="s-container">
-              <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-                <p className="s-label">AVAILABILITY</p>
-                <h2 className="s-heading">{hoursSectionTitle}</h2>
-                <span className="s-bar" />
+        {/* 3. Business Hours & Trust Badges: DARK */}
+        <section className="section-dark s-section">
+          <div className="s-container">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px', alignItems: 'start' }}>
+              {/* Business Hours */}
+              <div>
+                <div style={{ textAlign: 'left', marginBottom: '32px' }}>
+                  <p className="s-label">AVAILABILITY</p>
+                  <h2 className="s-heading" style={{ fontSize: '1.8rem' }}>{hoursSectionTitle}</h2>
+                </div>
+                
+                <div className={styles.hoursGrid} style={{ display: 'grid', gap: '16px' }}>
+                  {displayHours.map((entry, index) => (
+                    <div key={index} className="s-card-dark" style={{ padding: '20px' }}>
+                      <h3 className="s-card-title" style={{ color: 'var(--s-gold)', marginBottom: '8px' }}>{entry.label}</h3>
+                      <p className="s-card-hi" style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{entry.hours}</p>
+                      <p className="s-card-body">{entry.days}</p>
+                    </div>
+                  ))}
+                </div>
+                {displayHolidayNote && (
+                  <p className={styles.hoursNote} style={{ marginTop: '20px', color: 'rgba(255,255,255,0.6)' }}>
+                    <span className={styles.hoursIcon}>🗓️</span> {displayHolidayNote}
+                  </p>
+                )}
               </div>
-              
-              <div className={styles.hoursGrid}>
-                {displayHours.map((entry, index) => (
-                  <div key={index} className="s-card-dark">
-                    <h3 className="s-card-title">{entry.label}</h3>
-                    <p className="s-card-hi">{entry.hours}</p>
-                    <p className="s-card-body">{entry.days}</p>
+
+              {/* Trust Badges */}
+              {trustBadges && trustBadges.length > 0 && (
+                <div>
+                  <div style={{ textAlign: 'left', marginBottom: '32px' }}>
+                    <p className="s-label">OUR COMMITMENT</p>
+                    <h2 className="s-heading" style={{ fontSize: '1.8rem' }}>Trusted Service</h2>
                   </div>
-                ))}
-              </div>
-              
-              {displayHolidayNote && (
-                <p className={styles.hoursNote}>
-                  <span className={styles.hoursIcon}>🗓️</span>
-                  {displayHolidayNote}
-                </p>
+                  <div style={{ display: 'grid', gap: '16px' }}>
+                    {trustBadges.map((badge, index) => (
+                      <div key={badge._key || index} style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '8px' }}>
+                        <div style={{ fontSize: '2rem' }}>{badge.icon}</div>
+                        <div>
+                          <h4 style={{ color: 'var(--s-text-light)', margin: 0, fontSize: '1.1rem' }}>{badge.title}</h4>
+                          <p style={{ color: 'var(--s-text-mid)', margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>{badge.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {/* 4. FAQs: LIGHT (mid cream) */}
         {faqs && faqs.length > 0 && (
@@ -214,7 +240,7 @@ export default function SupportPage({ pageData }) {
               
               <div className={styles.faqList}>
                 {faqs.map((faq, index) => (
-                  <div key={index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''}`}>
+                  <div key={faq._key || index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''}`}>
                     <button
                       className={styles.faqQuestion}
                       onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
@@ -245,19 +271,15 @@ export default function SupportPage({ pageData }) {
               <div className={styles.resourcesGrid}>
                 {displayResources.map((resource, index) => (
                   <a 
-                    key={index} 
-                    href={resource.link} 
+                    key={resource._key || index} 
+                    href={resource.url || resource.link} 
                     className={styles.resourceCard}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {resource.icon?.asset?.url ? (
-                      <div className={styles.resourceIcon}>
-                        <img src={resource.icon.asset.url} alt="" style={{ width: '32px', height: '32px' }} />
-                      </div>
-                    ) : (
-                      <div className={styles.resourceIcon}>📖</div>
-                    )}
+                    <div className={styles.resourceIcon}>
+                      {resource.type === 'guide' ? '📚' : resource.type === 'docs' ? '📄' : '✍️'}
+                    </div>
                     <h3 className={styles.resourceTitle}>{resource.title}</h3>
                     <p className={styles.resourceDesc}>{resource.description}</p>
                     <span className={styles.resourceArrow}>→</span>
@@ -304,21 +326,23 @@ export default function SupportPage({ pageData }) {
         )}
 
         {/* 7. Ticket System CTA: CRIMSON */}
-        <section className="section-crimson s-section">
-          <div className="s-container" style={{ textAlign: 'center', maxWidth: '600px' }}>
-            <h2 className="s-heading">{ctaHeading || 'Still Need Help?'}</h2>
-            <p style={{ color: 'rgba(250,246,240,0.85)', fontSize: '1rem', lineHeight: '1.7', margin: '16px 0 32px' }}>
-              {ctaSubtext || "Can't find what you're looking for? Submit a support ticket and our team will get back to you within 24 hours."}
-            </p>
-            <button 
-              className="btn-cta-primary" 
-              onClick={() => setIsTicketModalOpen(true)}
-              style={{ background: 'var(--s-gold)', color: 'var(--s-dark)', border: 'none' }}
-            >
-              {ctaButtonLabel || 'Submit a Ticket'} <span className="arrow">→</span>
-            </button>
-          </div>
-        </section>
+        {ticketSystemEnabled && (
+          <section className="section-crimson s-section">
+            <div className="s-container" style={{ textAlign: 'center', maxWidth: '600px' }}>
+              <h2 className="s-heading">{ctaHeading || 'Still Need Help?'}</h2>
+              <p style={{ color: 'rgba(250,246,240,0.85)', fontSize: '1rem', lineHeight: '1.7', margin: '16px 0 32px' }}>
+                {ticketDescription || "Can't find what you're looking for? Submit a support ticket and our team will get back to you within 24 hours."}
+              </p>
+              <button 
+                className="btn-cta-primary" 
+                onClick={() => setIsTicketModalOpen(true)}
+                style={{ background: 'var(--s-gold)', color: 'var(--s-dark)', border: 'none' }}
+              >
+                {ctaButtonLabel || 'Submit a Ticket'} <span className="arrow">→</span>
+              </button>
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Ticket Modal */}
@@ -347,27 +371,29 @@ export async function getServerSideProps() {
     },
     businessHours[]{ label, hours, days },
     holidayNote,
-    faqs[]{ question, answer },
+    faqs[]{ question, answer, _key },
     resources[]{ title, description, link, icon{ asset->{ url } } },
     podCards[]{ title, description, icon{ asset->{ url } } },
     ctaHeading, ctaSubtext, ctaButtonLabel,
     seo,
     contactMethodsTitle,
-    contactMethods,
+    contactMethods[]{
+      method, value, description, icon, _key
+    },
     faqTitle,
     faqDescription,
     helpfulResourcesTitle,
-    helpfulResources,
+    helpfulResources[]{ title, description, type, url, _key },
     heroTitle,
     heroDescription,
     heroDescription2,
     heroStyling,
     supportPromise,
     supportHoursTitle,
-    supportHours,
+    supportHours{ weekdays, weekend, timezone, holidays },
     ticketDescription,
     ticketSystemEnabled,
-    trustBadges
+    trustBadges[]{ title, description, icon, _key }
   }`;
 
   try {

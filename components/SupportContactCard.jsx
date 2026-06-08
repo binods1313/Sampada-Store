@@ -1,50 +1,62 @@
 // components/SupportContactCard.jsx
-import { useRouter } from 'next/router'
+import React from 'react'
 
 export default function SupportContactCard({ card, onOpenModal }) {
-  const router = useRouter()
-  const { title, subtitle, description, icon, actionType, actionValue } = card
+  const { method, value, description, icon, title, subtitle, actionType, actionValue } = card
 
-  const handleClick = (e) => {
-    // Prevent double triggers if nested links exist
-    if (e) e.preventDefault()
+  const handleCardClick = () => {
+    const finalMethod = actionType || method
+    const finalValue = actionValue || value
 
-    switch (actionType) {
+    switch(finalMethod) {
       case 'email':
-        window.location.href = `mailto:${actionValue}`
-        break
+        window.location.href = `mailto:${finalValue}`;
+        break;
       case 'phone':
-        window.location.href = `tel:${actionValue}`
-        break
+        window.location.href = `tel:${finalValue}`;
+        break;
       case 'whatsapp':
         // Ensure phone number format is correct (digits only)
-        const phone = actionValue.replace(/\D/g, '')
-        window.open(`https://wa.me/${phone}?text=Hello%20Sampada%20Team`, '_blank')
-        break
-      case 'link':
-        router.push(actionValue)
-        break
-      case 'modal':
-        if (onOpenModal) onOpenModal(actionValue)
-        break
+        const phone = (finalValue || '').replace(/\D/g, '');
+        window.open(`https://wa.me/${phone}?text=Hello`, '_blank');
+        break;
+      case 'chat':
+        // trigger your existing live chat widget here
+        if (typeof Tawk_API !== 'undefined') {
+          Tawk_API.maximize();
+        } else if (onOpenModal) {
+          onOpenModal('chat');
+        }
+        break;
       default:
-        break
+        break;
+    }
+  }
+
+  // Get display label for method
+  const getMethodLabel = () => {
+    const finalMethod = actionType || method
+    switch(finalMethod) {
+      case 'email': return 'Email Us';
+      case 'phone': return 'Call Us';
+      case 'whatsapp': return 'WhatsApp';
+      case 'chat': return 'Live Chat';
+      default: return 'Contact';
     }
   }
 
   return (
     <div 
-      className="support-card" 
-      onClick={handleClick}
+      className="support-contact-card" 
+      onClick={handleCardClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          handleClick()
+          e.preventDefault();
+          handleCardClick();
         }
       }}
-      aria-label={`${title}: ${subtitle}`}
     >
       {(() => {
         if (icon && typeof icon === 'object' && icon.asset?.url) {
@@ -55,7 +67,7 @@ export default function SupportContactCard({ card, onOpenModal }) {
           )
         }
         
-        const iconName = (typeof icon === 'string' ? icon : actionType || '').toLowerCase()
+        const iconName = (typeof icon === 'string' ? icon : actionType || method || '').toLowerCase()
         let emoji = '✉️'
         if (iconName.includes('phone') || iconName.includes('call')) emoji = '📞'
         else if (iconName.includes('whatsapp')) emoji = '💬'
@@ -69,17 +81,12 @@ export default function SupportContactCard({ card, onOpenModal }) {
           </div>
         )
       })()}
-      <h3 className="card-title">{title}</h3>
-      <p className="card-subtitle">{subtitle}</p>
+      <h3 className="card-title">{title || (method === 'email' ? 'Email Support' : method === 'phone' ? 'Call Us' : method === 'whatsapp' ? 'WhatsApp' : 'Live Chat')}</h3>
+      <p className="card-subtitle">{subtitle || value}</p>
       <p className="card-desc">{description}</p>
-      <span className="card-action">
-        {actionType === 'email' && 'Send Email'}
-        {actionType === 'phone' && 'Call Now'}
-        {actionType === 'whatsapp' && 'Message Us'}
-        {actionType === 'link' && 'Learn More'}
-        {actionType === 'modal' && 'Open Ticket'}
-        <span style={{ fontSize: '1.1em', marginLeft: '4px' }}>→</span>
-      </span>
+      <div className="card-cta">
+        {getMethodLabel()} <span style={{ marginLeft: '4px' }}>→</span>
+      </div>
     </div>
   )
 }

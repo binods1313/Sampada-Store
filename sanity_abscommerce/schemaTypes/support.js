@@ -11,215 +11,173 @@ export default {
       description: 'Internal reference name, not shown on site'
     },
     // 1. Hero Section
+    { name: 'heroTitle', title: 'Hero Heading', type: 'string' },
+    { name: 'heroTagline', title: 'Hero Tagline', type: 'string', description: 'Small text above heading' },
+    { name: 'heroHeading', title: 'Hero Heading (Legacy)', type: 'string', description: 'Large display text' },
+    { name: 'heroDescription', title: 'Hero Description', type: 'text' },
+    {
+      name: 'heroDescription2',
+      title: 'Hero Description 2 (Right Panel)',
+      description: 'Displays on the right side of the hero banner. Use for a stylistic quote or secondary message.',
+      type: 'text',
+      rows: 4,
+    },
+    { name: 'supportPromise', title: 'Support Promise Quote', type: 'string' },
+    {
+      name: 'heroStyling', title: 'Hero Styling', type: 'object',
+      fields: [
+        { name: 'backgroundColor', type: 'string' },
+        { name: 'textColor', type: 'string' },
+        { name: 'accentColor', type: 'string' },
+        { name: 'overlayOpacity', type: 'number' },
+        { name: 'height', type: 'string' },
+      ]
+    },
     { name: 'heroImage', title: 'Hero Background Image (Base)', type: 'image', options: { hotspot: true } },
     { name: 'heroRevealImage', title: 'Hero Reveal Image (Spotlight)', type: 'image', options: { hotspot: true } },
-    { name: 'heroTagline', title: 'Hero Tagline', type: 'string', description: 'Small text above heading' },
-    { name: 'heroHeading', title: 'Hero Heading', type: 'string', description: 'Large display text' },
-
-    // 2. Contact Cards (Connect With Us)
+    
+    // 2. Contact Section
+    { name: 'contactMethodsTitle', title: 'Contact Section Heading', type: 'string' },
+    {
+      name: 'contactMethods', title: 'Contact Cards', type: 'array',
+      of: [{
+        type: 'object',
+        preview: { select: { title: 'method', subtitle: 'value' } },
+        fields: [
+          { name: 'method', type: 'string',
+            options: { list: ['email','phone','whatsapp','chat'] } },
+          { name: 'value', type: 'string' },
+          { name: 'description', type: 'text' },
+          { name: 'icon', type: 'string' },
+        ]
+      }]
+    },
     {
       name: 'contactCards',
-      title: 'Contact Cards',
+      title: 'Contact Cards (Legacy)',
       type: 'array',
       of: [{
         type: 'object',
-        name: 'contactCard',
-        preview: {
-          select: {
-            title: 'title',
-            subtitle: 'subtitle'
-          }
-        },
+        preview: { select: { title: 'title', subtitle: 'subtitle' } },
         fields: [
-          { name: 'title', type: 'string', title: 'Card Title' },
-          { name: 'subtitle', type: 'string', title: 'Card Subtitle (Value)', description: 'e.g. email@sampada.com or +91...' },
-          { name: 'icon', type: 'image', title: 'Card Icon' },
-          { name: 'description', type: 'text', title: 'Short Description' },
-          {
-            name: 'actionType',
-            type: 'string',
-            title: 'Action Type',
-            options: {
-              list: [
-                { title: 'Email', value: 'email' },
-                { title: 'Phone', value: 'phone' },
-                { title: 'WhatsApp', value: 'whatsapp' },
-                { title: 'External Link', value: 'link' },
-                { title: 'Open Modal', value: 'modal' }
-              ]
-            }
-          },
-          { name: 'actionValue', type: 'string', title: 'Action Value', description: 'Email address, phone number, URL, or modal ID' },
+          { name: 'title', type: 'string' },
+          { name: 'subtitle', type: 'string' },
+          { name: 'icon', type: 'image' },
+          { name: 'description', type: 'text' },
+          { name: 'actionType', type: 'string', options: { list: ['email','phone','whatsapp','link','modal'] } },
+          { name: 'actionValue', type: 'string' },
         ]
       }]
     },
-
+    
     // 3. Business Hours
+    { name: 'supportHoursTitle', title: 'Business Hours Section Heading', type: 'string' },
+    {
+      name: 'supportHours', title: 'Business Hours', type: 'object',
+      fields: [
+        { name: 'weekdays', type: 'string' },
+        { name: 'weekend', type: 'string' },
+        { name: 'timezone', type: 'string' },
+        { name: 'holidays', type: 'string' },
+      ]
+    },
     {
       name: 'businessHours',
-      title: 'Business Hours',
+      title: 'Business Hours (Legacy)',
       type: 'array',
       of: [{
         type: 'object',
-        name: 'hourEntry',
-        preview: {
-          select: {
-            title: 'label',
-            subtitle: 'hours'
-          }
-        },
         fields: [
-          { name: 'label', type: 'string', title: 'Label (e.g. Weekdays)' },
-          { name: 'hours', type: 'string', title: 'Hours (e.g. 9:00 AM – 9:00 PM)' },
-          { name: 'days', type: 'string', title: 'Days (e.g. Monday – Friday)' },
+          { name: 'label', type: 'string' },
+          { name: 'hours', type: 'string' },
+          { name: 'days', type: 'string' },
         ]
       }]
     },
-    { name: 'holidayNote', title: 'Holiday Closure Note', type: 'string', description: 'e.g. Closed on major Indian holidays' },
-
+    { name: 'holidayNote', title: 'Holiday Closure Note', type: 'string' },
+    
     // 4. FAQ
+    { name: 'faqTitle', title: 'FAQ Section Heading', type: 'string' },
+    { name: 'faqDescription', title: 'FAQ Section Subtext', type: 'text' },
     {
       name: 'faqs',
       title: 'FAQs',
       type: 'array',
       of: [{
         type: 'object',
-        name: 'faqEntry',
-        preview: {
-          select: { title: 'question' }
-        },
         fields: [
-          { name: 'question', type: 'string', title: 'Question' },
-          { name: 'answer', type: 'text', title: 'Answer' },
+          { name: 'question', type: 'string' },
+          { name: 'answer', type: 'text' },
         ]
       }]
     },
-
-    // 5. Helpful Resources
+    
+    // 5. Resources
+    { name: 'helpfulResourcesTitle', title: 'Resources Section Heading', type: 'string' },
+    {
+      name: 'helpfulResources', title: 'Helpful Resources', type: 'array',
+      of: [{
+        type: 'object',
+        preview: { select: { title: 'title', subtitle: 'type' } },
+        fields: [
+          { name: 'title', type: 'string' },
+          { name: 'description', type: 'text' },
+          { name: 'type', type: 'string', options: { list: ['guide','docs','blog'] } },
+          { name: 'url', type: 'string' },
+        ]
+      }]
+    },
     {
       name: 'resources',
-      title: 'Helpful Resources',
+      title: 'Helpful Resources (Legacy)',
       type: 'array',
       of: [{
         type: 'object',
-        name: 'resourceEntry',
-        preview: {
-          select: { title: 'title' }
-        },
         fields: [
-          { name: 'title', type: 'string', title: 'Resource Title' },
-          { name: 'description', type: 'text', title: 'Description' },
-          { name: 'icon', type: 'image', title: 'Icon' },
-          { name: 'link', type: 'url', title: 'Link URL' },
+          { name: 'title', type: 'string' },
+          { name: 'description', type: 'text' },
+          { name: 'icon', type: 'image' },
+          { name: 'link', type: 'url' },
         ]
       }]
     },
-
-    // 6. Print-on-Demand Section
+    
+    // 6. Trust & Badges
+    {
+      name: 'trustBadges', title: 'Trust Badges', type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          { name: 'title', type: 'string' },
+          { name: 'description', type: 'string' },
+          { name: 'icon', type: 'string' },
+        ]
+      }]
+    },
+    
+    // 7. Fulfillment Section
     {
       name: 'podCards',
       title: 'Print-on-Demand Info Cards',
       type: 'array',
       of: [{
         type: 'object',
-        name: 'podEntry',
-        preview: {
-          select: { title: 'title' }
-        },
         fields: [
-          { name: 'title', type: 'string', title: 'Card Title' },
-          { name: 'description', type: 'text', title: 'Description' },
-          { name: 'icon', type: 'image', title: 'Icon' },
-        ]
-      }]
-    },
-
-    // 7. Still Need Help CTA
-    { name: 'ctaHeading', title: 'CTA Heading', type: 'string' },
-    { name: 'ctaSubtext', title: 'CTA Subtext', type: 'text' },
-    { name: 'ctaButtonLabel', title: 'CTA Button Label', type: 'string' },
-
-    // 8. 16 Missing Fields from Database
-    { name: 'contactMethodsTitle', title: 'Contact Methods Title', type: 'string' },
-    {
-      name: 'contactMethods',
-      title: 'Contact Methods (Detailed)',
-      type: 'array',
-      of: [{
-        type: 'object',
-        name: 'contactMethod',
-        fields: [
-          { name: 'method', type: 'string', title: 'Method (e.g. email, phone, whatsapp)' },
-          { name: 'value', type: 'string', title: 'Value' },
-          { name: 'icon', type: 'string', title: 'Icon name (e.g. envelope, phone, whatsapp)' },
-          { name: 'description', type: 'text', title: 'Description' }
-        ]
-      }]
-    },
-    { name: 'faqTitle', title: 'FAQ Title', type: 'string' },
-    { name: 'faqDescription', title: 'FAQ Description', type: 'text' },
-    { name: 'helpfulResourcesTitle', title: 'Helpful Resources Title', type: 'string' },
-    {
-      name: 'helpfulResources',
-      title: 'Helpful Resources (Detailed)',
-      type: 'array',
-      of: [{
-        type: 'object',
-        name: 'helpfulResourceEntry',
-        fields: [
-          { name: 'title', type: 'string', title: 'Title' },
-          { name: 'description', type: 'text', title: 'Description' },
-          { name: 'type', type: 'string', title: 'Type (e.g. guide, docs, blog)' },
-          { name: 'url', type: 'string', title: 'URL' }
-        ]
-      }]
-    },
-    { name: 'heroTitle', title: 'Hero Title (Text)', type: 'string' },
-    { name: 'heroDescription', title: 'Hero Description', type: 'text' },
-    { name: 'heroDescription2', title: 'Hero Description 2 (Secondary)', type: 'text' },
-    {
-      name: 'heroStyling',
-      title: 'Hero Styling Settings',
-      type: 'object',
-      fields: [
-        { name: 'accentColor', type: 'string', title: 'Accent Color' },
-        { name: 'backgroundColor', type: 'string', title: 'Background Color' },
-        { name: 'height', type: 'string', title: 'Height (e.g. 60vh)' },
-        { name: 'overlayOpacity', type: 'number', title: 'Overlay Opacity' },
-        { name: 'textColor', type: 'string', title: 'Text Color' }
-      ]
-    },
-    { name: 'supportPromise', title: 'Support Promise Text', type: 'string' },
-    { name: 'supportHoursTitle', title: 'Support Hours Title', type: 'string' },
-    {
-      name: 'supportHours',
-      title: 'Support Hours Config',
-      type: 'object',
-      fields: [
-        { name: 'weekdays', type: 'string', title: 'Weekdays' },
-        { name: 'weekend', type: 'string', title: 'Weekend' },
-        { name: 'timezone', type: 'string', title: 'Timezone' },
-        { name: 'holidays', type: 'string', title: 'Holidays' }
-      ]
-    },
-    { name: 'ticketDescription', title: 'Ticket Description', type: 'text' },
-    { name: 'ticketSystemEnabled', title: 'Ticket System Enabled', type: 'boolean' },
-    {
-      name: 'trustBadges',
-      title: 'Trust Badges',
-      type: 'array',
-      of: [{
-        type: 'object',
-        name: 'trustBadgeEntry',
-        fields: [
-          { name: 'title', type: 'string', title: 'Title' },
-          { name: 'description', type: 'string', title: 'Description' },
-          { name: 'icon', type: 'string', title: 'Icon (Emoji or text)' }
+          { name: 'title', type: 'string' },
+          { name: 'description', type: 'text' },
+          { name: 'icon', type: 'image' },
         ]
       }]
     },
     
-    // SEO Settings
+    // 8. Ticket System
+    { name: 'ticketDescription', title: 'Support Ticket CTA Text', type: 'text' },
+    { name: 'ticketSystemEnabled', title: 'Show Ticket CTA Section', type: 'boolean' },
+    { name: 'ctaHeading', title: 'CTA Heading', type: 'string' },
+    { name: 'ctaSubtext', title: 'CTA Subtext', type: 'text' },
+    { name: 'ctaButtonLabel', title: 'CTA Button Label', type: 'string' },
+    
+    // SEO
     {
       name: 'seo',
       title: 'SEO Settings',
@@ -233,7 +191,7 @@ export default {
   preview: {
     select: {
       title: 'title',
-      heroHeading: 'heroHeading'
+      heroHeading: 'heroTitle'
     },
     prepare({ title, heroHeading }) {
       return {
