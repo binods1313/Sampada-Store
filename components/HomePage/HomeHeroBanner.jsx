@@ -8,7 +8,7 @@ import styles from './HomeHeroBanner.module.css';
 
 const HomeHeroBanner = ({ heroBanner }) => {
   const [isClient, setIsClient] = useState(false);
-  const product = heroBanner?.product || '';
+  const product = heroBanner?.product?.slug || '';   // dereferenced slug.current from Sanity
   
   // LOGO DATA - Use 'image' field for Hero Banner (Mandala Emblem)
   const logoImage = heroBanner?.image;

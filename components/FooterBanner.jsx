@@ -16,7 +16,7 @@ const FooterBanner = ({ footerBanner }) => {
     desc: 'Shop now for amazing deals!',
     smallText: "Don't Miss Out",
     midText: 'Flash Sale',
-    product: '',
+    product: null,
     buttonText: 'Shop Now',
     image: null
   };
@@ -28,7 +28,9 @@ const FooterBanner = ({ footerBanner }) => {
     ? urlFor(image).width(450).height(450).url()
     : '/asset/placeholder-image.jpg';
 
-  const shouldRenderLink = product && product.trim() !== '';
+  // product is now a dereferenced object: { slug, name }
+  const productSlug = product?.slug || '';
+  const shouldRenderLink = !!productSlug;
 
   return (
     <div className="footer-banner-container" style={{
@@ -180,7 +182,7 @@ const FooterBanner = ({ footerBanner }) => {
         textAlign: 'center'
       }}>
         {shouldRenderLink ? (
-          <Link href={`/product/${product}`}>
+          <Link href={`/product/${productSlug}`}>
             <button type="button" className="shop-now-btn-light">
               {buttonText}
               <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }}>→</span>

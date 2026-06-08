@@ -143,7 +143,7 @@ export const getServerSideProps = async () => {
     image,
     logo,
     buttonText,
-    product,
+    "product": product->{ "slug": slug.current, name },
     desc,
     smallText,
     midText,

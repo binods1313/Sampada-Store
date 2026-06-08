@@ -85,8 +85,13 @@ export default {
       {
         name: 'product',
         title: 'Product Reference',
-        type: 'string',
-        description: 'Use product slug or ID'
+        type: 'reference',
+        to: [{ type: 'product' }],
+        description: 'Select the product this banner links to (Shop Now button destination)',
+        options: {
+          disableNew: true,
+          filter: 'status in ["published", "active"]'
+        },
       },
       {
         name: 'desc',
