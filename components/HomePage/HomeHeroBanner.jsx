@@ -130,26 +130,24 @@ const HomeHeroBanner = ({ heroBanner }) => {
             </div>
           )}
 
-          {/* Shop Now Button - sits directly below the logo */}
-          {product ? (
-            <Link
-              href={`/product/${product}`}
-              className={`${styles.shopNowLink} shop-now-btn-light ${styles.heroShopBtn}`}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: 'auto' }}
-              aria-label={`Shop ${product}`}
-            >
-              Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-            </Link>
-          ) : (
-            <Link
-              href="/collections/mens-tshirts"
-              className={`${styles.shopNowLink} shop-now-btn-light ${styles.heroShopBtn}`}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: 'auto' }}
-              aria-label="Shop men's t-shirts"
-            >
-              Shop Now <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
-            </Link>
-          )}
+          {/* Shop Now Button - mirrors FooterBanner structure exactly for mobile centering */}
+          <div style={{ textAlign: 'center' }}>
+            {product ? (
+              <Link href={`/product/${product}`} aria-label={`Shop ${product}`}>
+                <button type="button" className="shop-now-btn-light">
+                  {heroBanner?.buttonText || 'Shop Now'}
+                  <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+                </button>
+              </Link>
+            ) : (
+              <Link href="/collections/mens-tshirts" aria-label="Shop men's t-shirts">
+                <button type="button" className="shop-now-btn-light">
+                  Shop Now
+                  <span style={{ fontSize: '16px', transition: 'transform 0.3s ease' }} aria-hidden="true">→</span>
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </section>
