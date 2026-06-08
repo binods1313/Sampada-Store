@@ -4601,6 +4601,12 @@ img {
 }
 
 @media (max-width: 768px) {
+  .hero-cta {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .hero-emblem-section {
     width: 100%;
     min-width: unset;
