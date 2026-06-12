@@ -1,0 +1,407 @@
+/* styles/animations.module.css */
+
+/* Base animations */
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUpReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes breathingPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(139, 26, 26, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(139, 26, 26, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(139, 26, 26, 0);
+  }
+}
+
+/* Utility Classes */
+.animateFadeUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animateFadeScale {
+  animation: fadeScale 0.6s ease-out forwards;
+}
+
+.animateSlideUpReveal {
+  animation: slideUpReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animateSlideInRight {
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.animateSlideInLeft {
+  animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.animateBreathingPulse {
+  animation: breathingPulse 3s infinite;
+}
+
+/* Stagger delays */
+.delay100 { animation-delay: 100ms; }
+.delay200 { animation-delay: 200ms; }
+.delay300 { animation-delay: 300ms; }
+.delay400 { animation-delay: 400ms; }
+.delay500 { animation-delay: 500ms; }
+
+/* Interactive Hover/Press States */
+.hoverPulse {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hoverPulse:hover {
+  transform: scale(1.02);
+}
+.hoverPulse:active {
+  transform: scale(0.98);
+}
+
+.pressBounce {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pressBounce:active {
+  transform: scale(0.95);
+}
+
+.hoverLift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hoverLift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Priority 2 — Product Detail Page Animations */
+
+@keyframes productImageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.productImageFade {
+  animation: productImageFadeIn 0.3s ease-out forwards;
+}
+
+.variantSelector {
+  transition: all 0.15s ease-out;
+}
+.variantSelector:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(139, 26, 26, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.addToCartPress {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.addToCartPress:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@keyframes staggerRowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.staggerRow {
+  opacity: 0;
+}
+.staggerRow.visible {
+  animation: staggerRowFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes staggerCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.staggerCard {
+  opacity: 0;
+}
+.staggerCard.visible {
+  animation: staggerCardFadeIn 0.4s ease-out forwards;
+}
+
+/* Visibility initial states for scroll reveal */
+.invisible {
+  opacity: 0;
+}
+
+@keyframes cinematicFadeIn {
+  from {
+    opacity: 0;
+    letter-spacing: 0.05em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.1em;
+  }
+}
+
+.cinematicFade {
+  animation: cinematicFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cardReveal {
+  opacity: 0;
+}
+.cardReveal.visible {
+  animation: cardReveal 0.5s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slideUpFade {
+  opacity: 0;
+}
+.slideUpFade.visible {
+  animation: slideUpFade 0.5s ease-out forwards;
+}
+
+@keyframes statReveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statReveal {
+  opacity: 0;
+}
+.statReveal.visible {
+  animation: statReveal 0.4s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slideInLeft {
+  opacity: 0;
+}
+.slideInLeft.visible {
+  animation: slideInLeft 0.4s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slideInRight {
+  opacity: 0;
+}
+.slideInRight.visible {
+  animation: slideInRight 0.4s ease-out forwards;
+}
+
+@keyframes breathingPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(139, 26, 26, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px 8px rgba(139, 26, 26, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(139, 26, 26, 0.4);
+  }
+}
+
+.breathingPulse {
+  animation: breathingPulse 3s ease-in-out infinite;
+}
+
+.accordionContent {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+.accordionContent.open {
+  max-height: 500px;
+  opacity: 1;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeUp {
+  opacity: 0;
+}
+.fadeUp.visible {
+  animation: fadeUp 0.4s ease-out forwards;
+}
+
+/* Global Reduced Motion handling */
+@media (prefers-reduced-motion: reduce) {
+  
+  
+  .animateFadeUp,
+  .animateFadeScale,
+  .animateSlideUpReveal,
+  .animateSlideInRight,
+  .animateSlideInLeft,
+  .animateBreathingPulse,
+  .productImageFade,
+  .staggerRow.visible,
+  .staggerCard.visible,
+  .cinematicFade,
+  .cardReveal.visible,
+  .slideUpFade.visible,
+  .statReveal.visible,
+  .slideInLeft.visible,
+  .slideInRight.visible,
+  .breathingPulse,
+  .fadeUp.visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .variantSelector:hover,
+  .addToCartPress:active {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .staggerRow,
+  .staggerCard,
+  .cardReveal,
+  .slideUpFade,
+  .statReveal,
+  .slideInLeft,
+  .slideInRight,
+  .fadeUp {
+    opacity: 1 !important;
+  }
+
+  .accordionContent {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+}
