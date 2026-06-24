@@ -47,18 +47,24 @@ const SampadaFooter = ({ footerData }) => {
     return <IconComponent />;
   };
 
-  // Render link list
+  // Render link list – skips # placeholder hrefs entirely
   const renderLinks = (links, indexOffset = 0) => {
     if (!links || links.length === 0) return null;
     
     return links.map((link, index) => (
-      <li key={`${link.url}-${indexOffset}-${index}`}>
-        <Link 
-          href={link.url || '#'} 
-          className={styles.footerLink}
-        >
-          {link.label}
-        </Link>
+      <li key={`${link.url || link.label}-${indexOffset}-${index}`}>
+        {link.url ? (
+          <Link 
+            href={link.url} 
+            className={styles.footerLink}
+          >
+            {link.label}
+          </Link>
+        ) : (
+          <span className={styles.footerLink} style={{ cursor: 'default', opacity: 0.5 }}>
+            {link.label}
+          </span>
+        )}
       </li>
     ));
   };
@@ -100,24 +106,26 @@ const SampadaFooter = ({ footerData }) => {
           {/* Social Icons */}
           {socialLinks && socialLinks.length > 0 && (
             <div className={styles.socialIcons} role="list" aria-label="Social media links">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={`${social.platform}-${index}`}
-                  href={social.url || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  role="listitem"
-                  aria-label={`Follow us on ${social.platform || 'social media'}`}
-                  onFocus={(e) => {
-                    e.currentTarget.style.outline = '2px solid #C9A84C';
-                    e.currentTarget.style.outlineOffset = '2px';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.outline = 'none';
-                  }}
-                >
-                  {getSocialIcon(social.platform)}
-                </a>
+              {socialLinks
+                .filter((social) => social.url) // skip icons with no URL
+                .map((social, index) => (
+                  <a
+                    key={`${social.platform}-${index}`}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    role="listitem"
+                    aria-label={`Follow us on ${social.platform || 'social media'}`}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '2px solid #C9A84C';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    {getSocialIcon(social.platform)}
+                  </a>
               ))}
             </div>
           )}
@@ -157,15 +165,21 @@ const SampadaFooter = ({ footerData }) => {
       {/* Legal Row */}
       <div className={styles.legalRow}>
         <div className={styles.legalLinks}>
-          {legalLinks && legalLinks.map((link, index) => (
-            <Link
-              key={`legal-${index}`}
-              href={link.url || '#'}
-              className={styles.legalLink}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {legalLinks && legalLinks.map((link, index) =>
+            link.url ? (
+              <Link
+                key={`legal-${index}`}
+                href={link.url}
+                className={styles.legalLink}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <span key={`legal-${index}`} className={styles.legalLink} style={{ cursor: 'default', opacity: 0.5 }}>
+                {link.label}
+              </span>
+            )
+          )}
         </div>
         <p className={styles.copyright}>
           {copyrightText}
@@ -280,7 +294,12 @@ export async function getFooterData() {
       return {
         ...(footerData || {}),
         companyLinks: dynamicCompanyLinks,
-        supportLinks: dynamicSupportLinks
+        supportLinks: dynamicSupportLinks,
+        legalLinks: [
+          { label: 'Privacy Policy', url: '/privacy-policy' },
+          { label: 'Terms of Service', url: '/terms-and-conditions' },
+          { label: 'Refund Policy', url: '/refund-policy' }
+        ]
       };
     }
 
@@ -339,7 +358,7 @@ export function get_default_footer_data() {
     legalLinks: [
       { label: 'Privacy Policy', url: '/privacy-policy' },
       { label: 'Terms and Conditions', url: '/terms-and-conditions' },
-      { label: 'Cookie Policy', url: '/cookie-policy' }
+      { label: 'Refund Policy', url: '/refund-policy' }
     ],
     copyrightText: '© 2026 Sampada',
     poweredByText: 'Powered by Printify & Stripe'

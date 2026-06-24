@@ -94,8 +94,8 @@ const Layout = ({ children }) => {
           {children}
         </main>
         
-        {/* Only show global Footer on non-homepage pages */}
-        {!hideLayout && (
+        {/* Only hide global Footer on creative-studio page */}
+        {!isCreativeStudio && (
           <footer>
             <Footer />
           </footer>

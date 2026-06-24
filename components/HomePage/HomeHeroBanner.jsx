@@ -70,9 +70,25 @@ const HomeHeroBanner = ({ heroBanner }) => {
             <span className={styles.heroLine3}>PROSPER IN STYLE</span>
           </h1>
 
-          {heroBanner?.heroQuote && (
-            <p className="hero-quote">{heroBanner.heroQuote}</p>
-          )}
+          {heroBanner?.heroQuote && (() => {
+            // Split into individual sentences, then group into 2-sentence paragraphs
+            const sentences = heroBanner.heroQuote
+              .split(/(?<=[.!?])\s+/)
+              .filter(s => s.trim().length > 0);
+            const paragraphs = [];
+            for (let i = 0; i < sentences.length; i += 2) {
+              paragraphs.push(sentences.slice(i, i + 2).join(' '));
+            }
+            return (
+              <div className="hero-quote">
+                {paragraphs.map((para, idx) => (
+                  <p key={idx} style={{ marginBottom: idx < paragraphs.length - 1 ? '0.75em' : 0 }}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            );
+          })()}
 
           {/* New Clean Stat Row — sits between two thin gold rules */}
           {(() => {

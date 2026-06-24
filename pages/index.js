@@ -13,7 +13,7 @@ import CollectionsSection from '../components/HomePage/CollectionsSection';
 import ProductFilterSection from '../components/ProductFilterSection';
 import PromoBanner from '../components/HomePage/PromoBanner';
 import NewsletterSection from '../components/NewsletterSection';
-import SampadaFooter from '../components/HomePage/SampadaFooter';
+// Footer is rendered by Layout.jsx for all pages (including homepage)
 
 // NEW: Revenue-boosting components
 import TrustStrip from '../components/TrustStrip';
@@ -111,8 +111,7 @@ function HomeContent({ products, categories, bannerData }) {
         {/* ── 7. Newsletter Section ── */}
         <NewsletterSection />
 
-        {/* ── 8. Footer ── */}
-        <SampadaFooter />
+        {/* Footer is rendered by Layout.jsx below main */}
       </main>
     </>
   );
