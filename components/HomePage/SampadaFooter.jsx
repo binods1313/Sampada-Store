@@ -338,7 +338,7 @@ export function get_default_footer_data() {
     ],
     legalLinks: [
       { label: 'Privacy Policy', url: '/privacy-policy' },
-      { label: 'Terms of Service', url: '/terms-of-service' },
+      { label: 'Terms and Conditions', url: '/terms-and-conditions' },
       { label: 'Cookie Policy', url: '/cookie-policy' }
     ],
     copyrightText: '© 2026 Sampada',

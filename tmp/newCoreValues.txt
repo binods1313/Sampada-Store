@@ -1,0 +1,32 @@
+          <section className="section-dark s-section">
+            <div className="s-container">
+              <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                <p className="s-label">{valuesTitle || 'WHAT WE STAND FOR'}</p>
+                <h2 className="s-heading">Core Values</h2>
+                <span className="s-bar" />
+              </div>
+              <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }}>
+                {values.map((value, index) => (
+                  <div key={index} className="s-card-dark">
+                    <div className="s-card-icon" style={{ marginBottom: '16px' }}>
+                      {value.icon ? (
+                        <img 
+                          src={urlFor(value.icon).url()}
+                          alt={`${value.title} icon`} 
+                          style={{ 
+                            width: isMobile ? 'clamp(48px, 10vw, 64px)' : '64px',
+                            height: isMobile ? 'clamp(48px, 10vw, 64px)' : '64px',
+                            objectFit: 'contain'
+                          }} 
+                        />
+                      ) : (
+                        '�o"'
+                      )}
+                    </div>
+                    <h3 className="s-card-title">{value.title}</h3>
+                    <p className="s-card-body">{value.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>

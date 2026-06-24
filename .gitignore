@@ -7,6 +7,8 @@
 .env.production
 .env.test
 .env
+# Backup files from domain migration script
+.env*.backup-*
 
 # Secret key files — NEVER commit these
 gcs-service-account.json
@@ -82,3 +84,10 @@ temp/"notebooklm-py/"
 config/admin-auth.json 
 
 .vercel
+
+# Documentation (internal/sensitive)
+docs/DOMAIN_MIGRATION_GUIDE.md
+docs/DOMAIN_MIGRATION_QUICK_CHECKLIST.md
+docs/DOMAIN_SETUP_SUMMARY.md
+docs/WHAT_I_DID_DOMAIN_SETUP.md
+DOMAIN_QUICKSTART.md

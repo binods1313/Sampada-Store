@@ -4250,6 +4250,87 @@ img {
   }
 }
 
+/* Sticky Add to Cart Bar - Fixed viewport containment to prevent bleeding */
+.sticky-add-to-cart-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 999;
+}
+
+/* Mobile safe area for sticky bars */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .sticky-add-to-cart-bar {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   CHECKOUT PAGE MOBILE FIXES
+   ═══════════════════════════════════════════════ */
+
+/* Prevent horizontal overflow on checkout */
+.checkout-page-wrapper,
+.checkout-page-wrapper > div,
+.checkout-page-wrapper form {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* City/State/ZIP field row layout */
+.checkout-city-state-zip-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.checkout-city-state-zip-row > div {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.checkout-city-state-zip-row .city-field {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.checkout-city-state-zip-row .state-field {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.checkout-city-state-zip-row .zip-field {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+@media (max-width: 480px) {
+  .checkout-city-state-zip-row {
+    flex-wrap: wrap;
+  }
+
+  .checkout-city-state-zip-row .city-field {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .checkout-city-state-zip-row .state-field {
+    flex: 0 0 calc(50% - 6px);
+    max-width: calc(50% - 6px);
+  }
+
+  .checkout-city-state-zip-row .zip-field {
+    flex: 0 0 calc(50% - 6px);
+    max-width: calc(50% - 6px);
+  }
+}
+
 /* ===== PREMIUM TRUST BADGES (CHECKOUT) ===== */
 .trust-badges-container {
   display: flex;
@@ -4633,3 +4714,87 @@ img {
     height: 240px;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   ANIMATION: Reduced Motion & Shared Keyframes
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lightweight, reuseable keyframes for PDP / Stories / Support */
+@keyframes sampadaFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sampadaFadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sampadaFadeInScale {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes sampadaPressIn {
+  0% { transform: scale(1); }
+  60% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sampadaStaggerFade {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sampadaCardRevealLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sampadaCardRevealRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sampadaExpandHeight {
+  from { max-height: 0; opacity: 0; }
+  to { max-height: 500px; opacity: 1; }
+}
+
+@keyframes sampadaBreathingGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 26, 26, 0.35); }
+  50% { box-shadow: 0 0 18px 4px rgba(139, 26, 26, 0.15); }
+}
+
+/* Animation utility classes */
+.anim-fade-in { animation: sampadaFadeIn 0.3s ease both; }
+.anim-fade-in-up { animation: sampadaFadeInUp 0.35s ease both; }
+.anim-fade-in-scale { animation: sampadaFadeInScale 0.35s ease both; }
+.anim-press { animation: sampadaPressIn 0.2s ease both; }
+.anim-stagger-reveal { animation: sampadaStaggerFade 0.35s ease both; }
+.anim-card-left { animation: sampadaCardRevealLeft 0.35s ease both; }
+.anim-card-right { animation: sampadaCardRevealRight 0.35s ease both; }
+.anim-expand { animation: sampadaExpandHeight 0.35s ease both; }
+.anim-breathing-glow { animation: sampadaBreathingGlow 3s ease-in-out infinite; }
+
+/* Stagger helper */
+.anim-stagger-reveal:nth-child(1) { animation-delay: 0.05s; }
+.anim-stagger-reveal:nth-child(2) { animation-delay: 0.13s; }
+.anim-stagger-reveal:nth-child(3) { animation-delay: 0.21s; }
+.anim-stagger-reveal:nth-child(4) { animation-delay: 0.29s; }
+.anim-stagger-reveal:nth-child(5) { animation-delay: 0.37s; }
+.anim-stagger-reveal:nth-child(n+6) { animation-delay: 0.45s; }
+
+.anim-card-left:nth-child(odd),
+.anim-card-right:nth-child(even) { animation-delay: 0.08s; }
+.anim-card-left:nth-child(even),
+.anim-card-right:nth-child(odd) { animation-delay: 0.16s; }

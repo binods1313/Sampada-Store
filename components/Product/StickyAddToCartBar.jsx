@@ -2,6 +2,7 @@
 // Sticky bottom bar for mobile - shows when scrolled past price
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag } from 'lucide-react';
+import stickyStyles from '../../styles/stickyAddToCartBar.module.css';
 
 const StickyAddToCartBar = ({ 
   productName, 
@@ -29,24 +30,7 @@ const StickyAddToCartBar = ({
   
   return (
     <div
-      className={`sticky-add-to-cart-bar ${isVisible ? 'visible' : ''}`}
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: '#ffffff',
-        borderTop: '2px solid #C9A84C',
-        padding: '12px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '12px',
-        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-        transition: 'transform 0.3s ease-in-out',
-        zIndex: 999,
-        boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.1)'
-      }}
+      className={`${stickyStyles.bar} ${isVisible ? stickyStyles.visible : ''}`}
     >
       {/* Product Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -89,24 +73,7 @@ const StickyAddToCartBar = ({
       <button
         onClick={onAddToCart}
         disabled={isOutOfStock}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '12px 24px',
-          background: isOutOfStock ? '#ccc' : 'linear-gradient(135deg, #8B1A1A 0%, #A52A2A 100%)',
-          color: '#ffffff',
-          border: 'none',
-          borderRadius: '6px',
-          fontSize: '14px',
-          fontWeight: '700',
-          cursor: isOutOfStock ? 'not-allowed' : 'pointer',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          whiteSpace: 'nowrap',
-          boxShadow: isOutOfStock ? 'none' : '0 4px 12px rgba(139, 26, 26, 0.3)',
-          transition: 'all 0.2s ease'
-        }}
+        className={stickyStyles.button}
         onMouseEnter={(e) => {
           if (!isOutOfStock) {
             e.currentTarget.style.transform = 'translateY(-2px)';

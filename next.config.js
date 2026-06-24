@@ -62,7 +62,7 @@ const nextConfigCore = {
       }
     ],
     formats: ['image/avif', 'image/webp'], // Prioritize modern formats
-    qualities: [25, 50, 75, 85, 100],
+    qualities: [25, 50, 75, 85, 95, 100],
     minimumCacheTTL: 31536000, // Cache images for 1 year
     deviceSizes: [320, 480, 640, 768, 1024, 1280, 1536, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

@@ -1,8 +1,9 @@
 // pages/contact.js
 // Contact Page - Dynamically fetches content from Sanity
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { urlFor } from '@/lib/client';
 import { client, writeClient } from '@/lib/client';
 
@@ -19,6 +20,8 @@ const socialIcons = {
 };
 
 const Contact = ({ contactPage, notFound = false }) => {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,6 +31,28 @@ const Contact = ({ contactPage, notFound = false }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(null);
+
+  // Responsive state management
+  useEffect(() => {
+    setMounted(true);
+    const checkBreakpoints = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+    };
+
+    checkBreakpoints();
+    window.addEventListener('resize', checkBreakpoints);
+    return () => window.removeEventListener('resize', checkBreakpoints);
+  }, []);
+
+  // Generate OG image URL for social sharing only
+  const ogImageUrl = contactPage?.socialSharingImage
+    ? urlFor(contactPage.socialSharingImage).width(1200).height(630).url()
+    : (contactPage?.seo?.ogImage 
+        ? urlFor(contactPage.seo.ogImage).width(1200).height(630).url() 
+        : (contactPage?.heroSection?.backgroundImage 
+            ? urlFor(contactPage.heroSection.backgroundImage).width(1200).height(630).url() 
+            : null));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,21 +118,91 @@ const Contact = ({ contactPage, notFound = false }) => {
         {contactPage.seo?.keywords && (
           <meta name="keywords" content={contactPage.seo.keywords.join(', ')} />
         )}
-        {contactPage.seo?.ogImage?.asset && (
-          <meta property="og:image" content={urlFor(contactPage.seo.ogImage).width(1200).height(630).url()} />
-        )}
+        <meta property="og:title" content={contactPage.seo?.metaTitle || title} />
+        <meta property="og:description" content={contactPage.seo?.metaDescription || introductionSection?.description} />
+        {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
       </Head>
 
       <main>
-        {/* Hero Section: DARK */}
-        <section className="section-dark s-section" style={{ minHeight: '50vh', display: 'flex', alignItems: 'center' }}>
-          <div className="s-container" style={{ textAlign: 'center' }}>
-            <p className="s-label">GET IN TOUCH</p>
-            <h1 className="s-heading" style={{ fontSize: '2.8rem' }}>
+        {/* Hero Section: DARK with Background Image - Full Width */}
+        <section style={{ 
+          position: 'relative',
+          width: '100%',
+          height: mounted && isMobile ? '700px' : '1350px',
+          minHeight: mounted && isMobile ? '700px' : '1350px',
+          overflow: 'hidden',
+          padding: 0,
+          margin: 0
+        }}>
+          {/* Background Image */}
+          {contactPage?.heroSection?.backgroundImage && (
+            <>
+              <Image
+                src={urlFor(contactPage.heroSection.backgroundImage).auto('format').url()}
+                alt={contactPage.heroSection.backgroundImage?.alt || 'Contact Us'}
+                fill
+                priority
+                quality={95}
+                sizes="100vw"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: mounted && isMobile ? 'center top' : 'center center'
+                }}
+              />
+              {/* Gradient Overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 1,
+                background: mounted && isMobile 
+                  ? 'linear-gradient(to top, rgba(13, 4, 8, 0.92) 0%, rgba(13, 4, 8, 0.70) 35%, rgba(13, 4, 8, 0.20) 60%, rgba(13, 4, 8, 0.0) 100%)'
+                  : 'linear-gradient(to top, rgba(13, 4, 8, 0.88) 0%, rgba(13, 4, 8, 0.65) 30%, rgba(13, 4, 8, 0.35) 55%, rgba(13, 4, 8, 0.0) 85%)',
+                pointerEvents: 'none'
+              }} />
+            </>
+          )}
+          
+          {/* Content - Centered bottom */}
+          <div style={{
+            position: 'absolute',
+            bottom: mounted && isMobile ? '10%' : '8%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 2,
+            maxWidth: mounted && isMobile ? '90%' : '800px',
+            textAlign: 'center',
+            padding: mounted && isMobile ? '0 16px' : '0'
+          }}>
+            <p className="s-label" style={{ 
+              color: 'var(--s-gold)', 
+              letterSpacing: '2.5px', 
+              marginBottom: '16px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              textShadow: '0 2px 8px rgba(0,0,0,0.6)'
+            }}>
+              GET IN TOUCH
+            </p>
+            <h1 className="s-heading" style={{ 
+              fontSize: 'clamp(1.8rem, 5vw, 3rem)', 
+              marginBottom: '20px',
+              color: 'var(--s-cream)',
+              lineHeight: '1.1',
+              textShadow: '0 2px 12px rgba(0,0,0,0.7)'
+            }}>
               {heroSection?.title || title || 'Contact Us'}
             </h1>
             {heroSection?.subtitle && (
-              <p style={{ color: 'var(--s-text-mid)', fontSize: '1.1rem', marginTop: '16px', maxWidth: '600px', margin: '16px auto 0' }}>
+              <p style={{ 
+                color: 'rgba(255,255,255,0.9)', 
+                fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', 
+                lineHeight: '1.7', 
+                margin: 0,
+                textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+                maxWidth: '700px',
+                marginLeft: 'auto',
+                marginRight: 'auto'
+              }}>
                 {heroSection.subtitle}
               </p>
             )}
@@ -591,11 +686,23 @@ export async function getServerSideProps() {
         title,
         subtitle,
         backgroundImage {
-          alt,
-          asset->{
-            _ref
-          }
+          asset -> {
+            _id,
+            url,
+            metadata {
+              blurhash,
+              dimensions
+            }
+          },
+          alt
         }
+      },
+      socialSharingImage {
+        asset -> {
+          _id,
+          url
+        },
+        alt
       },
       introductionSection {
         title,
@@ -642,9 +749,11 @@ export async function getServerSideProps() {
         metaDescription,
         keywords,
         ogImage {
-          asset->{
-            _ref
-          }
+          asset -> {
+            _id,
+            url
+          },
+          alt
         },
         canonicalUrl,
         noIndex

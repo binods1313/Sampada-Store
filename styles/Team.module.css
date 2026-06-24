@@ -1,0 +1,108 @@
+/* Team Page Styles - Sampada */
+
+/* Leadership Profile Image Container - Portrait 3:4 Ratio */
+.leadershipImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4; /* Portrait container */
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.leadershipImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Edge-to-edge fill */
+  object-position: center top; /* Keeps faces visible */
+}
+
+/* Alternative: Use 'contain' to show full image without cropping */
+.leadershipImageWrapperContain {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.leadershipImageWrapperContain img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Shows full image, may have padding */
+  object-position: center top;
+}
+
+/* DEPRECATED: Square format (kept for reference) */
+.leadershipImageWrapperSquare {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.leadershipImageWrapperSquare img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Department Member Image (if used) */
+.departmentMemberImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.departmentMemberImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Culture Gallery Image */
+.cultureGalleryImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3; /* Landscape ratio for culture photos */
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.cultureGalleryImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .leadershipImageWrapper,
+  .leadershipImageWrapperCover {
+    aspect-ratio: 1 / 1;
+    max-height: 400px;
+  }
+  
+  .cultureGalleryImage {
+    aspect-ratio: 16 / 9; /* Wider on mobile */
+  }
+}
+
+/* Image loading state */
+.leadershipImageWrapper::before,
+.leadershipImageWrapperCover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 26, 26, 0.1) 0%,
+    rgba(201, 169, 110, 0.1) 100%
+  );
+  z-index: -1;
+}

@@ -8,11 +8,20 @@ import SupportContactCard from '@/components/SupportContactCard';
 import Modal from '@/components/Modal';
 import SupportTicketForm from '@/components/SupportTicketForm';
 import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
+import animStyles from '@/styles/animations.module.css';
+import { useInView } from '@/hooks/useInView';
 
 // ─── Main Support Page ────────────────────────────────────────────────────────
 export default function SupportPage({ pageData }) {
   const [openFAQ, setOpenFAQ] = useState(null)
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false)
+
+  // useInView hooks
+  const [contactRef, contactInView] = useInView({ threshold: 0.1, triggerOnce: true })
+  const [availabilityRef, availabilityInView] = useInView({ threshold: 0.1, triggerOnce: true })
+  const [faqRef, faqInView] = useInView({ threshold: 0.1, triggerOnce: true })
+  const [resourcesRef, resourcesInView] = useInView({ threshold: 0.1, triggerOnce: true })
+  const [ticketRef, ticketInView] = useInView({ threshold: 0.1, triggerOnce: true })
 
   if (!pageData || Object.keys(pageData).length === 0) {
     return (
@@ -155,7 +164,7 @@ export default function SupportPage({ pageData }) {
 
         {/* 2. Contact Cards: LIGHT */}
         {displayContactCards && displayContactCards.length > 0 && (
-          <section className="section-light s-section">
+          <section ref={contactRef} className="section-light s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">GET IN TOUCH</p>
@@ -163,25 +172,31 @@ export default function SupportPage({ pageData }) {
                 <span className="s-bar" />
               </div>
               
-              <div className="support-cards">
-                {displayContactCards.map((card, index) => (
-                  <SupportContactCard 
-                    key={card._key || index} 
-                    card={card} 
-                    onOpenModal={handleOpenModal}
-                  />
-                ))}
-              </div>
+               <div className="support-cards">
+                 {displayContactCards.map((card, index) => (
+                   <div
+                     key={card._key || index}
+                     className={`${index % 2 === 0 ? animStyles.slideInLeft : animStyles.slideInRight} ${contactInView ? animStyles.visible : ''}`}
+                     style={{ animationDelay: `${index * 0.1}s` }}
+                   >
+                     <SupportContactCard 
+                       key={card._key || index} 
+                       card={card} 
+                       onOpenModal={handleOpenModal}
+                     />
+                   </div>
+                 ))}
+               </div>
             </div>
           </section>
         )}
 
         {/* 3. Business Hours & Trust Badges: DARK */}
-        <section className="section-dark s-section">
+        <section ref={availabilityRef} className="section-dark s-section">
           <div className="s-container">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px', alignItems: 'start' }}>
               {/* Business Hours */}
-              <div>
+              <div className={`${animStyles.fadeUp} ${availabilityInView ? animStyles.visible : ''}`}>
                 <div style={{ textAlign: 'left', marginBottom: '32px' }}>
                   <p className="s-label">AVAILABILITY</p>
                   <h2 className="s-heading" style={{ fontSize: '1.8rem' }}>{hoursSectionTitle}</h2>
@@ -205,7 +220,7 @@ export default function SupportPage({ pageData }) {
 
               {/* Trust Badges */}
               {trustBadges && trustBadges.length > 0 && (
-                <div>
+                <div className={`${animStyles.fadeUp} ${availabilityInView ? animStyles.visible : ''}`} style={{ animationDelay: '0.2s' }}>
                   <div style={{ textAlign: 'left', marginBottom: '32px' }}>
                     <p className="s-label">OUR COMMITMENT</p>
                     <h2 className="s-heading" style={{ fontSize: '1.8rem' }}>Trusted Service</h2>
@@ -229,7 +244,7 @@ export default function SupportPage({ pageData }) {
 
         {/* 4. FAQs: LIGHT (mid cream) */}
         {faqs && faqs.length > 0 && (
-          <section className="section-mid s-section">
+          <section ref={faqRef} className="section-mid s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">COMMON QUESTIONS</p>
@@ -240,7 +255,7 @@ export default function SupportPage({ pageData }) {
               
               <div className={styles.faqList}>
                 {faqs.map((faq, index) => (
-                  <div key={faq._key || index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''}`}>
+                  <div key={faq._key || index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''} ${animStyles.fadeUp} ${faqInView ? animStyles.visible : ''}`} style={{ animationDelay: `${index * 0.1}s` }}>
                     <button
                       className={styles.faqQuestion}
                       onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
@@ -248,9 +263,11 @@ export default function SupportPage({ pageData }) {
                       <span>{faq.question}</span>
                       <span className={styles.faqToggle}>{openFAQ === index ? '▲' : '▼'}</span>
                     </button>
-                    <div className={`${styles.faqAnswer} ${openFAQ === index ? styles.faqAnswerOpen : ''}`}>
-                      <p>{faq.answer}</p>
-                    </div>
+                     <div className={`${animStyles.accordionContent} ${openFAQ === index ? animStyles.open : ''}`}>
+                       <div className={styles.faqAnswer} style={{ maxHeight: 'none', paddingBottom: '1rem' }}>
+                         <p>{faq.answer}</p>
+                       </div>
+                     </div>
                   </div>
                 ))}
               </div>
@@ -260,7 +277,7 @@ export default function SupportPage({ pageData }) {
 
         {/* 5. Helpful Resources: DARK */}
         {displayResources && displayResources.length > 0 && (
-          <section className="section-dark s-section">
+          <section ref={resourcesRef} className="section-dark s-section">
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
                 <p className="s-label">LEARN MORE</p>
@@ -268,24 +285,29 @@ export default function SupportPage({ pageData }) {
                 <span className="s-bar" />
               </div>
               
-              <div className={styles.resourcesGrid}>
-                {displayResources.map((resource, index) => (
-                  <a 
-                    key={resource._key || index} 
-                    href={resource.url || resource.link} 
-                    className={styles.resourceCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <div className={styles.resourceIcon}>
-                      {resource.type === 'guide' ? '📚' : resource.type === 'docs' ? '📄' : '✍️'}
-                    </div>
-                    <h3 className={styles.resourceTitle}>{resource.title}</h3>
-                    <p className={styles.resourceDesc}>{resource.description}</p>
-                    <span className={styles.resourceArrow}>→</span>
-                  </a>
-                ))}
-              </div>
+               <div className={styles.resourcesGrid}>
+                 {displayResources.map((resource, index) => (
+                   <div
+                     key={resource._key || index}
+                     className={`${animStyles.fadeUp} ${resourcesInView ? animStyles.visible : ''}`}
+                     style={{ animationDelay: `${index * 0.08}s` }}
+                   >
+                     <a 
+                       href={resource.url || resource.link} 
+                       className={styles.resourceCard}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                     >
+                       <div className={styles.resourceIcon}>
+                         {resource.type === 'guide' ? '📚' : resource.type === 'docs' ? '📄' : '✍️'}
+                       </div>
+                       <h3 className={styles.resourceTitle}>{resource.title}</h3>
+                       <p className={styles.resourceDesc}>{resource.description}</p>
+                       <span className={styles.resourceArrow}>→</span>
+                     </a>
+                   </div>
+                 ))}
+               </div>
             </div>
           </section>
         )}
@@ -327,19 +349,19 @@ export default function SupportPage({ pageData }) {
 
         {/* 7. Ticket System CTA: CRIMSON */}
         {ticketSystemEnabled && (
-          <section className="section-crimson s-section">
+          <section ref={ticketRef} className="section-crimson s-section">
             <div className="s-container" style={{ textAlign: 'center', maxWidth: '600px' }}>
               <h2 className="s-heading">{ctaHeading || 'Still Need Help?'}</h2>
               <p style={{ color: 'rgba(250,246,240,0.85)', fontSize: '1rem', lineHeight: '1.7', margin: '16px 0 32px' }}>
                 {ticketDescription || "Can't find what you're looking for? Submit a support ticket and our team will get back to you within 24 hours."}
               </p>
-              <button 
-                className="btn-cta-primary" 
-                onClick={() => setIsTicketModalOpen(true)}
-                style={{ background: 'var(--s-gold)', color: 'var(--s-dark)', border: 'none' }}
-              >
-                {ctaButtonLabel || 'Submit a Ticket'} <span className="arrow">→</span>
-              </button>
+               <button 
+                 className={`btn-cta-primary ${animStyles.breathingPulse}`} 
+                 onClick={() => setIsTicketModalOpen(true)}
+                 style={{ background: 'var(--s-gold)', color: 'var(--s-dark)', border: 'none' }}
+               >
+                 {ctaButtonLabel || 'Submit a Ticket'} <span className="arrow">→</span>
+               </button>
             </div>
           </section>
         )}

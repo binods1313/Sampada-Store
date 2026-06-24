@@ -8,7 +8,9 @@ import '../../styles/hero-banner.css';
 import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
 import JourneyStats from '@/components/JourneyStats';
 import styles from './Stories.module.css'
+import animStyles from '@/styles/animations.module.css';
 import SelectedWorksGallery from '@/components/stories/SelectedWorksGallery'
+import { useInView } from '@/hooks/useInView';
 
 // ─── Collections data ─────────────────────────────────────────────────────────
 const COLLECTIONS = [
@@ -98,15 +100,23 @@ function FilterBar({ total, active, onChange }) {
   )
 }
 
-// ─── Story Card ───────────────────────────────────────────────────────────────
+// ─── StoryCard ───────────────────────────────────────────────────────────────
 function StoryCard({ story, index, featured, onOpen, openTip, onToggleTip, voted, onVote, isTopVoted }) {
   const isLocal = story.source === 'local'
   const imgSrc = isLocal
     ? story.coverImage
     : urlFor(story.coverImage).width(600).height(900).fit('crop').url()
 
+  const [cardRef, cardInView] = useInView({ threshold: 0.15, triggerOnce: true })
+
   return (
-    <div id={`story-card-${index}`} className={`${styles.cardWrap} ${featured ? styles.cardWrapFeatured : ''} story-card`}>
+    <div
+      ref={cardRef}
+      id={`story-card-${index}`}
+      className={`${styles.cardWrap} ${featured ? styles.cardWrapFeatured : ''} story-card ${animStyles.cardReveal} ${cardInView ? animStyles.visible : ''}`}
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+
       <div className={`${styles.card} ${featured ? styles.cardFeatured : ''}`}>
 
         {/* Image */}
@@ -231,11 +241,17 @@ function BehindTheShoot({ total }) {
     { value: '4 Collections', label: 'Featured' },
     { value: '100%', label: 'Heritage Design' },
   ]
+  const [sectionRef, sectionInView] = useInView({ threshold: 0.15, triggerOnce: true })
+  
   return (
-    <section className="section-dark s-section" style={{
-      borderTop: '1px solid rgba(201,169,110,0.15)',
-      borderBottom: '1px solid rgba(201,169,110,0.15)',
-    }}>
+    <section
+      ref={sectionRef}
+      className={`section-dark s-section ${animStyles.slideUpFade} ${sectionInView ? animStyles.visible : ''}`}
+      style={{
+        borderTop: '1px solid rgba(201,169,110,0.15)',
+        borderBottom: '1px solid rgba(201,169,110,0.15)',
+      }}
+    >
       <div className="s-container" style={{ textAlign: 'center' }}>
         <p className="s-label">THE SAMPADA PROMISE</p>
         <h2 className="s-heading" style={{ fontSize: 'clamp(2.2rem, 6vw, 3.8rem)' }}>
@@ -246,8 +262,12 @@ function BehindTheShoot({ total }) {
           maxWidth: '360px', margin: '20px auto 40px', lineHeight: 1.7,
         }}>Real models, real wear, real Sampada.</p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap' }}>
-          {stats.map(stat => (
-            <div key={stat.label} style={{ textAlign: 'center' }}>
+          {stats.map((stat, index) => (
+            <div 
+              key={stat.label} 
+              className={`${animStyles.statReveal} ${sectionInView ? animStyles.visible : ''}`}
+              style={{ textAlign: 'center', animationDelay: `${index * 0.1}s` }}
+            >
               <p style={{
                 fontFamily: 'var(--s-serif)',
                 fontSize: '1.6rem', fontWeight: 900, color: 'var(--s-gold)', margin: '0 0 6px',
@@ -343,17 +363,23 @@ function EmptyState() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function StoriesIndex({ stories, banner }) {
-  const [activeFilter, setActiveFilter] = useState('All')
-  const [openTip, setOpenTip] = useState(null)
-  const [lightboxIndex, setLightboxIndex] = useState(null)
-  const [voted, setVoted] = useState(null)
-  const [votes, setVotes] = useState({})
+   const [activeFilter, setActiveFilter] = useState('All')
+   const [openTip, setOpenTip] = useState(null)
+   const [lightboxIndex, setLightboxIndex] = useState(null)
+   const [voted, setVoted] = useState(null)
+   const [votes, setVotes] = useState({})
+   const [heroAnimated, setHeroAnimated] = useState(false)
 
-  // Load vote from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('sampada_vote')
-    if (saved) setVoted(saved)
-  }, [])
+   // Load vote from localStorage
+   useEffect(() => {
+     const saved = localStorage.getItem('sampada_vote')
+     if (saved) setVoted(saved)
+   }, [])
+   
+   // Hero animation on mount
+   useEffect(() => {
+     setHeroAnimated(true)
+   }, [])
 
   const handleVote = (id) => {
     if (voted) return
@@ -382,79 +408,80 @@ export default function StoriesIndex({ stories, banner }) {
   const nextLook = useCallback(() => setLightboxIndex(i => (i + 1) % stories.length), [stories.length])
   const prevLook = useCallback(() => setLightboxIndex(i => (i - 1 + stories.length) % stories.length), [stories.length])
 
-  return (
-    <>
-      <Head>
-        <title>Sampada Stories — Lookbooks &amp; Collections</title>
-        <meta name="description" content="Explore Sampada's lookbooks, model stories, and curated collections. Featuring Kavya in Winter Drop 2026." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {heroImage && <link rel="preload" href={heroImage} as="image" />}
-        {heroImage && <meta property="og:image" content={heroImage} />}
-        <meta property="og:title" content="Sampada Stories — Lookbooks &amp; Collections" />
-      </Head>
+   return (
+     <>
+       <Head>
+         <title>Sampada Stories — Lookbooks &amp; Collections</title>
+         <meta name="description" content="Explore Sampada's lookbooks, model stories, and curated collections. Featuring Kavya in Winter Drop 2026." />
+         <meta name="viewport" content="width=device-width, initial-scale=1" />
+         {heroImage && <link rel="preload" href={heroImage} as="image" />}
+         {heroImage && <meta property="og:image" content={heroImage} />}
+         <meta property="og:title" content="Sampada Stories — Lookbooks &amp; Collections" />
+       </Head>
 
-      <main>
-        {/* 1. Hero Section: DARK - Spotlight Reveal (Support Page Style) */}
-        <section className="section-dark" style={{ padding: 0 }}>
-          <div className={styles.heroSpotlight}>
-            <SpotlightRevealClean
-              baseImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17.jpeg"
-              revealImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg"
-            />
-            
-            {/* Quotes/Text overlay in Support page style */}
-            <div className="hero-quotes-section">
-              {/* Left quote */}
-              <div className="hero-quote-block left">
-                <span className="quote-mark">&ldquo;</span>
-                <p className="quote-text" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
-                  Grace is not just how you look &mdash;<br />
-                  it&apos;s how you carry your story.
-                </p>
-                <div className="quote-rule" />
-                <span className="quote-brand">SAMPADA ORIGINALS&trade;</span>
-              </div>
-
-              {/* Center Title */}
-              <div className="hero-quote-center">
-                <div style={{ textAlign: 'center', pointerEvents: 'none', userSelect: 'none' }}>
-                  <p style={{
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: '0.72rem',
-                    letterSpacing: '0.28em',
-                    textTransform: 'uppercase',
-                    color: '#c9a96e',
-                    margin: '0 0 18px',
-                    fontWeight: 600,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.8)'
-                  }}>
-                    Meet the Face
-                  </p>
-                  <h1 style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: 'clamp(5rem, 12vw, 8rem)',
-                    fontWeight: 900,
-                    color: '#f5f0eb',
-                    margin: '0 0 20px',
-                    lineHeight: 0.95,
-                    letterSpacing: '-0.02em',
-                    textShadow: '0 4px 32px rgba(13,17,38,0.8)'
-                  }}>
-                    Kavya
-                  </h1>
-                  <p style={{
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: '0.8rem',
-                    letterSpacing: '0.22em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(245,240,235,0.85)',
-                    margin: 0,
-                    fontWeight: 500,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.8)'
-                  }}>
-                    Sampada Originals&trade;
-                  </p>
-                </div>
+       <main>
+         {/* 1. Hero Section: DARK - Spotlight Reveal (Support Page Style) */}
+         <section className="section-dark" style={{ padding: 0 }}>
+           <div className={styles.heroSpotlight}>
+             <SpotlightRevealClean
+               baseImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17.jpeg"
+               revealImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg"
+             />
+             
+             {/* Quotes/Text overlay in Support page style */}
+             <div className="hero-quotes-section">
+               {/* Left quote */}
+               <div className="hero-quote-block left">
+                 <span className="quote-mark">&ldquo;</span>
+                 <p className="quote-text" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+                   Grace is not just how you look &mdash;<br />
+                   it&apos;s how you carry your story.
+                 </p>
+                 <div className="quote-rule" />
+                 <span className="quote-brand">SAMPADA ORIGINALS&trade;</span>
+               </div>
+               
+               {/* Center Title */}
+               <div className="hero-quote-center">
+                 <div style={{ textAlign: 'center', pointerEvents: 'none', userSelect: 'none' }}>
+                   <p style={{
+                     fontFamily: "'Montserrat', sans-serif",
+                     fontSize: '0.72rem',
+                     letterSpacing: '0.28em',
+                     textTransform: 'uppercase',
+                     color: '#c9a96e',
+                     margin: '0 0 18px',
+                     fontWeight: 600,
+                     textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+                   }}>
+                   Meet the Face
+                 </p>
+                 <h1 className={animStyles.cinematicFade} style={{
+                   fontFamily: "'Playfair Display', serif",
+                   fontSize: 'clamp(5rem, 12vw, 8rem)',
+                   fontWeight: 900,
+                   color: '#f5f0eb',
+                   margin: '0 0 20px',
+                   lineHeight: 0.95,
+                   letterSpacing: '-0.02em',
+                   textShadow: '0 4px 32px rgba(13,17,38,0.8)',
+                 }}>
+                   Kavya
+                 </h1>
+                 <p className={animStyles.cinematicFade} style={{
+                   fontFamily: "'Montserrat', sans-serif",
+                   fontSize: '0.8rem',
+                   letterSpacing: '0.22em',
+                   textTransform: 'uppercase',
+                   color: 'rgba(245,240,235,0.85)',
+                   margin: 0,
+                   fontWeight: 500,
+                   textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+                   animationDelay: '0.2s'
+                 }}>
+                   Sampada Originals&trade;
+                 </p>
+               </div>
               </div>
 
               {/* Right quote */}
@@ -467,9 +494,9 @@ export default function StoriesIndex({ stories, banner }) {
                 <div className="quote-rule" />
                 <span className="quote-season">WINTER DROP 2026</span>
               </div>
-            </div>
-          </div>
-        </section>
+               </div>
+             </div>
+           </section>
 
 
         {banner?.collectionQuote?.storiesQuote && (
@@ -501,7 +528,7 @@ export default function StoriesIndex({ stories, banner }) {
           {stories.length === 0 ? <EmptyState /> : (
             <>
               <FilterBar total={filtered.length} active={activeFilter} onChange={setActiveFilter} />
-              <div className={`${styles.grid} ${styles.gridAnimated}`}>
+              <div className={styles.grid}>
                 {filtered.map((story, i) => (
                   <StoryCard
                     key={story._id}

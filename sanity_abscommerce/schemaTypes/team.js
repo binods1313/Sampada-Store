@@ -26,6 +26,7 @@ export default {
       name: 'heroImage',
       title: 'Hero Image',
       type: 'image',
+      description: 'Upload high-res image for best quality (recommended: 1920x1080 or larger)',
       options: {
         hotspot: true,
         storeDimensions: true,
@@ -64,15 +65,17 @@ export default {
         {
           type: 'object',
           fields: [
-            { name: 'name', title: 'Name', type: 'string' },
+            { name: 'name', title: 'Name', type: 'string', validation: Rule => Rule.required() },
             { name: 'position', title: 'Position', type: 'string' },
             { name: 'bio', title: 'Bio', type: 'text' },
             {
               name: 'image',
               title: 'Profile Image',
               type: 'image',
+              description: 'Upload high-res portrait image (3:4 ratio recommended, e.g., 800x1066px) for best quality. Use hotspot to set focal point.',
               options: {
                 hotspot: true,
+                accept: 'image/*',
                 storeDimensions: true,
                 metadata: ['blurhash', 'palette']
               },
@@ -86,8 +89,9 @@ export default {
                 },
               ],
             },
-            { name: 'linkedin', title: 'LinkedIn URL', type: 'url' },
-            { name: 'twitter', title: 'Twitter URL', type: 'url' }
+            { name: 'profileLink', title: 'Profile Link', type: 'url', description: 'Link to detailed profile page', validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] }) },
+            { name: 'linkedin', title: 'LinkedIn URL', type: 'url', validation: Rule => Rule.uri({ scheme: ['http', 'https'] }) },
+            { name: 'twitter', title: 'Twitter URL', type: 'url', validation: Rule => Rule.uri({ scheme: ['http', 'https'] }) }
           ],
           preview: {
             select: {
@@ -238,8 +242,9 @@ export default {
     {
       name: 'careersCTALink',
       title: 'Careers CTA Link',
-      type: 'string',
-      description: 'URL to careers page or job listings'
+      type: 'url',
+      description: 'URL to careers page or job listings (relative URLs allowed)',
+      validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] })
     },
     {
       name: 'seo',

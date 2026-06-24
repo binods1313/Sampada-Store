@@ -623,10 +623,6 @@ export default function CreativeStudio() {
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Experiment, imagine, and make an infinite range of creations with AI-powered creative engines." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=DM+Sans:wght@400;600&display=swap"
-          rel="stylesheet"
-        />
       </Head>
 
       {/* Full-screen shell */}

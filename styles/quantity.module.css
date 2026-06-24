@@ -1,0 +1,41 @@
+.quantityContainer {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 8px; /* Added spacing */
+}
+
+.qtyBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  background: transparent;
+  color: #8B1A1A;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px; /* subtle rounded look */
+}
+
+.qtyBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.qtyDisplay {
+  width: 48px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  border-left: 1px solid rgba(201, 168, 76, 0.4);
+  border-right: 1px solid rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.05);
+}

@@ -24,7 +24,10 @@ import UrgencyTimer from '../../components/UrgencyTimer';
 import ProductShare from '../../components/ProductShare';
 import PrintifyBadge from '../../components/PrintifyBadge';
 import ProductTabs from '../../components/ProductTabs';
+import { useInView } from '../../hooks/useInView';
+import animStyles from '../../styles/animations.module.css';
 import '../../styles/sampada-premium-brand.css';
+import quantityStyles from '../../styles/quantity.module.css';
 import StickyAddToCartBar from '../../components/Product/StickyAddToCartBar';
 import SizeGuideModal from '../../components/Product/SizeGuideModal';
 
@@ -36,9 +39,19 @@ const ProductDetails = ({ product, products, slug }) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showSizeChartModal, setShowSizeChartModal] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { decQty, incQty, qty, onAdd, resetQty } = useCartContext();
   const { setShowCart } = useUIContext();
+
+  const [specsRef, specsInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [prosRef, prosInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [consRef, consInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [relatedRef, relatedInView] = useInView({ threshold: 0.1, triggerOnce: true });
+
+  useEffect(() => {
+    setImageLoaded(false)
+  }, [currentImageIndex, selectedColor, selectedSize, selectedVariant])
 
   // --- Initial selection of variants ---
   useEffect(() => {
@@ -269,7 +282,7 @@ const ProductDetails = ({ product, products, slug }) => {
     return <li style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', backgroundColor: '#f8f9fa', padding: '8px', borderRadius: '4px' }} key={item}><span style={{ marginRight: '8px', fontWeight: 'bold' }}>•</span><span>{item}</span></li>;
   };
 
-  const renderProItem = (item) => {
+  const renderProItem = (item, index, isInView) => {
     const words = item.split(' ');
     const highlightedItem = words.map((word, i) => {
       if (word.toLowerCase().includes('rapid') || word.toLowerCase().includes('motion') || word.toLowerCase().includes('auto-reactive') || word.toLowerCase().includes('thermo') || word.toLowerCase().includes('regenerative') || word.toLowerCase().includes('zero-g')) {
@@ -277,10 +290,27 @@ const ProductDetails = ({ product, products, slug }) => {
       }
       return word + ' ';
     });
-    return <li style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '15px', backgroundColor: '#f8fbf8', padding: '8px', borderRadius: '4px' }} key={item}><span style={{ color: 'green', marginRight: '8px', marginTop: '2px', fontWeight: 'bold' }}>✓</span><span>{highlightedItem}</span></li>;
+    return (
+      <li 
+        key={item}
+        className={`${animStyles.staggerRow} ${isInView ? animStyles.visible : ''}`}
+        style={{ 
+          display: 'flex', 
+          alignItems: 'flex-start', 
+          marginBottom: '15px', 
+          backgroundColor: '#f8fbf8', 
+          padding: '8px', 
+          borderRadius: '4px',
+          animationDelay: `${index * 0.08}s`
+        }} 
+      >
+        <span style={{ color: 'green', marginRight: '8px', marginTop: '2px', fontWeight: 'bold' }}>✓</span>
+        <span>{highlightedItem}</span>
+      </li>
+    );
   };
 
-  const renderConItem = (item) => {
+  const renderConItem = (item, index, isInView) => {
     const words = item.split(' ');
     const highlightedItem = words.map((word, i) => {
       if (word.toLowerCase().includes('energy-intensive') || word.toLowerCase().includes('advanced') || word.toLowerCase().includes('skill') || word.toLowerCase().includes('limited') || word.toLowerCase().includes('heavy')) {
@@ -288,7 +318,24 @@ const ProductDetails = ({ product, products, slug }) => {
       }
       return word + ' ';
     });
-    return <li style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '15px', backgroundColor: '#fbf8f8', padding: '8px', borderRadius: '4px' }} key={item}><span style={{ color: 'red', marginRight: '8px', marginTop: '2px', fontWeight: 'bold' }}>✗</span><span>{highlightedItem}</span></li>;
+    return (
+      <li 
+        key={item}
+        className={`${animStyles.staggerRow} ${isInView ? animStyles.visible : ''}`}
+        style={{ 
+          display: 'flex', 
+          alignItems: 'flex-start', 
+          marginBottom: '15px', 
+          backgroundColor: '#fbf8f8', 
+          padding: '8px', 
+          borderRadius: '4px',
+          animationDelay: `${index * 0.08}s`
+        }} 
+      >
+        <span style={{ color: 'red', marginRight: '8px', marginTop: '2px', fontWeight: 'bold' }}>✗</span>
+        <span>{highlightedItem}</span>
+      </li>
+    );
   };
 
   const renderUseCaseItem = (item) => {
@@ -395,7 +442,7 @@ const ProductDetails = ({ product, products, slug }) => {
           }}>
             <Image
               src={mainProductImageSource}
-              className="product-detail-image"
+              className={`product-detail-image ${imageLoaded ? animStyles.productImageFade : ''}`}
               alt={name || 'Product Image'}
               width={600}
               height={500}
@@ -405,9 +452,12 @@ const ProductDetails = ({ product, products, slug }) => {
                 width: 'auto',
                 height: 'auto',
                 objectFit: 'contain',
-                objectPosition: 'center'
+                objectPosition: 'center',
+                opacity: imageLoaded ? 1 : 0
               }}
+              onLoad={() => setImageLoaded(true)}
               onError={(e) => {
+                setImageLoaded(true)
                 console.error('Product details main image load failed for:', name, 'from URL:', e.target.src);
                 e.target.src = '/asset/placeholder-image.jpg';
               }}
@@ -630,7 +680,7 @@ const ProductDetails = ({ product, products, slug }) => {
                   {uniqueColors.map((colorItem) => (
                     <button
                       key={colorItem.colorName}
-                      className={`color-option ${selectedColor === colorItem.colorName ? 'selected' : ''}`}
+                      className={`color-option ${selectedColor === colorItem.colorName ? 'selected' : ''} ${animStyles.variantSelector}`}
                       onClick={() => handleColorSelect(colorItem.colorName)}
                       aria-label={`Color: ${colorItem.colorName}`}
                       aria-pressed={selectedColor === colorItem.colorName}
@@ -645,10 +695,10 @@ const ProductDetails = ({ product, products, slug }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        transition: 'border-color 0.3s ease, background-color 0.3s ease',
                         backgroundColor: colorItem.colorHex || '#f1f1f1',
-                        boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset' : 'none',
-                        padding: 0
+                        boxShadow: selectedColor === colorItem.colorName ? '0 0 0 2px #f02d34 inset, 0 4px 12px rgba(240,45,52,0.25)' : 'none',
+                        padding: 0,
+                        transform: selectedColor === colorItem.colorName ? 'scale(1.15)' : 'scale(1)'
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.outline = '2px solid #C9A84C';
@@ -687,25 +737,26 @@ const ProductDetails = ({ product, products, slug }) => {
                 </h3>
                 <div className="size-selector-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {availableSizesForSelectedColor.length > 0 ? (
-                    availableSizesForSelectedColor.map((sizeItem) => (
-                      <button
-                        key={sizeItem.size}
-                        className={`size-option ${selectedSize === sizeItem.size ? 'selected' : ''} ${sizeItem.stock === 0 ? 'out-of-stock' : ''}`}
-                        onClick={() => handleSizeSelect(sizeItem.size)}
-                        disabled={sizeItem.stock === 0}
-                        style={{
-                          padding: '10px 15px',
-                          border: selectedSize === sizeItem.size ? '2px solid #f02d34' : '1px solid #d0d0d0',
-                          backgroundColor: selectedSize === sizeItem.size ? '#f02d34' : (sizeItem.stock === 0 ? '#e0e0e0' : '#f1f1f1'), // Grey out if out of stock
-                          color: selectedSize === sizeItem.size ? 'white' : (sizeItem.stock === 0 ? '#aaa' : '#333'),
-                          borderRadius: '4px',
-                          cursor: sizeItem.stock === 0 ? 'not-allowed' : 'pointer',
-                          fontWeight: '500',
-                          transition: 'all 0.2s ease',
-                          opacity: sizeItem.stock === 0 ? 0.6 : 1,
-                          position: 'relative' // For out-of-stock line
-                        }}
-                      >
+                      availableSizesForSelectedColor.map((sizeItem) => (
+                        <button
+                          key={sizeItem.size}
+                          className={`size-option ${selectedSize === sizeItem.size ? 'selected' : ''} ${sizeItem.stock === 0 ? 'out-of-stock' : ''} ${animStyles.variantSelector}`}
+                          onClick={() => handleSizeSelect(sizeItem.size)}
+                          disabled={sizeItem.stock === 0}
+                          style={{
+                            padding: '10px 15px',
+                            border: selectedSize === sizeItem.size ? '2px solid #f02d34' : '1px solid #d0d0d0',
+                            backgroundColor: selectedSize === sizeItem.size ? '#f02d34' : (sizeItem.stock === 0 ? '#e0e0e0' : '#f1f1f1'),
+                            color: selectedSize === sizeItem.size ? 'white' : (sizeItem.stock === 0 ? '#aaa' : '#333'),
+                            borderRadius: '4px',
+                            cursor: sizeItem.stock === 0 ? 'not-allowed' : 'pointer',
+                            fontWeight: '500',
+                            opacity: sizeItem.stock === 0 ? 0.6 : 1,
+                            position: 'relative',
+                            transform: selectedSize === sizeItem.size ? 'scale(1.1)' : 'scale(1)',
+                            boxShadow: selectedSize === sizeItem.size ? '0 4px 12px rgba(240,45,52,0.25)' : 'none'
+                          }}
+                        >
                         {sizeItem.size}
                         {sizeItem.stock === 0 && (
                           <span style={{
@@ -825,48 +876,17 @@ const ProductDetails = ({ product, products, slug }) => {
           )}
 
           {/* Quantity Controls with Premium Styling */}
-          <div className="quantity-container" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            marginBottom: '30px',
-            opacity: currentStock === 0 ? 0.6 : 1
-          }}>
+          <div className={quantityStyles.quantityContainer} style={{ opacity: currentStock === 0 ? 0.6 : 1 }}>
             <button
               onClick={decQty}
               type="button"
               disabled={currentStock === 0}
               aria-label="Decrease quantity"
-              className="qty-btn"
-              style={{
-                width: '40px',
-                height: '40px',
-                cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '18px',
-                fontWeight: '700',
-                background: 'transparent',
-                color: '#8B1A1A',
-                border: 'none',
-                transition: 'all 0.2s ease'
-              }}
+              className={quantityStyles.qtyBtn}
             >
               <AiOutlineMinus />
             </button>
-            <span className="qty-display" style={{
-              width: '48px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '15px',
-              fontWeight: '600',
-              color: '#1a1a1a',
-              borderLeft: '1px solid rgba(201, 168, 76, 0.4)',
-              borderRight: '1px solid rgba(201, 168, 76, 0.4)',
-              background: 'rgba(201, 168, 76, 0.05)'
-            }}>
+            <span className={quantityStyles.qtyDisplay}>
               {qty}
             </span>
             <button
@@ -874,21 +894,7 @@ const ProductDetails = ({ product, products, slug }) => {
               type="button"
               disabled={currentStock === 0}
               aria-label="Increase quantity"
-              className="qty-btn"
-              style={{
-                width: '40px',
-                height: '40px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: currentStock === 0 ? 'not-allowed' : 'pointer',
-                fontSize: '18px',
-                fontWeight: '700',
-                background: 'transparent',
-                color: '#8B1A1A',
-                border: 'none',
-                transition: 'all 0.2s ease'
-              }}
+              className={quantityStyles.qtyBtn}
             >
               <AiOutlinePlus />
             </button>
@@ -907,7 +913,7 @@ const ProductDetails = ({ product, products, slug }) => {
               type="button"
               onClick={handleAddToCart}
               disabled={(variants && variants.length > 0 && !selectedVariant) || currentStock === 0}
-              className="add-to-cart-btn"
+              className={`add-to-cart-btn ${animStyles.addToCartPress}`}
               style={{
                 minWidth: '200px',
                 height: '56px',
@@ -959,25 +965,33 @@ const ProductDetails = ({ product, products, slug }) => {
 
           {/* --- MOVED: Product Specifications Section --- */}
           {specifications && specifications.length > 0 && (
-            <div className="specifications-section" style={{
-              marginBottom: '25px', // Space before Product Insights
-              borderTop: '1px solid #e0e0e0',
-              paddingTop: '20px' // Space after border
-              // marginTop is implicitly handled by buttons' marginBottom
-            }}>
+            <div
+              ref={specsRef}
+              className="specifications-section"
+              style={{
+                marginBottom: '25px',
+                borderTop: '1px solid #e0e0e0',
+                paddingTop: '20px'
+              }}
+            >
               <h4 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '15px', color: '#333' }}>
                 Product Specifications
               </h4>
               <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
                 {specifications.map((spec, index) => (
-                  <li key={spec._key || index} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '10px 0',
-                    borderBottom: index < specifications.length - 1 ? '1px dashed #f0f0f0' : 'none',
-                    fontSize: '0.95rem',
-                    lineHeight: '1.4',
-                  }}>
+                  <li 
+                    key={spec._key || index} 
+                    className={`${animStyles.staggerRow} ${specsInView ? animStyles.visible : ''}`}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '10px 0',
+                      borderBottom: index < specifications.length - 1 ? '1px dashed #f0f0f0' : 'none',
+                      fontSize: '0.95rem',
+                      lineHeight: '1.4',
+                      animationDelay: `${index * 0.08}s`
+                    }}
+                  >
                     <strong style={{ color: '#444', marginRight: '15px', flexBasis: '40%', minWidth: '120px', fontWeight: '500' }}>{spec.feature}:</strong>
                     <span style={{ color: '#666', flexBasis: '60%', textAlign: 'left' }}>{spec.value}</span>
                   </li>
@@ -1020,7 +1034,11 @@ const ProductDetails = ({ product, products, slug }) => {
               marginBottom: '30px'
             }}>
               {pros && pros.length > 0 && (
-                <div className="pros">
+                <div
+                  ref={prosRef}
+                  className="pros"
+                  style={{}}
+                >
                   <h4 style={{
                     fontSize: '1.25rem',
                     fontWeight: 'bold',
@@ -1042,15 +1060,19 @@ const ProductDetails = ({ product, products, slug }) => {
                   </h4>
                   <ul className="pros-list" style={{ paddingLeft: '5px', listStyle: 'none' }}>
                     {typeof pros === 'string'
-                      ? renderProItem(pros)
-                      : pros.map(pro => renderProItem(pro))
+                      ? renderProItem(pros, 0, prosInView)
+                      : pros.map((pro, index) => renderProItem(pro, index, prosInView))
                     }
                   </ul>
                 </div>
               )}
 
               {cons && cons.length > 0 && (
-                <div className="cons">
+                <div
+                  ref={consRef}
+                  className="cons"
+                  style={{}}
+                >
                   <h4 style={{
                     fontSize: '1.25rem',
                     fontWeight: 'bold',
@@ -1072,8 +1094,8 @@ const ProductDetails = ({ product, products, slug }) => {
                   </h4>
                   <ul className="cons-list" style={{ paddingLeft: '5px', listStyle: 'none' }}>
                     {typeof cons === 'string'
-                      ? renderConItem(cons)
-                      : cons.map(con => renderConItem(con))
+                      ? renderConItem(cons, 0, consInView)
+                      : cons.map((con, index) => renderConItem(con, index, consInView))
                     }
                   </ul>
                 </div>
@@ -1159,13 +1181,16 @@ const ProductDetails = ({ product, products, slug }) => {
           </h2>
 
           {/* Outer: clips overflow, hides scrollbar */}
-          <div style={{
-            overflow: 'hidden',
-            position: 'relative',
-            width: '100%',
-          }}>
+          <div
+            ref={relatedRef}
+            style={{
+              overflow: 'hidden',
+              position: 'relative',
+              width: '100%',
+            }}
+          >
             {/* Inner: actual scrolling track */}
-            <RelatedProductsCarousel products={products} />
+            <RelatedProductsCarousel products={products} isInView={relatedInView} />
           </div>
         </div>
       )}

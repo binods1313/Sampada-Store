@@ -15,8 +15,9 @@ import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { urlFor } from '@/lib/client';
+import animStyles from '@/styles/animations.module.css';
 
-export default function RelatedProductsCarousel({ products = [] }) {
+export default function RelatedProductsCarousel({ products = [], isInView = false }) {
   const trackRef = useRef(null);
   const animRef = useRef(null);
   const posRef = useRef(0);
@@ -82,9 +83,11 @@ export default function RelatedProductsCarousel({ products = [] }) {
       {doubled.map((product, i) => (
         <div
           key={`${product._id}-${i}`}
+          className={`${animStyles.staggerCard} ${isInView ? animStyles.visible : ''}`}
           style={{
             flexShrink: 0,
             width: '220px',
+            animationDelay: `${(i % products.length) * 0.08}s`
           }}
         >
           {product && product.slug && product.slug.current ? (

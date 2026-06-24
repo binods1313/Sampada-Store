@@ -1,0 +1,58 @@
+.checkoutWrapper {
+  min-height: 100vh;
+  background: #FAF6F0;
+  padding: 80px 20px 40px;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.checkoutGrid {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .checkoutWrapper {
+    padding: 72px 16px 40px;
+  }
+  .checkoutGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.cityStateZipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.formField {
+  flex: 1 1 calc(33.333% - 12px);
+  min-width: 120px;
+}
+
+@media (max-width: 480px) {
+  .cityStateZipRow {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .formField {
+    flex: 1 1 calc(50% - 12px);
+  }
+  .formField:first-child {
+    flex: 1 1 100%;
+  }
+}
+
+.noSpaceCorners {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}

@@ -12,9 +12,11 @@ import { CURRENCY_OPTIONS } from '../utils/currency';
 import { urlFor } from '../lib/client';
 import { toast } from 'react-hot-toast';
 import CurrencySelector from '../components/CurrencySelector';
+import checkoutStyles from '../styles/checkout.module.css';
 
-// Load Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) 
+  : Promise.resolve(null);
 
 const Checkout = () => {
   const router = useRouter();
@@ -170,6 +172,11 @@ const Checkout = () => {
     
     try {
       const stripe = await stripePromise;
+      if (!stripe) {
+        toast.error('Stripe is not configured or missing API key.');
+        setIsProcessing(false);
+        return;
+      }
       
       // Prepare line items for Stripe
       const lineItems = cartItems.map(item => ({
@@ -434,8 +441,8 @@ const Checkout = () => {
     }
   };
   
-  if (cartItems.length === 0) {
-    return null; // Will redirect in useEffect
+  if (!mounted || cartItems.length === 0) {
+    return <div style={{ minHeight: '100vh', background: '#FAF6F0' }}></div>; // Prevent hydration mismatch while checking cart or waiting for redirect
   }
   
   return (
@@ -453,18 +460,8 @@ const Checkout = () => {
         </div>
       )}
       
-      <div style={{
-        minHeight: '100vh',
-        background: '#FAF6F0',
-        padding: '80px 20px 40px'
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 400px',
-          gap: '40px'
-        }}>
+      <div className={checkoutStyles.checkoutWrapper}>
+        <div className={checkoutStyles.checkoutGrid}>
           {/* Left Column - Shipping Form */}
           <div>
             <h1 style={{
@@ -614,8 +611,8 @@ const Checkout = () => {
                 />
               </div>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '16px' }}>
-                <div>
+              <div className={checkoutStyles.cityStateZipRow}>
+                <div className={checkoutStyles.formField}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
                     City *
                   </label>
@@ -635,9 +632,9 @@ const Checkout = () => {
                   {errors.city && <span style={{ color: '#e74c3c', fontSize: '12px' }}>{errors.city}</span>}
                 </div>
                 
-                <div>
+                <div className={checkoutStyles.formField}>
                   {shippingAddress.country !== 'IN' && (
-                    <div style={{ marginTop: '16px' }}>
+                    <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>State *</label>
                       <input
                         type="text"
@@ -657,7 +654,7 @@ const Checkout = () => {
                   )}
                 </div>
 
-                <div>
+                <div className={checkoutStyles.formField}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
                     ZIP Code *
                   </label>

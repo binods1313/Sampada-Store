@@ -1,0 +1,144 @@
+         {/* Section 1: HERO Banner with Background Image */}
+         <section className="s-section" style={{ 
+           position: 'relative', 
+           overflow: 'hidden'
+         }}>
+           {heroImage && (
+             <>
+               {/* Image Wrapper */}
+               <div ref={imageRef} style={{ 
+                 position: 'relative', 
+                 width: '100%', 
+                 height: 'auto',
+                 opacity: imageVisible ? 1 : 0,
+                 transform: imageVisible ? 'scale(1)' : 'scale(1.05)',
+                 transition: imageVisible ? 'opacity 1.5s ease-out, transform 1.5s ease-out' : 'none'
+               }}>
+                 <Image 
+                   src={urlFor(heroImage).url()} 
+                   alt={heroImage.alt || 'Company hero image'} 
+                   width={heroImage?.metadata?.dimensions?.width || 1920}
+                   height={heroImage?.metadata?.dimensions?.height || 1080}
+                   style={{ 
+                     width: '100%', 
+                     height: 'auto', 
+                     objectFit: 'contain', 
+                     objectPosition: 'center center' 
+                   }}
+                 />
+               </div>
+               
+               {/* Gradient Overlay */}
+               <div style={{ 
+                 position: 'absolute', 
+                 top: 0, 
+                 left: 0, 
+                 width: '100%', 
+                 height: '100%',
+                 background: isMobile 
+                   ? 'linear-gradient(to bottom, rgba(13, 4, 8, 0.80) 0%, rgba(13, 4, 8, 0.60) 50%, rgba(13, 4, 8, 0.40) 100%)'
+                   : 'linear-gradient(to right, rgba(13, 4, 8, 0.80) 0%, rgba(13, 4, 8, 0.45) 60%, rgba(13, 4, 8, 0.15) 100%)',
+                 zIndex: 1
+               }}></div>
+               
+               {/* Quote Marks */}
+               <span style={{ 
+                 position: 'absolute', 
+                 top: '50%', 
+                 left: '24px', 
+                 transform: 'translateY(-50%)', 
+                 opacity: '0.3', 
+                 fontSize: 'clamp(2rem, 8vw, 5rem)', 
+                 pointerEvents: 'none',
+                 display: isMobile ? 'none' : 'block'
+               }}>“</span>
+               <span style={{ 
+                 position: 'absolute', 
+                 top: '50%', 
+                 right: '24px', 
+                 transform: 'translateY(-50%)', 
+                 opacity: '0.3', 
+                 fontSize: 'clamp(2rem, 8vw, 5rem)', 
+                 pointerEvents: 'none',
+                 display: isMobile ? 'none' : 'block'
+               }}>”</span>
+               
+               {/* Content Container */}
+               <div className="s-container" style={{ 
+                 position: 'absolute', 
+                 top: 0, 
+                 left: 0, 
+                 width: '100%', 
+                 height: '100%', 
+                 display: 'flex', 
+                 alignItems: 'center', 
+                 zIndex: 2, 
+                 textAlign: 'center',
+                 padding: isMobile ? '24px 16px' : '0px',
+                 justifyContent: 'center'
+               }}>
+                 {/* We will move the quote marks inside the content container? No, we placed them in the section. */}
+                 {/* Content */}
+                 <div>
+                   <p className="s-label">{companyInfo?.industry || 'HERITAGE FASHION'}</p>
+                   <h1 className="s-heading" style={{ 
+                     fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', 
+                     marginBottom: '24px',
+                     opacity: titleVisible ? 1 : 0,
+                     transform: titleVisible ? 'translateY(0)' : 'translateY(10px)',
+                     transition: titleVisible ? 'opacity 0.8s ease-out, transform 0.8s ease-out' : 'none'
+                   }}>
+                     {heroTitle || 'Where Heritage Meets Modern Elegance'}
+                   </h1>
+                   <p style={{ 
+                     color: 'var(--s-text-mid)', 
+                     fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', 
+                     lineHeight: '1.8', 
+                     maxWidth: '700px', 
+                     margin: '0 auto',
+                     opacity: descriptionVisible ? 1 : 0,
+                     transform: descriptionVisible ? 'translateY(0)' : 'translateY(10px)',
+                     transition: descriptionVisible ? 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s' : 'none'
+                   }}>
+                     {heroDescription || 'Founded on the principles of timeless design and uncompromising quality.'}
+                   </p>
+                   {companyInfo && (
+                     <div style={{ 
+                       display: isMobile ? 'flex' : 'flex', 
+                       flexDirection: isMobile ? 'column' : 'row', 
+                       gap: isMobile ? '16px' : '32px', 
+                       justifyContent: 'center', 
+                       marginTop: '32px', 
+                       flexWrap: 'nowrap'
+                     }}>
+                       {companyInfo.foundedYear && (
+                         <div style={{ 
+                           opacity: statsVisible ? 1 : 0,
+                           transform: statsVisible ? 'translateY(0)' : 'translateY(10px)',
+                           transition: statsVisible ? 'opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s' : 'none'
+                         }}>
+                           <p style={{ color: 'var(--s-gold)', fontSize: '1.8rem', fontFamily: 'var(--s-serif)', fontWeight: '700', margin: '0 0 4px' }}>
+                             {companyInfo.foundedYear}
+                           </p>
+                           <p style={{ color: 'var(--s-text-dim)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Founded</p>
+                         </div>
+                       )}
+                       {companyInfo.headquarters && (
+                         <div style={{ 
+                           opacity: statsVisible ? 1 : 0,
+                           transform: statsVisible ? 'translateY(0)' : 'translateY(10px)',
+                           transition: statsVisible ? 'opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s' : 'none'
+                         }}>
+                           <p style={{ color: 'var(--s-gold)', fontSize: '1.2rem', fontFamily: 'var(--s-serif)', fontWeight: '600', margin: '0 0 4px' }}>
+                             {companyInfo.headquarters}
+                           </p>
+                           <p style={{ color: 'var(--s-text-dim)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Headquarters</p>
+                         </div>
+                       )}
+                     </div>
+                   )}
+                 </div>
+               </div>
+             </>
+           )}
+         </section>

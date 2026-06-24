@@ -622,22 +622,27 @@
 
   .heroQuoteOverlay {
     top: 5%;
-    left: 4%;
-    right: auto;
+    left: 5%;
+    right: 5%;
     width: auto;
-    max-width: 220px;
-    padding: 0;
-    background: none;
-    backdrop-filter: none;
+    max-width: 320px;
+    padding: 20px;
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    z-index: 50;
   }
 
   .heroQuote {
-    font-size: 1.2rem;
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
     max-width: 100%;
     border-left: none;
     padding-left: 0;
-    border-top: 3px solid #C9A96E;
-    padding-top: 16px;
+    border-top: 2px solid #C9A96E;
+    padding-top: 12px;
+    line-height: 1.4;
   }
 
   /* Grids: Single column on mobile */

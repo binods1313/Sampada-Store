@@ -25,12 +25,6 @@ const HomeHeroBanner = ({ heroBanner }) => {
 
   return (
     <section className={styles.hero} aria-label="Hero section">
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Tiro+Devanagari+Sanskrit:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
-      </Head>
-
       {/* Enhanced Premium Tagline Banner */}
       <div className={styles.taglineBanner}>
         <div className={styles.shimmerLine}></div>
@@ -114,6 +108,7 @@ const HomeHeroBanner = ({ heroBanner }) => {
                   src={logoUrl}
                   alt={logoImage?.alt || 'Sampada emblem'}
                   fill
+                  sizes="(max-width: 900px) 100vw, 450px"
                   className={styles.logoImg}
                   priority
                   style={{

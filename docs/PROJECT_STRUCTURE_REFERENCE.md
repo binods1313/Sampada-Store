@@ -2,7 +2,7 @@
 
 **Last updated:** June 2026  
 **Framework:** Next.js 16 (Pages Router)  
-**Live URL:** https://sampada.online  
+**Live URL:** https://sampadaoriginals.in  
 **GitHub:** https://github.com/binods1313/Sampada-Store  
 **Sanity Project ID:** 7lh35oho
 
@@ -10,6 +10,7 @@
 
 ## Recent Changes (June 2026)
 
+- **Legal Pages added** — Added `/privacy-policy` and `/terms-and-conditions` using markdown content from `content/` directory, parsed via `lib/markdown.js`, and rendered with `components/LegalPageLayout.jsx`.
 - **Hero Feature Cards redesigned** — `components/HeroBanner.jsx` now uses `.sampada-cards` / `.s-card` structure with `Tiro Devanagari Sanskrit` font for subtext, `Libre Baskerville` for titles, beige background, gold borders, hover lift animation, corner accent marks
 - **Fonts added** — `pages/_document.js` now loads `Libre Baskerville` + `Tiro Devanagari Sanskrit` from Google Fonts
 - **Mobile overflow fixed** — `components/spotlight/SpotlightReveal.jsx` no longer uses `width: 100vw` + `marginLeft: calc(-50vw + 50%)` which caused horizontal scroll on mobile
@@ -43,6 +44,7 @@ E:\Sampada-Store\
 ├── controllers/        ← API controller logic
 ├── utils/              ← Helper utilities
 ├── data/               ← Static data files
+├── content/            ← Markdown content files (e.g., legal pages)
 ├── scripts/            ← One-off scripts (image list gen, seed, etc.)
 ├── public/             ← Static assets (images, icons)
 ├── docs/               ← Documentation
@@ -74,6 +76,8 @@ E:\Sampada-Store\
 | `/contact` | `pages/contact.js` | Contact page |
 | `/creative-studio` | `pages/creative-studio.jsx` | Sampada Creative Studio |
 | `/fallback-demo` | `pages/fallback-demo.js` | Fallback UI demo |
+| `/privacy-policy` | `pages/privacy-policy.jsx` | Privacy Policy page |
+| `/terms-and-conditions` | `pages/terms-and-conditions.jsx` | Terms and Conditions page |
 
 ### Admin Pages (`pages/admin/`)
 - `pages/admin/index.jsx` — Dashboard
@@ -122,6 +126,7 @@ E:\Sampada-Store\
 | Product | `components/Product.jsx` | Product card |
 | Footer | `components/Footer.jsx` | Site footer |
 | Layout | `components/Layout.jsx` | Page wrapper |
+| Legal Page Layout | `components/LegalPageLayout.jsx` | Wrapper for markdown-based legal pages |
 | Admin Layout | `components/admin/AdminLayout.jsx` | Admin panel wrapper |
 | Bulk Auto Tag | `components/admin/BulkAutoTag.jsx` | Gemini bulk tagger UI |
 | Fallback UI | `components/FallbackUI.jsx` | Loading/error/empty state components |
@@ -170,6 +175,7 @@ E:\Sampada-Store\
 | `lib/openrouter.ts` | OpenRouter AI API client |
 | `lib/creativeStudioApi.js` | Creative Studio API helpers |
 | `lib/sanity.js` | Alternative Sanity client (some pages use this) |
+| `lib/markdown.js` | Markdown parser for static content |
 
 ---
 

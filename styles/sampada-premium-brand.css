@@ -624,6 +624,15 @@
   .quantity-container {
     width: 100%;
     justify-content: center;
+    align-items: center;
+  }
+
+  .qty-btn {
+    flex-shrink: 0;
+  }
+
+  .qty-display {
+    flex-shrink: 0;
   }
 
   .size-selector-container {

@@ -329,28 +329,41 @@
 /* ===== MOBILE — stack below hero ===== */
 @media (max-width: 768px) {
   .hero-quotes-section {
-    position: static;
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 0;
-    padding: 0;
-    background: #0d0408;    /* very dark — continues hero mood */
+    padding: 40px 20px;
+    background: transparent;
+    z-index: 10;
   }
 
-  .hero-quote-center { display: none; }
+  .hero-quote-center { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
 
   .hero-quote-block {
     max-width: 100%;
     align-items: center;
     text-align: center;
-    padding: 24px 32px;
-    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 16px;
+    background: rgba(13, 4, 8, 0.4); /* Subtle dark backing for readability */
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    border: 1px solid rgba(201,168,76,0.2);
   }
 
-  .hero-quote-block.right { align-items: center; }
+  .hero-quote-block.left { align-self: flex-start; max-width: 85%; }
+  .hero-quote-block.right { align-self: flex-end; max-width: 85%; }
 
-  .quote-mark { font-size: 48px; }
-  .quote-text { font-size: 15px; }
+  .quote-mark { font-size: clamp(32px, 8vw, 48px); }
+  .quote-text { font-size: clamp(13px, 3.5vw, 15px); }
 
   .quote-rule { align-self: center !important; }
 }

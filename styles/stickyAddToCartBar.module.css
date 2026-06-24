@@ -1,0 +1,66 @@
+/* styles/stickyAddToCartBar.module.css */
+
+.bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100vw;
+  background: #ffffff;
+  border-top: 2px solid #C9A84C;
+  padding: 12px 20px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+
+
+.visible {
+  transform: translateY(0);
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #8B1A1A 0%, #A52A2A 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(139, 26, 26, 0.3);
+  transition: all 0.2s ease;
+}
+
+.button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+  .button {
+    transition: none;
+  }
+}

@@ -27,15 +27,10 @@ export default function CompanyPage({ companyData }) {
    }, [])
 
    // Animation refs and visibility tracking
-   const titleRef = useInView({ triggerOnce: true })
-   const descriptionRef = useInView({ triggerOnce: true })
-   const statsRef = useInView({ triggerOnce: true })
-   const imageRef = useInView({ triggerOnce: true })
-
-   const [titleVisible] = titleRef
-   const [descriptionVisible] = descriptionRef
-   const [statsVisible] = statsRef
-   const [imageVisible] = imageRef
+   const [titleRef, titleVisible] = useInView({ triggerOnce: true })
+   const [descriptionRef, descriptionVisible] = useInView({ triggerOnce: true })
+   const [statsRef, statsVisible] = useInView({ triggerOnce: true })
+   const [imageRef, imageVisible] = useInView({ triggerOnce: true })
 
   if (!companyData) {
     return (

@@ -120,9 +120,14 @@ export default function SpotlightRevealClean({ baseImage, revealImage }) {
           objectFit: 'cover',
           objectPosition: '60% top',
           zIndex: 1,
-          clipPath: hasPointer ? clipPath : `circle(35% at 50% 50%)`,
-          transition: 'clip-path 0ms linear',
+          clipPath: hasPointer 
+            ? clipPath 
+            : (typeof window !== 'undefined' && window.innerWidth <= 768 
+                ? 'circle(20% at 50% 60%)' 
+                : 'circle(35% at 50% 50%)'),
+          transition: 'clip-path 0.4s ease-out',
           filter: 'saturate(1.05) contrast(1.02)',
+          opacity: (typeof window !== 'undefined' && window.innerWidth <= 768) ? 0.8 : 1,
         }}
       />
 

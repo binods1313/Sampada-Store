@@ -40,7 +40,8 @@ export default {
                   { title: 'TikTok', value: 'tiktok' },
                   { title: 'Pinterest', value: 'pinterest' }
                 ]
-              }
+              },
+              validation: Rule => Rule.required()
             },
             {
               name: 'url',
@@ -57,7 +58,7 @@ export default {
             prepare({ platform, url }) {
               return {
                 title: platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'Social Link',
-                subtitle: url
+                subtitle: url || ''
               }
             }
           }
@@ -72,29 +73,12 @@ export default {
         {
           type: 'object',
           fields: [
-            {
-              name: 'label',
-              title: 'Link Label',
-              type: 'string'
-            },
-            {
-              name: 'url',
-              title: 'Link URL',
-              type: 'string',
-              description: 'e.g., /features or /products'
-            }
+            { name: 'label', title: 'Link Label', type: 'string' },
+            { name: 'url', title: 'Link URL', type: 'url', description: 'Absolute or relative URL', validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] }) }
           ],
           preview: {
-            select: {
-              label: 'label',
-              url: 'url'
-            },
-            prepare({ label, url }) {
-              return {
-                title: label,
-                subtitle: url
-              }
-            }
+            select: { label: 'label', url: 'url' },
+            prepare({ label, url }) { return { title: label, subtitle: url } }
           }
         }
       ]
@@ -107,30 +91,10 @@ export default {
         {
           type: 'object',
           fields: [
-            {
-              name: 'label',
-              title: 'Link Label',
-              type: 'string'
-            },
-            {
-              name: 'url',
-              title: 'Link URL',
-              type: 'string',
-              description: 'e.g., /about or /careers'
-            }
+            { name: 'label', title: 'Link Label', type: 'string' },
+            { name: 'url', title: 'Link URL', type: 'url', validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] }) }
           ],
-          preview: {
-            select: {
-              label: 'label',
-              url: 'url'
-            },
-            prepare({ label, url }) {
-              return {
-                title: label,
-                subtitle: url
-              }
-            }
-          }
+          preview: { select: { label: 'label', url: 'url' }, prepare({ label, url }) { return { title: label, subtitle: url } } }
         }
       ]
     },
@@ -142,30 +106,10 @@ export default {
         {
           type: 'object',
           fields: [
-            {
-              name: 'label',
-              title: 'Link Label',
-              type: 'string'
-            },
-            {
-              name: 'url',
-              title: 'Link URL',
-              type: 'string',
-              description: 'e.g., /help or /contact'
-            }
+            { name: 'label', title: 'Link Label', type: 'string' },
+            { name: 'url', title: 'Link URL', type: 'url', validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] }) }
           ],
-          preview: {
-            select: {
-              label: 'label',
-              url: 'url'
-            },
-            prepare({ label, url }) {
-              return {
-                title: label,
-                subtitle: url
-              }
-            }
-          }
+          preview: { select: { label: 'label', url: 'url' }, prepare({ label, url }) { return { title: label, subtitle: url } } }
         }
       ]
     },
@@ -177,29 +121,10 @@ export default {
         {
           type: 'object',
           fields: [
-            {
-              name: 'label',
-              title: 'Link Label',
-              type: 'string'
-            },
-            {
-              name: 'url',
-              title: 'Link URL',
-              type: 'string'
-            }
+            { name: 'label', title: 'Link Label', type: 'string' },
+            { name: 'url', title: 'Link URL', type: 'url', validation: Rule => Rule.uri({ allowRelative: true, scheme: ['http', 'https'] }) }
           ],
-          preview: {
-            select: {
-              label: 'label',
-              url: 'url'
-            },
-            prepare({ label, url }) {
-              return {
-                title: label,
-                subtitle: url
-              }
-            }
-          }
+          preview: { select: { label: 'label', url: 'url' }, prepare({ label, url }) { return { title: label, subtitle: url } } }
         }
       ]
     },
@@ -218,15 +143,9 @@ export default {
     }
   ],
   preview: {
-    select: {
-      brandName: 'brandName',
-      tagline: 'brandTagline'
-    },
+    select: { brandName: 'brandName', tagline: 'brandTagline' },
     prepare({ brandName, tagline }) {
-      return {
-        title: brandName || 'Footer Settings',
-        subtitle: tagline || 'Configure footer content'
-      }
+      return { title: brandName || 'Footer Settings', subtitle: tagline || 'Configure footer content' }
     }
   }
 }

@@ -1,0 +1,52 @@
+        {/* Section 6: LIGHT Partners */}
+        {partners && partners.length > 0 && (
+          <section className="section-light s-section">
+            <div className="s-container">
+              <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                <p className="s-label">PARTNERSHIPS</p>
+                <h2 className="s-heading">{partnersTitle || 'Trusted By'}</h2>
+                <span className="s-bar" />
+              </div>
+              <div style={{ 
+                display: 'grid', 
+                gap: '32px', 
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : isTablet ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', 
+                alignItems: 'center' 
+              }}>
+                {partners.map((partner, index) => (
+                  <div key={index} style={{ textAlign: 'center' }}>
+                    {partner.logo && (
+                      <div style={{ 
+                        width: isMobile ? 'clamp(80px, 25vw, 120px)' : '120px',
+                        height: isMobile ? 'clamp(55px, 15vw, 80px)' : '80px',
+                        background: 'transparent',
+                        padding: isMobile ? '6px' : '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src={urlFor(partner.logo).url()}
+                          alt={`${partner.name} logo - Sampada partner`} 
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'contain' 
+                          }} 
+                        />
+                      </div>
+                    )}
+                    <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '1rem', color: 'var(--s-text-heading)', fontWeight: '600', margin: '0 0 4px' }}>
+                      {partner.name}
+                    </h3>
+                    {partner.description && (
+                      <p style={{ color: 'var(--s-text-muted)', fontSize: '0.85rem', margin: 0, wordBreak: 'break-word' }}>
+                        {partner.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
