@@ -1,5 +1,5 @@
 // pages/support.js - SAMPADA CUSTOMER SUPPORT WITH SANITY INTEGRATION
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { client, urlFor } from '@/lib/client'
 import styles from '../styles/Support.module.css'
@@ -15,6 +15,27 @@ import { useInView } from '@/hooks/useInView';
 export default function SupportPage({ pageData }) {
   const [openFAQ, setOpenFAQ] = useState(null)
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false)
+
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-clay-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.dataset.clayDelay || 0;
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, Number(delay));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   // useInView hooks
   const [contactRef, contactInView] = useInView({ threshold: 0.1, triggerOnce: true })
@@ -204,7 +225,7 @@ export default function SupportPage({ pageData }) {
                 
                 <div className={styles.hoursGrid} style={{ display: 'grid', gap: '16px' }}>
                   {displayHours.map((entry, index) => (
-                    <div key={index} className="s-card-dark" style={{ padding: '20px' }}>
+                    <div key={index} className="s-card-dark" data-clay-card="dark" data-clay-reveal="true" style={{ padding: '20px' }}>
                       <h3 className="s-card-title" style={{ color: 'var(--s-gold)', marginBottom: '8px' }}>{entry.label}</h3>
                       <p className="s-card-hi" style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{entry.hours}</p>
                       <p className="s-card-body">{entry.days}</p>
@@ -227,7 +248,7 @@ export default function SupportPage({ pageData }) {
                   </div>
                   <div style={{ display: 'grid', gap: '16px' }}>
                     {trustBadges.map((badge, index) => (
-                      <div key={badge._key || index} style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '8px' }}>
+                      <div key={badge._key || index} data-clay-card="dark" data-clay-reveal="true" style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '8px' }}>
                         <div style={{ fontSize: '2rem' }}>{badge.icon}</div>
                         <div>
                           <h4 style={{ color: 'var(--s-text-light)', margin: 0, fontSize: '1.1rem' }}>{badge.title}</h4>
@@ -255,7 +276,7 @@ export default function SupportPage({ pageData }) {
               
               <div className={styles.faqList}>
                 {faqs.map((faq, index) => (
-                  <div key={faq._key || index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''} ${animStyles.fadeUp} ${faqInView ? animStyles.visible : ''}`} style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div key={faq._key || index} className={`${styles.faqItem} ${openFAQ === index ? styles.faqItemOpen : ''} ${animStyles.fadeUp} ${faqInView ? animStyles.visible : ''}`} data-clay-card="light" data-clay-reveal="true" style={{ animationDelay: `${index * 0.1}s` }}>
                     <button
                       className={styles.faqQuestion}
                       onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
@@ -295,6 +316,8 @@ export default function SupportPage({ pageData }) {
                      <a 
                        href={resource.url || resource.link} 
                        className={styles.resourceCard}
+                       data-clay-card="dark"
+                       data-clay-reveal="true"
                        target="_blank"
                        rel="noopener noreferrer"
                      >
@@ -330,7 +353,7 @@ export default function SupportPage({ pageData }) {
                 margin: '0 auto'
               }}>
                 {podCards.map((card, index) => (
-                  <div key={index} className="s-card">
+                  <div key={index} className="s-card" data-clay-card="light" data-clay-reveal="true">
                     {card.icon?.asset?.url ? (
                       <div className="s-card-icon">
                         <img src={card.icon.asset.url} alt="" style={{ width: '24px', height: '24px' }} />
@@ -357,6 +380,7 @@ export default function SupportPage({ pageData }) {
               </p>
                <button 
                  className={`btn-cta-primary ${animStyles.breathingPulse}`} 
+                 data-clay-btn="primary"
                  onClick={() => setIsTicketModalOpen(true)}
                  style={{ background: 'var(--s-gold)', color: 'var(--s-dark)', border: 'none' }}
                >

@@ -1,47 +1,51 @@
-// pages/team.js - Sampada Team Page
-import { useState, useEffect } from 'react'
+// pages/team.js - Sampada Premium Brand Styling
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
-import { client, urlFor } from '@/lib/client'
 import Image from 'next/image'
-import { useInView } from '@/hooks/useInView'
+import Link from 'next/link'
+import { client } from '../lib/sanity'
+import { urlFor } from '../lib/client'
 
-export default function TeamPage({ teamData }) {
+export default function Team({ teamData }) {
   const [mounted, setMounted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [isTablet, setIsTablet] = useState(false)
-  const [isDesktop, setIsDesktop] = useState(false)
 
+  // SCROLL REVEAL (PART E)
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-clay-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.dataset.clayDelay || 0;
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0) scale(1)';
+            }, Number(delay));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [mounted]);
+
+  // Handle hydration and window resize
   useEffect(() => {
     setMounted(true)
-    const checkBreakpoints = () => {
-      const width = window.innerWidth
-      setIsMobile(width <= 768)
-      setIsTablet(width > 768 && width <= 1024)
-      setIsDesktop(width > 1024)
-    }
-
-    checkBreakpoints()
-    window.addEventListener('resize', checkBreakpoints)
-    return () => window.removeEventListener('resize', checkBreakpoints)
+    const handleResize = () => setIsMobile(window.innerWidth <= 768)
+    handleResize() // Initial check
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
-
-  // Animation refs
-  const [heroRef, heroVisible] = useInView({ triggerOnce: true })
-  const [introRef, introVisible] = useInView({ triggerOnce: true })
-  const [leadershipRef, leadershipVisible] = useInView({ triggerOnce: true })
-  const [departmentsRef, departmentsVisible] = useInView({ triggerOnce: true })
-  const [cultureRef, cultureVisible] = useInView({ triggerOnce: true })
-  const [benefitsRef, benefitsVisible] = useInView({ triggerOnce: true })
 
   if (!teamData) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', padding: '40px 24px', textAlign: 'center' }}>
-        <h1 style={{ fontFamily: 'var(--s-serif)', fontSize: '2rem', color: 'var(--s-text-heading)', marginBottom: '16px' }}>Team Page Not Configured</h1>
-        <p style={{ color: 'var(--s-text-body)', marginBottom: '24px' }}>Please configure the team page in Sanity Studio.</p>
-        <Link href="/" className="btn-cta-primary" aria-label="Return to Sampada homepage">
-          Back to Home <span className="arrow">→</span>
-        </Link>
+      <div className="section-light" style={{ padding: '80px 20px', textAlign: 'center' }}>
+        <h2 className="s-heading">Content currently unavailable.</h2>
+        <p>Please check back later.</p>
       </div>
     )
   }
@@ -65,136 +69,144 @@ export default function TeamPage({ teamData }) {
     careersCTATitle,
     careersCTADescription,
     careersCTAButton,
-    careersCTALink,
-    seo
+    careersCTALink
   } = teamData
-
-  const heroImageUrl = heroImage ? urlFor(heroImage).width(1920).height(1080).url() : null
 
   return (
     <>
       <Head>
-        <title>{seo?.metaTitle || `${title || 'Team'} - Sampada`}</title>
-        <meta name="description" content={seo?.metaDescription || heroDescription || ''} />
-        <meta property="og:title" content={seo?.metaTitle || title} />
-        <meta property="og:description" content={seo?.metaDescription || heroDescription} />
-        {heroImageUrl && <meta property="og:image" content={heroImageUrl} />}
+        <title>{title || 'Our Team'} | Sampada</title>
+        <meta name="description" content={heroDescription || 'Meet the team behind Sampada.'} />
+        <style>{`
+          @media (hover: hover) {
+            .clay-value-card:hover {
+              transform: translateY(-4px) !important;
+              border-color: rgba(201,168,76,0.4) !important;
+              box-shadow: 6px 6px 18px rgba(0,0,0,0.45), -2px -2px 10px rgba(255,255,255,0.06) !important;
+            }
+            .clay-light-card:hover {
+              transform: translateY(-3px) !important;
+              border-color: rgba(201,168,76,0.30) !important;
+              box-shadow: 8px 8px 20px rgba(0,0,0,0.1), -8px -8px 20px rgba(255,255,255,0.9) !important;
+            }
+            .clay-cta:hover {
+              transform: translateY(-2px) scale(1.02) !important;
+            }
+            .clay-about-img:hover {
+              transform: scale(1.015) !important;
+            }
+          }
+        `}</style>
       </Head>
 
       <main>
-        {/* Section 1: HERO Banner - Full Width Image with Text Overlay */}
+        {/* Section 1: Hero - Full Width Image with Overlay */}
         <section style={{ 
-          position: 'relative',
-          width: '100%',
-          height: mounted && isMobile ? '700px' : '1350px',
-          minHeight: mounted && isMobile ? '700px' : '1350px',
-          overflow: 'hidden',
-          padding: 0,
-          margin: 0
+          position: 'relative', 
+          width: '100%', 
+          height: mounted && isMobile ? '600px' : '85vh',
+          minHeight: '500px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden'
         }}>
           {heroImage && (
             <>
-              {/* Full-width hero image */}
-              <Image 
-                src={urlFor(heroImage).auto('format').url()} 
-                alt={heroImage.alt || 'Sampada Team'} 
+              <Image
+                src={urlFor(heroImage)
+                  .width(1920)
+                  .height(1080)
+                  .fit('crop')
+                  .auto('format')
+                  .url()}
+                alt={heroImage.alt || 'Sampada Team'}
                 fill
                 priority
-                quality={95}
                 sizes="100vw"
                 style={{ 
-                  objectFit: 'cover', 
-                  objectPosition: mounted && isMobile ? 'center top' : 'center center'
+                  objectFit: 'cover',
+                  objectPosition: 'center 30%'
                 }}
               />
-
-              {/* Gradient overlay for text readability */}
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                zIndex: 1,
-                background: mounted && isMobile 
-                  ? 'linear-gradient(to top, rgba(13, 4, 8, 0.92) 0%, rgba(13, 4, 8, 0.70) 35%, rgba(13, 4, 8, 0.20) 60%, rgba(13, 4, 8, 0.0) 100%)'
-                  : 'linear-gradient(to top, rgba(13, 4, 8, 0.88) 0%, rgba(13, 4, 8, 0.65) 30%, rgba(13, 4, 8, 0.35) 55%, rgba(13, 4, 8, 0.0) 85%)',
-                pointerEvents: 'none'
+                background: 'linear-gradient(to bottom, rgba(13, 4, 8, 0.4) 0%, rgba(13, 4, 8, 0.7) 100%)',
+                zIndex: 1
               }} />
-
-              {/* Text overlay - Centered bottom */}
-              <div style={{
-                position: 'absolute',
-                bottom: mounted && isMobile ? '10%' : '8%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 2,
-                maxWidth: mounted && isMobile ? '90%' : '800px',
-                textAlign: 'center',
-                padding: mounted && isMobile ? '0 16px' : '0',
-                opacity: heroVisible ? 1 : 0,
-                transform: heroVisible ? 'translate(-50%, 0)' : 'translate(-50%, 20px)',
-                transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
-              }} ref={heroRef}>
-                <p className="s-label" style={{ 
-                  color: 'var(--s-gold)', 
-                  letterSpacing: '2.5px', 
-                  marginBottom: '16px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  textShadow: '0 2px 8px rgba(0,0,0,0.6)'
-                }}>
-                  OUR TEAM
-                </p>
-                
-                <h1 className="s-heading" style={{ 
-                  fontSize: 'clamp(1.8rem, 5vw, 3rem)', 
-                  marginBottom: '20px',
-                  color: 'var(--s-cream)',
-                  lineHeight: '1.1',
-                  textShadow: '0 2px 12px rgba(0,0,0,0.7)'
-                }}>
-                  {heroTitle || 'Meet the Keepers of Legacy'}
-                </h1>
-                
-                {heroDescription && (
-                  <p style={{ 
-                    color: 'rgba(255,255,255,0.9)', 
-                    fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', 
-                    lineHeight: '1.7', 
-                    margin: 0,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.6)',
-                    maxWidth: '700px',
-                    marginLeft: 'auto',
-                    marginRight: 'auto'
-                  }}>
-                    {heroDescription}
-                  </p>
-                )}
-              </div>
-
-              {/* Decorative Quote - "Wear Your Legacy" - Desktop only, top right */}
-              {mounted && !isMobile && (
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '5%', 
-                  right: '3%', 
-                  zIndex: 2,
-                  textAlign: 'right'
-                }}>
-                  <p style={{
-                    fontFamily: 'Georgia, "Times New Roman", serif',
-                    fontWeight: '700',
-                    fontStyle: 'italic',
-                    fontSize: 'clamp(1.2rem, 2vw, 1.5rem)',
-                    color: '#C9A96E',
-                    opacity: '0.5',
-                    margin: 0,
-                    letterSpacing: '0.5px',
-                    textShadow: '0 2px 8px rgba(201, 169, 110, 0.4)'
-                  }}>
-                    "Wear Your Legacy"
-                  </p>
-                </div>
-              )}
             </>
+          )}
+
+          {/* Hero Content */}
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            textAlign: 'center',
+            padding: '40px 20px',
+            maxWidth: '900px',
+            backdropFilter: 'blur(2px)',
+            background: 'rgba(253,246,236,0.10)',
+            borderRadius: '16px',
+            width: mounted && isMobile ? '90%' : 'auto'
+          }}>
+            <p className="s-label" style={{ 
+              color: 'var(--s-gold)', 
+              letterSpacing: '3px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+              marginBottom: '16px'
+            }}>
+              BEHIND THE BRAND
+            </p>
+            <h1 className="s-heading" style={{ 
+              fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', 
+              marginBottom: '24px',
+              color: 'var(--s-cream)',
+              lineHeight: '1.1',
+              textShadow: '0 2px 12px rgba(0,0,0,0.7)'
+            }}>
+              {heroTitle || 'Meet the Keepers of Legacy'}
+            </h1>
+            
+            {heroDescription && (
+              <p style={{ 
+                color: 'rgba(255,255,255,0.9)', 
+                fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', 
+                lineHeight: '1.7', 
+                margin: 0,
+                textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+                maxWidth: '700px',
+                marginLeft: 'auto',
+                marginRight: 'auto'
+              }}>
+                {heroDescription}
+              </p>
+            )}
+          </div>
+
+          {/* Decorative Quote */}
+          {mounted && !isMobile && (
+            <div style={{ 
+              position: 'absolute', 
+              top: '5%', 
+              right: '3%', 
+              zIndex: 2,
+              textAlign: 'right'
+            }}>
+              <p style={{
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontWeight: '700',
+                fontStyle: 'italic',
+                fontSize: 'clamp(1.2rem, 2vw, 1.5rem)',
+                color: '#C9A96E',
+                opacity: '0.5',
+                margin: 0,
+                letterSpacing: '0.5px',
+                textShadow: '0 2px 8px rgba(201, 169, 110, 0.4)'
+              }}>
+                "Wear Your Legacy"
+              </p>
+            </div>
           )}
         </section>
 
@@ -202,11 +214,18 @@ export default function TeamPage({ teamData }) {
         {teamIntroduction && (
           <section className="section-light s-section">
             <div className="s-container" style={{ maxWidth: '900px', textAlign: 'center' }}>
-              <div style={{
-                opacity: introVisible ? 1 : 0,
-                transform: introVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
-              }} ref={introRef}>
+              <div 
+                data-clay-reveal="true"
+                data-clay-delay="0"
+                style={{
+                opacity: 0,
+                transform: 'translateY(20px)',
+                transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
+                background: '#FDF6EC',
+                borderRadius: '20px',
+                boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.80), inset 0 1px 0 rgba(255,255,255,0.5)',
+                padding: '40px 30px'
+              }}>
                 <p className="s-label">{teamIntroductionTitle || 'OUR STORY'}</p>
                 <h2 className="s-heading" style={{ fontSize: '1.8rem', marginBottom: '24px' }}>
                   {teamIntroductionTitle || 'Our People, Our Promise'}
@@ -222,7 +241,6 @@ export default function TeamPage({ teamData }) {
                   {teamIntroduction}
                 </p>
                 
-                {/* Decorative intro quote */}
                 {mounted && !isMobile && (
                   <p style={{
                     fontFamily: 'Georgia, "Times New Roman", serif',
@@ -251,7 +269,6 @@ export default function TeamPage({ teamData }) {
                 <h2 className="s-heading">{leadershipTitle || 'Leadership Team'}</h2>
                 <span className="s-bar" />
                 
-                {/* Decorative leadership quote */}
                 {mounted && !isMobile && (
                   <p style={{
                     fontFamily: 'Georgia, "Times New Roman", serif',
@@ -274,120 +291,123 @@ export default function TeamPage({ teamData }) {
                 gridTemplateColumns: mounted && isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
                 maxWidth: '1200px',
                 margin: '0 auto'
-              }} ref={leadershipRef}>
+              }}>
                 {leadership.map((member, index) => (
-                  <div key={index} style={{
-                    opacity: leadershipVisible ? 1 : 0,
-                    transform: leadershipVisible ? 'translateY(0)' : 'translateY(30px)',
-                    transition: `opacity 0.6s ease-out ${index * 0.1}s, transform 0.6s ease-out ${index * 0.1}s`
+                  <div key={index} 
+                    className="clay-value-card"
+                    data-clay-reveal="true"
+                    data-clay-delay={index * 100}
+                    style={{
+                    opacity: 0,
+                    transform: 'translateY(30px)',
+                    transition: `opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.22s ease, border-color 0.22s ease`,
+                    borderRadius: '16px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(201,168,76,0.18)',
+                    boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden'
                   }}>
-                    <div className="s-card-dark" style={{ 
-                      padding: 0, 
-                      overflow: 'hidden',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}>
-                      {/* Profile Image - Portrait aspect ratio container (3:4) */}
-                      {member.image && (
-                        <div style={{ 
-                          position: 'relative', 
-                          width: '100%', 
-                          aspectRatio: '3 / 4',
-                          overflow: 'hidden',
-                          backgroundColor: 'rgba(0,0,0,0.1)'
+                    {/* Profile Image - Portrait aspect ratio container (3:4) */}
+                    {member.image && (
+                      <div style={{ 
+                        position: 'relative', 
+                        width: '100%', 
+                        aspectRatio: '3 / 4',
+                        overflow: 'hidden',
+                        backgroundColor: 'rgba(0,0,0,0.1)'
+                      }}>
+                        <Image
+                          src={urlFor(member.image)
+                            .width(600)
+                            .height(800)
+                            .fit('crop')
+                            .crop('focalpoint')
+                            .url()}
+                          alt={member.image.alt || `${member.name} - ${member.position}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          style={{ 
+                            objectFit: 'cover',
+                            objectPosition: 'center top'
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Member Info */}
+                    <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <h3 className="s-card-title" style={{ 
+                        color: 'var(--s-cream)', 
+                        fontSize: '1.5rem', 
+                        marginBottom: '8px',
+                        fontFamily: 'var(--s-serif)'
+                      }}>
+                        {member.name}
+                      </h3>
+                      
+                      <p style={{ 
+                        color: 'var(--s-gold)', 
+                        fontSize: '0.9rem', 
+                        fontWeight: '600',
+                        letterSpacing: '0.5px',
+                        marginBottom: '16px',
+                        textTransform: 'uppercase'
+                      }}>
+                        {member.position}
+                      </p>
+                      
+                      {member.bio && (
+                        <p className="s-card-body" style={{ 
+                          fontSize: '0.95rem', 
+                          lineHeight: '1.7',
+                          flex: 1,
+                          marginBottom: '20px'
                         }}>
-                          <Image
-                            src={urlFor(member.image)
-                              .width(600)
-                              .height(800)
-                              .fit('crop')
-                              .crop('focalpoint')
-                              .url()}
-                            alt={member.image.alt || `${member.name} - ${member.position}`}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            style={{ 
-                              objectFit: 'cover',
-                              objectPosition: 'center top'
-                            }}
-                          />
-                        </div>
+                          {member.bio}
+                        </p>
                       )}
                       
-                      {/* Member Info */}
-                      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <h3 className="s-card-title" style={{ 
-                          color: 'var(--s-cream)', 
-                          fontSize: '1.5rem', 
-                          marginBottom: '8px',
-                          fontFamily: 'var(--s-serif)'
-                        }}>
-                          {member.name}
-                        </h3>
-                        
-                        <p style={{ 
-                          color: 'var(--s-gold)', 
-                          fontSize: '0.9rem', 
-                          fontWeight: '600',
-                          letterSpacing: '0.5px',
-                          marginBottom: '16px',
-                          textTransform: 'uppercase'
-                        }}>
-                          {member.position}
-                        </p>
-                        
-                        {member.bio && (
-                          <p className="s-card-body" style={{ 
-                            fontSize: '0.95rem', 
-                            lineHeight: '1.7',
-                            flex: 1,
-                            marginBottom: '20px'
-                          }}>
-                            {member.bio}
-                          </p>
+                      {/* Social Links */}
+                      <div style={{ display: 'flex', gap: '16px', marginTop: 'auto' }}>
+                        {member.profileLink && (
+                          <Link 
+                            href={member.profileLink}
+                            style={{ 
+                              color: 'var(--s-gold)', 
+                              fontSize: '0.85rem',
+                              textDecoration: 'underline',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                            onMouseLeave={(e) => e.target.style.opacity = '1'}
+                          >
+                            View Profile →
+                          </Link>
                         )}
-                        
-                        {/* Social Links */}
-                        <div style={{ display: 'flex', gap: '16px', marginTop: 'auto' }}>
-                          {member.profileLink && (
-                            <Link 
-                              href={member.profileLink}
-                              style={{ 
-                                color: 'var(--s-gold)', 
-                                fontSize: '0.85rem',
-                                textDecoration: 'underline',
-                                transition: 'opacity 0.2s'
-                              }}
-                              onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                              onMouseLeave={(e) => e.target.style.opacity = '1'}
-                            >
-                              View Profile →
-                            </Link>
-                          )}
-                          {member.linkedin && (
-                            <a 
-                              href={member.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: 'var(--s-gold)', fontSize: '1.2rem' }}
-                              aria-label={`${member.name} LinkedIn profile`}
-                            >
-                              in
-                            </a>
-                          )}
-                          {member.twitter && (
-                            <a 
-                              href={member.twitter}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: 'var(--s-gold)', fontSize: '1.2rem' }}
-                              aria-label={`${member.name} Twitter profile`}
-                            >
-                              𝕏
-                            </a>
-                          )}
-                        </div>
+                        {member.linkedin && (
+                          <a 
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: 'var(--s-gold)', fontSize: '1.2rem' }}
+                            aria-label={`${member.name} LinkedIn profile`}
+                          >
+                            in
+                          </a>
+                        )}
+                        {member.twitter && (
+                          <a 
+                            href={member.twitter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: 'var(--s-gold)', fontSize: '1.2rem' }}
+                            aria-label={`${member.name} Twitter profile`}
+                          >
+                            𝕏
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -406,7 +426,6 @@ export default function TeamPage({ teamData }) {
                 <h2 className="s-heading">{departmentsTitle || 'Departments'}</h2>
                 <span className="s-bar" />
                 
-                {/* Decorative departments quote */}
                 {mounted && !isMobile && (
                   <p style={{
                     fontFamily: 'Georgia, "Times New Roman", serif',
@@ -429,12 +448,21 @@ export default function TeamPage({ teamData }) {
                 gridTemplateColumns: mounted && isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
                 maxWidth: '1100px',
                 margin: '0 auto'
-              }} ref={departmentsRef}>
+              }}>
                 {departments.map((dept, index) => (
-                  <div key={index} className="s-card" style={{
-                    opacity: departmentsVisible ? 1 : 0,
-                    transform: departmentsVisible ? 'translateY(0)' : 'translateY(30px)',
-                    transition: `opacity 0.6s ease-out ${index * 0.08}s, transform 0.6s ease-out ${index * 0.08}s`
+                  <div key={index} 
+                    className="clay-light-card"
+                    data-clay-reveal="true"
+                    data-clay-delay={index * 80}
+                    style={{
+                    opacity: 0,
+                    transform: 'translateY(30px)',
+                    transition: `opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.22s ease, border-color 0.22s ease`,
+                    background: '#FDF6EC', 
+                    borderRadius: '20px', 
+                    boxShadow: '6px 6px 16px rgba(0,0,0,0.08), -6px -6px 16px rgba(255,255,255,0.80)', 
+                    border: '1px solid rgba(201,168,76,0.10)',
+                    padding: '32px 24px'
                   }}>
                     <h3 className="s-card-title" style={{ 
                       fontSize: '1.4rem', 
@@ -448,7 +476,6 @@ export default function TeamPage({ teamData }) {
                       {dept.description}
                     </p>
                     
-                    {/* Department members if available */}
                     {dept.members && dept.members.length > 0 && (
                       <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(139,26,26,0.1)' }}>
                         <p style={{ 
@@ -492,7 +519,6 @@ export default function TeamPage({ teamData }) {
                 <h2 className="s-heading">{cultureTitle || 'Culture at Sampada'}</h2>
                 <span className="s-bar" />
                 
-                {/* Decorative culture quote */}
                 {mounted && !isMobile && (
                   <p style={{
                     fontFamily: 'Georgia, "Times New Roman", serif',
@@ -527,16 +553,21 @@ export default function TeamPage({ teamData }) {
                   gap: '24px', 
                   gridTemplateColumns: mounted && isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
                   marginTop: '48px'
-                }} ref={cultureRef}>
+                }}>
                   {cultureGallery.map((item, index) => (
-                    <div key={index} style={{
+                    <div key={index} 
+                      className="clay-about-img"
+                      data-clay-reveal="true"
+                      data-clay-delay={index * 100}
+                      style={{
                       position: 'relative',
-                      borderRadius: '8px',
+                      borderRadius: '24px',
                       overflow: 'hidden',
                       aspectRatio: '4/3',
-                      opacity: cultureVisible ? 1 : 0,
-                      transform: cultureVisible ? 'scale(1)' : 'scale(0.95)',
-                      transition: `opacity 0.6s ease-out ${index * 0.1}s, transform 0.6s ease-out ${index * 0.1}s`
+                      boxShadow: '10px 10px 28px rgba(0,0,0,0.13), -6px -6px 18px rgba(255,255,255,0.04)',
+                      opacity: 0,
+                      transform: 'scale(0.95)',
+                      transition: `opacity 0.6s ease-out, transform 0.6s ease-out`
                     }}>
                       {item.image && (
                         <>
@@ -581,7 +612,6 @@ export default function TeamPage({ teamData }) {
                 <h2 className="s-heading">{benefitsTitle || 'Benefits and Perks'}</h2>
                 <span className="s-bar" />
                 
-                {/* Decorative benefits quote */}
                 {mounted && !isMobile && (
                   <p style={{
                     fontFamily: 'Georgia, "Times New Roman", serif',
@@ -604,17 +634,25 @@ export default function TeamPage({ teamData }) {
                 gridTemplateColumns: mounted && isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
                 maxWidth: '1100px',
                 margin: '0 auto'
-              }} ref={benefitsRef}>
+              }}>
                 {benefits.map((benefit, index) => (
-                  <div key={index} className="s-card" style={{
+                  <div key={index} 
+                    className="clay-light-card"
+                    data-clay-reveal="true"
+                    data-clay-delay={index * 80}
+                    style={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     textAlign: 'center',
                     padding: '32px 24px',
-                    opacity: benefitsVisible ? 1 : 0,
-                    transform: benefitsVisible ? 'translateY(0)' : 'translateY(30px)',
-                    transition: `opacity 0.6s ease-out ${index * 0.08}s, transform 0.6s ease-out ${index * 0.08}s`
+                    opacity: 0,
+                    transform: 'translateY(30px)',
+                    transition: `opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.22s ease, border-color 0.22s ease`,
+                    background: '#FDF6EC', 
+                    borderRadius: '20px', 
+                    boxShadow: '6px 6px 16px rgba(0,0,0,0.08), -6px -6px 16px rgba(255,255,255,0.80)', 
+                    border: '1px solid rgba(201,168,76,0.10)'
                   }}>
                     {benefit.icon && (
                       <div style={{ fontSize: '3rem', marginBottom: '16px' }}>
@@ -650,7 +688,6 @@ export default function TeamPage({ teamData }) {
                 </p>
               )}
               
-              {/* Decorative careers quote */}
               {mounted && !isMobile && (
                 <p style={{
                   fontFamily: 'Georgia, "Times New Roman", serif',
@@ -669,9 +706,14 @@ export default function TeamPage({ teamData }) {
               {careersCTALink && (
                 <Link 
                   href={careersCTALink} 
-                  className="btn-cta-primary" 
+                  className="btn-cta-primary clay-cta" 
                   aria-label="View open career opportunities at Sampada"
-                  style={{ display: 'inline-block' }}
+                  style={{ 
+                    display: 'inline-block',
+                    borderRadius: '40px',
+                    boxShadow: '4px 4px 14px rgba(139,26,26,0.25), -2px -2px 8px rgba(255,255,255,0.55)',
+                    transition: 'transform 0.2s ease'
+                  }}
                 >
                   {careersCTAButton || 'View Open Roles'} <span className="arrow">→</span>
                 </Link>

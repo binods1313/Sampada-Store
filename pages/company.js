@@ -1,5 +1,5 @@
 // pages/company.js - Sampada Company Page
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/client'
@@ -25,6 +25,75 @@ export default function CompanyPage({ companyData }) {
      window.addEventListener('resize', checkBreakpoints);
      return () => window.removeEventListener('resize', checkBreakpoints);
    }, [])
+
+  // SCROLL REVEAL
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-clay-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.dataset.clayDelay || 0;
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, Number(delay));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // STATS COUNTER
+  const statsSectionRef = useRef(null);
+  const hasAnimated = useRef(false);
+  useEffect(() => {
+    const statEls = document.querySelectorAll('[data-target]');
+    if (!statEls.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          statEls.forEach(el => {
+            const originalText = el.dataset.target;
+            const targetNum = parseInt(originalText.replace(/[^0-9]/g, ''), 10);
+            const suffix = originalText.replace(/[0-9]/g, '');
+            
+            if (isNaN(targetNum)) return;
+            
+            let start = 0;
+            const duration = 1200;
+            const startTime = performance.now();
+            
+            const animate = (currentTime) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const easeOut = 1 - Math.pow(1 - progress, 3);
+              const current = Math.floor(easeOut * targetNum);
+              el.innerText = current + suffix;
+              
+              if (progress < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                el.innerText = originalText;
+              }
+            };
+            requestAnimationFrame(animate);
+          });
+        }
+      });
+    }, { threshold: 0.1 });
+
+    if (statsSectionRef.current) {
+      observer.observe(statsSectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
    // Animation refs and visibility tracking
    const [titleRef, titleVisible] = useInView({ triggerOnce: true })
@@ -77,6 +146,36 @@ export default function CompanyPage({ companyData }) {
         <meta property="og:title" content={seo?.metaTitle || title} />
         <meta property="og:description" content={seo?.metaDescription || heroDescription} />
         {heroImageUrl && <meta property="og:image" content={heroImageUrl} />}
+        
+        {/* Add hover styling rules without breaking React constraints */}
+        <style>{`
+          @media (hover: hover) {
+            .clay-value-card:hover {
+              transform: translateY(-4px) !important;
+              border-color: rgba(201,168,76,0.4) !important;
+              box-shadow: 6px 6px 18px rgba(0,0,0,0.45), -2px -2px 10px rgba(255,255,255,0.06) !important;
+            }
+            .clay-journey-img:hover {
+              transform: scale(1.015) !important;
+            }
+            .clay-stat-card:hover {
+              background: rgba(255,255,255,0.13) !important;
+              transform: translateY(-3px) !important;
+            }
+            .clay-partner-card:hover {
+              transform: translateY(-3px) !important;
+              border-color: rgba(201,168,76,0.3) !important;
+              box-shadow: 9px 9px 22px rgba(0,0,0,0.11), -9px -9px 22px rgba(255,255,255,0.88) !important;
+            }
+            .clay-cta:hover {
+              transform: translateY(-2px) scale(1.02) !important;
+              box-shadow: 6px 6px 18px rgba(0,0,0,0.3), -2px -2px 10px rgba(255,255,255,0.2) !important;
+            }
+            .clay-medallion:hover {
+              transform: scale(1.03) rotate(1deg) !important;
+            }
+          }
+        `}</style>
       </Head>
 
       <main>
@@ -92,7 +191,6 @@ export default function CompanyPage({ companyData }) {
           }}>
             {heroImage && (
               <>
-                {/* Full-width hero image fills entire container */}
                 <Image 
                   src={urlFor(heroImage).auto('format').url()} 
                   alt={heroImage.alt || 'Sampada Company Hero'} 
@@ -105,7 +203,6 @@ export default function CompanyPage({ companyData }) {
                   }}
                 />
 
-                {/* Gradient overlay — darkens top-right for text readability, keeps center-left (models) visible */}
                 <div style={{
                   position: 'absolute',
                   inset: 0,
@@ -116,7 +213,13 @@ export default function CompanyPage({ companyData }) {
                   pointerEvents: 'none'
                 }} />
 
-                {/* Text overlay — TOP LEFT on desktop, BOTTOM on mobile */}
+                {/* Optional Medallion Logo if the user wanted it in the center. We'll wrap a hypothetical logo area. */}
+                <div className="clay-medallion" style={{
+                  position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2,
+                  filter: 'drop-shadow(0 8px 24px rgba(201,168,76,0.45)) drop-shadow(0 2px 8px rgba(139,26,26,0.3))',
+                  transition: 'transform 0.3s ease'
+                }}></div>
+
                 <div style={{
                   position: 'absolute',
                   top: mounted && isMobile ? 'auto' : '3%',
@@ -126,7 +229,10 @@ export default function CompanyPage({ companyData }) {
                   zIndex: 2,
                   maxWidth: mounted && isMobile ? '100%' : '35%',
                   textAlign: 'left',
-                  padding: mounted && isMobile ? '20px 16px' : '0',
+                  padding: mounted && isMobile ? '20px 16px' : '32px',
+                  background: 'rgba(253,246,236,0.12)',
+                  backdropFilter: 'blur(2px)',
+                  borderRadius: '16px',
                   opacity: titleVisible ? 1 : 0,
                   transform: titleVisible ? 'translateY(0)' : 'translateY(20px)',
                   transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
@@ -158,7 +264,12 @@ export default function CompanyPage({ companyData }) {
                       flexDirection: mounted && isMobile ? 'column' : 'row', 
                       gap: mounted && isMobile ? '16px' : '40px', 
                       justifyContent: 'flex-start',
-                      marginTop: '32px'
+                      marginTop: '32px',
+                      background: 'rgba(201,168,76,0.15)',
+                      border: '1px solid rgba(201,168,76,0.35)',
+                      borderRadius: '40px',
+                      padding: '6px 14px',
+                      width: 'fit-content'
                     }}>
                       {companyInfo.foundedYear && (
                         <div style={{ textAlign: 'left' }}>
@@ -214,7 +325,6 @@ export default function CompanyPage({ companyData }) {
                   )}
                 </div>
 
-                {/* Description text — TOP RIGHT on desktop */}
                 {!isMobile && (
                   <div style={{
                     position: 'absolute',
@@ -243,10 +353,8 @@ export default function CompanyPage({ companyData }) {
                   </div>
                 )}
 
-                {/* Decorative Quote — Desktop only, positioned bottom-left */}
                 {mounted && !isMobile && (
                   <>
-                    {/* Closing quote — bottom left corner */}
                     <span style={{ 
                       position: 'absolute', 
                       bottom: '3%', 
@@ -272,17 +380,43 @@ export default function CompanyPage({ companyData }) {
         {missionDescription && (
           <section className="section-light s-section">
             <div className="s-container" style={{ maxWidth: '800px', textAlign: 'center' }}>
-              <p className="s-label">{missionTitle || 'OUR MISSION'}</p>
-              <h2 className="s-heading" style={{ fontSize: '1.8rem', marginBottom: '24px' }}>
-                {missionDescription}
-              </h2>
-              <span className="s-bar" />
+              <div 
+                style={{ 
+                  background: '#FDF6EC', 
+                  borderRadius: '20px', 
+                  padding: '28px 36px', 
+                  boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.8), inset 0 1px 0 rgba(255,255,255,0.5)',
+                  marginBottom: '24px',
+                  opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease' 
+                }} 
+                data-clay-reveal="true" 
+                data-clay-delay="0"
+              >
+                <p className="s-label">{missionTitle || 'OUR MISSION'}</p>
+                <h2 className="s-heading" style={{ fontSize: '1.8rem', margin: '0' }}>
+                  {missionDescription}
+                </h2>
+              </div>
+              
               {visionDescription && (
                 <>
-                  <p className="s-label" style={{ marginTop: '48px' }}>{visionTitle || 'OUR VISION'}</p>
-                  <p style={{ color: 'var(--s-text-body)', fontSize: '1.1rem', lineHeight: '1.8', marginTop: '16px' }}>
-                    {visionDescription}
-                  </p>
+                  <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, #C9A84C 30%, #C9A84C 70%, transparent)', opacity: 0.45, margin: '24px auto', maxWidth: '200px' }} />
+                  <div 
+                    style={{ 
+                      background: '#FDF6EC', 
+                      borderRadius: '20px', 
+                      padding: '28px 36px', 
+                      boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.8), inset 0 1px 0 rgba(255,255,255,0.5)',
+                      opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                    }} 
+                    data-clay-reveal="true" 
+                    data-clay-delay="100"
+                  >
+                    <p className="s-label">{visionTitle || 'OUR VISION'}</p>
+                    <p style={{ color: 'var(--s-text-body)', fontSize: '1.1rem', lineHeight: '1.8', margin: '0' }}>
+                      {visionDescription}
+                    </p>
+                  </div>
                 </>
               )}
             </div>
@@ -306,7 +440,7 @@ export default function CompanyPage({ companyData }) {
                 margin: '0 auto'
               }}>
                 {values.map((value, index) => (
-                  <div key={index} className="s-card-dark" style={{
+                  <div key={index} className="s-card-dark clay-value-card" style={{
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
@@ -314,7 +448,11 @@ export default function CompanyPage({ companyData }) {
                     height: '100%',
                     textAlign: 'left',
                     overflow: 'hidden',
-                    border: '1px solid rgba(201, 169, 110, 0.25)'
+                    borderRadius: '16px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(201,168,76,0.18)',
+                    boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease'
                   }}>
                     <div style={{ 
                       flexShrink: 0,
@@ -330,9 +468,11 @@ export default function CompanyPage({ companyData }) {
                           src={urlFor(value.icon).url()}
                           alt={`${value.title} icon`} 
                           style={{ 
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
+                            width: '80%',
+                            height: 'auto',
+                            objectFit: 'contain',
+                            borderRadius: '12px',
+                            boxShadow: '3px 3px 10px rgba(0,0,0,0.4)'
                           }} 
                         />
                       ) : (
@@ -346,8 +486,15 @@ export default function CompanyPage({ companyData }) {
                       padding: '8px 26px',
                       justifyContent: 'center'
                     }}>
-                      <h3 className="s-card-title" style={{ margin: 0, fontSize: '1.45rem', color: 'var(--s-cream)' }}>{value.title}</h3>
-                      <p className="s-card-body" style={{ margin: 0, fontSize: '1.05rem', lineHeight: '1.6', opacity: 0.85 }}>{value.description}</p>
+                      <h3 className="s-card-title" style={{ 
+                        margin: 0, 
+                        fontSize: '1.45rem',
+                        background: 'linear-gradient(135deg, #C9A84C, #E8C96A)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}>{value.title}</h3>
+                      <p className="s-card-body" style={{ margin: 0, fontSize: '1.05rem', lineHeight: '1.6', opacity: 0.85, color: 'var(--s-cream)' }}>{value.description}</p>
                     </div>
                   </div>
                 ))}
@@ -366,7 +513,19 @@ export default function CompanyPage({ companyData }) {
                 <span className="s-bar" />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: storyImageUrl ? '1fr 1fr' : '1fr', gap: '48px', alignItems: 'center', maxWidth: '1000px', margin: '0 auto' }}>
-                <div style={{ color: 'var(--s-text-body)', fontSize: '1rem', lineHeight: '1.8' }}>
+                <div 
+                  data-clay-reveal="true" 
+                  data-clay-delay="0"
+                  style={{ 
+                    color: 'var(--s-text-body)', 
+                    fontSize: '1rem', 
+                    lineHeight: '1.8',
+                    background: '#FDF6EC',
+                    borderRadius: '20px',
+                    padding: '32px',
+                    boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.8)',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                  }}>
                   {Array.isArray(storyContent) ? (
                     storyContent.map((block, index) => {
                       if (block._type === 'block') {
@@ -379,7 +538,16 @@ export default function CompanyPage({ companyData }) {
                   )}
                 </div>
                 {storyImageUrl && (
-                  <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 8px 24px rgba(139,26,26,0.15)' }}>
+                  <div 
+                    className="clay-journey-img"
+                    data-clay-reveal="true" 
+                    data-clay-delay="120"
+                    style={{ 
+                      borderRadius: '24px', 
+                      overflow: 'hidden', 
+                      boxShadow: '10px 10px 28px rgba(0,0,0,0.14), -6px -6px 18px rgba(255,255,255,0.75), inset 0 1px 0 rgba(255,255,255,0.4)',
+                      opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                    }}>
                     <img 
                       src={storyImageUrl} 
                       alt={storyImage?.alt || 'Sampada company story and heritage'} 
@@ -394,15 +562,26 @@ export default function CompanyPage({ companyData }) {
 
         {/* Section 5: CRIMSON Stats */}
         {stats && stats.length > 0 && (
-          <section className="section-crimson s-section">
+          <section className="section-crimson s-section" ref={statsSectionRef}>
             <div className="s-container">
               <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-                <h2 className="s-heading">{statsTitle || 'Sampada by the Numbers'}</h2>
+                <h2 className="s-heading" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.2)' }}>
+                  {statsTitle || 'Sampada by the Numbers'}
+                </h2>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '48px', textAlign: 'center' }}>
                 {stats.map((stat, index) => (
-                  <div key={index}>
-                    <p style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '900', color: 'var(--s-cream)', margin: '0 0 8px', lineHeight: '1' }}>
+                  <div key={index} className="clay-stat-card" style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    padding: '20px 16px',
+                    boxShadow: '4px 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
+                    transition: 'transform 0.2s ease, background 0.2s ease'
+                  }}>
+                    <p 
+                      data-target={stat.value}
+                      style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '900', color: 'var(--s-cream)', margin: '0 0 8px', lineHeight: '1' }}>
                       {stat.value}
                     </p>
                     <p style={{ color: 'var(--s-gold)', fontSize: '1rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 8px' }}>
@@ -436,17 +615,25 @@ export default function CompanyPage({ companyData }) {
                 alignItems: 'stretch' 
               }}>
                 {partners.map((partner, index) => (
-                  <div key={index} style={{ 
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: '20px',
-                    padding: '8px 20px',
-                    background: 'rgba(0,0,0,0.02)',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(139, 26, 26, 0.05)',
-                    textAlign: 'left'
-                  }}>
+                  <div 
+                    key={index} 
+                    className="clay-partner-card"
+                    data-clay-reveal="true" 
+                    data-clay-delay={index * 80}
+                    style={{ 
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: '20px',
+                      padding: '8px 20px',
+                      background: '#FDF6EC',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(201,168,76,0.12)',
+                      boxShadow: '6px 6px 16px rgba(0,0,0,0.08), -6px -6px 16px rgba(255,255,255,0.8), inset 0 1px 0 rgba(255,255,255,0.55)',
+                      transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                      textAlign: 'left',
+                      opacity: 0, transform: 'translateY(16px)'
+                    }}>
                     <div style={{ 
                       width: 'clamp(75px, 18.75vw, 125px)',
                       height: 'clamp(63px, 15vw, 100px)',
@@ -461,9 +648,11 @@ export default function CompanyPage({ companyData }) {
                           src={urlFor(partner.logo).url()}
                           alt={`${partner.name} logo - Sampada partner`} 
                           style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            objectFit: 'contain' 
+                            width: '80%', 
+                            height: 'auto', 
+                            objectFit: 'contain',
+                            borderRadius: '50%',
+                            boxShadow: '3px 3px 10px rgba(0,0,0,0.12), -2px -2px 8px rgba(255,255,255,0.7)'
                           }} 
                         />
                       ) : (
@@ -502,11 +691,16 @@ export default function CompanyPage({ companyData }) {
         {/* Section 7: CRIMSON Connect CTA */}
         <section className="section-crimson s-section">
           <div className="s-container" style={{ textAlign: 'center', maxWidth: '600px' }}>
-            <h2 className="s-heading">Connect With Us</h2>
+            <h2 className="s-heading" style={{ textShadow: '0 2px 16px rgba(201,168,76,0.25)' }}>Connect With Us</h2>
             <p style={{ color: 'rgba(250,246,240,0.85)', fontSize: '1rem', lineHeight: '1.7', margin: '16px 0 32px' }}>
               Have questions about our company, partnerships, or career opportunities? We&apos;d love to hear from you.
             </p>
-              <Link href="/contact" className="btn-cta-primary" aria-label="Contact Sampada company" style={{ display: 'inline-block' }}>
+              <Link href="/contact" className="btn-cta-primary clay-cta" aria-label="Contact Sampada company" style={{ 
+                display: 'inline-block',
+                borderRadius: '40px',
+                boxShadow: '4px 4px 14px rgba(0,0,0,0.25), -2px -2px 8px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.15)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+              }}>
                 Get in Touch <span className="arrow">→</span>
               </Link>
           </div>

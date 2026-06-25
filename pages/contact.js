@@ -1,6 +1,6 @@
 // pages/contact.js
 // Contact Page - Dynamically fetches content from Sanity
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -31,6 +31,28 @@ const Contact = ({ contactPage, notFound = false }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(null);
+
+  // SCROLL REVEAL (PART E)
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-clay-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.dataset.clayDelay || 0;
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, Number(delay));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [mounted]);
 
   // Responsive state management
   useEffect(() => {
@@ -121,6 +143,21 @@ const Contact = ({ contactPage, notFound = false }) => {
         <meta property="og:title" content={contactPage.seo?.metaTitle || title} />
         <meta property="og:description" content={contactPage.seo?.metaDescription || introductionSection?.description} />
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+        <style>{`
+          @media (hover: hover) {
+            .clay-value-card:hover {
+              transform: translateY(-4px) !important;
+              border-color: rgba(201,168,76,0.4) !important;
+              box-shadow: 6px 6px 18px rgba(0,0,0,0.45), -2px -2px 10px rgba(255,255,255,0.06) !important;
+            }
+            .clay-input:focus {
+              box-shadow: inset 6px 6px 12px rgba(0,0,0,0.08), inset -6px -6px 12px rgba(255,255,255,0.9), 0 0 0 2px var(--s-crimson) !important;
+            }
+            .clay-cta:hover {
+              transform: translateY(-2px) scale(1.02) !important;
+            }
+          }
+        `}</style>
       </Head>
 
       <main>
@@ -240,7 +277,20 @@ const Contact = ({ contactPage, notFound = false }) => {
                 margin: '0 auto'
               }}>
                 {contactInformation.map((card, index) => (
-                  <div key={card._key || index} className="s-card-dark">
+                  <div 
+                    key={card._key || index} 
+                    className="s-card-dark clay-value-card"
+                    data-clay-reveal="true" 
+                    data-clay-delay={index * 75}
+                    style={{
+                      borderRadius: '16px',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(201,168,76,0.18)',
+                      boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                      opacity: 0, transform: 'translateY(16px)'
+                    }}
+                  >
                     <div style={{
                       width: '40px',
                       height: '40px',
@@ -286,12 +336,16 @@ const Contact = ({ contactPage, notFound = false }) => {
                 alignItems: 'start'
               }}>
                 {/* Contact Form */}
-                <div style={{ 
-                  background: '#FFFFFF', 
+                <div 
+                  data-clay-reveal="true" 
+                  data-clay-delay="0"
+                  style={{ 
+                  background: '#FDF6EC', 
                   padding: '40px', 
-                  borderRadius: '8px', 
-                  border: '1px solid rgba(139,26,26,0.12)',
-                  boxShadow: '0 2px 12px rgba(139,26,26,0.05)'
+                  borderRadius: '20px', 
+                  border: 'none',
+                  boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.80), inset 0 1px 0 rgba(255,255,255,0.5)',
+                  opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
                 }}>
                   {contactFormSection.title && (
                     <h2 style={{ 
@@ -336,6 +390,7 @@ const Contact = ({ contactPage, notFound = false }) => {
                       </p>
                       <button
                         onClick={() => setFormSubmitted(false)}
+                        className="clay-cta"
                         style={{
                           background: 'transparent',
                           border: '2px solid var(--s-crimson)',
@@ -394,18 +449,19 @@ const Contact = ({ contactPage, notFound = false }) => {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
+                            className="clay-input"
                             style={{
                               width: '100%',
                               padding: '12px 16px',
-                              border: '1px solid rgba(139,26,26,0.15)',
-                              borderRadius: '4px',
+                              border: 'none',
+                              background: '#FDF6EC',
+                              borderRadius: '12px',
+                              boxShadow: 'inset 4px 4px 10px rgba(0,0,0,0.06), inset -4px -4px 10px rgba(255,255,255,0.7)',
                               fontFamily: 'var(--s-sans)',
                               fontSize: '0.95rem',
                               color: 'var(--s-text-heading)',
-                              transition: 'border-color 0.25s ease'
+                              transition: 'box-shadow 0.2s ease, border 0.2s ease'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--s-crimson)'}
-                            onBlur={(e) => e.target.style.borderColor = 'rgba(139,26,26,0.15)'}
                             required
                           />
                         </div>
@@ -427,18 +483,19 @@ const Contact = ({ contactPage, notFound = false }) => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
+                            className="clay-input"
                             style={{
                               width: '100%',
                               padding: '12px 16px',
-                              border: '1px solid rgba(139,26,26,0.15)',
-                              borderRadius: '4px',
+                              border: 'none',
+                              background: '#FDF6EC',
+                              borderRadius: '12px',
+                              boxShadow: 'inset 4px 4px 10px rgba(0,0,0,0.06), inset -4px -4px 10px rgba(255,255,255,0.7)',
                               fontFamily: 'var(--s-sans)',
                               fontSize: '0.95rem',
                               color: 'var(--s-text-heading)',
-                              transition: 'border-color 0.25s ease'
+                              transition: 'box-shadow 0.2s ease, border 0.2s ease'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--s-crimson)'}
-                            onBlur={(e) => e.target.style.borderColor = 'rgba(139,26,26,0.15)'}
                             required
                           />
                         </div>
@@ -460,18 +517,19 @@ const Contact = ({ contactPage, notFound = false }) => {
                             name="subject"
                             value={formData.subject}
                             onChange={handleChange}
+                            className="clay-input"
                             style={{
                               width: '100%',
                               padding: '12px 16px',
-                              border: '1px solid rgba(139,26,26,0.15)',
-                              borderRadius: '4px',
+                              border: 'none',
+                              background: '#FDF6EC',
+                              borderRadius: '12px',
+                              boxShadow: 'inset 4px 4px 10px rgba(0,0,0,0.06), inset -4px -4px 10px rgba(255,255,255,0.7)',
                               fontFamily: 'var(--s-sans)',
                               fontSize: '0.95rem',
                               color: 'var(--s-text-heading)',
-                              transition: 'border-color 0.25s ease'
+                              transition: 'box-shadow 0.2s ease, border 0.2s ease'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--s-crimson)'}
-                            onBlur={(e) => e.target.style.borderColor = 'rgba(139,26,26,0.15)'}
                             required
                           />
                         </div>
@@ -493,29 +551,36 @@ const Contact = ({ contactPage, notFound = false }) => {
                             value={formData.message}
                             onChange={handleChange}
                             rows="6"
+                            className="clay-input"
                             style={{
                               width: '100%',
                               padding: '12px 16px',
-                              border: '1px solid rgba(139,26,26,0.15)',
-                              borderRadius: '4px',
+                              border: 'none',
+                              background: '#FDF6EC',
+                              borderRadius: '12px',
+                              boxShadow: 'inset 4px 4px 10px rgba(0,0,0,0.06), inset -4px -4px 10px rgba(255,255,255,0.7)',
                               fontFamily: 'var(--s-sans)',
                               fontSize: '0.95rem',
                               color: 'var(--s-text-heading)',
                               resize: 'vertical',
-                              transition: 'border-color 0.25s ease'
+                              transition: 'box-shadow 0.2s ease, border 0.2s ease'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = 'var(--s-crimson)'}
-                            onBlur={(e) => e.target.style.borderColor = 'rgba(139,26,26,0.15)'}
                             required
                           ></textarea>
                         </div>
 
-                        <div>
+                        <div style={{ marginTop: '8px' }}>
                           <button
                             type="submit"
-                            className="btn-cta-primary"
+                            className="btn-cta-primary clay-cta"
                             disabled={isSubmitting}
-                            style={{ opacity: isSubmitting ? 0.6 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+                            style={{ 
+                              opacity: isSubmitting ? 0.6 : 1, 
+                              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                              borderRadius: '40px',
+                              boxShadow: '4px 4px 14px rgba(139,26,26,0.25), -2px -2px 8px rgba(255,255,255,0.55)',
+                              transition: 'transform 0.2s ease'
+                            }}
                           >
                             {isSubmitting ? 'Sending...' : (contactFormSection.submitButton || 'Send Message')} <span className="arrow">→</span>
                           </button>
@@ -529,11 +594,18 @@ const Contact = ({ contactPage, notFound = false }) => {
                 {contactFormSection.showMap && contactFormSection.mapEmbedUrl && (
                   <div style={{ position: 'sticky', top: '100px' }}>
                     <iframe
+                      data-clay-reveal="true" 
+                      data-clay-delay="100"
                       src={contactFormSection.mapEmbedUrl}
                       title="Google Maps"
                       width="100%"
                       height="550"
-                      style={{ border: 0, borderRadius: '8px', boxShadow: '0 2px 12px rgba(139,26,26,0.1)' }}
+                      style={{ 
+                        border: 0, 
+                        borderRadius: '20px', 
+                        boxShadow: '6px 6px 16px rgba(0,0,0,0.08), -6px -6px 16px rgba(255,255,255,0.8)',
+                        opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                      }}
                       allowFullScreen=""
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -574,8 +646,20 @@ const Contact = ({ contactPage, notFound = false }) => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="s-card-dark"
-                    style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                    className="s-card-dark clay-value-card"
+                    data-clay-reveal="true" 
+                    data-clay-delay={index * 75}
+                    style={{ 
+                      textDecoration: 'none', 
+                      display: 'block', 
+                      textAlign: 'center',
+                      borderRadius: '16px',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(201,168,76,0.18)',
+                      boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                      opacity: 0, transform: 'translateY(16px)'
+                    }}
                   >
                     <span style={{ fontSize: '2rem', display: 'block', marginBottom: '12px' }}>
                       {socialIcons[social.platform] || '🔗'}
@@ -611,12 +695,18 @@ const Contact = ({ contactPage, notFound = false }) => {
               </div>
               <div style={{ maxWidth: '740px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {faqSection.faqs.map((faq, index) => (
-                  <div key={faq._key || index} style={{
+                  <div 
+                    key={faq._key || index} 
+                    data-clay-reveal="true" 
+                    data-clay-delay={index * 50}
+                    style={{
                     background: '#FDFAF6',
-                    border: '1px solid rgba(139,26,26,0.15)',
-                    borderRadius: '8px',
+                    border: '1px solid rgba(139,26,26,0.05)',
+                    borderRadius: '16px',
                     borderLeft: '3px solid var(--s-crimson)',
-                    padding: '20px 24px'
+                    boxShadow: '5px 5px 14px rgba(0,0,0,0.06), -5px -5px 14px rgba(255,255,255,0.8)',
+                    padding: '20px 24px',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
                   }}>
                     <h3 style={{ 
                       fontFamily: 'var(--s-serif)', 
@@ -665,7 +755,12 @@ const Contact = ({ contactPage, notFound = false }) => {
             <p style={{ color: 'rgba(250,246,240,0.85)', fontSize: '1rem', lineHeight: '1.7', margin: '16px 0 32px' }}>
               Need more help? Visit our support page for comprehensive FAQs, guides, and resources.
             </p>
-            <Link href="/support" className="btn-cta-primary">
+            <Link href="/support" className="btn-cta-primary clay-cta" style={{
+              borderRadius: '40px',
+              boxShadow: '4px 4px 14px rgba(139,26,26,0.25), -2px -2px 8px rgba(255,255,255,0.55)',
+              transition: 'transform 0.2s ease',
+              display: 'inline-block'
+            }}>
               Visit Support <span className="arrow">→</span>
             </Link>
           </div>

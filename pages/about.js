@@ -1,5 +1,5 @@
 // pages/about.js - Sampada Premium Brand Styling
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { client } from '../lib/sanity';
 import { groq } from 'next-sanity';
@@ -46,6 +46,75 @@ export async function getStaticProps() {
 }
 
 const AboutPage = ({ aboutData }) => {
+  // SCROLL REVEAL (PART E)
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-clay-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.dataset.clayDelay || 0;
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, Number(delay));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // COUNTER ANIMATION FOR SECTION E
+  const statsSectionRef = useRef(null);
+  const hasAnimated = useRef(false);
+  useEffect(() => {
+    const statEls = document.querySelectorAll('[data-target]');
+    if (!statEls.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          statEls.forEach(el => {
+            const originalText = el.dataset.target;
+            const targetNum = parseInt(originalText.replace(/[^0-9]/g, ''), 10);
+            const suffix = originalText.replace(/[0-9]/g, ''); 
+            
+            if (isNaN(targetNum)) return;
+            
+            let start = 0;
+            const duration = 1200; 
+            const startTime = performance.now();
+            
+            const animate = (currentTime) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const easeOut = 1 - Math.pow(1 - progress, 3);
+              const current = Math.floor(easeOut * targetNum);
+              el.innerText = current + suffix;
+              
+              if (progress < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                el.innerText = originalText;
+              }
+            };
+            requestAnimationFrame(animate);
+          });
+        }
+      });
+    }, { threshold: 0.1 });
+
+    if (statsSectionRef.current) {
+      observer.observe(statsSectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
   if (!aboutData) return <div className="section-light" style={{ padding: '80px 20px', textAlign: 'center' }}><div className="loading-spinner">Loading...</div></div>;
 
   return (
@@ -53,11 +122,26 @@ const AboutPage = ({ aboutData }) => {
       <Head>
         <title>About Sampada – Prosperity in Every Print</title>
         <meta name="description" content="Learn about Sampada, a Vedic-inspired custom print-on-demand brand. Bringing prosperity, abundance, and blessings through every product." />
+        <style>{`
+          @media (hover: hover) {
+            .clay-about-img:hover {
+              transform: scale(1.015) !important;
+            }
+            .clay-value-card:hover {
+              transform: translateY(-4px) !important;
+              border-color: rgba(201,168,76,0.4) !important;
+              box-shadow: 6px 6px 18px rgba(0,0,0,0.45), -2px -2px 10px rgba(255,255,255,0.06) !important;
+            }
+            .clay-cta:hover {
+              transform: translateY(-2px) scale(1.02) !important;
+            }
+          }
+        `}</style>
       </Head>
 
       {/* Hero Section: DARK */}
       <section className="section-dark s-section" style={{ minHeight: '50vh', display: 'flex', alignItems: 'center' }}>
-        <div className="s-container" style={{ textAlign: 'center' }}>
+        <div className="s-container" style={{ textAlign: 'center', backdropFilter: 'blur(2px)', background: 'rgba(253,246,236,0.10)', borderRadius: '16px', padding: '40px 20px' }}>
           <p className="s-label">OUR STORY</p>
           <h1 className="s-heading" style={{ fontSize: '2.8rem' }}>
             {aboutData.heroTitle || "Building the Future, Now"}
@@ -92,21 +176,54 @@ const AboutPage = ({ aboutData }) => {
             <span className="s-bar" />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-            <div className="s-card-dark">
+            <div 
+              className="s-card-dark clay-value-card"
+              data-clay-reveal="true" 
+              data-clay-delay="0"
+              style={{
+                borderRadius: '16px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(201,168,76,0.18)',
+                boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                opacity: 0, transform: 'translateY(16px)'
+              }}>
               <div style={{ fontSize: '32px', marginBottom: '16px' }}>💡</div>
               <h3 className="s-card-title">Innovation</h3>
               <p className="s-card-body">
                 We constantly push the boundaries of what's possible, exploring new technologies and developing products that transform the way you interact with the world.
               </p>
             </div>
-            <div className="s-card-dark">
+            <div 
+              className="s-card-dark clay-value-card"
+              data-clay-reveal="true" 
+              data-clay-delay="75"
+              style={{
+                borderRadius: '16px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(201,168,76,0.18)',
+                boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                opacity: 0, transform: 'translateY(16px)'
+              }}>
               <div style={{ fontSize: '32px', marginBottom: '16px' }}>⭐</div>
               <h3 className="s-card-title">Quality</h3>
               <p className="s-card-body">
                 We're committed to excellence in every product we offer, ensuring unparalleled performance, durability, and user experience.
               </p>
             </div>
-            <div className="s-card-dark">
+            <div 
+              className="s-card-dark clay-value-card"
+              data-clay-reveal="true" 
+              data-clay-delay="150"
+              style={{
+                borderRadius: '16px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(201,168,76,0.18)',
+                boxShadow: '4px 4px 12px rgba(0,0,0,0.35), -2px -2px 8px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
+                transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
+                opacity: 0, transform: 'translateY(16px)'
+              }}>
               <div style={{ fontSize: '32px', marginBottom: '16px' }}>🌿</div>
               <h3 className="s-card-title">Sustainability</h3>
               <p className="s-card-body">
@@ -127,26 +244,63 @@ const AboutPage = ({ aboutData }) => {
           </div>
 
           {aboutData.storyContent ? (
-            <div style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--s-text-body)', lineHeight: '1.8', fontSize: '1rem' }}>
+            <div 
+              data-clay-reveal="true" 
+              data-clay-delay="0"
+              style={{ 
+                maxWidth: '800px', 
+                margin: '0 auto', 
+                color: 'var(--s-text-body)', 
+                lineHeight: '1.8', 
+                fontSize: '1rem',
+                background: '#FDF6EC',
+                borderRadius: '20px',
+                boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.80), inset 0 1px 0 rgba(255,255,255,0.5)',
+                padding: '40px',
+                opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+              }}>
               <PortableText value={aboutData.storyContent} />
             </div>
           ) : (
-            <>
-              <p style={{ maxWidth: '800px', margin: '0 auto 24px', color: 'var(--s-text-body)', fontSize: '1rem', lineHeight: '1.8' }}>
+            <div 
+              data-clay-reveal="true" 
+              data-clay-delay="0"
+              style={{ 
+                maxWidth: '800px', 
+                margin: '0 auto',
+                background: '#FDF6EC',
+                borderRadius: '20px',
+                boxShadow: '6px 6px 16px rgba(0,0,0,0.07), -6px -6px 16px rgba(255,255,255,0.80), inset 0 1px 0 rgba(255,255,255,0.5)',
+                padding: '40px',
+                opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+              }}>
+              <p style={{ marginBottom: '24px', color: 'var(--s-text-body)', fontSize: '1rem', lineHeight: '1.8' }}>
                 Founded with a bold vision and a passion for Vedic prosperity, Sampada began as a small print-on-demand venture fueled by big ideas.
                 Over the years, we have grown into a leading force in the tech industry, continually challenging the status quo and setting new benchmarks for excellence.
               </p>
-              <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--s-text-body)', fontSize: '1rem', lineHeight: '1.8' }}>
+              <p style={{ color: 'var(--s-text-body)', fontSize: '1rem', lineHeight: '1.8' }}>
                 Our journey is a story of passion, collaboration, and a commitment to transforming challenges into opportunities.
                 Today, we celebrate our achievements and look ahead to a future filled with limitless possibilities.
                 Join us as we continue to pioneer breakthroughs that reshape the digital landscape.
               </p>
-            </>
+            </div>
           )}
 
           {/* Team Photo */}
           {aboutData.storyImage && (
-            <div style={{ maxWidth: '800px', margin: '40px auto 0', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(139,26,26,0.1)' }}>
+            <div 
+              className="clay-about-img"
+              data-clay-reveal="true" 
+              data-clay-delay="100"
+              style={{ 
+                maxWidth: '800px', 
+                margin: '40px auto 0', 
+                borderRadius: '24px', 
+                overflow: 'hidden', 
+                boxShadow: '10px 10px 28px rgba(0,0,0,0.13), -6px -6px 18px rgba(255,255,255,0.72)',
+                transition: 'transform 0.3s ease',
+                opacity: 0, transform: 'translateY(16px)'
+              }}>
               <SanityImage
                 image={aboutData.storyImage}
                 alt="Sampada team bringing prosperity through prints"
@@ -219,7 +373,7 @@ const AboutPage = ({ aboutData }) => {
       </section>
 
       {/* Impact Section: CRIMSON */}
-      <section className="section-crimson s-section">
+      <section className="section-crimson s-section" ref={statsSectionRef}>
         <div className="s-container" style={{ textAlign: 'center' }}>
           <p className="s-label" style={{ color: 'var(--s-gold)' }}>BY THE NUMBERS</p>
           <h2 className="s-heading">{aboutData.statsTitle || "Our Impact"}</h2>
@@ -232,24 +386,69 @@ const AboutPage = ({ aboutData }) => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', maxWidth: '800px', margin: '0 auto' }}>
             {aboutData.stats && aboutData.stats.length > 0 ? (
               aboutData.stats.map((stat, index) => (
-                <div key={index}>
-                  <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-gold)', marginBottom: '8px' }}>{stat.value}</h3>
-                  <p style={{ color: 'var(--s-cream)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>{stat.label}</p>
+                <div 
+                  key={index}
+                  data-clay-reveal="true" 
+                  data-clay-delay={index * 80}
+                  style={{
+                    background: '#FDF6EC',
+                    borderRadius: '40px',
+                    boxShadow: '5px 5px 14px rgba(0,0,0,0.09), -5px -5px 14px rgba(255,255,255,0.80)',
+                    padding: '20px 28px',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                  }}>
+                  <h3 
+                    data-target={stat.value}
+                    style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-crimson)', marginBottom: '8px' }}>{stat.value}</h3>
+                  <p style={{ color: 'var(--s-text-heading)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>{stat.label}</p>
                 </div>
               ))
             ) : (
               <>
-                <div>
-                  <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-gold)', marginBottom: '8px' }}>100+</h3>
-                  <p style={{ color: 'var(--s-cream)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Projects Delivered</p>
+                <div
+                  data-clay-reveal="true" 
+                  data-clay-delay="0"
+                  style={{
+                    background: '#FDF6EC',
+                    borderRadius: '40px',
+                    boxShadow: '5px 5px 14px rgba(0,0,0,0.09), -5px -5px 14px rgba(255,255,255,0.80)',
+                    padding: '20px 28px',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                  }}>
+                  <h3 
+                    data-target="100+"
+                    style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-crimson)', marginBottom: '8px' }}>100+</h3>
+                  <p style={{ color: 'var(--s-text-heading)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Projects Delivered</p>
                 </div>
-                <div>
-                  <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-gold)', marginBottom: '8px' }}>50+</h3>
-                  <p style={{ color: 'var(--s-cream)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Happy Clients</p>
+                <div
+                  data-clay-reveal="true" 
+                  data-clay-delay="80"
+                  style={{
+                    background: '#FDF6EC',
+                    borderRadius: '40px',
+                    boxShadow: '5px 5px 14px rgba(0,0,0,0.09), -5px -5px 14px rgba(255,255,255,0.80)',
+                    padding: '20px 28px',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                  }}>
+                  <h3 
+                    data-target="50+"
+                    style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-crimson)', marginBottom: '8px' }}>50+</h3>
+                  <p style={{ color: 'var(--s-text-heading)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Happy Clients</p>
                 </div>
-                <div>
-                  <h3 style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-gold)', marginBottom: '8px' }}>10+</h3>
-                  <p style={{ color: 'var(--s-cream)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Years of Innovation</p>
+                <div
+                  data-clay-reveal="true" 
+                  data-clay-delay="160"
+                  style={{
+                    background: '#FDF6EC',
+                    borderRadius: '40px',
+                    boxShadow: '5px 5px 14px rgba(0,0,0,0.09), -5px -5px 14px rgba(255,255,255,0.80)',
+                    padding: '20px 28px',
+                    opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
+                  }}>
+                  <h3 
+                    data-target="10+"
+                    style={{ fontFamily: 'var(--s-serif)', fontSize: '3rem', fontWeight: '800', color: 'var(--s-crimson)', marginBottom: '8px' }}>10+</h3>
+                  <p style={{ color: 'var(--s-text-heading)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Years of Innovation</p>
                 </div>
               </>
             )}
@@ -267,7 +466,12 @@ const AboutPage = ({ aboutData }) => {
             {aboutData.contactDescription ||
               "We'd love to hear from you. Whether you have a question, an idea, or simply want to get in touch, reach out and let's create something extraordinary together."}
           </p>
-          <Link href="/contact" className="btn-cta-primary">
+          <Link href="/contact" className="btn-cta-primary clay-cta" style={{
+            borderRadius: '40px',
+            boxShadow: '4px 4px 14px rgba(139,26,26,0.25), -2px -2px 8px rgba(255,255,255,0.55)',
+            transition: 'transform 0.2s ease',
+            display: 'inline-block'
+          }}>
             Contact Our Team <span className="arrow">→</span>
           </Link>
         </div>
