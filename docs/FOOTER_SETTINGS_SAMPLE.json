@@ -1,0 +1,34 @@
+{
+  "brandName": "Sampada",
+  "brandTagline": "Wear Your Legacy",
+  "socialLinks": [
+    { "platform": "instagram", "url": "https://instagram.com/SampadaOriginals" },
+    { "platform": "facebook", "url": "https://facebook.com/SampadaOriginals" },
+    { "platform": "youtube", "url": "https://youtube.com/@SampadaOriginals" },
+    { "platform": "pinterest", "url": "https://pinterest.com/SampadaOriginals" },
+    { "platform": "linkedin", "url": "https://www.linkedin.com/company/SampadaOriginals" }
+  ],
+  "productLinks": [
+    { "label": "Men's Clothing", "url": "/collections/mens" },
+    { "label": "Women's Clothing", "url": "/collections/womens" },
+    { "label": "Home & Living", "url": "/collections/home-living" }
+  ],
+  "companyLinks": [
+    { "label": "About Us", "url": "/company" },
+    { "label": "Our Story", "url": "/stories" },
+    { "label": "Team", "url": "/team" },
+    { "label": "Careers", "url": "/careers" }
+  ],
+  "supportLinks": [
+    { "label": "Help Center", "url": "/support" },
+    { "label": "Shipping & Returns", "url": "/shipping-returns" },
+    { "label": "Contact Us", "url": "/contact" }
+  ],
+  "legalLinks": [
+    { "label": "Privacy Policy", "url": "/privacy-policy" },
+    { "label": "Terms of Service", "url": "/terms" },
+    { "label": "Cookie Policy", "url": "/cookie-policy" }
+  ],
+  "copyrightText": "© 2026 Sampada. All rights reserved.",
+  "poweredByText": "Powered by Printify & Stripe"
+}

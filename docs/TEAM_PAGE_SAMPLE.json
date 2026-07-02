@@ -1,0 +1,61 @@
+{
+  "pageTitle": "Team",
+  "heroTitle": "Meet the Keepers of Legacy",
+  "heroDescription": "We design with purpose and craft with care. Meet the people who bring Sampada's heritage, design, and quality to life.",
+  "teamIntroTitle": "Our People, Our Promise",
+  "teamIntro": "Sampada is built on craft, culture, and care. From design to delivery, our team blends traditional techniques with modern sensibility to create pieces that carry meaning.",
+  "leadershipTitle": "Leadership Team",
+  "leadership": [
+    {
+      "name": "Aarav Mehta",
+      "role": "Founder & Creative Director",
+      "bio": "Visionary behind Sampada's aesthetic; leads design direction and cultural collaborations.",
+      "profileLink": "https://sampada.online/team/aarav-mehta"
+    },
+    {
+      "name": "Nisha Rao",
+      "role": "Head of Product and Merchandising",
+      "bio": "Oversees product strategy, quality, and seasonal collections.",
+      "profileLink": "https://sampada.online/team/nisha-rao"
+    },
+    {
+      "name": "Rohan Kapoor",
+      "role": "Head of Operations",
+      "bio": "Ensures ethical sourcing and timely delivery; manages production partnerships.",
+      "profileLink": "https://sampada.online/team/rohan-kapoor"
+    },
+    {
+      "name": "Maya Iyer",
+      "role": "Head of Brand and Storytelling",
+      "bio": "Crafts Sampada's voice and campaigns; leads content and community partnerships.",
+      "profileLink": "https://sampada.online/team/maya-iyer"
+    }
+  ],
+  "departmentsTitle": "Departments",
+  "departments": [
+    { "label": "Design Studio", "description": "Concept, pattern, and textile innovation." },
+    { "label": "Production & Sourcing", "description": "Ethical manufacturing and quality control." },
+    { "label": "Brand & Marketing", "description": "Campaigns, content, and community." },
+    { "label": "Operations & Logistics", "description": "Order fulfillment and customer experience." },
+    { "label": "Technology", "description": "E-commerce platform and digital tools." }
+  ],
+  "cultureTitle": "Culture at Sampada",
+  "cultureDescription": "We celebrate craft, curiosity, and community through workshops, residencies, and pop-ups. Our team values collaboration, continuous learning, and creative expression.",
+  "benefitsTitle": "Benefits and Perks",
+  "benefits": [
+    { "title": "Competitive Compensation", "description": "Market-aligned pay and performance bonuses." },
+    { "title": "Health and Wellness", "description": "Medical coverage and wellness stipends." },
+    { "title": "Maker Time", "description": "Paid studio hours for personal creative projects." },
+    { "title": "Professional Development", "description": "Learning stipends and conference attendance." },
+    { "title": "Flexible Work", "description": "Hybrid work options and flexible hours." },
+    { "title": "Team Retreats", "description": "Annual team building and cultural immersion trips." }
+  ],
+  "careersCTATitle": "Join the Legacy",
+  "careersCTADescription": "If you care about craft, culture, and sustainable design, bring your curiosity and skills to Sampada.",
+  "careersCTAButtonText": "View Open Roles",
+  "careersCTALink": "https://sampada.online/careers",
+  "seo": {
+    "metaTitle": "Sampada Team — Meet Our Designers and Makers",
+    "metaDescription": "Meet the Sampada team behind heritage-inspired design and ethical production. Learn about our leadership, departments, culture, and open roles."
+  }
+}

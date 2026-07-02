@@ -1,0 +1,380 @@
+// components/HomePage/SampadaFooter.jsx
+import React from 'react';
+import Link from 'next/link';
+import {
+  AiFillInstagram,
+  AiOutlineTwitter,
+  AiFillFacebook,
+  AiFillYoutube,
+  AiFillLinkedin,
+  AiFillTikTok,
+  AiFillPinterest
+} from 'react-icons/ai';
+import { client } from '../../lib/client';
+import styles from './SampadaFooter.module.css';
+import NewsletterSignup from '../NewsletterSignup';
+
+// Icon mapping for social platforms
+const socialIcons = {
+  instagram: AiFillInstagram,
+  twitter: AiOutlineTwitter,
+  facebook: AiFillFacebook,
+  youtube: AiFillYoutube,
+  linkedin: AiFillLinkedin,
+  tiktok: AiFillTikTok,
+  pinterest: AiFillPinterest
+};
+
+const SampadaFooter = ({ footerData, madeInIndiaText }) => {
+  if (!footerData) {
+    return null;
+  }
+
+  const {
+    brandName = 'Sampada',
+    brandTagline = 'Prosperity in Every Print – Custom products for every occasion',
+    socialLinks = [],
+    productLinks = [],
+    companyLinks = [],
+    supportLinks = [],
+    legalLinks = [],
+    copyrightText = '© 2026 Sampada',
+    poweredByText = 'Powered by Printify & Stripe'
+  } = footerData;
+
+  // Get icon component for platform
+  const getSocialIcon = (platform) => {
+    const IconComponent = socialIcons[platform] || AiFillInstagram;
+    return <IconComponent />;
+  };
+
+  // Render link list – skips # placeholder hrefs entirely
+  const renderLinks = (links, indexOffset = 0) => {
+    if (!links || links.length === 0) return null;
+    
+    return links.map((link, index) => (
+      <li key={`${link.url || link.label}-${indexOffset}-${index}`}>
+        {link.url ? (
+          <Link 
+            href={link.url} 
+            className={styles.footerLink}
+          >
+            {link.label}
+          </Link>
+        ) : (
+          <span className={styles.footerLink} style={{ cursor: 'default', opacity: 0.5 }}>
+            {link.label}
+          </span>
+        )}
+      </li>
+    ));
+  };
+
+  return (
+    <footer className={styles.footer} role="contentinfo">
+      <div className={styles.topRow}>
+        {/* Brand Column */}
+        <div className={styles.brandCol}>
+          {/* Rotating Emblem */}
+          <div className={styles.footerLogoRotator} style={{ width: '48px', height: '48px', marginBottom: '8px' }}>
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 300 300"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Sampada emblem"
+            >
+              <circle cx="150" cy="150" r="140" fill="none" stroke="#C9A84C" strokeWidth="3" opacity="0.3" />
+              <circle cx="150" cy="150" r="120" fill="none" stroke="#C9A84C" strokeWidth="2" opacity="0.5" />
+              <text
+                x="150"
+                y="170"
+                fontFamily="'Playfair Display', serif"
+                fontSize="120"
+                fontWeight="900"
+                fill="#C9A84C"
+                textAnchor="middle"
+              >
+                स
+              </text>
+              <circle cx="150" cy="150" r="100" fill="none" stroke="#C9A84C" strokeWidth="1.5" opacity="0.4" />
+            </svg>
+          </div>
+          
+          <h3 className={styles.brandName}>{brandName}</h3>
+          <p className={styles.brandDesc}>{brandTagline}</p>
+
+          {/* Social Icons */}
+          {socialLinks && socialLinks.length > 0 && (
+            <div className={styles.socialIcons} role="list" aria-label="Social media links">
+              {socialLinks
+                .filter((social) => social.url) // skip icons with no URL
+                .map((social, index) => (
+                  <a
+                    key={`${social.platform}-${index}`}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    role="listitem"
+                    aria-label={`Follow us on ${social.platform || 'social media'}`}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '2px solid #C9A84C';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    {getSocialIcon(social.platform)}
+                  </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Product Column */}
+        {productLinks && productLinks.length > 0 && (
+          <div className={styles.linkCol}>
+            <h4 className={styles.colTitle}>Product</h4>
+            <ul className={styles.colLinks}>
+              {renderLinks(productLinks, 1)}
+            </ul>
+          </div>
+        )}
+
+        {/* Company Column */}
+        {companyLinks && companyLinks.length > 0 && (
+          <div className={styles.linkCol}>
+            <h4 className={styles.colTitle}>Company</h4>
+            <ul className={styles.colLinks}>
+              {renderLinks(companyLinks, 2)}
+            </ul>
+          </div>
+        )}
+
+        {/* Support Column */}
+        {supportLinks && supportLinks.length > 0 && (
+          <div className={styles.linkCol}>
+            <h4 className={styles.colTitle}>Support</h4>
+            <ul className={styles.colLinks}>
+              {renderLinks(supportLinks, 3)}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      {/* Compact newsletter — avoids duplicating homepage "Join the Legacy" hero section */}
+      <div style={{ maxWidth: '400px', margin: '0 auto 32px', padding: '0 16px' }}>
+        <NewsletterSignup variant="compact" />
+      </div>
+
+      {/* Legal Row */}
+      <div className={styles.legalRow}>
+        <div className={styles.legalLinks}>
+          {legalLinks && legalLinks.map((link, index) =>
+            link.url ? (
+              <Link
+                key={`legal-${index}`}
+                href={link.url}
+                className={styles.legalLink}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <span key={`legal-${index}`} className={styles.legalLink} style={{ cursor: 'default', opacity: 0.5 }}>
+                {link.label}
+              </span>
+            )
+          )}
+        </div>
+        <p className={styles.copyright}>
+          {copyrightText}
+          {poweredByText && ` . ${poweredByText}`}
+        </p>
+      </div>
+
+      {madeInIndiaText && (
+        <p className={styles.madeInIndia}>{madeInIndiaText}</p>
+      )}
+    </footer>
+  );
+};
+
+// Fetch footer data from Sanity (client-side compatible)
+// Now includes dynamic links from Company, Support, and Team pages
+export async function getFooterData() {
+  try {
+    // Use Sanity client if available (server-side)
+    if (client && typeof client.fetch === 'function') {
+      // Fetch footer settings
+      const footerQuery = `*[_type == "footerSettings"][0]{
+        brandName,
+        brandTagline,
+        socialLinks[] {
+          platform,
+          url
+        },
+        productLinks[] {
+          label,
+          url
+        },
+        legalLinks[] {
+          label,
+          url
+        },
+        copyrightText,
+        poweredByText
+      }`;
+
+      // Fetch Company page for company links
+      const companyQuery = `*[_type == "company"][0]{
+        _id,
+        title,
+        "slug": "company"
+      }`;
+
+      // Fetch Support page for support links
+      const supportQuery = `*[_type == "support"][0]{
+        _id,
+        title,
+        "slug": "support"
+      }`;
+
+      // Fetch Team page for team/careers links
+      const teamQuery = `*[_type == "team"][0]{
+        _id,
+        title,
+        "slug": "team",
+        "hasCareers": defined(careersCTALink)
+      }`;
+
+      // Fetch About Us page
+      const aboutQuery = `*[_type == "aboutUs"][0]{
+        _id,
+        title,
+        "slug": "about"
+      }`;
+
+      // Fetch Stories page
+      const storiesQuery = `*[_type == "storiesPage"][0]{
+        _id,
+        title,
+        "slug": "stories"
+      }`;
+
+      const [footerData, companyPage, supportPage, teamPage, aboutPage, storiesPage] = await Promise.all([
+        client.fetch(footerQuery),
+        client.fetch(companyQuery),
+        client.fetch(supportQuery),
+        client.fetch(teamQuery),
+        client.fetch(aboutQuery),
+        client.fetch(storiesQuery)
+      ]);
+
+      // Build dynamic company links
+      const dynamicCompanyLinks = [];
+      if (aboutPage) {
+        dynamicCompanyLinks.push({ label: 'About Us', url: '/about' });
+      }
+      if (companyPage) {
+        dynamicCompanyLinks.push({ label: 'Company', url: '/company' });
+      }
+      if (teamPage) {
+        dynamicCompanyLinks.push({ label: 'Team', url: '/team' });
+      }
+      // Add Stories link if published
+      if (storiesPage) {
+        dynamicCompanyLinks.push({ label: 'Sampada Stories', url: '/stories' });
+      }
+      // Add blog and careers as static links (or make them dynamic if you have those schemas)
+      dynamicCompanyLinks.push({ label: 'Blog', url: '/blog' });
+      dynamicCompanyLinks.push({ label: 'Membership', url: '/subscribe' });
+      if (teamPage?.hasCareers) {
+        dynamicCompanyLinks.push({ label: 'Careers', url: '/careers' });
+      }
+
+      // Build dynamic support links
+      const dynamicSupportLinks = [];
+      if (supportPage) {
+        dynamicSupportLinks.push({ label: 'Support Center', url: '/support' });
+      }
+      dynamicSupportLinks.push({ label: 'Documentation', url: '/documentation' });
+      dynamicSupportLinks.push({ label: 'Contact Us', url: '/contact' });
+      dynamicSupportLinks.push({ label: 'FAQs', url: '/faq' });
+
+      return {
+        ...(footerData || {}),
+        companyLinks: dynamicCompanyLinks,
+        supportLinks: dynamicSupportLinks,
+        legalLinks: [
+          { label: 'Privacy Policy', url: '/privacy-policy' },
+          { label: 'Terms of Service', url: '/terms-and-conditions' },
+          { label: 'Refund Policy', url: '/refund-policy' }
+        ]
+      };
+    }
+
+    // Fallback: use fetch API for client-side
+    const sanityId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+    const sanityDataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+
+    if (!sanityId) {
+      console.warn('Sanity Project ID not configured');
+      return get_default_footer_data();
+    }
+
+    const url = `https://${sanityId}.api.sanity.io/v1/data/query/${sanityDataset}?query=*[_type == "footerSettings"][0]`;
+    const response = await fetch(url);
+    const json = await response.json();
+
+    return json.result || get_default_footer_data();
+  } catch (error) {
+    console.error('Error fetching footer data:', error);
+    return get_default_footer_data();
+  }
+}
+
+// Default footer data as fallback
+export function get_default_footer_data() {
+  return {
+    brandName: 'Sampada',
+    brandTagline: 'Prosperity in Every Print – Custom products for every occasion',
+    socialLinks: [
+      { platform: 'instagram', url: 'https://instagram.com' },
+      { platform: 'twitter', url: 'https://twitter.com' },
+      { platform: 'facebook', url: 'https://facebook.com' },
+      { platform: 'youtube', url: 'https://youtube.com' }
+    ],
+    productLinks: [
+      { label: 'Features', url: '/features' },
+      { label: 'Pricing', url: '/pricing' },
+      { label: 'Use Cases', url: '/use-cases' },
+      { label: 'Roadmap', url: '/roadmap' }
+    ],
+    // Dynamic company links - will be populated when pages are published
+    companyLinks: [
+      { label: 'About Us', url: '/about' },
+      { label: 'Company', url: '/company' },
+      { label: 'Team', url: '/team' },
+      { label: 'Blog', url: '/blog' },
+      { label: 'Membership', url: '/subscribe' },
+      { label: 'Careers', url: '/careers' }
+    ],
+    // Dynamic support links - will be populated when support page is published
+    supportLinks: [
+      { label: 'Support Center', url: '/support' },
+      { label: 'Documentation', url: '/documentation' },
+      { label: 'Contact Us', url: '/contact' },
+      { label: 'FAQs', url: '/faq' }
+    ],
+    legalLinks: [
+      { label: 'Privacy Policy', url: '/privacy-policy' },
+      { label: 'Terms and Conditions', url: '/terms-and-conditions' },
+      { label: 'Refund Policy', url: '/refund-policy' }
+    ],
+    copyrightText: '© 2026 Sampada',
+    poweredByText: 'Powered by Printify & Stripe'
+  };
+}
+
+export default SampadaFooter;

@@ -1,0 +1,221 @@
+/* components/Lightbox.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 28, 0.92);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Split panel ─────────────────────────────────────────────────────────── */
+.panel {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Left info panel (30%) ───────────────────────────────────────────────── */
+.infoPanel {
+  width: 30%;
+  min-width: 220px;
+  background: #1a1f3a;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.infoPanelTop {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoModel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin: 0;
+}
+
+.infoTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.infoTag {
+  display: inline-block;
+  background: #8B1A1A;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.infoDesc {
+  font-size: 0.82rem;
+  color: rgba(245,240,232,0.65);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.infoPanelBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.infoCounter {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+}
+
+.infoShopBtn {
+  display: inline-block;
+  background: #C9A84C;
+  color: #1a1f3a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infoShopBtn:hover { background: #e0bc5a; }
+
+/* ── Right image panel (70%) ─────────────────────────────────────────────── */
+.imagePanel {
+  position: relative;
+  width: 70%;
+  background: #0d1020;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+  animation: imgIn 0.2s ease;
+}
+
+@keyframes imgIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Close button */
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 1rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.close:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
+
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 2rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.arrow:hover { background: rgba(201,168,76,0.2); border-color: #C9A84C; color: #C9A84C; }
+.arrowLeft  { left: 12px; }
+.arrowRight { right: 12px; }
+
+/* ── Mobile: stack vertically ────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .overlay { padding: 0; align-items: flex-end; }
+
+  .panel {
+    flex-direction: column-reverse;
+    max-height: 95vh;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .infoPanel {
+    width: 100%;
+    min-width: unset;
+    padding: 20px 20px 28px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .infoPanelTop { width: 100%; gap: 8px; }
+  .infoPanelBottom { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+
+  .imagePanel {
+    width: 100%;
+    max-height: 55vh;
+  }
+
+  .image { max-height: 55vh; }
+}

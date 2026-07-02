@@ -1,0 +1,544 @@
+/* HomeHeroBanner.module.css */
+
+.hero {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 60%, #f0f0f0 100%);
+  color: #1a1a2e;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0 0 28px 0;
+}
+
+/* Subtle decorative gradient blobs */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 57, 43, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ============================================================================
+   ENHANCED PREMIUM TAGLINE BANNER - Continuous Marquee
+   ============================================================================ */
+
+/* Premium fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+.taglineBanner {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #8B1A1A;
+  border-top: 1px solid rgba(212,175,55,0.35);
+  border-bottom: 1px solid rgba(212,175,55,0.35);
+}
+
+/* Gold shimmer sweep across top edge */
+.shimmerLine {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent);
+  animation: shimmer-sweep 4s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes shimmer-sweep {
+  0%   { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* Fade masks — 28% each side */
+.taglineFadeLeft,
+.taglineFadeRight {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 28%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.taglineFadeLeft {
+  left: 0;
+  background: linear-gradient(to right, #8B1A1A 0%, #8B1A1A 10%, rgba(139,26,26,0) 100%);
+}
+
+.taglineFadeRight {
+  right: 0;
+  background: linear-gradient(to left, #8B1A1A 0%, #8B1A1A 10%, rgba(139,26,26,0) 100%);
+}
+
+/* Corner ornaments */
+.taglineOrnament {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  color: #C9A84C;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.ornamentLeft {
+  left: 14px;
+}
+
+.ornamentRight {
+  right: 14px;
+}
+
+/* Marquee track — matches announcement bar pattern (handled by global sampada-marquee-track class) */
+
+/* Override duration to 90s (50% slower than the current 45s speed) */
+.taglineTrack {
+  animation-duration: 90s !important;
+  animation-direction: reverse !important;
+}
+
+/* Content row */
+.taglineContent {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 15px 56px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Typography */
+.taglinePrimary {
+  font-family: 'Playfair Display', serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  position: relative;
+}
+
+.taglinePrimary::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent);
+}
+
+.taglineSecondary {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: #C9A84C;
+  font-style: italic;
+}
+
+.taglineAccent {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C9A84C;
+}
+
+.taglineDivider {
+  color: #C9A84C;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.taglineDiamond {
+  width: 5px;
+  height: 5px;
+  background: #C9A84C;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  border: 0.5px solid rgba(201, 168, 76, 0.3);
+}
+
+/* Announcement / desc bar - DEPRECATED (replaced by taglineBanner) */
+.announcementBar {
+  display: none;
+}
+
+/* Right visual column: emblem/image + Shop Now button */
+.heroVisual {
+  flex-shrink: 0;
+  width: 580px;
+  min-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Shop Now button - centered below logo */
+.shopNowLink {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroShopBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: auto !important;
+  margin: 0 auto !important;
+}
+
+/* Main hero inner layout */
+.heroInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 60px 32px;
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Left text */
+.heroText {
+  flex: 1;
+  max-width: 640px;
+}
+
+.smallLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c9a227;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+
+.winterDrop {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.5px;
+}
+
+.heroHeading {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  line-height: 0.95;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.heroLine1 {
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #1a1a2e;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.heroLine2 {
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #1a1a2e;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.heroLine3 {
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: #c9a227;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+/* Right emblem/image wrapper — explicit 450×450 (10% reduced from 500) */
+.imageWrapper {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 450px;
+  height: 450px;
+  overflow: visible;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .heroInner {
+    flex-direction: column;
+    padding: 36px 32px 24px;
+    text-align: center;
+    gap: 28px;
+  }
+  .heroVisual {
+    width: 100%;
+    min-width: unset;
+    gap: 32px;
+    transform: translateX(0) !important;
+  }
+  .shopNowLink {
+    justify-content: center;
+  }
+  .imageWrapper {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroInner {
+    padding: 24px 20px 16px;
+  }
+  .heroVisual {
+    gap: 24px;
+  }
+  .imageWrapper {
+    width: 230px;
+    height: 230px;
+  }
+}
+
+/* Outer wrapper */
+.heroStats {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 2rem;
+}
+
+/* The two horizontal gold rules (top and bottom lines) */
+.statRule {
+  border: none;
+  border-top: 1px solid rgba(197, 154, 42, 0.40);
+  margin: 0;
+}
+
+/* 3-column grid row between the two rules */
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+}
+
+/* Each column */
+.statCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  position: relative;
+  cursor: default;
+}
+
+/* Thin vertical divider between columns (not after last) */
+.statCol:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: rgba(197, 154, 42, 0.30);
+}
+
+/* Title — maroon, serif, uppercase */
+.statValue {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+  font-weight: 700;
+  color: #7A2B2B;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+  transition: color 0.2s ease, text-shadow 0.25s ease;
+}
+
+/* Hover: maroon flash + physics spring effect */
+.statCol:hover .statValue {
+  color: #9B3535;
+  text-shadow:
+    0 0 8px rgba(122, 43, 43, 0.50),
+    0 0 20px rgba(122, 43, 43, 0.20);
+  animation: maroonPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Physics spring keyframe (elastic overshoot = "physics effect") */
+@keyframes maroonPulse {
+  0%   { transform: scale(1);    }
+  35%  { transform: scale(1.08); }
+  65%  { transform: scale(0.97); }
+  85%  { transform: scale(1.02); }
+  100% { transform: scale(1);    }
+}
+
+/* Subtext — Devanagari, dark maroon/black */
+.statLabel {
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: clamp(0.68rem, 1vw, 0.80rem);
+  font-weight: 400;
+  color: #3B2E2B;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  display: block;
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+/* Mobile: stack into single column */
+@media (max-width: 480px) {
+  .heroStats  { max-width: 100%; }
+  .statRow    { grid-template-columns: 1fr; }
+  .statCol    { padding: 0.6rem 0; text-align: left; align-items: flex-start; }
+  .statCol:not(:last-child)::after { display: none; }
+  .statCol:not(:last-child) {
+    border-bottom: 1px solid rgba(197, 154, 42, 0.25);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SAMPADA HERO LOGO — STRIPPED-DOWN FOR DEBUG
+   ═══════════════════════════════════════════ */
+
+/* ── Stripped-down logo container (no rings, no effects) ── */
+.heroLogoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.heroLogoImg {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Outer wrapper: grid-centered, never stretches ── */
+.logoRingContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Rotating rings removed per design update */
+
+/* ── Static logo container: centered ── */
+.logoImageStatic {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  overflow: visible;
+  z-index: 2;
+  transform: none;
+  background: none;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Hover: spring zoom only — no ring, no shadow ── */
+.imageWrapper:hover .logoImageStatic {
+  transform: scale(1.08);
+}
+
+.logoImg {
+  object-fit: contain !important;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* spinCW / spinCCW keyframes removed — rings no longer in use */
+
+@media (max-width: 1024px) {
+  .heroVisual {
+    width: 460px;
+    min-width: 460px;
+  }
+  .imageWrapper {
+    width: 360px;
+    height: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroVisual {
+    width: 100%;
+    min-width: unset;
+  }
+  .imageWrapper {
+    width: 270px;
+    height: 270px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   END SAMPADA HERO LOGO BLOCK
+   ═══════════════════════════════════════════ */
+
+/* Custom Hover styles specifically for Hero Banner Shop Now button */
+.heroShopBtn:hover {
+  background: #800000 !important; /* Maroon background */
+  color: #D4AF37 !important; /* Yellow/Gold text */
+  border-color: #D4AF37 !important; /* Yellow/Gold border */
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5) !important;
+}
+
+.heroShopBtn:hover::after {
+  background: #D4AF37 !important; /* Yellow/Gold underline */
+}
+
+.heroShopBtn:hover span {
+  color: #D4AF37 !important; /* Yellow/Gold arrow */
+}

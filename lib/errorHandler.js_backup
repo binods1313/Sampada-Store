@@ -1,0 +1,463 @@
+// lib/errorHandler.js
+// Enterprise-grade error handling utilities
+import toast from 'react-hot-toast';
+
+/**
+ * Error types for categorization
+ */
+export const ERROR_TYPES = {
+  NETWORK: 'NETWORK_ERROR',
+  VALIDATION: 'VALIDATION_ERROR',
+  AUTHENTICATION: 'AUTH_ERROR',
+  AUTHORIZATION: 'AUTHORIZATION_ERROR',
+  NOT_FOUND: 'NOT_FOUND_ERROR',
+  SERVER: 'SERVER_ERROR',
+  CLIENT: 'CLIENT_ERROR',
+  TIMEOUT: 'TIMEOUT_ERROR',
+  RATE_LIMIT: 'RATE_LIMIT_ERROR',
+  MAINTENANCE: 'MAINTENANCE_ERROR',
+  UNKNOWN: 'UNKNOWN_ERROR'
+};
+
+/**
+ * Error severity levels
+ */
+export const ERROR_SEVERITY = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical'
+};
+
+/**
+ * Enhanced error class with additional context
+ */
+export class EnhancedError extends Error {
+  constructor(message, type = ERROR_TYPES.UNKNOWN, severity = ERROR_SEVERITY.MEDIUM, context = {}) {
+    super(message);
+    this.name = 'EnhancedError';
+    this.type = type;
+    this.severity = severity;
+    this.context = context;
+    this.timestamp = new Date().toISOString();
+    this.id = `ERR_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Capture stack trace
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, EnhancedError);
+    }
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      message: this.message,
+      type: this.type,
+      severity: this.severity,
+      context: this.context,
+      timestamp: this.timestamp,
+      stack: this.stack
+    };
+  }
+}
+
+/**
+ * Global error handler class
+ */
+export class ErrorHandler {
+  constructor() {
+    this.errorReports = new Map();
+    this.retryAttempts = new Map();
+    this.maxRetryAttempts = 3;
+    this.retryDelay = 1000; // 1 second base delay
+    
+    // Set up global error listeners
+    this.setupGlobalErrorHandlers();
+  }
+
+  setupGlobalErrorHandlers() {
+    if (typeof window !== 'undefined') {
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', (event) => {
+        this.handleError(
+          new EnhancedError(
+            event.reason?.message || 'Unhandled promise rejection',
+            ERROR_TYPES.CLIENT,
+            ERROR_SEVERITY.HIGH,
+            { 
+              reason: event.reason,
+              type: 'unhandledrejection'
+            }
+          )
+        );
+      });
+
+      // Handle JavaScript errors
+      window.addEventListener('error', (event) => {
+        this.handleError(
+          new EnhancedError(
+            event.message || 'JavaScript error',
+            ERROR_TYPES.CLIENT,
+            ERROR_SEVERITY.HIGH,
+            {
+              filename: event.filename,
+              lineno: event.lineno,
+              colno: event.colno,
+              type: 'javascript'
+            }
+          )
+        );
+      });
+    }
+  }
+
+  /**
+   * Handle errors with appropriate user feedback and logging
+   */
+  handleError(error, showToast = true) {
+    const enhancedError = this.enhanceError(error);
+    
+    // Log error
+    this.logError(enhancedError);
+    
+    // Show user feedback
+    if (showToast) {
+      this.showUserFeedback(enhancedError);
+    }
+    
+    // Report error if in production
+    if (process.env.NODE_ENV === 'production') {
+      this.reportError(enhancedError);
+    }
+    
+    return enhancedError;
+  }
+
+  /**
+   * Enhance error with additional context
+   */
+  enhanceError(error) {
+    if (error instanceof EnhancedError) {
+      return error;
+    }
+
+    let type = ERROR_TYPES.UNKNOWN;
+    let severity = ERROR_SEVERITY.MEDIUM;
+
+    // Categorize error based on message or properties
+    if (error.message?.includes('fetch') || error.message?.includes('network')) {
+      type = ERROR_TYPES.NETWORK;
+      severity = ERROR_SEVERITY.HIGH;
+    } else if (error.message?.includes('401')) {
+      type = ERROR_TYPES.AUTHENTICATION;
+      severity = ERROR_SEVERITY.HIGH;
+    } else if (error.message?.includes('403')) {
+      type = ERROR_TYPES.AUTHORIZATION;
+      severity = ERROR_SEVERITY.MEDIUM;
+    } else if (error.message?.includes('404')) {
+      type = ERROR_TYPES.NOT_FOUND;
+      severity = ERROR_SEVERITY.LOW;
+    } else if (error.message?.includes('500')) {
+      type = ERROR_TYPES.SERVER;
+      severity = ERROR_SEVERITY.CRITICAL;
+    } else if (error.message?.includes('timeout')) {
+      type = ERROR_TYPES.TIMEOUT;
+      severity = ERROR_SEVERITY.MEDIUM;
+    }
+
+    return new EnhancedError(
+      error.message || 'An unknown error occurred',
+      type,
+      severity,
+      {
+        originalError: error.name,
+        stack: error.stack,
+        url: typeof window !== 'undefined' ? window.location.href : 'Unknown'
+      }
+    );
+  }
+
+  /**
+   * Show appropriate user feedback based on error type
+   */
+  showUserFeedback(error) {
+    const userMessages = {
+      [ERROR_TYPES.NETWORK]: {
+        title: 'Connection Problem',
+        message: 'Please check your internet connection and try again.',
+        icon: '🔌'
+      },
+      [ERROR_TYPES.AUTHENTICATION]: {
+        title: 'Authentication Required',
+        message: 'Please log in to continue.',
+        icon: '🔐'
+      },
+      [ERROR_TYPES.AUTHORIZATION]: {
+        title: 'Access Denied',
+        message: 'You don\'t have permission to perform this action.',
+        icon: '🚫'
+      },
+      [ERROR_TYPES.NOT_FOUND]: {
+        title: 'Not Found',
+        message: 'The requested resource could not be found.',
+        icon: '❓'
+      },
+      [ERROR_TYPES.SERVER]: {
+        title: 'Server Error',
+        message: 'Our servers are experiencing issues. Please try again later.',
+        icon: '⚠️'
+      },
+      [ERROR_TYPES.TIMEOUT]: {
+        title: 'Request Timeout',
+        message: 'The request took too long. Please try again.',
+        icon: '⏱️'
+      },
+      [ERROR_TYPES.RATE_LIMIT]: {
+        title: 'Rate Limited',
+        message: 'Too many requests. Please wait a moment and try again.',
+        icon: '🚦'
+      },
+      [ERROR_TYPES.MAINTENANCE]: {
+        title: 'Maintenance Mode',
+        message: 'We\'re currently performing maintenance. Please try again later.',
+        icon: '🔧'
+      }
+    };
+
+    const userMessage = userMessages[error.type] || {
+      title: 'Something went wrong',
+      message: 'An unexpected error occurred. Please try again.',
+      icon: '❌'
+    };
+
+    const toastOptions = {
+      duration: this.getToastDuration(error.severity),
+      position: 'top-right',
+      style: this.getToastStyle(error.severity)
+    };
+
+    // Show appropriate toast based on severity
+    switch (error.severity) {
+      case ERROR_SEVERITY.CRITICAL:
+        toast.error(`${userMessage.icon} ${userMessage.title}: ${userMessage.message}`, toastOptions);
+        break;
+      case ERROR_SEVERITY.HIGH:
+        toast.error(`${userMessage.icon} ${userMessage.message}`, toastOptions);
+        break;
+      case ERROR_SEVERITY.MEDIUM:
+        toast(`${userMessage.icon} ${userMessage.message}`, toastOptions);
+        break;
+      case ERROR_SEVERITY.LOW:
+        toast(`${userMessage.icon} ${userMessage.message}`, { 
+          ...toastOptions,
+          duration: 3000
+        });
+        break;
+    }
+  }
+
+  getToastDuration(severity) {
+    switch (severity) {
+      case ERROR_SEVERITY.CRITICAL: return 8000;
+      case ERROR_SEVERITY.HIGH: return 6000;
+      case ERROR_SEVERITY.MEDIUM: return 4000;
+      case ERROR_SEVERITY.LOW: return 3000;
+      default: return 4000;
+    }
+  }
+
+  getToastStyle(severity) {
+    const baseStyle = {
+      borderRadius: '8px',
+      fontWeight: '500'
+    };
+
+    switch (severity) {
+      case ERROR_SEVERITY.CRITICAL:
+        return {
+          ...baseStyle,
+          background: '#dc2626',
+          color: 'white'
+        };
+      case ERROR_SEVERITY.HIGH:
+        return {
+          ...baseStyle,
+          background: '#ea580c',
+          color: 'white'
+        };
+      case ERROR_SEVERITY.MEDIUM:
+        return {
+          ...baseStyle,
+          background: '#d97706',
+          color: 'white'
+        };
+      case ERROR_SEVERITY.LOW:
+        return {
+          ...baseStyle,
+          background: '#0891b2',
+          color: 'white'
+        };
+      default:
+        return baseStyle;
+    }
+  }
+
+  /**
+   * Log error with enhanced details
+   */
+  logError(error) {
+    const errorReport = {
+      ...error.toJSON(),
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'Unknown',
+      url: typeof window !== 'undefined' ? window.location.href : 'Unknown',
+      timestamp: new Date().toISOString(),
+      sessionId: this.getSessionId()
+    };
+
+    // Store error report
+    this.errorReports.set(error.id, errorReport);
+
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.group(`🔴 Error [${error.severity.toUpperCase()}] - ${error.type}`);
+      console.error('Message:', error.message);
+      console.error('ID:', error.id);
+      console.error('Context:', error.context);
+      console.error('Full Report:', errorReport);
+      console.groupEnd();
+    }
+  }
+
+  /**
+   * Report error to external service (placeholder)
+   */
+  reportError(error) {
+    // In a real application, you would send this to your error tracking service
+    // Example: Sentry, LogRocket, Bugsnag, etc.
+    
+    if (typeof window !== 'undefined' && window.gtag) {
+      // Send to Google Analytics if available
+      window.gtag('event', 'exception', {
+        description: error.message,
+        fatal: error.severity === ERROR_SEVERITY.CRITICAL
+      });
+    }
+
+    // Placeholder for error reporting service
+    console.info('Error reported to monitoring service:', error.id);
+  }
+
+  /**
+   * Retry mechanism with exponential backoff
+   */
+  async retryOperation(operation, options = {}) {
+    const {
+      maxAttempts = this.maxRetryAttempts,
+      baseDelay = this.retryDelay,
+      retryCondition = (error) => error.type === ERROR_TYPES.NETWORK || error.type === ERROR_TYPES.TIMEOUT
+    } = options;
+
+    let lastError;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = this.enhanceError(error);
+        
+        // Don't retry if condition doesn't match or it's the last attempt
+        if (!retryCondition(lastError) || attempt === maxAttempts) {
+          throw lastError;
+        }
+
+        // Calculate delay with exponential backoff
+        const delay = baseDelay * Math.pow(2, attempt - 1);
+        
+        console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms...`, lastError.message);
+        
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+
+    throw lastError;
+  }
+
+  /**
+   * Get or generate session ID
+   */
+  getSessionId() {
+    if (typeof window === 'undefined') return 'server';
+    
+    let sessionId = sessionStorage.getItem('errorHandlerSessionId');
+    if (!sessionId) {
+      sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem('errorHandlerSessionId', sessionId);
+    }
+    return sessionId;
+  }
+
+  /**
+   * Get error reports for debugging
+   */
+  getErrorReports() {
+    return Array.from(this.errorReports.values());
+  }
+
+  /**
+   * Clear error reports
+   */
+  clearErrorReports() {
+    this.errorReports.clear();
+  }
+}
+
+// Create global instance
+export const errorHandler = new ErrorHandler();
+
+/**
+ * Utility functions for common error scenarios
+ */
+export const createAsyncErrorHandler = (operation, options = {}) => {
+  return async (...args) => {
+    try {
+      return await operation(...args);
+    } catch (error) {
+      throw errorHandler.handleError(error, options.showToast !== false);
+    }
+  };
+};
+
+export const createRetryableOperation = (operation, retryOptions = {}) => {
+  return async (...args) => {
+    return errorHandler.retryOperation(() => operation(...args), retryOptions);
+  };
+};
+
+/**
+ * React hook for error handling
+ */
+export const useErrorHandler = () => {
+  const handleError = (error, showToast = true) => {
+    return errorHandler.handleError(error, showToast);
+  };
+
+  const retryOperation = (operation, options = {}) => {
+    return errorHandler.retryOperation(operation, options);
+  };
+
+  const createAsyncHandler = (operation, options = {}) => {
+    return createAsyncErrorHandler(operation, options);
+  };
+
+  return {
+    handleError,
+    retryOperation,
+    createAsyncHandler,
+    errorReports: errorHandler.getErrorReports(),
+    clearErrorReports: errorHandler.clearErrorReports.bind(errorHandler)
+  };
+};
+
+export default errorHandler;

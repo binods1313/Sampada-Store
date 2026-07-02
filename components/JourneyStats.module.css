@@ -1,0 +1,18 @@
+.statsSection {
+  display: flex;
+  justify-content: space-around;
+  background: #0d1126;
+  padding: 40px 0;
+  color: #f5f0eb;
+  border-top: 2px solid #c9a96e;
+}
+.statItem {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.statItem span {
+  font-weight: 900;
+  color: #c9a96e;
+  margin-right: 4px;
+}
