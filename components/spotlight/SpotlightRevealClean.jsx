@@ -1,150 +1,216 @@
 // components/spotlight/SpotlightRevealClean.jsx
-import { useEffect, useRef, useState } from 'react'
-import EchoCanvas from './EchoCanvas'
+import { useEffect, useRef, useState } from 'react';
+import EchoCanvas from './EchoCanvas';
 
-const LERP_FACTOR = 0.15 // Increased from 0.08 for more responsive tracking
-const SPOTLIGHT_RADIUS = 70 // Support page spotlight radius
+const LERP_FACTOR = 0.15;
+const DEFAULT_SPOTLIGHT_RADIUS = 70;
 
 /**
- * Clean spotlight reveal component without built-in text overlays.
- * Designed for custom overlays (like Support page quote).
+ * Clean spotlight reveal — base (muted) + reveal (bright) clipped to cursor.
+ * Pass objectFit="contain" for portrait lookbook heroes; default "cover" for support page.
  */
-export default function SpotlightRevealClean({ baseImage, revealImage }) {
-  const containerRef = useRef(null)
-  const rafRef = useRef(null)
-
-  // Target position (raw mouse)
-  const targetRef = useRef({ x: -9999, y: -9999 })
-  // Current lerped position
-  const currentRef = useRef({ x: -9999, y: -9999 })
+export default function SpotlightRevealClean({
+  baseImage,
+  revealImage,
+  objectPosition = 'center center',
+  objectFit = 'cover',
+  isActive = true,
+  alt = 'Spotlight reveal',
+  revealAlt = 'Spotlight reveal bright',
+  imageStageClassName = '',
+  imageFrameClassName = '',
+  imageClassName = '',
+  spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
+}) {
+  const containerRef = useRef(null);
+  const frameRef = useRef(null);
+  const rafRef = useRef(null);
+  const targetRef = useRef({ x: -9999, y: -9999 });
+  const currentRef = useRef({ x: -9999, y: -9999 });
 
   const [clipPath, setClipPath] = useState(
-    `circle(${SPOTLIGHT_RADIUS}px at 50% 50%)`
-  )
-  const [hasPointer, setHasPointer] = useState(false)
+    `circle(${spotlightRadius}px at 50% 50%)`
+  );
+  const [hasPointer, setHasPointer] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detect pointer capability
-    const mq = window.matchMedia('(pointer: fine)')
-    setHasPointer(mq.matches)
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    const container = containerRef.current
-    if (!container) return
+  useEffect(() => {
+    if (!isActive) return undefined;
+
+    const mq = window.matchMedia('(pointer: fine)');
+    setHasPointer(mq.matches);
+
+    const container = containerRef.current;
+    if (!container) return undefined;
+
+    const getTrackEl = () =>
+      (objectFit === 'contain' && frameRef.current) ? frameRef.current : container;
+
+    const centerTarget = () => {
+      const el = getTrackEl();
+      const bounds = el.getBoundingClientRect();
+      targetRef.current = { x: bounds.width / 2, y: bounds.height / 2 };
+      currentRef.current = { x: bounds.width / 2, y: bounds.height / 2 };
+    };
+
+    centerTarget();
 
     const onMouseMove = (e) => {
-      const rect = container.getBoundingClientRect()
+      const el = getTrackEl();
+      const bounds = el.getBoundingClientRect();
       targetRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      }
-    }
+        x: e.clientX - bounds.left,
+        y: e.clientY - bounds.top,
+      };
+    };
 
     const onMouseLeave = () => {
-      // Animate back to center
-      const rect = container.getBoundingClientRect()
-      targetRef.current = { x: rect.width / 2, y: rect.height / 2 }
-    }
+      centerTarget();
+    };
 
-    container.addEventListener('mousemove', onMouseMove)
-    container.addEventListener('mouseleave', onMouseLeave)
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('mouseleave', onMouseLeave);
 
-    // Lerp animation loop
     const animate = () => {
-      const t = targetRef.current
-      const c = currentRef.current
+      const t = targetRef.current;
+      const c = currentRef.current;
 
-      // Initialize current to target on first frame
-      if (c.x === -9999) {
-        currentRef.current = { ...t }
-      }
-
-      // Lerp smoothing
       currentRef.current = {
         x: c.x + (t.x - c.x) * LERP_FACTOR,
         y: c.y + (t.y - c.y) * LERP_FACTOR,
-      }
+      };
 
       setClipPath(
-        `circle(${SPOTLIGHT_RADIUS}px at ${currentRef.current.x}px ${currentRef.current.y}px)`
-      )
+        `circle(${spotlightRadius}px at ${currentRef.current.x}px ${currentRef.current.y}px)`
+      );
 
-      rafRef.current = requestAnimationFrame(animate)
-    }
+      rafRef.current = requestAnimationFrame(animate);
+    };
 
-    rafRef.current = requestAnimationFrame(animate)
+    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
-      container.removeEventListener('mousemove', onMouseMove)
-      container.removeEventListener('mouseleave', onMouseLeave)
-      cancelAnimationFrame(rafRef.current)
-    }
-  }, [])
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('mouseleave', onMouseLeave);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [isActive, baseImage, revealImage, spotlightRadius, objectFit]);
+
+  const mobileFallback = isMobile
+    ? 'circle(22% at 50% 55%)'
+    : 'circle(38% at 50% 50%)';
+
+  const isContain = objectFit === 'contain';
+  const baseFilter = isContain
+    ? 'brightness(0.72) saturate(0.8)'
+    : 'brightness(0.45) saturate(0.65)';
+  const revealFilter = isContain
+    ? 'saturate(1.1) contrast(1.06) brightness(1.08)'
+    : 'saturate(1.08) contrast(1.04) brightness(1.05)';
+
+  const sharedImageStyle = {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit,
+    objectPosition,
+    margin: 'auto',
+  };
+
+  const imageLayers = (
+    <>
+      <img
+        src={baseImage}
+        alt={alt}
+        className={imageClassName}
+        draggable={false}
+        style={{
+          ...sharedImageStyle,
+          zIndex: 0,
+          filter: baseFilter,
+        }}
+      />
+      <img
+        src={revealImage}
+        alt={revealAlt}
+        className={imageClassName}
+        draggable={false}
+        style={{
+          ...sharedImageStyle,
+          zIndex: 1,
+          clipPath: hasPointer ? clipPath : mobileFallback,
+          transition: 'clip-path 0.35s ease-out',
+          filter: revealFilter,
+          opacity: isMobile ? 0.9 : 1,
+        }}
+      />
+    </>
+  );
 
   return (
     <div
       ref={containerRef}
+      aria-hidden={!isActive}
       style={{
         position: 'absolute',
         inset: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: '#0a0a0a',
         overflow: 'hidden',
+        opacity: isActive ? 1 : 0,
+        visibility: isActive ? 'visible' : 'hidden',
+        pointerEvents: isActive ? 'auto' : 'none',
+        transition: 'opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        zIndex: isActive ? 1 : 0,
       }}
     >
-      {/* Base layer — darker/muted image */}
-      <img
-        src={baseImage}
-        alt="Kavya"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: '60% top',
-          zIndex: 0,
-          filter: 'brightness(0.5) saturate(0.7)',
-        }}
-      />
+      {isContain ? (
+        <div
+          className={imageStageClassName}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 0,
+          }}
+        >
+          <div
+            ref={frameRef}
+            className={imageFrameClassName}
+            style={{ position: 'relative', width: '100%', height: '100%' }}
+          >
+            {imageLayers}
+          </div>
+        </div>
+      ) : (
+        imageLayers
+      )}
 
-      {/* Reveal layer — brighter image clipped to spotlight */}
-      <img
-        src={revealImage}
-        alt="Kavya reveal"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: '60% top',
-          zIndex: 1,
-          clipPath: hasPointer 
-            ? clipPath 
-            : (typeof window !== 'undefined' && window.innerWidth <= 768 
-                ? 'circle(20% at 50% 60%)' 
-                : 'circle(35% at 50% 50%)'),
-          transition: 'clip-path 0.4s ease-out',
-          filter: 'saturate(1.05) contrast(1.02)',
-          opacity: (typeof window !== 'undefined' && window.innerWidth <= 768) ? 0.8 : 1,
-        }}
-      />
-
-      {/* Subtle vignette overlay */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background:
-            'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.3) 100%)',
+          background: isContain
+            ? 'radial-gradient(ellipse at center, transparent 45%, rgba(26,10,8,0.18) 100%)'
+            : 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.3) 100%)',
           zIndex: 2,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Echo rings canvas */}
       <EchoCanvas />
     </div>
-  )
+  );
 }

@@ -76,6 +76,7 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-rx": "2.0.1",
+    "recharts": "^3.9.0",
     "redis": "^5.8.2",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
@@ -133,5 +134,9 @@
     "tar": "^7.5.11",
     "sanity": "^5.20.0",
     "smol-toml": "^1.6.1"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "sharp@0.34.5": true
   }
 }

@@ -4,8 +4,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/client'
 import { getLocalKavyaImages } from '@/lib/getLocalStories'
-import '../../styles/hero-banner.css';
-import SpotlightRevealClean from '@/components/spotlight/SpotlightRevealClean';
+import StoriesHeroBanner, { STORIES_HERO_SLIDES } from '@/components/StoriesHeroBanner';
 import JourneyStats from '@/components/JourneyStats';
 import styles from './Stories.module.css'
 import animStyles from '@/styles/animations.module.css';
@@ -414,89 +413,15 @@ export default function StoriesIndex({ stories, banner }) {
          <title>Sampada Stories — Lookbooks &amp; Collections</title>
          <meta name="description" content="Explore Sampada's lookbooks, model stories, and curated collections. Featuring Kavya in Winter Drop 2026." />
          <meta name="viewport" content="width=device-width, initial-scale=1" />
-         {heroImage && <link rel="preload" href={heroImage} as="image" />}
-         {heroImage && <meta property="og:image" content={heroImage} />}
+         <link rel="preload" href={STORIES_HERO_SLIDES[0].image} as="image" />
+         <meta property="og:image" content={`https://sampada.store${STORIES_HERO_SLIDES[0].image}`} />
+         {heroImage && <link rel="preload" href={heroImage} as="image" fetchPriority="low" />}
          <meta property="og:title" content="Sampada Stories — Lookbooks &amp; Collections" />
        </Head>
 
        <main>
-         {/* 1. Hero Section: DARK - Spotlight Reveal (Support Page Style) */}
-         <section className="section-dark" style={{ padding: 0 }}>
-           <div className={styles.heroSpotlight}>
-             <SpotlightRevealClean
-               baseImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17.jpeg"
-               revealImage="/images/kavya-portfolio/WhatsApp Image 2026-02-20 at 09.01.17 (1).jpeg"
-             />
-             
-             {/* Quotes/Text overlay in Support page style */}
-             <div className="hero-quotes-section">
-               {/* Left quote */}
-               <div className="hero-quote-block left">
-                 <span className="quote-mark">&ldquo;</span>
-                 <p className="quote-text" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
-                   Grace is not just how you look &mdash;<br />
-                   it&apos;s how you carry your story.
-                 </p>
-                 <div className="quote-rule" />
-                 <span className="quote-brand">SAMPADA ORIGINALS&trade;</span>
-               </div>
-               
-               {/* Center Title */}
-               <div className="hero-quote-center">
-                 <div style={{ textAlign: 'center', pointerEvents: 'none', userSelect: 'none' }}>
-                   <p style={{
-                     fontFamily: "'Montserrat', sans-serif",
-                     fontSize: '0.72rem',
-                     letterSpacing: '0.28em',
-                     textTransform: 'uppercase',
-                     color: '#c9a96e',
-                     margin: '0 0 18px',
-                     fontWeight: 600,
-                     textShadow: '0 2px 8px rgba(0,0,0,0.8)'
-                   }}>
-                   Meet the Face
-                 </p>
-                 <h1 className={animStyles.cinematicFade} style={{
-                   fontFamily: "'Playfair Display', serif",
-                   fontSize: 'clamp(5rem, 12vw, 8rem)',
-                   fontWeight: 900,
-                   color: '#f5f0eb',
-                   margin: '0 0 20px',
-                   lineHeight: 0.95,
-                   letterSpacing: '-0.02em',
-                   textShadow: '0 4px 32px rgba(13,17,38,0.8)',
-                 }}>
-                   Kavya
-                 </h1>
-                 <p className={animStyles.cinematicFade} style={{
-                   fontFamily: "'Montserrat', sans-serif",
-                   fontSize: '0.8rem',
-                   letterSpacing: '0.22em',
-                   textTransform: 'uppercase',
-                   color: 'rgba(245,240,235,0.85)',
-                   margin: 0,
-                   fontWeight: 500,
-                   textShadow: '0 2px 8px rgba(0,0,0,0.8)',
-                   animationDelay: '0.2s'
-                 }}>
-                   Sampada Originals&trade;
-                 </p>
-               </div>
-              </div>
-
-              {/* Right quote */}
-              <div className="hero-quote-block right">
-                <span className="quote-mark">&ldquo;</span>
-                <p className="quote-text" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
-                  Every look is a legacy<br />
-                  worn with intention.
-                </p>
-                <div className="quote-rule" />
-                <span className="quote-season">WINTER DROP 2026</span>
-              </div>
-               </div>
-             </div>
-           </section>
+         {/* 1. Hero — full-bleed editorial spotlight carousel */}
+         <StoriesHeroBanner />
 
 
         {banner?.collectionQuote?.storiesQuote && (

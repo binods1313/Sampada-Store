@@ -1,0 +1,373 @@
+/* StoriesHeroBanner.module.css
+   Ivory/Sandal/Crimson/Gold · Claymorphism · Full-bleed editorial */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+.hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Full-bleed hero body ── */
+.heroBleed {
+  position: relative;
+  width: 100%;
+  min-height: min(920px, 88vh);
+  height: min(920px, 88vh);
+  background: #1A0A08;
+  overflow: hidden;
+}
+
+.slideStack {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity;
+}
+
+.slideActive {
+  opacity: 1;
+  z-index: 1;
+}
+
+.slideImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Base editorial wash + per-slide overlay variants for quote legibility */
+.editorialOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  background:
+    linear-gradient(to top, rgba(26, 10, 8, 0.55) 0%, transparent 22%),
+    linear-gradient(to bottom, rgba(253, 246, 236, 0.12) 0%, transparent 10%);
+}
+
+.washBalanced {
+  background:
+    linear-gradient(105deg, rgba(26, 10, 8, 0.55) 0%, transparent 28%),
+    linear-gradient(285deg, rgba(26, 10, 8, 0.55) 0%, transparent 28%),
+    linear-gradient(to top, rgba(26, 10, 8, 0.45) 0%, transparent 20%),
+    radial-gradient(ellipse 80% 60% at 50% 40%, transparent 35%, rgba(45, 27, 14, 0.2) 100%);
+}
+
+.washLeft {
+  background:
+    linear-gradient(105deg, rgba(26, 10, 8, 0.72) 0%, rgba(26, 10, 8, 0.25) 22%, transparent 42%),
+    linear-gradient(285deg, rgba(26, 10, 8, 0.35) 0%, transparent 25%),
+    linear-gradient(to top, rgba(26, 10, 8, 0.4) 0%, transparent 18%);
+}
+
+.washRight {
+  background:
+    linear-gradient(285deg, rgba(26, 10, 8, 0.72) 0%, rgba(26, 10, 8, 0.25) 22%, transparent 42%),
+    linear-gradient(105deg, rgba(26, 10, 8, 0.35) 0%, transparent 25%),
+    linear-gradient(to top, rgba(26, 10, 8, 0.4) 0%, transparent 18%);
+}
+
+.washCenter {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 45%, rgba(26, 10, 8, 0.5) 0%, transparent 65%),
+    linear-gradient(105deg, rgba(26, 10, 8, 0.45) 0%, transparent 24%),
+    linear-gradient(285deg, rgba(26, 10, 8, 0.45) 0%, transparent 24%),
+    linear-gradient(to top, rgba(26, 10, 8, 0.35) 0%, transparent 16%);
+}
+
+/* ── Quotes layer ── */
+.quotesLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 48px 5vw 100px;
+  pointer-events: none;
+  gap: 24px;
+}
+
+/* Direct quote overlays on image — no background cards */
+.quoteBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 240px;
+  animation: fadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.quoteLeft  { justify-self: start; align-self: center; }
+.quoteRight { justify-self: end;   align-self: center; text-align: right; }
+
+.quoteMark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 0.6;
+  color: #C9A84C;
+  opacity: 0.85;
+  display: block;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+.quoteText {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 1.35vw, 18px);
+  font-style: italic;
+  font-weight: 400;
+  color: #FDF6EC;
+  line-height: 1.75;
+  margin: 0;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+}
+
+.quoteRule {
+  width: 40px;
+  height: 1.5px;
+  background: #C9A84C;
+  margin: 4px 0;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+
+.quoteRight .quoteRule {
+  margin-left: auto;
+}
+
+.quoteBrand,
+.quoteSeason {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.9);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Center title block */
+.centerBlock {
+  text-align: center;
+  pointer-events: none;
+  animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.12s both;
+}
+
+.eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin: 0 0 16px;
+  font-weight: 600;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.heroTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(4rem, 11vw, 7.5rem);
+  font-weight: 700;
+  color: #FDF6EC;
+  margin: 0 0 12px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 32px rgba(26, 10, 8, 0.75);
+}
+
+.slideLabel {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-style: italic;
+  color: rgba(253, 246, 236, 0.9);
+  margin: 0 0 8px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.35s ease;
+}
+
+.heroSub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.9);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bottom fade */
+.heroFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, rgba(26, 10, 8, 0.85));
+  z-index: 8;
+  pointer-events: none;
+}
+
+/* ── Carousel controls ── */
+.carouselControls {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(253, 246, 236, 0.9), rgba(245, 236, 215, 0.85));
+  box-shadow:
+    6px 6px 16px rgba(0, 0, 0, 0.12),
+    -3px -3px 10px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  pointer-events: auto;
+}
+
+.carouselArrow {
+  background: transparent;
+  border: 1px solid rgba(139, 26, 26, 0.35);
+  color: #8B1A1A;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.carouselArrow:hover {
+  background: #8B1A1A;
+  color: #FDF6EC;
+}
+
+.slideDots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 26, 26, 0.45);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+
+.dotActive {
+  background: #8B1A1A;
+  transform: scale(1.2);
+}
+
+/* ═══════════════════════════════════════════
+   TABLET (768–1023px)
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+  .heroBleed {
+    min-height: min(720px, 82vh);
+    height: min(720px, 82vh);
+  }
+
+  .quotesLayer {
+    padding: 40px 4vw 90px;
+  }
+
+  .quoteBlock {
+    max-width: 200px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE (<768px)
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .heroBleed {
+    min-height: 580px;
+    height: 580px;
+  }
+
+  .quotesLayer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 16px 80px;
+    gap: 10px;
+  }
+
+  .centerBlock {
+    order: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .quoteLeft  { order: 1; align-self: flex-start; max-width: 90%; }
+  .quoteRight { order: 2; align-self: flex-end;   max-width: 90%; text-align: left; }
+
+  .quoteBlock {
+    max-width: 100%;
+  }
+
+  .quoteRight .quoteRule {
+    margin-left: 0;
+  }
+
+  .heroTitle {
+    font-size: clamp(3.2rem, 14vw, 5rem);
+  }
+
+  .carouselControls {
+    bottom: 16px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroBleed {
+    min-height: 520px;
+    height: 520px;
+  }
+
+  .quoteMark {
+    font-size: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quoteBlock,
+  .centerBlock,
+  .editorialOverlay {
+    animation: none;
+    transition: none;
+  }
+}

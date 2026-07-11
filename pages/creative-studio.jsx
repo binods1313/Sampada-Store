@@ -69,31 +69,31 @@ const START_CARDS = [
   { 
     label: 'Start new design', 
     icon: '✦',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
+    image: '/images/creative-studio/start-new-design.jpg',
     overlay: 'rgba(201,168,76,0.75)'
   },
   { 
     label: 'Upload', 
     icon: '↑',
-    image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&q=80',
+    image: '/images/creative-studio/upload.jpg',
     overlay: 'rgba(26,10,8,0.65)'
   },
   { 
     label: 'Edit photos', 
     icon: '◈',
-    image: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400&q=80',
+    image: '/images/creative-studio/edit-photos.jpg',
     overlay: 'rgba(30,58,74,0.75)'
   },
   { 
     label: 'Create video', 
     icon: '▶',
-    image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80',
+    image: '/images/creative-studio/create-video.jpg',
     overlay: 'rgba(42,26,53,0.75)'
   },
   { 
     label: 'Generate with AI', 
     icon: '◆',
-    image: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400&q=80',
+    image: '/images/creative-studio/generate-with-ai.jpg',
     overlay: 'rgba(139,26,26,0.75)'
   },
 ];
@@ -176,33 +176,45 @@ const TEMPLATE_DATA = [
   { label: 'Simmi Tailors',    sub: 'Drapes',          image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=300&q=80', overlay: 'rgba(58,42,26,0.6)' },
 ];
 
+const MODEL_OPTIONS = [
+  { label: 'Grok Imagine', value: 'grok-imagine-image' },
+  { label: 'Grok Imagine HD', value: 'grok-imagine-image-quality' },
+];
+
+const ASPECT_OPTIONS = [
+  { label: '1:1 Square', value: '1:1' },
+  { label: '16:9 Wide', value: '16:9' },
+  { label: '9:16 Portrait', value: '9:16' },
+  { label: '4:3 Standard', value: '4:3' },
+];
+
 const FEATURED_TOOLS = [
   {
     title: 'Text to Image',
     desc: 'Generate images from a detailed text description',
     icon: '✦',
-    image: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=500&q=80',
+    image: '/images/creative-studio/text-to-image.jpg',
     overlay: 'rgba(139,26,26,0.78)',
   },
   {
     title: 'Generative Fill',
     desc: 'Use a brush to remove objects or paint in new ones',
     icon: '◈',
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80',
+    image: '/images/creative-studio/generative-fill.jpg',
     overlay: 'rgba(20,60,40,0.78)',
   },
   {
     title: 'Text Effects',
     desc: 'Apply styles or textures to text with a prompt',
     icon: 'T',
-    image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&q=80',
+    image: '/images/creative-studio/text-effects.jpg',
     overlay: 'rgba(80,50,10,0.78)',
   },
   {
     title: 'Generative Recolor',
     desc: 'Generate color variations of your vector artwork',
     icon: '◎',
-    image: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?w=500&q=80',
+    image: '/images/creative-studio/generative-recolor.jpg',
     overlay: 'rgba(10,30,70,0.78)',
   },
 ];
@@ -591,8 +603,14 @@ export default function CreativeStudio() {
 
   const [activeNav, setActiveNav] = useState('Generate');
   const [viewMode, setViewMode] = useState('home'); // 'home' or 'canvas'
-  const [prompt,    setPrompt]    = useState('');
-  const [genState,  setGenState]  = useState('idle'); // 'idle'|'loading'|'done'
+  const [prompt, setPrompt] = useState('');
+  const [selectedModel, setSelectedModel] = useState('grok-imagine-image');
+  const [aspectRatio, setAspectRatio] = useState('1:1');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  const [savedImagePath, setSavedImagePath] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState(null);
   const [showFonts, setShowFonts] = useState(false);
   const [selectedFont, setSelectedFont] = useState('Inter');
 
@@ -609,11 +627,65 @@ export default function CreativeStudio() {
   }, []);
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || genState === 'loading') return;
-    setGenState('loading');
-    await new Promise(r => setTimeout(r, 2800));
-    setGenState('done');
-    setTimeout(() => setGenState('idle'), 2200);
+    if (!prompt.trim() || isGenerating) return;
+    setIsGenerating(true);
+    setGeneratedImage(null);
+    setSavedImagePath(null);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/creative/grok-imagine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          model: selectedModel,
+          aspectRatio,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Generation failed');
+      }
+
+      if (data.imageUrl) {
+        setGeneratedImage(data.imageUrl);
+      } else {
+        throw new Error('No image returned from API');
+      }
+    } catch (err) {
+      console.error('Generate error:', err);
+      setError(err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleSaveToProject = async () => {
+    if (!generatedImage || isSaving) return;
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/creative/save-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: generatedImage,
+          filename: `generated-${Date.now()}`,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Save failed');
+      setSavedImagePath(data.path);
+    } catch (err) {
+      console.error('Save error:', err);
+      setError(err.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -878,43 +950,145 @@ export default function CreativeStudio() {
                 />
 
                 <div style={{
-                  padding: '5px 12px', borderRadius: DS.r8, cursor: 'pointer',
-                  background: DS.goldGlow,
-                  border: `1px solid ${DS.border}`,
-                  color: DS.gold, fontSize: 12, fontFamily: DS.fontBody,
-                  whiteSpace: 'nowrap', transition: DS.t15,
+                  position: 'relative', zIndex: 100, pointerEvents: 'auto',
+                  display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0,
                 }}>
-                  Imagen 3 ▾
-                </div>
+                  <select
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    style={{
+                      background: '#2a1a0e',
+                      color: DS.gold,
+                      border: '1px solid rgba(201,168,76,0.3)',
+                      borderRadius: DS.r8,
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      fontFamily: DS.fontBody,
+                    }}
+                  >
+                    {MODEL_OPTIONS.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
 
-                <div style={{
-                  padding: '5px 12px', borderRadius: DS.r8, cursor: 'pointer',
-                  background: DS.goldGlow,
-                  border: `1px solid ${DS.border}`,
-                  color: DS.cream, fontSize: 12, fontFamily: DS.fontBody,
-                  transition: DS.t15,
-                }}>
-                  ⬜ ▾
+                  <select
+                    value={aspectRatio}
+                    onChange={(e) => setAspectRatio(e.target.value)}
+                    style={{
+                      background: '#2a1a0e',
+                      color: DS.cream,
+                      border: '1px solid rgba(201,168,76,0.3)',
+                      borderRadius: DS.r8,
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      fontFamily: DS.fontBody,
+                    }}
+                  >
+                    {ASPECT_OPTIONS.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <button
                   onClick={handleGenerate}
-                  disabled={genState === 'loading'}
+                  disabled={isGenerating}
                   style={{
                     padding: '8px 22px', borderRadius: DS.r8,
-                    background: genState === 'loading' ? 'rgba(139,26,26,0.4)' : DS.gradCrimson,
+                    background: isGenerating ? 'rgba(139,26,26,0.4)' : DS.gradCrimson,
                     border: `1px solid rgba(201,168,76,0.45)`,
                     color: DS.cream, fontSize: 13, fontWeight: 600,
-                    cursor: genState === 'loading' ? 'not-allowed' : 'pointer',
+                    cursor: isGenerating ? 'not-allowed' : 'pointer',
                     whiteSpace: 'nowrap',
                     fontFamily: DS.fontBody, letterSpacing: '0.3px',
                     transition: DS.t15,
-                    opacity: genState === 'loading' ? 0.7 : 1,
+                    opacity: isGenerating ? 0.7 : 1,
                   }}
                 >
-                  {genState === 'loading' ? '⏳ Generating…' : genState === 'done' ? '✓ Done!' : '✦ Generate'}
+                  {isGenerating ? '⏳ Generating…' : '✦ Generate'}
                 </button>
               </div>
+
+              {isGenerating && (
+                <div style={{ textAlign: 'center', padding: '40px' }}>
+                  <p style={{ color: DS.gold }}>✦ Generating your image...</p>
+                </div>
+              )}
+
+              {error && (
+                <div style={{
+                  color: '#ff6b6b', padding: '16px',
+                  background: 'rgba(255,0,0,0.1)',
+                  borderRadius: DS.r8, margin: '16px auto',
+                  maxWidth: 700,
+                }}>
+                  ✗ {error}
+                </div>
+              )}
+
+              {generatedImage && !isGenerating && (
+                <div style={{ marginTop: '24px' }}>
+                  <img
+                    src={generatedImage}
+                    alt="Generated by Sampada AI"
+                    style={{
+                      width: '100%',
+                      maxWidth: '768px',
+                      borderRadius: DS.r16,
+                      display: 'block',
+                      margin: '0 auto',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                    }}
+                  />
+                  <div style={{
+                    textAlign: 'center', marginTop: '12px',
+                    display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap',
+                  }}>
+                    <a
+                      href={generatedImage}
+                      download="sampada-generated.png"
+                      style={{
+                        color: DS.gold,
+                        textDecoration: 'underline',
+                        fontSize: '14px',
+                      }}
+                    >
+                      ↓ Download Image
+                    </a>
+                    <button
+                      onClick={handleSaveToProject}
+                      disabled={isSaving || !!savedImagePath}
+                      style={{
+                        background: 'transparent',
+                        border: `1px solid ${DS.gold}`,
+                        color: DS.gold,
+                        borderRadius: DS.r8,
+                        padding: '6px 14px',
+                        fontSize: '13px',
+                        cursor: isSaving || savedImagePath ? 'not-allowed' : 'pointer',
+                        opacity: isSaving || savedImagePath ? 0.6 : 1,
+                        fontFamily: DS.fontBody,
+                      }}
+                    >
+                      {savedImagePath ? '✓ Saved to Project' : isSaving ? 'Saving…' : '＋ Save to Project'}
+                    </button>
+                  </div>
+                  {savedImagePath && (
+                    <p style={{
+                      textAlign: 'center', marginTop: 8,
+                      fontSize: 12, color: DS.creamDim, fontFamily: DS.fontMono,
+                    }}>
+                      {savedImagePath}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Keyboard hint */}
               <div style={{ marginTop: 10, fontSize: 11, color: DS.creamFaint, fontFamily: DS.fontBody }}>
