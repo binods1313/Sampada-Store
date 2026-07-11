@@ -1348,27 +1348,36 @@ export default function SampadaNavbar({
             onClick={() => setShowCart(true)}
             aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
             className="icon-btn"
-            style={{
-              position: 'relative',
-              transition: 'transform 0.2s ease, filter 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.08)';
-              e.currentTarget.style.filter = 'drop-shadow(0 2px 8px rgba(201,168,76,0.5))';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.filter = 'none';
-            }}
+            style={{ position: 'relative' }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/icons/sampada-cart.svg"
-              alt="Cart"
-              width={32}
-              height={32}
-              style={{ display: 'block', width: 32, height: 32 }}
-            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.2s ease, filter 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+                e.currentTarget.style.filter = 'drop-shadow(0 2px 8px rgba(201,168,76,0.55))';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.filter = 'none';
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/icons/sampada-cart.png"
+                alt="Cart"
+                width={34}
+                height={34}
+                style={{
+                  display: 'block',
+                  transition: 'transform 0.2s ease, filter 0.2s ease',
+                }}
+              />
+            </div>
             {(totalQuantities || 0) > 0 && (
               <span 
                 style={{
