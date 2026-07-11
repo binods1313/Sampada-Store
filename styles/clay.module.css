@@ -1,465 +1,832 @@
 /* ============================================================
    clay.module.css — Sampada Originals Claymorphism Design System
-   Used by: components/legal/LegalPageLayout.jsx
+   Used by: components/legal/LegalPageLayout.jsx, components/HeroBanner.jsx
    ============================================================ */
 
 /* ── Design Tokens ── */
 .root {
-  --clay-ivory:        #FDF6EC;
-  --clay-sandalwood:   #F5ECD7;
-  --clay-crimson:      #8B1A1A;
-  --clay-gold:         #C9A84C;
-  --clay-cream-bg:     #FAF6F0;
-  --clay-shadow-dark:  rgba(0, 0, 0, 0.12);
-  --clay-shadow-light: rgba(255, 255, 255, 0.85);
-  --clay-text-main:    #2D1B0E;
-  --clay-text-muted:   #6B4D35;
+   --clay-ivory:        #FDF6EC;
+   --clay-sandalwood:   #F5ECD7;
+   --clay-crimson:      #8B1A1A;
+   --clay-gold:         #C9A84C;
+   --clay-cream-bg:     #FAF6F0;
+   --clay-shadow-dark:  rgba(0, 0, 0, 0.12);
+   --clay-shadow-light: rgba(255, 255, 255, 0.85);
+   --clay-text-main:    #2D1B0E;
+   --clay-text-muted:   #6B4D35;
 }
 
 /* ── Page Shell ── */
 .pageWrapper {
-  background: #FAF6F0;
-  min-height: 100vh;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  color: #2D1B0E;
+   background: #FAF6F0;
+   min-height: 100vh;
+   font-family: 'Inter', 'Segoe UI', sans-serif;
+   color: #2D1B0E;
 }
 
 /* ── Hero Banner ── */
 .clayHero {
-  background: linear-gradient(135deg, #FDF6EC 0%, #F5ECD7 60%, #FAF0DC 100%);
-  border-radius: 0 0 40px 40px;
-  box-shadow: 0 12px 40px rgba(139, 26, 26, 0.08);
-  padding: 64px 24px 52px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+   background: linear-gradient(135deg, #FDF6EC 0%, #F5ECD7 60%, #FAF0DC 100%);
+   border-radius: 0 0 40px 40px;
+   box-shadow: 0 12px 40px rgba(139, 26, 26, 0.08);
+   padding: 64px 24px 52px;
+   text-align: center;
+   position: relative;
+   overflow: hidden;
 }
 
 .clayHero::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
-  pointer-events: none;
+   content: '';
+   position: absolute;
+   top: -60px;
+   right: -60px;
+   width: 280px;
+   height: 280px;
+   border-radius: 50%;
+   background: radial-gradient(circle, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
+   pointer-events: none;
 }
 
 .clayHero::after {
-  content: '';
-  position: absolute;
-  bottom: -40px;
-  left: -40px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 26, 26, 0.06) 0%, transparent 70%);
-  pointer-events: none;
+   content: '';
+   position: absolute;
+   bottom: -40px;
+   left: -40px;
+   width: 200px;
+   height: 200px;
+   border-radius: 50%;
+   background: radial-gradient(circle, rgba(139, 26, 26, 0.06) 0%, transparent 70%);
+   pointer-events: none;
 }
 
 .heroEyebrow {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(139, 26, 26, 0.6);
-  font-weight: 700;
-  margin-bottom: 12px;
+   font-size: 11px;
+   letter-spacing: 0.18em;
+   text-transform: uppercase;
+   color: rgba(139, 26, 26, 0.6);
+   font-weight: 700;
+   margin-bottom: 12px;
 }
 
 .heroTitle {
-  font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
-  font-size: clamp(32px, 5vw, 52px);
-  font-weight: 800;
-  color: #8B1A1A;
-  margin: 0 0 16px;
-  line-height: 1.15;
+   font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+   font-size: clamp(32px, 5vw, 52px);
+   font-weight: 800;
+   color: #8B1A1A;
+   margin: 0 0 16px;
+   line-height: 1.15;
 }
 
 .goldRule {
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #C9A84C, transparent);
-  margin: 0 auto 16px;
-  border-radius: 2px;
+   width: 80px;
+   height: 3px;
+   background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+   margin: 0 auto 16px;
+   border-radius: 2px;
 }
 
 .heroSubtitle {
-  font-size: 16px;
-  color: #6B4D35;
-  max-width: 560px;
-  margin: 0 auto 14px;
-  line-height: 1.6;
+   font-size: 16px;
+   color: #6B4D35;
+   max-width: 560px;
+   margin: 0 auto 14px;
+   line-height: 1.6;
 }
 
 .lastUpdated {
-  display: inline-block;
-  background: rgba(201, 168, 76, 0.15);
-  border: 1px solid rgba(201, 168, 76, 0.4);
-  border-radius: 20px;
-  padding: 4px 14px;
-  font-size: 12px;
-  color: #8B5E3C;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+   display: inline-block;
+   background: rgba(201, 168, 76, 0.15);
+   border: 1px solid rgba(201, 168, 76, 0.4);
+   border-radius: 20px;
+   padding: 4px 14px;
+   font-size: 12px;
+   color: #8B5E3C;
+   font-weight: 500;
+   letter-spacing: 0.02em;
 }
 
 /* ── Trust Badge Row ── */
 .clayTrustBadge {
-  background: #1A1A2E;
-  padding: 14px 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 36px;
-  flex-wrap: wrap;
+   background: #1A1A2E;
+   padding: 14px 24px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 36px;
+   flex-wrap: wrap;
 }
 
 .clayTrustItem {
-  color: #E8D5A3;
-  font-size: 12px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
+   color: #E8D5A3;
+   font-size: 12px;
+   font-weight: 500;
+   display: flex;
+   align-items: center;
+   gap: 7px;
+   letter-spacing: 0.05em;
+   white-space: nowrap;
 }
 
 .trustIcon {
-  font-size: 14px;
-  line-height: 1;
+   font-size: 14px;
+   line-height: 1;
 }
 
 /* ── Body Two-Column Layout ── */
 .bodyLayout {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 32px;
-  align-items: start;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 40px 24px 80px;
+   display: grid;
+   grid-template-columns: 240px 1fr;
+   gap: 32px;
+   align-items: start;
 }
 
 /* ── Sticky TOC Sidebar ── */
 .clayTOC {
-  background: #FDF6EC;
-  border-radius: 20px;
-  box-shadow:
-    6px 6px 16px rgba(0, 0, 0, 0.10),
-    -6px -6px 16px rgba(255, 255, 255, 0.85);
-  padding: 20px 16px;
-  position: sticky;
-  top: 100px;
+   background: #FDF6EC;
+   border-radius: 20px;
+   box-shadow:
+     6px 6px 16px rgba(0, 0, 0, 0.10),
+     -6px -6px 16px rgba(255, 255, 255, 0.85);
+   padding: 20px 16px;
+   position: sticky;
+   top: 100px;
 }
 
 .tocHeading {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(139, 26, 26, 0.5);
-  font-weight: 700;
-  padding: 0 8px;
-  margin-bottom: 12px;
+   font-size: 10px;
+   letter-spacing: 0.14em;
+   text-transform: uppercase;
+   color: rgba(139, 26, 26, 0.5);
+   font-weight: 700;
+   padding: 0 8px;
+   margin-bottom: 12px;
 }
 
 .tocList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
 }
 
 .clayTOCItem {
-  display: block;
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  color: #5a3e2b;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 400;
-  line-height: 1.4;
+   display: block;
+   padding: 8px 14px;
+   border-radius: 12px;
+   font-size: 13px;
+   color: #5a3e2b;
+   transition: all 0.2s ease;
+   cursor: pointer;
+   text-decoration: none;
+   font-weight: 400;
+   line-height: 1.4;
 }
 
 .clayTOCItem:hover {
-  background: #F5ECD7;
-  color: #8B1A1A;
-  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.07);
-  font-weight: 500;
+   background: #F5ECD7;
+   color: #8B1A1A;
+   box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.07);
+   font-weight: 500;
 }
 
 .clayTOCItemActive {
-  background: #F5ECD7;
-  color: #8B1A1A;
-  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.08);
-  font-weight: 700;
+   background: #F5ECD7;
+   color: #8B1A1A;
+   box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.08);
+   font-weight: 700;
 }
 
 /* ── Content Column ── */
 .contentColumn {
-  min-width: 0;
+   min-width: 0;
 }
 
 /* ── Quick Summary Card ── */
 .claySummaryCard {
-  background: linear-gradient(135deg, #FDF6EC, #F9F0E0);
-  border-left: 4px solid #C9A84C;
-  border-radius: 20px;
-  box-shadow:
-    6px 6px 16px rgba(0, 0, 0, 0.09),
-    -6px -6px 16px rgba(255, 255, 255, 0.80);
-  padding: 24px 28px;
-  margin-bottom: 28px;
+   background: linear-gradient(135deg, #FDF6EC, #F9F0E0);
+   border-left: 4px solid #C9A84C;
+   border-radius: 20px;
+   box-shadow:
+     6px 6px 16px rgba(0, 0, 0, 0.09),
+     -6px -6px 16px rgba(255, 255, 255, 0.80);
+   padding: 24px 28px;
+   margin-bottom: 28px;
 }
 
 .summaryHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-bottom: 14px;
 }
 
 .summaryIcon {
-  font-size: 20px;
-  line-height: 1;
+   font-size: 20px;
+   line-height: 1;
 }
 
 .summaryTitle {
-  font-size: 15px;
-  font-weight: 700;
-  color: #8B1A1A;
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
-  letter-spacing: 0.02em;
+   font-size: 1.1rem;
+   font-weight: 700;
+   color: #8B1A1A;
+   font-family: 'Cormorant Garamond', 'Georgia', serif;
+   letter-spacing: 0.02em;
 }
 
 .summaryList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
 }
 
 .summaryList li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 14px;
-  color: #5a3e2b;
-  line-height: 1.5;
+   display: flex;
+   align-items: flex-start;
+   gap: 10px;
+   font-size: 14px;
+   color: #5a3e2b;
+   line-height: 1.5;
 }
 
 .summaryList li::before {
-  content: '✦';
-  color: #C9A84C;
-  font-size: 10px;
-  margin-top: 4px;
-  flex-shrink: 0;
+   content: '✦';
+   color: #C9A84C;
+   font-size: 10px;
+   margin-top: 4px;
+   flex-shrink: 0;
 }
 
 /* ── Individual Section Cards ── */
 .claySection {
-  background: #FDF6EC;
-  border-radius: 20px;
-  box-shadow:
-    5px 5px 14px rgba(0, 0, 0, 0.08),
-    -5px -5px 14px rgba(255, 255, 255, 0.75);
-  padding: 28px 32px;
-  margin-bottom: 20px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+   background: #FDF6EC;
+   border-radius: 20px;
+   box-shadow:
+     5px 5px 14px rgba(0, 0, 0, 0.08),
+     -5px -5px 14px rgba(255, 255, 255, 0.75);
+   padding: 28px 32px;
+   margin-bottom: 20px;
+   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .claySection:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    8px 8px 20px rgba(0, 0, 0, 0.10),
-    -8px -8px 20px rgba(255, 255, 255, 0.85);
+   transform: translateY(-2px);
+   box-shadow:
+     8px 8px 20px rgba(0, 0, 0, 0.10),
+     -8px -8px 20px rgba(255, 255, 255, 0.85);
 }
 
 .claySectionHeading {
-  font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: #8B1A1A;
-  margin: 0 0 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.28);
-  line-height: 1.3;
+   font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+   font-size: 22px;
+   font-weight: 700;
+   color: #8B1A1A;
+   margin: 0 0 14px;
+   padding-bottom: 10px;
+   border-bottom: 1px solid rgba(201, 168, 76, 0.28);
+   line-height: 1.3;
 }
 
 .sectionBody p {
-  font-size: 15px;
-  line-height: 1.75;
-  color: #3D2B1F;
-  margin: 0 0 14px;
+   font-size: 15px;
+   line-height: 1.75;
+   color: #3D2B1F;
+   margin: 0 0 14px;
 }
 
 .sectionBody p:last-child {
-  margin-bottom: 0;
+   margin-bottom: 0;
 }
 
 /* ── Contact Box ── */
 .clayContactBox {
-  background: linear-gradient(135deg, #FDF6EC, #F5ECD7);
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  border-radius: 24px;
-  box-shadow:
-    8px 8px 20px rgba(0, 0, 0, 0.09),
-    -8px -8px 20px rgba(255, 255, 255, 0.90);
-  padding: 28px 32px;
-  margin-top: 32px;
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
+   background: linear-gradient(135deg, #FDF6EC, #F5ECD7);
+   border: 1px solid rgba(201, 168, 76, 0.3);
+   border-radius: 24px;
+   box-shadow:
+     8px 8px 20px rgba(0, 0, 0, 0.09),
+     -8px -8px 20px rgba(255, 255, 255, 0.90);
+   padding: 28px 32px;
+   margin-top: 32px;
+   display: flex;
+   align-items: flex-start;
+   gap: 18px;
 }
 
 .contactIcon {
-  font-size: 28px;
-  line-height: 1;
-  flex-shrink: 0;
-  margin-top: 2px;
+   font-size: 28px;
+   line-height: 1;
+   flex-shrink: 0;
+   margin-top: 2px;
 }
 
 .contactTitle {
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #8B1A1A;
-  margin-bottom: 6px;
-  display: block;
+   font-family: 'Cormorant Garamond', 'Georgia', serif;
+   font-size: 20px;
+   font-weight: 700;
+   color: #8B1A1A;
+   margin-bottom: 6px;
+   display: block;
 }
 
 .contactBody {
-  font-size: 14px;
-  color: #5a3e2b;
-  line-height: 1.65;
-  margin: 0;
+   font-size: 14px;
+   color: #5a3e2b;
+   line-height: 1.65;
+   margin: 0;
 }
 
 .contactLink {
-  color: #8B1A1A;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+   color: #8B1A1A;
+   font-weight: 600;
+   text-decoration: underline;
+   text-underline-offset: 3px;
 }
 
 .contactLink:hover {
-  color: #C9A84C;
+   color: #C9A84C;
 }
 
 /* ── Scroll Reveal Animation ── */
 .clayReveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+   opacity: 0;
+   transform: translateY(16px);
+   transition: opacity 0.45s ease, transform 0.45s ease;
 }
 
 .clayReveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+   opacity: 1;
+   transform: translateY(0);
 }
 
 /* ── Mobile TOC Toggle (accordion) ── */
 .tocToggleBtn {
-  display: none;
-  width: 100%;
-  background: #FDF6EC;
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  border-radius: 14px;
-  padding: 12px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #8B1A1A;
-  cursor: pointer;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 4px 4px 10px rgba(0,0,0,0.08), -4px -4px 10px rgba(255,255,255,0.8);
+   display: none;
+   width: 100%;
+   background: #FDF6EC;
+   border: 1px solid rgba(201, 168, 76, 0.35);
+   border-radius: 14px;
+   padding: 12px 18px;
+   font-size: 14px;
+   font-weight: 600;
+   color: #8B1A1A;
+   cursor: pointer;
+   align-items: center;
+   justify-content: space-between;
+   box-shadow: 4px 4px 10px rgba(0,0,0,0.08), -4px -4px 10px rgba(255,255,255,0.8);
 }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .bodyLayout {
-    grid-template-columns: 1fr;
-    padding: 28px 16px 60px;
-    gap: 20px;
-  }
+   .bodyLayout {
+     grid-template-columns: 1fr;
+     padding: 28px 16px 60px;
+     gap: 20px;
+   }
 
-  .clayTOC {
-    position: static;
-    padding: 0;
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-  }
+   .clayTOC {
+     position: static;
+     padding: 0;
+     background: transparent;
+     box-shadow: none;
+     border-radius: 0;
+   }
 
-  .tocHeading {
-    display: none;
-  }
+   .tocHeading {
+     display: none;
+   }
 
-  .tocToggleBtn {
-    display: flex;
-    margin-bottom: 0;
-  }
+   .tocToggleBtn {
+     display: flex;
+     margin-bottom: 0;
+   }
 
-  .tocList {
-    display: none;
-    background: #FDF6EC;
-    border-radius: 14px;
-    padding: 10px;
-    margin-top: 8px;
-    box-shadow: 4px 4px 12px rgba(0,0,0,0.09), -4px -4px 12px rgba(255,255,255,0.8);
-  }
+   .tocList {
+     display: none;
+     background: #FDF6EC;
+     border-radius: 14px;
+     padding: 10px;
+     margin-top: 8px;
+     box-shadow: 4px 4px 12px rgba(0,0,0,0.09), -4px -4px 12px rgba(255,255,255,0.8);
+   }
 
-  .tocListOpen {
-    display: flex;
-  }
+   .tocListOpen {
+     display: flex;
+   }
 
-  .clayHero {
-    padding: 48px 20px 40px;
-    border-radius: 0 0 28px 28px;
-  }
+   .clayHero {
+     padding: 48px 20px 40px;
+     border-radius: 0 0 28px 28px;
+   }
 
-  .heroTitle {
-    font-size: 30px;
-  }
+   .heroTitle {
+     font-size: 30px;
+   }
 
-  .claySection {
-    padding: 22px 20px;
-  }
+   .claySection {
+     padding: 22px 20px;
+   }
 
-  .clayContactBox {
-    flex-direction: column;
-    gap: 12px;
-    padding: 22px 20px;
-  }
+   .clayContactBox {
+     flex-direction: column;
+     gap: 12px;
+     padding: 22px 20px;
+   }
 
-  .claySummaryCard {
-    padding: 20px;
-  }
+   .claySummaryCard {
+     padding: 20px;
+   }
 
-  .clayTrustBadge {
-    gap: 18px;
-    padding: 12px 16px;
-  }
+   .clayTrustBadge {
+     gap: 18px;
+     padding: 12px 16px;
+   }
 
-  .clayTrustItem {
-    font-size: 11px;
-  }
+   .clayTrustItem {
+     font-size: 11px;
+   }
+}
+
+/* ── Hero Banner (Full-Bleed Editorial) ── */
+.heroBanner {
+   position: relative;
+   overflow: hidden;
+   background: var(--clay-cream-bg);
+   min-height: 80vh;
+   display: flex;
+   align-items: center;
+}
+
+.heroBanner::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: linear-gradient(
+     135deg,
+     rgba(253, 246, 236, 0.8) 0%,
+     rgba(245, 236, 215, 0.6) 50%,
+     rgba(250, 246, 240, 0.7) 100%
+   );
+   pointer-events: none;
+}
+
+.heroBannerContent {
+   position: relative;
+   z-index: 2;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 4rem 1.5rem;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 2rem;
+}
+
+.heroBannerText {
+   flex: 1 1 400px;
+   color: var(--clay-text-main);
+}
+
+.heroBannerEyebrow {
+   font-size: 0.875rem;
+   letter-spacing: 0.15em;
+   text-transform: uppercase;
+   font-weight: 600;
+   color: var(--clay-crimson);
+   margin-bottom: 1rem;
+   display: inline-block;
+}
+
+.heroBannerTitle {
+   font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+   font-size: clamp(2.5rem, 8vw, 4.5rem);
+   font-weight: 800;
+   line-height: 1.1;
+   color: var(--clay-crimson);
+   margin: 0 0 1.5rem 0;
+   letter-spacing: -0.02em;
+}
+
+.heroBannerSubtitle {
+   font-size: 1.125rem;
+   line-height: 1.7;
+   color: var(--clay-text-muted);
+   max-width: 40ch;
+   margin-bottom: 2rem;
+}
+
+.heroBadge {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   background: rgba(201, 168, 76, 0.1);
+   border: 1px solid rgba(201, 168, 76, 0.3);
+   border-radius: 50px;
+   padding: 0.5rem 1.25rem;
+   font-size: 0.875rem;
+   font-weight: 500;
+   color: var(--clay-text-main);
+}
+
+.heroBadgeIcon {
+   font-size: 1rem;
+}
+
+.heroButton {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   background: linear-gradient(135deg, var(--clay-gold), #d4af37);
+   color: #1a0a08;
+   border: none;
+   border-radius: 50px;
+   padding: 0.75rem 2rem;
+   font-weight: 600;
+   font-size: 1rem;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   box-shadow: 
+     4px 4px 12px rgba(0, 0, 0, 0.1),
+     -4px -4px 12px rgba(255, 255, 255, 0.8);
+}
+
+.heroButton:hover {
+   transform: translateY(-2px);
+   box-shadow: 
+     6px 6px 16px rgba(0, 0, 0, 0.12),
+     -6px -6px 16px rgba(255, 255, 255, 0.85);
+}
+
+.heroButton:active {
+   transform: translateY(0);
+}
+
+.heroButton span {
+   transition: transform 0.3s ease;
+}
+
+.heroButton:hover span {
+   transform: translateX(4px);
+}
+
+.heroBannerImage {
+   flex: 1 1 300px;
+   max-width: 400px;
+   border-radius: 24px;
+   overflow: hidden;
+   box-shadow: 
+     8px 8px 24px rgba(0, 0, 0, 0.15),
+     -8px -8px 24px rgba(255, 255, 255, 0.8);
+   position: relative;
+}
+
+.heroBannerImage::before {
+   content: '';
+   position: absolute;
+   top: -8px;
+   left: -8px;
+   right: -8px;
+   bottom: -8px;
+   border-radius: 28px;
+   background: linear-gradient(
+     135deg,
+     transparent 0%,
+     rgba(201, 168, 76, 0.3) 50%,
+     transparent 100%
+   );
+   pointer-events: none;
+}
+
+.heroBannerImage img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   display: block;
+}
+
+/* Claymorphism variants for hero elements */
+.heroClay {
+   background: var(--clay-ivory);
+   border-radius: 24px;
+   box-shadow: 
+     8px 8px 16px rgba(0, 0, 0, 0.1),
+     -8px -8px 16px rgba(255, 255, 255, 0.8);
+   backdrop-filter: blur(5px);
+   border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.heroClay:hover {
+   box-shadow: 
+     12px 12px 24px rgba(0, 0, 0, 0.12),
+     -12px -12px 24px rgba(255, 255, 255, 0.85);
+}
+
+/* New additions for Hero Banner refinements */
+.heroLogo {
+   position: absolute;
+   /* align with hero container padding (1.5rem) */
+   top: 1.5rem;
+   right: 1.5rem;
+   width: 3.5rem; /* scaled to 50% of a larger previous mark */
+   height: 3.5rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: transparent; /* remove white circle */
+   overflow: visible;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+   z-index: 3;
+   pointer-events: none;
+}
+
+.heroLogoImg {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   object-position: center;
+}
+
+/* Hover glow effect (without background) */
+.heroLogo:hover {
+   box-shadow: 0 0 10px rgba(201, 168, 76, 0.4);
+   transform: scale(1.02);
+}
+
+/* Marquee styling */
+.marquee {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   background: rgba(201, 168, 76, 0.1);
+   border: 1px solid rgba(201, 168, 76, 0.3);
+   border-radius: 50px;
+   padding: 0.5rem 1.25rem;
+   font-size: 0.875rem;
+   font-weight: 500;
+   color: var(--clay-text-main);
+   margin: 1rem 0;
+}
+
+/* Parallax background */
+.heroParallax {
+   position: absolute;
+   inset: 0;
+   background-size: cover;
+   background-position: center;
+   background-attachment: fixed;
+   z-index: 0;
+}
+
+/* Fade-in animation for hero text */
+.heroFadeIn {
+   opacity: 0;
+   animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+   from {
+     opacity: 0;
+     transform: translateY(20px);
+   }
+   to {
+     opacity: 1;
+     transform: translateY(0);
+   }
+}
+
+/* Ensure content is above parallax */
+.heroBannerContent {
+   position: relative;
+   z-index: 2;
 }
 
 @media (max-width: 480px) {
-  .heroTitle {
-    font-size: 26px;
+    .heroTitle {
+      font-size: 26px;
+    }
+   
+    .clayTrustBadge {
+      gap: 12px;
+    }
+    
+    .heroBanner {
+      min-height: 60vh;
+    }
+    
+    .heroBannerContent {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .heroBannerText {
+      margin-bottom: 2rem;
+    }
+    
+    .heroBannerImage {
+      max-width: 100%;
+    }
+      .heroLogo {
+         top: 0.5rem;
+         right: 0.5rem;
+         width: 2.25rem; /* smaller on very small screens */
+         height: 2.25rem;
+      }
+      .heroLogoImg {
+         width: 100%;
+         height: 100%;
+      }
+}
+
+/* ── Stories Hero — full model/outfit image stage (spotlight + contain) ── */
+.storiesHeroStage {
+   position: absolute;
+   inset: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.storiesHeroImageFrame {
+   position: relative;
+   width: 100%;
+   height: 100%;
+   max-width: min(560px, 40vw);
+   max-height: 100%;
+   margin: 0 auto;
+   flex-shrink: 0;
+}
+
+.storiesHeroImage {
+   width: 100%;
+   height: 100%;
+   max-width: 100%;
+   max-height: 100%;
+   object-fit: contain;
+   object-position: center center;
+}
+
+@media (max-width: 1023px) {
+   .storiesHeroImageFrame {
+      max-width: min(480px, 58vw);
+   }
+}
+
+@media (max-width: 767px) {
+   .storiesHeroStage {
+      padding: 16px 8px 80px;
+   }
+
+   .storiesHeroImageFrame {
+      max-width: 100%;
+      max-height: min(620px, 70vh);
+   }
+}
+
+@media (max-width: 480px) {
+   .storiesHeroImageFrame {
+      max-height: min(520px, 65vh);
+   }
+}
+
+/* Global helper: Sampada emblem hover — opt-in via class on any component */
+:global {
+  .sampada-emblem-hover {
+    pointer-events: auto;
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+    will-change: box-shadow, transform;
+    position: relative;
   }
 
-  .clayTrustBadge {
-    gap: 12px;
+  .sampada-emblem-hover:hover,
+  .sampada-emblem-hover:focus {
+    box-shadow:
+      0 8px 24px rgba(139, 26, 26, 0.12),
+      0 0 18px rgba(201, 168, 76, 0.45);
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  @media (max-width: 1023px) {
+    .sampada-emblem-hover {
+      transform-origin: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .sampada-emblem-hover {
+      transform-origin: center;
+    }
   }
 }
