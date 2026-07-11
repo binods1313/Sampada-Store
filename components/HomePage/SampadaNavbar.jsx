@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Search } from "lucide-react";
@@ -1362,13 +1361,13 @@ export default function SampadaNavbar({
               e.currentTarget.style.filter = 'none';
             }}
           >
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/icons/sampada-cart.svg"
               alt="Cart"
               width={32}
               height={32}
-              style={{ display: 'block' }}
-              unoptimized
+              style={{ display: 'block', width: 32, height: 32 }}
             />
             {(totalQuantities || 0) > 0 && (
               <span 
