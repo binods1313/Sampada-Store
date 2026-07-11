@@ -340,11 +340,11 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.05rem;
   font-style: italic;
-  color: #FFF9E6;
+  color: #F2D18A;
   line-height: 1.65;
   margin-bottom: 1.25rem;
   padding-left: 0;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75), 0 0 20px rgba(201, 168, 76, 0.25);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8), 0 0 24px rgba(201, 168, 76, 0.35);
 }
 
 .heroQuote p {
