@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ShoppingCart, User, Menu, X, MoreVertical, ChevronDown, ChevronUp, Search } from "lucide-react";
@@ -1348,9 +1349,27 @@ export default function SampadaNavbar({
             onClick={() => setShowCart(true)}
             aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
             className="icon-btn"
-            style={{ position: 'relative' }}
+            style={{
+              position: 'relative',
+              transition: 'transform 0.2s ease, filter 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.08)';
+              e.currentTarget.style.filter = 'drop-shadow(0 2px 8px rgba(201,168,76,0.5))';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.filter = 'none';
+            }}
           >
-            <ShoppingCart size={18} />
+            <Image
+              src="/icons/sampada-cart.svg"
+              alt="Cart"
+              width={32}
+              height={32}
+              style={{ display: 'block' }}
+              unoptimized
+            />
             {(totalQuantities || 0) > 0 && (
               <span 
                 style={{

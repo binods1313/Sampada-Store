@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sampada cart icon">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8B1A1A"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#ffd" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Basket body -->
+  <path d="M18 30 H78 L68 64 H32 Z" fill="url(#g)" filter="url(#glow)" />
+
+  <!-- Handle / rim -->
+  <path d="M22 30 Q30 12 50 12 Q70 12 78 30" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Wheels -->
+  <circle cx="36" cy="76" r="5" fill="url(#g)" />
+  <circle cx="64" cy="76" r="5" fill="url(#g)" />
+
+  <!-- Integrated 'S' monogram inside basket -->
+  <text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI, Roboto, Arial, sans-serif" font-weight="700" font-size="22" fill="url(#g)">S</text>
+
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" 
+     viewBox="0 0 100 100" 
+     width="40" height="40">
+  <defs>
+    <linearGradient id="sampadaGrad" 
+                    x1="0%" y1="0%" 
+                    x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8B1A1A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cart basket body -->
+  <path d="M15 25 L20 25 L28 65 L75 65 L82 35 L28 35" 
+        fill="none" 
+        stroke="url(#sampadaGrad)" 
+        stroke-width="6" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- Cart handle curve over top -->
+  <path d="M20 25 Q18 15 28 12 Q42 8 40 22" 
+        fill="none" 
+        stroke="url(#sampadaGrad)" 
+        stroke-width="6" 
+        stroke-linecap="round"/>
+
+  <!-- S shape integrated in cart body -->
+  <path d="M45 42 Q55 40 54 48 Q53 55 43 55 Q33 55 34 63" 
+        fill="none" 
+        stroke="url(#sampadaGrad)" 
+        stroke-width="5" 
+        stroke-linecap="round"/>
+
+  <!-- Left wheel -->
+  <circle cx="35" cy="74" r="6" 
+          fill="url(#sampadaGrad)"/>
+
+  <!-- Right wheel -->
+  <circle cx="65" cy="74" r="6" 
+          fill="url(#sampadaGrad)"/>
+</svg>
