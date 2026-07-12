@@ -1,0 +1,14 @@
+---
+pid: 3236
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; node scripts/generate-homepage-slides-1-2-4.js"
+started_at: 2026-07-11T02:43:47.619Z
+running_for_ms: 12140002 
+---
+Regenerating homepage hero slides 1, 2 & 4 (cache-busted v2)...
+
+✓ Saved 01-winter-drop-v2.jpg (233.0 KB)
+✓ Saved 02-wear-your-legacy-v2.jpg (265.0 KB)
+✓ Saved 04-prosper-in-style-v2.jpg (148.4 KB)
+
+Done.

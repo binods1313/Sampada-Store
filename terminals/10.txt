@@ -1,0 +1,17 @@
+---
+pid: 6620
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; node scripts/generate-homepage-hero-images.js"
+started_at: 2026-07-10T23:08:50.650Z
+running_for_ms: 25035011 
+---
+Generating 6 homepage hero banners...
+
+✓ Saved 01-winter-drop.jpg (297.9 KB)
+✓ Saved 02-wear-your-legacy.jpg (349.1 KB)
+✓ Saved 03-gold-thread.jpg (410.1 KB)
+✓ Saved 04-prosper-in-style.jpg (243.4 KB)
+✓ Saved 05-generational-wealth.jpg (267.0 KB)
+✓ Saved 06-sampada-originals.jpg (326.2 KB)
+
+Done.

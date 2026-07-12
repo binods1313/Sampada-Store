@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { ChevronLeft, Package, LayoutGrid, List, Tag, ShoppingCart, Users, Star, Sparkles, BarChart3, Settings, LogOut } from 'lucide-react'
 
-const DEAD_LINKS = ['/admin/users', '/admin/reviews', '/admin/settings'];
+const DEAD_LINKS = [];
 
 const NAV = [
   {

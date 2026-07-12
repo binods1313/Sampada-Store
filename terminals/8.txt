@@ -1,0 +1,35 @@
+---
+pid: 29668
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; npm run dev"
+started_at: 2026-07-05T09:56:33.382Z
+running_for_ms: 92689097 
+---
+
+> abscommerce@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.10 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.5:3000
+- Environments: .env.local, .env
+✓ Ready in 1171ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Experiments (use with caution):
+  · optimizePackageImports
+  ✓ scrollRestoration
+
+⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+○ Compiling /creative-studio ...
+ GET /creative-studio 304 in 6.4s (next.js: 6.2s, application-code: 154ms)
+ GET /api/hello 200 in 3.4s (next.js: 1279ms, application-code: 2.1s)
+ GET /api/auth/session 200 in 1747ms (next.js: 1727ms, application-code: 21ms)
+ GET /creative-studio 304 in 959ms (next.js: 856ms, application-code: 103ms)
+ GET /api/auth/session 200 in 10ms (next.js: 2ms, application-code: 8ms)
+
+
+---
+exit_code: -1
+elapsed_ms: 92689097
+ended_at: 2026-07-06T11:41:23.979Z
+---

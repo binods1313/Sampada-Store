@@ -1,0 +1,16 @@
+---
+pid: 11740
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; node scripts/generate-stories-hero-images.js"
+started_at: 2026-07-11T01:42:33.834Z
+running_for_ms: 15810377 
+---
+Generating 5 Stories hero images...
+
+✓ Saved 01-winter-editorial.jpg (319.5 KB)
+✓ Saved 02-festive-silk-look.jpg (242.4 KB)
+✓ Saved 03-premium-casual.jpg (271.8 KB)
+✓ Saved 04-gold-embroidered.jpg (238.7 KB)
+✓ Saved 05-legacy-portrait.jpg (255.2 KB)
+
+Done.

@@ -1,0 +1,32 @@
+---
+pid: 30692
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; npm run dev"
+started_at: 2026-07-05T09:50:57.330Z
+running_for_ms: 93025200 
+---
+
+> abscommerce@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.10 (webpack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.5:3001
+- Environments: .env.local, .env
+✓ Ready in 1534ms
+⚠ Port 3000 is in use by process 564, using available port 3001 instead.
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          564
+- Dir:          E:\Sampada-Store
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 564 /F to stop it.
+
+
+---
+exit_code: -1
+elapsed_ms: 93025200
+ended_at: 2026-07-06T11:41:23.989Z
+---

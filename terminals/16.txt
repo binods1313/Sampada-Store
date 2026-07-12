@@ -1,0 +1,17 @@
+---
+pid: 35844
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; node scripts/generate-stories-hero-images.js"
+started_at: 2026-07-11T02:06:49.961Z
+running_for_ms: 14360010 
+---
+Generating 6 full-bleed Stories hero banners (16:9)...
+
+✓ Saved 01-winter-editorial.jpg (280.5 KB)
+✓ Saved 02-festive-silk-look.jpg (169.6 KB)
+✓ Saved 03-premium-casual.jpg (215.4 KB)
+✓ Saved 04-gold-embroidered.jpg (163.2 KB)
+✓ Saved 05-legacy-portrait.jpg (266.7 KB)
+✓ Saved 06-evening-gala.jpg (181.2 KB)
+
+Done.

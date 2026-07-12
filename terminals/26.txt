@@ -1,0 +1,14 @@
+---
+pid: 39544
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; node scripts/generate-home-hero-slides.js"
+started_at: 2026-07-11T02:48:18.920Z
+running_for_ms: 11870009 
+---
+Generating homepage hero slides 1, 2 & 4 → public/images/home/hero/
+
+✓ Saved slide1.png (1572.4 KB)
+✓ Saved slide2.png (1593.6 KB)
+✓ Saved slide4.png (1719.3 KB)
+
+Done.

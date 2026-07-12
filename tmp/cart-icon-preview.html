@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sampada Cart Icon Preview</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      background: #FAF6F0;
+      font-family: system-ui, sans-serif;
+      color: #1a1a1a;
+    }
+    h1 { font-size: 18px; font-weight: 600; margin: 0; }
+    .row {
+      display: flex;
+      gap: 64px;
+      align-items: flex-end;
+    }
+    .preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .box {
+      background: #fff;
+      border: 1px solid #e8e0d4;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .box-100 { width: 140px; height: 140px; }
+    .box-32 { width: 64px; height: 64px; }
+    .box-28 { width: 56px; height: 56px; }
+    label { font-size: 13px; color: #666; }
+    img { display: block; }
+  </style>
+</head>
+<body>
+  <h1>Sampada Cart Icon — Preview (gold → crimson)</h1>
+  <div class="row">
+    <div class="preview">
+      <div class="box box-100">
+        <img src="../public/icons/sampada-cart.svg" width="100" height="100" alt="Cart 100px" />
+      </div>
+      <label>100 × 100 px</label>
+    </div>
+    <div class="preview">
+      <div class="box box-32">
+        <img src="../public/icons/sampada-cart.svg" width="32" height="32" alt="Cart 32px" />
+      </div>
+      <label>32 × 32 px (navbar)</label>
+    </div>
+    <div class="preview">
+      <div class="box box-28">
+        <img src="../public/icons/sampada-cart.svg" width="28" height="28" alt="Cart 28px" />
+      </div>
+      <label>28 × 28 px</label>
+    </div>
+  </div>
+</body>
+</html>

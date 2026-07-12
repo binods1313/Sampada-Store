@@ -1,0 +1,78 @@
+---
+pid: 27660
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; npm run dev"
+started_at: 2026-07-05T09:44:35.619Z
+running_for_ms: 93406921 
+---
+
+> abscommerce@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.10 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.5:3000
+- Environments: .env.local, .env
+✓ Ready in 1208ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Experiments (use with caution):
+  · optimizePackageImports
+  ✓ scrollRestoration
+
+[grok-imagine] XAI_API_KEY prefix: xai-pC
+[grok-imagine] Raw Grok API response: {
+  "code": "not-found",
+  "error": "The model grok-2-image does not exist or your team 32dac313-e123-4c81-a9a1-26a30fef5d9f does not have access to it. If you believe this is a mistake, please contact support and quote your team ID and the model name."
+}
+ POST /api/creative/grok-imagine 404 in 1972ms (next.js: 1643ms, application-code: 329ms)
+[grok-imagine] XAI_API_KEY prefix: xai-pC
+[grok-imagine] Raw Grok API response: {
+  "data": [
+    {
+      "url": "https://imgen.x.ai/xai-imgen/xai-tmp-imgen-28f9868e-a9bb-957a-a0a4-1bcb36fee293-ccfb8a01.jpeg",
+      "mime_type": "image/jpeg"
+    }
+  ],
+  "usage": {
+    "cost_in_usd_ticks": 200000000
+  }
+}
+ POST /api/creative/grok-imagine 200 in 5.2s (next.js: 22ms, application-code: 5.1s)
+○ Compiling /creative-studio ...
+ GET /creative-studio 200 in 6.9s (next.js: 6.8s, application-code: 129ms)
+[grok-imagine] XAI_API_KEY prefix: xai-pC
+[grok-imagine] Raw Grok API response: {
+  "data": [
+    {
+      "url": "https://imgen.x.ai/xai-imgen/xai-tmp-imgen-f8445598-7053-98d0-9c6e-be0448221afe-8bb233ec.jpeg",
+      "mime_type": "image/jpeg"
+    }
+  ],
+  "usage": {
+    "cost_in_usd_ticks": 200000000
+  }
+}
+ POST /api/creative/grok-imagine 200 in 5.7s (next.js: 570ms, application-code: 5.1s)
+[grok-imagine] XAI_API_KEY prefix: xai-pC
+ POST /api/creative/grok-imagine 200 in 3.0s (next.js: 1919µs, application-code: 3.0s)
+ GET /api/hello 200 in 641ms (next.js: 628ms, application-code: 14ms)
+[grok-imagine] Raw Grok API response: {
+  "data": [
+    {
+      "url": "https://imgen.x.ai/xai-imgen/xai-tmp-imgen-0fbf9ae1-33e8-9c72-b719-f91992d62e57-62e3aafb.jpeg",
+      "mime_type": "image/jpeg"
+    }
+  ],
+  "usage": {
+    "cost_in_usd_ticks": 200000000
+  }
+}
+ GET /api/hello 200 in 10ms (next.js: 5ms, application-code: 5ms)
+ GET /creative-studio 200 in 1295ms (next.js: 1176ms, application-code: 119ms)
+
+
+---
+exit_code: -1
+elapsed_ms: 93406921
+ended_at: 2026-07-06T11:41:23.981Z
+---

@@ -1,0 +1,146 @@
+---
+pid: 2528
+cwd: "E:\Sampada-Store"
+command: "Set-Location E:\\Sampada-Store; npm run build"
+started_at: 2026-07-11T01:50:19.445Z
+running_for_ms: 15345004 
+---
+
+> abscommerce@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.2.10 (webpack)
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Environments: .env.local, .env.production, .env
+- Experiments (use with caution):
+  · optimizePackageImports
+  ✓ scrollRestoration
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.0s
+  Skipping validation of types
+  Finished TypeScript config validation in 8ms ...
+  Collecting page data using 17 workers ...
+  Generating static pages using 17 workers (0/51) ...
+ErrorHandlingTestSuite imported: [Function: m]
+  Generating static pages using 17 workers (12/51) 
+  Generating static pages using 17 workers (25/51) 
+  Generating static pages using 17 workers (38/51) 
+✓ Generating static pages using 17 workers (51/51) in 2.2s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /_not-found
+└ ƒ /api/ai/generate-description
+
+Route (pages)                                                  Revalidate  Expire
+┌ ƒ /
+├   /_app
+├ ● /about (778 ms)                                                    1m      1y
+├ ƒ /account
+├ ○ /admin
+├ ○ /admin/ai-tools
+├ ○ /admin/ai-usage
+├ ○ /admin/analytics
+├ ○ /admin/bulk-tag
+├ ○ /admin/categories (326 ms)
+├ ○ /admin/login
+├ ○ /admin/orders
+├ ○ /admin/products
+├ ○ /admin/products/add
+├ ○ /admin/products/edit/[id]
+├ ○ /admin/seo/bulk-generate
+├ ○ /ai-demo
+├ ƒ /api/ai
+├ ƒ /api/ai/describe-product
+├ ƒ /api/ai/generate-image
+├ ƒ /api/ai/lookbook-search
+├ ƒ /api/ai/models
+├ ƒ /api/ai/smart-search
+├ ƒ /api/ai/style-assistant
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/creative/grok-imagine
+├ ƒ /api/creative/grok-video
+├ ƒ /api/creative/save-image
+├ ƒ /api/example-error-handler
+├ ƒ /api/hello
+├ ƒ /api/klarna/create-session
+├ ƒ /api/lob/validate-address
+├ ƒ /api/logout-admin
+├ ƒ /api/mailchimp/[action]
+├ ƒ /api/moderate/image
+├ ƒ /api/newsletter/subscribe
+├ ƒ /api/orders/create-manual
+├ ƒ /api/orders/fix-email-mismatch
+├ ƒ /api/orders/fix-user-link
+├ ƒ /api/paypal/capture-order
+├ ƒ /api/paypal/create-order
+├ ƒ /api/printify/catalog
+├ ƒ /api/printify/create-order
+├ ƒ /api/printify/sync-product
+├ ƒ /api/products/auto-tag
+├ ƒ /api/products/colors
+├ ƒ /api/products/extract-colors
+├ ƒ /api/products/gemini-auto-tag
+├ ƒ /api/products/list-ids
+├ ƒ /api/products/search
+├ ƒ /api/products/search-by-color
+├ ƒ /api/razorpay/create-order
+├ ƒ /api/razorpay/verify-payment
+├ ƒ /api/sampada/voice
+├ ƒ /api/sanity/write
+├ ƒ /api/search/visual
+├ ƒ /api/stripe
+├ ƒ /api/subscriptions/designer/create-checkout
+├ ƒ /api/subscriptions/designer/webhook
+├ ƒ /api/support-ticket
+├ ƒ /api/test-enhanced-error-handler
+├ ƒ /api/user/orders
+├ ƒ /api/verify-admin
+├ ƒ /api/virtual-tryon/enhanced
+├ ƒ /api/webhooks/paypal
+├ ƒ /api/webhooks/printify
+├ ƒ /api/webhooks/sanity-auto-tag
+├ ƒ /api/webhooks/stripe
+├ ○ /checkout (330 ms)
+├ ƒ /collections/[slug]
+├ ● /company (545 ms)                                                  1m      1y
+├ ƒ /contact
+├ ○ /creative-studio (327 ms)
+├ ○ /enhanced-error-handler-demo (326 ms)
+├ ○ /error-test-suite (326 ms)
+├ ○ /fallback-demo (326 ms)
+├ ○ /image-optimizer-examples (325 ms)
+├ ○ /image-optimizer-test
+├ ○ /pretext-demo
+├ ○ /privacy-policy
+├ ● /product/[slug] (10438 ms)                                         1m      1y
+│ ├ /product/one-piece-sunset-tee (980 ms)
+│ ├ /product/smartwatches (951 ms)
+│ ├ /product/headphones Latest (948 ms)
+│ ├ /product/enhanced-bohemian-inspired-tunic (945 ms)
+│ ├ /product/stellar-nexus-prime-snp-1 (944 ms)
+│ ├ /product/SunGlasses (944 ms)
+│ ├ /product/salman-o-o-jaane-jaana-inspired-t-shirt (944 ms)
+│ └ [+6 more paths] (avg 630 ms)
+├ ƒ /products/[id]
+├ ○ /refund-policy
+├ ○ /shop
+├ ○ /simple-test
+├ ● /stories (428 ms)                                                  1m      1y
+├ ● /stories/[slug]
+├ ○ /success
+├ ƒ /support
+├ ● /team (526 ms)                                                     1m      1y
+├ ○ /terms-and-conditions
+├ ○ /test-error-api
+├ ○ /test-error-component (301 ms)
+└ ○ /wishlist
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

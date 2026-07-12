@@ -1,0 +1,24 @@
+---
+pid: 29712
+cwd: "E:\Sampada-Store"
+command: "npm run dev"
+started_at: 2026-07-05T09:41:54.579Z
+running_for_ms: 93567975 
+---
+At line:1 char:24
++ (cd "E:\\Sampada-Store" ; npm run dev)
++                        ~
+Missing closing ')' in expression.
+At line:1 char:38
++ (cd "E:\\Sampada-Store" ; npm run dev)
++                                      ~
+Unexpected token ')' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingEndParenthesisInExpression
+ 
+
+---
+exit_code: -1
+elapsed_ms: 93567975
+ended_at: 2026-07-06T11:41:23.988Z
+---
