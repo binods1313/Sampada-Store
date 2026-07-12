@@ -1343,23 +1343,25 @@ export default function SampadaNavbar({
             <Search size={18} />
           </button>
 
-          {/* Cart Icon */}
+          {/* Cart Icon — Sampada custom V6 */}
           <button
             onClick={() => setShowCart(true)}
             aria-label={`Open Cart, ${(totalQuantities || 0)} items`}
             className="icon-btn"
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', background: 'none', border: 'none', padding: 4 }}
           >
             <div
               style={{
-                display: 'flex',
+                position: 'relative',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                cursor: 'pointer',
                 transition: 'transform 0.2s ease, filter 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.1)';
-                e.currentTarget.style.filter = 'drop-shadow(0 2px 8px rgba(201,168,76,0.55))';
+                e.currentTarget.style.filter =
+                  'drop-shadow(0 2px 8px rgba(201,168,76,0.5))';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)';
@@ -1372,10 +1374,7 @@ export default function SampadaNavbar({
                 alt="Cart"
                 width={34}
                 height={34}
-                style={{
-                  display: 'block',
-                  transition: 'transform 0.2s ease, filter 0.2s ease',
-                }}
+                style={{ display: 'block' }}
               />
             </div>
             {(totalQuantities || 0) > 0 && (
