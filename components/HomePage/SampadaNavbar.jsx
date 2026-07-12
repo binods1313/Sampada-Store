@@ -515,6 +515,15 @@ function MoreDropdown({ isOpen, onOpen, onClose }) {
             </Link>
             <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
             <Link
+              href="/blog"
+              onClick={onClose}
+              className={pathname === '/blog' ? 'active' : ''}
+              style={{ display: 'block' }}
+            >
+              Blog
+            </Link>
+            <div style={{ height: '1px', backgroundColor: 'rgba(201, 168, 76, 0.1)', margin: '8px 0' }} />
+            <Link
               href="/contact"
               onClick={onClose}
               className={pathname === '/contact' ? 'active' : ''}
@@ -898,6 +907,18 @@ function MobileMenu({ isOpen, onClose, session, menuItems }) {
                           }}
                         >
                           Support
+                        </Link>
+                        <Link
+                          href="/blog"
+                          onClick={onClose}
+                          className="mobile-submenu-item"
+                          style={{
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            display: 'block'
+                          }}
+                        >
+                          Blog
                         </Link>
                         <Link
                           href="/contact"
