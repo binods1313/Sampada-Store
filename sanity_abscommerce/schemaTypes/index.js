@@ -16,6 +16,8 @@ import contactMessage from './contactMessage'
 import footerSettings from './footerSettings'
 import newsletterSubscriber from './newsletterSubscriber'
 import navigation from './navigation'
+import post from './post'
+import career from './career'
 
 export const schemaTypes = [
   product,
@@ -34,5 +36,7 @@ export const schemaTypes = [
   contactMessage,
   footerSettings,
   newsletterSubscriber,
-  navigation
+  navigation,
+  post,
+  career
 ]
