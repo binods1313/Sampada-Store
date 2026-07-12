@@ -67,7 +67,7 @@ export default function AIImageGenerator({ productName, category, onImageGenerat
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
     } catch (err) {
-      console.error('Download failed:', err)
+      if (process.env.NODE_ENV !== 'production') console.error('Download failed:', err)
     }
   }
 

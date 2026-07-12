@@ -14,6 +14,7 @@ export default function NewsletterSection() {
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [welcomeCode, setWelcomeCode] = useState('');
 
   // Validate email format
   const isValidEmail = (email) => {
@@ -60,6 +61,9 @@ export default function NewsletterSection() {
         setStatus('success');
         setEmail('');
         setAgreed(false);
+        if (data.welcomeCode) {
+          setWelcomeCode(data.welcomeCode);
+        }
       } else {
         setStatus('error');
         setErrorMessage(data.message || 'Something went wrong. Please try again.');
@@ -203,11 +207,17 @@ export default function NewsletterSection() {
             </div>
             <div>
               <p style={{ color: '#ffffff', fontWeight: '600', marginBottom: '4px' }}>
-                You're subscribed!
+                You're in!
               </p>
-              <p style={{ color: '#9ca3af', fontSize: '14px' }}>
-                Check your inbox for your 10% discount code.
-              </p>
+              {welcomeCode ? (
+                <p style={{ color: '#9ca3af', fontSize: '14px' }}>
+                  Use <strong style={{ color: '#C9A84C' }}>{welcomeCode}</strong> for 10% off your first order.
+                </p>
+              ) : (
+                <p style={{ color: '#9ca3af', fontSize: '14px' }}>
+                  Check your inbox for your 10% discount code.
+                </p>
+              )}
             </div>
           </div>
         ) : (

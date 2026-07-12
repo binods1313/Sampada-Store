@@ -106,7 +106,7 @@ function BulkAutoTag() {
 
         } catch (error) {
             setStatus('error');
-            console.error('Bulk tagging error:', error);
+            if (process.env.NODE_ENV !== 'production') console.error('Bulk tagging error:', error);
             setLogs(prev => [...prev, `Critical Error: ${error.message}`]);
         }
     };

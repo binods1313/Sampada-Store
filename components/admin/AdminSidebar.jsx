@@ -3,6 +3,8 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { ChevronLeft, Package, LayoutGrid, List, Tag, ShoppingCart, Users, Star, Sparkles, BarChart3, Settings, LogOut } from 'lucide-react'
 
+const DEAD_LINKS = ['/admin/users', '/admin/reviews', '/admin/settings'];
+
 const NAV = [
   {
     section: 'Content',
@@ -91,6 +93,47 @@ export default function AdminSidebar({ collapsed, onToggle, mobileOpen }) {
             {group.items.map(item => {
               const active = isActive(item.href)
               const IconComponent = item.icon
+              const isDeadLink = DEAD_LINKS.includes(item.href)
+
+              if (isDeadLink) {
+                return (
+                  <span key={item.href} className="admin-sidebar-item" style={{ textDecoration: 'none', opacity: 0.45, cursor: 'not-allowed' }}>
+                    <div className="admin-sidebar-item-inner" style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: collapsed ? '0' : 'var(--admin-space-2)',
+                      padding: collapsed ? 'var(--admin-space-2) 0' : 'var(--admin-space-2) var(--admin-space-3)',
+                      justifyContent: collapsed ? 'center' : 'flex-start',
+                      borderRadius: collapsed ? '0' : 'var(--admin-radius-md)',
+                      marginBottom: '2px',
+                      cursor: 'not-allowed',
+                      position: 'relative',
+                      background: 'transparent',
+                      color: 'var(--admin-text-secondary)',
+                      fontSize: 'var(--admin-text-base)',
+                      fontWeight: 'var(--admin-font-normal)',
+                      transition: 'var(--admin-transition-fast)',
+                      borderLeft: 'var(--admin-border-width-sm) solid transparent',
+                      opacity: 0.45
+                    }}>
+                      <IconComponent style={{ width: '16px', height: '16px', flexShrink: 0 }} />
+                      {!collapsed && (
+                        <>
+                          <span style={{ flex: 1 }}>{item.label}</span>
+                          <span style={{
+                            fontSize: '10px',
+                            background: 'rgba(201,168,76,0.2)',
+                            color: '#C9A84C',
+                            borderRadius: '4px',
+                            padding: '1px 5px'
+                          }}>Soon</span>
+                        </>
+                      )}
+                    </div>
+                  </span>
+                )
+              }
+
               return (
                 <Link key={item.href} href={item.href} className="admin-sidebar-item" style={{ textDecoration: 'none' }}>
                   <div className="admin-sidebar-item-inner" style={{

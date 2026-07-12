@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import { client, urlFor } from '@/lib/client'
 import { getLocalKavyaImages } from '@/lib/getLocalStories'
 import StoriesHeroBanner, { STORIES_HERO_SLIDES } from '@/components/StoriesHeroBanner';
@@ -37,8 +38,8 @@ function MeetTheFace({ heroImage, total }) {
   return (
     <section className={styles.bioSection}>
       <div className={styles.bioInner}>
-        <div className={styles.bioImageWrap}>
-          <img src={heroImage} alt="Kavya" className={styles.bioImage} />
+        <div className={styles.bioImageWrap} style={{ position: 'relative' }}>
+          <Image src={heroImage} alt="Kavya" fill style={{ objectFit: 'cover', objectPosition: 'top center' }} sizes="260px" />
         </div>
         <div className={styles.bioContent}>
           <p className={styles.bioEyebrow}>Meet the Face</p>
@@ -67,10 +68,13 @@ function StoryTimeline({ stories }) {
       <div className={styles.timelineScroll}>
         {stories.map((story, i) => (
           <button key={story._id} className={styles.timelineNode} onClick={() => scrollTo(i)}>
-            <div className={styles.timelineThumb}>
-              <img
+            <div className={styles.timelineThumb} style={{ position: 'relative' }}>
+              <Image
                 src={story.source === 'local' ? story.coverImage : urlFor(story.coverImage).width(120).height(120).fit('crop').url()}
                 alt={story.title}
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'top' }}
+                sizes="60px"
               />
             </div>
             <span className={styles.timelineNum}>0{i + 1}</span>
@@ -316,21 +320,15 @@ function CollectionBanners() {
         padding: '0 0 2px',
       }}>
         {kavyaShowcase.map((src, i) => (
-          <div key={i} style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3/4' }}>
-            <img
+          <div key={i} style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3/4', transition: 'transform 0.5s cubic-bezier(0.23,1,0.32,1)' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}>
+            <Image
               src={src}
               alt={`Kavya look ${i + 1}`}
-              loading="lazy"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
-                display: 'block',
-                transition: 'transform 0.5s cubic-bezier(0.23,1,0.32,1)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+              sizes="(max-width: 768px) 25vw, 330px"
             />
             {/* Subtle gold bottom fade */}
             <div style={{

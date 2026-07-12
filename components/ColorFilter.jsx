@@ -14,7 +14,7 @@ function ColorFilter({ onColorSelect }) {
             const data = await response.json();
             setAvailableColors(data.colors || []);
         } catch (e) {
-            console.error("Failed to fetch colors", e);
+            if (process.env.NODE_ENV !== 'production') console.error("Failed to fetch colors", e);
         }
     };
 

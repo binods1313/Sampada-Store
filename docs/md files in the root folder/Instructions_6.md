@@ -1,314 +1,266 @@
 ╔══════════════════════════════════════════════════════════════════╗
-║  SAMPADA CREATIVE STUDIO — IMAGE GENERATION DEBUG & FIX          ║
-║  File: pages/creative-studio.jsx + API routes                    ║
+║  SAMPADA ORIGINALS — FULL CODEBASE AUDIT                         ║
+║  Find everything incomplete, broken, or missing                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 
-WHAT I'M SEEING:
-  1. Typing a prompt and clicking "+ Generate" shows "processed"
-     or a loading state but no image ever appears.
-  2. The model dropdown (currently showing "Imagen 3") is not
-     working — clicking it does nothing.
-  3. The aspect ratio dropdown (the small square icon next to
-     the model selector) is also not working.
-  4. I recently added XAI_API_KEY (Grok) to the environment.
-     The system may still be wired to a different model/provider.
+Do a thorough audit of the entire codebase. Do NOT fix 
+anything yet. Only audit and report findings in the exact 
+format below. I will prioritize what to fix after seeing 
+the full report.
 
-DO THIS AUDIT FIRST — report findings before fixing anything:
-══════════════════════════════════════════════════════════════════
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-STEP 1 — Trace the Generate button's onClick handler:
-  In pages/creative-studio.jsx (or components/CreativeStudio/
-  AIImageStudio.jsx, wherever the generate button lives):
+AUDIT SECTION 1 — TODO / FIXME / PLACEHOLDER SCAN
+
+  Run these commands and paste the full output:
+
+  grep -rn "TODO" --include="*.jsx" --include="*.tsx" \
+    --include="*.js" --include="*.ts" \
+    --exclude-dir=node_modules --exclude-dir=.next .
+
+  grep -rn "FIXME\|HACK\|PLACEHOLDER\|coming soon\|not implemented\|stub\|dummy\|hardcoded" \
+    --include="*.jsx" --include="*.tsx" \
+    --include="*.js" --include="*.ts" \
+    --exclude-dir=node_modules --exclude-dir=.next .
+
+  grep -rn "href=\"#\"\|href='#'" \
+    --include="*.jsx" --include="*.tsx" \
+    --exclude-dir=node_modules --exclude-dir=.next .
+
+  grep -rn "console.log\|console.error" \
+    --include="*.jsx" --include="*.tsx" \
+    --include="*.js" --include="*.ts" \
+    --exclude-dir=node_modules --exclude-dir=.next . \
+    | grep -v "//.*console"
+
+  Paste all output. These reveal: unfinished logic, 
+  debug code left in production, dead links, and stubs.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 2 — PAGE BY PAGE VISUAL + CODE CHECK
+
+  Open each page file and check:
+  a) Does the page render without console errors?
+  b) Are there any empty sections (no content)?
+  c) Are there any broken images (missing src)?
+  d) Are there any buttons/links with no action?
+  e) Is there placeholder text ("Lorem ipsum", 
+     "Coming soon", "TBD", "Sample text")?
+  f) Are there any hardcoded test emails, prices, 
+     or names that should come from Sanity/DB?
+
+  Check these pages specifically:
+
+  CUSTOMER PAGES:
+  / (homepage)
+  /shop
+  /about
+  /company
+  /team
+  /contact
+  /support
+  /stories
+  /blog
+  /careers
+  /documentation
+  /creative-studio
+  /subscribe (if built)
+  /privacy-policy
+  /terms-and-conditions
+  /refund-policy
+  /account
+  /wishlist
+  /checkout
+  /success
+
+  ADMIN PAGES:
+  /admin (dashboard)
+  /admin/products
+  /admin/products/add
+  /admin/orders
+  /admin/categories
+  /admin/analytics
+  /admin/ai-tools
+  /admin/ai-hub
+  /admin/ai-usage
+  /admin/bulk-tag
+  /admin/seo/bulk-generate
+  /admin/subscriptions (if built)
+
+  For each page report in this format:
+  ┌─────────────────────┬──────┬────────────────────────┐
+  │ Page                │ Status│ Issues Found          │
+  ├─────────────────────┼──────┼────────────────────────┤
+  │ /about              │ ⚠️   │ CTA button has href=#  │
+  │ /admin/orders       │ ✅   │ None                   │
+  │ /careers            │ ❌   │ Page is empty/stub     │
+  └─────────────────────┴──────┴────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 3 — API ROUTES CHECK
+
+  For every file in pages/api/, check:
+  a) Is it a stub (returns hardcoded data or does nothing)?
+  b) Does it have proper error handling (try/catch)?
+  c) Does it reference an env variable that might not 
+     be set? (grep for process.env inside each file)
+  d) Is it actually called by any frontend page, or 
+     is it orphaned/unused?
+
+  Report format:
+  ┌──────────────────────────────┬────────┬─────────────────┐
+  │ API Route                    │ Status │ Issue           │
+  ├──────────────────────────────┼────────┼─────────────────┤
+  │ /api/newsletter.js           │ ⚠️ Stub│ Does nothing    │
+  │ /api/creative/grok-imagine   │ ✅     │ Working         │
+  │ /api/support-ticket          │ ❌     │ No error handler│
+  └──────────────────────────────┴────────┴─────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 4 — COMPONENTS NEVER MOUNTED
+
+  Find components that are built but never imported 
+  anywhere:
+
+  List every file in components/ directory.
+  For each component file, check if it is imported 
+  in any page or other component.
+
+  Run:
+  for f in $(find components -name "*.jsx" -o -name "*.tsx"); do
+    name=$(basename $f | sed 's/\..*//')
+    count=$(grep -rl "$name" --include="*.jsx" \
+      --include="*.tsx" --include="*.js" \
+      --exclude-dir=node_modules --exclude-dir=.next \
+      . | wc -l)
+    echo "$count uses: $f"
+  done
+
+  Report any component with 0 or 1 uses 
+  (1 use = only its own file, effectively unused).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 5 — ENV VARIABLES HEALTH CHECK
+
+  Find every process.env reference in the codebase:
+
+  grep -rn "process\.env\." \
+    --include="*.jsx" --include="*.tsx" \
+    --include="*.js" --include="*.ts" \
+    --exclude-dir=node_modules --exclude-dir=.next . \
+    | grep -oP 'process\.env\.\w+' | sort | uniq
+
+  Then compare this list against what is actually set 
+  in .env and .env.local (show variable NAMES only, 
+  never values).
+
+  Report any variable referenced in code but missing 
+  from env files — these will silently fail in production.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 6 — NAVIGATION & LINKS HEALTH
+
+  Check the following for broken or missing links:
+
+  a) Navbar "More" dropdown — does every item link 
+     to a real existing page?
+  b) Footer — do all 3 legal links go to real pages?
+     (privacy-policy, terms-and-conditions, refund-policy)
+  c) Footer column links — do all go to real pages?
+  d) Admin sidebar — which links 404?
+     (already known: /admin/users, /admin/reviews, 
+      /admin/settings — confirm and add any others)
+  e) Any <Link href=""> with empty string?
+  f) Any Next.js <Link> pointing to an external URL 
+     without target="_blank"?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 7 — DESIGN & UI CONSISTENCY CHECK
+
+  Using your frontend design skills, review each 
+  customer-facing page and flag:
+
+  a) Pages where footer is MISSING
+     (homepage was missing it — is it fixed now?)
+  b) Pages where claymorphism was NOT applied yet
+     (we applied it to company, about, team, contact,
+      support, stories — any others that look plain?)
+  c) Pages where font is inconsistent
+     (should be Cormorant Garamond for headings, 
+      Inter for body everywhere)
+  d) Pages where brand colors are wrong
+     (crimson #8B1A1A, gold #C9A84C, cream #FAF6F0)
+  e) Mobile responsiveness — any page that breaks 
+     below 375px width?
+  f) Any page missing a proper <title> tag or 
+     meta description?
+  g) Any <title> tag using JSX array instead of 
+     template literal? (previously fixed in legal pages
+     — check all remaining pages)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 8 — SANITY CMS CONNECTIONS
+
+  Check which pages fetch from Sanity and which 
+  should but don't:
+
+  a) grep for sanityClient or createClient across 
+     all page files
+  b) Are blog posts pulling from Sanity or hardcoded?
+  c) Are products pulling from Sanity or a local file?
+  d) Is the hero banner content (slides, quotes, stat 
+     cards) coming from Sanity or hardcoded?
+  e) Are team member cards hardcoded or from Sanity?
+  f) Any Sanity query that has no error handling 
+     (no try/catch, no fallback if data is null)?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUDIT SECTION 9 — BUILD & PERFORMANCE
+
+  Run: npm run build
   
-  a) What function does the "+ Generate" button call?
-  b) What API route does that function POST to?
-     (e.g. /api/creative/grok-imagine or /api/ai/generate-image
-      or /api/creative/firefly-generate)
-  c) Show me the full fetch/axios call including headers,
-     body payload, and how the response is handled.
-  d) What happens with the response? Where is the returned
-     image URL or base64 stored? Which state variable?
-  e) Where in the JSX is that state variable rendered?
-     Show me the <img> or image display element.
+  Report:
+  a) Any build errors (paste exact error)
+  b) Any build warnings (paste exact warning)
+  c) Any pages flagged as very large bundle size
+  d) Any images not using Next.js <Image> component
+     (these won't be optimized):
+     grep -rn "<img " --include="*.jsx" \
+       --include="*.tsx" \
+       --exclude-dir=node_modules --exclude-dir=.next .
 
-STEP 2 — Check the API route that handles image generation:
-  Open whichever API file the generate button calls and report:
-  
-  a) Which AI provider is it calling?
-     (Grok/xAI, Imagen, Firefly, DALL-E, or other)
-  b) Which environment variable does it use for the API key?
-     (e.g. XAI_API_KEY, GOOGLE_API_KEY, ADOBE_API_KEY)
-  c) Is that env variable actually set in .env or .env.local?
-     Log process.env.XAI_API_KEY?.slice(0,6) and report what
-     it shows (first 6 chars only, never the full key).
-  d) What does the full API response look like?
-     Add a console.log of the raw API response BEFORE any
-     processing and show me the terminal output when you
-     click Generate with any test prompt.
-  e) Is there any error being swallowed silently?
-     Check every catch block — are errors being logged or
-     are they silently setting a generic "error" state?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-STEP 3 — Check the dropdowns:
-  a) Find the model selector dropdown component. What onClick
-     or onChange handler does it have? Show the code.
-  b) Find the aspect ratio dropdown. Same question.
-  c) Are these controlled components (value + onChange) or
-     uncontrolled? If controlled, what state variable drives
-     the selected value?
-  d) Is there any z-index or pointer-events CSS that might
-     be blocking the dropdown from receiving clicks?
-     Check if any parent container has overflow:hidden or
-     a higher z-index overlay sitting on top.
+FINAL DELIVERABLE — MASTER REPORT
 
-Report all findings before touching any code.
+After completing all sections above, give me a single 
+prioritized list in this format:
 
-══════════════════════════════════════════════════════════════════
-FIXES TO APPLY (after audit confirms the issues)
-══════════════════════════════════════════════════════════════════
+🔴 CRITICAL (broken in production, user-facing):
+  1. [issue] — [file] — [what's needed]
+  2. ...
 
-FIX 1 — Wire image generation to Grok (xAI) API
-──────────────────────────────────────────────────
+🟡 INCOMPLETE (built but not finished/wired):
+  1. [issue] — [file] — [what's needed]
+  2. ...
 
-The correct Grok image generation endpoint is:
-  POST https://api.x.ai/v1/images/generations
+🟢 MISSING FEATURES (not built yet):
+  1. [feature] — [where it should go]
+  2. ...
 
-Request format:
-  {
-    "model": "grok-2-image",        // or "grok-2-image-1212"
-    "prompt": "<user's prompt>",
-    "n": 1,
-    "response_format": "url"        // or "b64_json"
-  }
+⚪ NICE TO HAVE (design/polish improvements):
+  1. [improvement] — [page/component]
+  2. ...
 
-Headers:
-  Authorization: Bearer ${process.env.XAI_API_KEY}
-  Content-Type: application/json
-
-Expected response shape:
-  {
-    "data": [
-      { "url": "https://..." }      // if response_format: "url"
-      // OR
-      { "b64_json": "..." }         // if response_format: "b64_json"
-    ]
-  }
-
-In the API route file (likely pages/api/creative/grok-imagine.js):
-  - Replace whatever provider call is there with the above.
-  - Extract the image URL from response.data[0].url
-  - Return it as JSON: { imageUrl: "..." }
-  - Wrap in try/catch and return meaningful errors:
-    catch(err) {
-      console.error('Grok image generation error:', err.message);
-      return res.status(500).json({ 
-        error: err.message,
-        details: err.response?.data || null
-      });
-    }
-
-FIX 2 — Fix the frontend to display the returned image
-────────────────────────────────────────────────────────
-
-In the generate handler function in creative-studio.jsx
-(or AIImageStudio.jsx):
-
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return;
-    setIsGenerating(true);
-    setGeneratedImage(null);
-    setError(null);
-    
-    try {
-      const res = await fetch('/api/creative/grok-imagine', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: prompt,
-          model: selectedModel,     // from dropdown state
-          aspectRatio: aspectRatio  // from dropdown state
-        })
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Generation failed');
-      }
-      
-      if (data.imageUrl) {
-        setGeneratedImage(data.imageUrl);
-      } else {
-        throw new Error('No image returned from API');
-      }
-    } catch (err) {
-      console.error('Generate error:', err);
-      setError(err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-In the JSX, make sure the image renders:
-
-  {isGenerating && (
-    <div style={{ textAlign: 'center', padding: '40px' }}>
-      <p style={{ color: '#C9A84C' }}>✦ Generating your image...</p>
-    </div>
-  )}
-  
-  {error && (
-    <div style={{ color: '#ff6b6b', padding: '16px',
-                  background: 'rgba(255,0,0,0.1)',
-                  borderRadius: '8px', margin: '16px 0' }}>
-      ✗ {error}
-    </div>
-  )}
-  
-  {generatedImage && !isGenerating && (
-    <div style={{ marginTop: '24px' }}>
-      <img
-        src={generatedImage}
-        alt="Generated by Sampada AI"
-        style={{
-          width: '100%',
-          maxWidth: '768px',
-          borderRadius: '16px',
-          display: 'block',
-          margin: '0 auto',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
-        }}
-      />
-      <div style={{ textAlign: 'center', marginTop: '12px' }}>
-        
-          href={generatedImage}
-          download="sampada-generated.png"
-          style={{
-            color: '#C9A84C',
-            textDecoration: 'underline',
-            fontSize: '14px'
-          }}
-        >
-          ↓ Download Image
-        </a>
-      </div>
-    </div>
-  )}
-
-FIX 3 — Fix the model dropdown
-────────────────────────────────
-
-The dropdown currently shows "Imagen 3" but that's likely a
-display label leftover from a previous provider. Update the
-model options to reflect what Grok actually supports:
-
-  const MODEL_OPTIONS = [
-    { label: 'Grok 2 Image',      value: 'grok-2-image' },
-    { label: 'Grok 2 Image HD',   value: 'grok-2-image-1212' },
-  ];
-
-  const [selectedModel, setSelectedModel] = 
-    useState('grok-2-image');
-
-Make the dropdown a controlled component:
-  <select
-    value={selectedModel}
-    onChange={(e) => setSelectedModel(e.target.value)}
-    style={{
-      background: '#2a1a0e',
-      color: '#C9A84C',
-      border: '1px solid rgba(201,168,76,0.3)',
-      borderRadius: '8px',
-      padding: '8px 12px',
-      cursor: 'pointer'
-    }}
-  >
-    {MODEL_OPTIONS.map(opt => (
-      <option key={opt.value} value={opt.value}>
-        {opt.label}
-      </option>
-    ))}
-  </select>
-
-FIX 4 — Fix the aspect ratio dropdown
-───────────────────────────────────────
-
-  const ASPECT_OPTIONS = [
-    { label: '1:1 Square',    value: '1:1' },
-    { label: '16:9 Wide',     value: '16:9' },
-    { label: '9:16 Portrait', value: '9:16' },
-    { label: '4:3 Standard',  value: '4:3' },
-  ];
-
-  const [aspectRatio, setAspectRatio] = useState('1:1');
-
-Note: Grok's image API may not support aspect ratio as a
-direct parameter. If it doesn't, encode the desired ratio
-into the prompt automatically:
-
-  const promptWithRatio = aspectRatio !== '1:1'
-    ? `${prompt}, ${aspectRatio} aspect ratio composition`
-    : prompt;
-
-  // Use promptWithRatio in the API call body, not raw prompt
-
-FIX 5 — Fix dropdown z-index / click blocking
-───────────────────────────────────────────────
-
-If the dropdowns still don't respond to clicks after the above
-fixes, the problem is likely a CSS overlay. Check for:
-
-  1. Any <div> with position:absolute or position:fixed,
-     z-index > 0, covering the top bar area
-  2. The spotlight effect or any canvas element that might
-     be capturing pointer events in this area
-  3. Any parent with pointer-events: none accidentally
-     cascading down
-
-Fix: add explicitly to the dropdown wrapper div:
-  position: relative;
-  z-index: 100;
-  pointer-events: auto;
-
-══════════════════════════════════════════════════════════════════
-ENVIRONMENT CHECK
-══════════════════════════════════════════════════════════════════
-
-Confirm these are set in .env.local (not just .env):
-  XAI_API_KEY=xai-...
-
-Run this check in the API route during development only:
-  if (!process.env.XAI_API_KEY) {
-    return res.status(500).json({
-      error: 'XAI_API_KEY is not configured'
-    });
-  }
-
-This way the frontend shows a clear error instead of silently
-processing forever.
-
-══════════════════════════════════════════════════════════════════
-ALSO CHECK — Video Studio (same API key)
-══════════════════════════════════════════════════════════════════
-
-Since you added XAI_API_KEY for both image and video:
-  - Open pages/api/creative/grok-video.js
-  - Confirm it also reads from process.env.XAI_API_KEY
-  - If it was previously using a different variable name
-    (e.g. GROK_API_KEY or XAI_SECRET), update it to
-    XAI_API_KEY to match the new env variable you added.
-
-══════════════════════════════════════════════════════════════════
-✅ VERIFICATION
-══════════════════════════════════════════════════════════════════
-
-1. Show me the terminal console.log of the raw Grok API
-   response for a test prompt (e.g. "a red rose on a table")
-2. Show me the network tab response from /api/creative/grok-imagine
-   with status 200 and a real imageUrl in the JSON
-3. Screenshot of the generated image actually rendering on screen
-4. Confirm both dropdowns open and change the selected value
-5. Confirm the error state renders properly when API fails
-   (test by temporarily using a bad API key — show the error
-   message on screen, not a silent hang)
-6. Run npm run build — zero errors
+Do NOT fix anything during this audit.
+Do NOT skip any section.
+Show me the full report — I will then tell you 
+what to fix first.

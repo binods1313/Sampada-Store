@@ -6,11 +6,10 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
 
   useEffect(() => {
     const initializeGooglePay = async () => {
-      console.log('Initializing Google Pay, totalPrice:', totalPrice);
       const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
       if (!stripe) {
-        console.error('Failed to load Stripe for Google Pay');
+        if (process.env.NODE_ENV !== 'production') console.error('Failed to load Stripe for Google Pay');
         return;
       }
 
@@ -27,7 +26,6 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
 
       // Check if Google Pay is available
       const canMakePayment = await pr.canMakePayment();
-      console.log('Google Pay canMakePayment result in component:', canMakePayment);
 
       // Handle different response formats from canMakePayment
       let googlePayAvailable = false;
@@ -37,15 +35,11 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
       }
 
       if (googlePayAvailable) {
-        console.log('Setting payment request');
         setPaymentRequest(pr);
-      } else {
-        console.log('Google Pay not available');
       }
 
       // Handle payment method event
       pr.on('paymentmethod', async (ev) => {
-        console.log('Payment method event received');
         try {
           // Create order on your backend
           const response = await fetch('/api/stripe', {
@@ -64,7 +58,7 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
           const { clientSecret, error } = await response.json();
 
           if (error) {
-            console.error('Error in payment processing:', error);
+            if (process.env.NODE_ENV !== 'production') console.error('Error in payment processing:', error);
             ev.complete('fail');
             return;
           }
@@ -77,7 +71,7 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
           );
 
           if (confirmError) {
-            console.error('Payment confirmation error:', confirmError);
+            if (process.env.NODE_ENV !== 'production') console.error('Payment confirmation error:', confirmError);
             ev.complete('fail');
           } else {
             ev.complete('success');
@@ -85,7 +79,7 @@ const GooglePayButton = ({ cartItems, totalPrice, userEmail }) => {
             window.location.href = '/success';
           }
         } catch (error) {
-          console.error('Payment error:', error);
+          if (process.env.NODE_ENV !== 'production') console.error('Payment error:', error);
           ev.complete('fail');
         }
       });

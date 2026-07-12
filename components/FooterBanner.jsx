@@ -127,7 +127,7 @@ const FooterBanner = ({ footerBanner }) => {
               filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
             }}
             onError={(e) => {
-              console.error('Banner image load failed:', imageUrl);
+              if (process.env.NODE_ENV !== 'production') console.error('Banner image load failed:', imageUrl);
               e.target.src = '/asset/placeholder-image.jpg';
               e.target.style.width = 'auto';
               e.target.style.height = 'auto';

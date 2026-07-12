@@ -3,6 +3,7 @@
 // Security: Never expose RAZORPAY_KEY_SECRET in frontend code
 
 import { verifyPayment } from '../../../lib/razorpay';
+import { writeClient } from '../../../lib/client';
 
 export const config = {
   api: {
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
   console.time('RazorpayVerifyPayment');
 
   try {
-    const { razorpay_payment_id, razorpay_order_id, razorpay_signature, cartItems, customerEmail } = req.body;
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature, cartItems, customerEmail, customerName } = req.body;
 
     // Validate required parameters
     if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
@@ -50,11 +51,42 @@ export default async function handler(req, res) {
     console.log('Payment verified successfully:', verificationResult.payment_id);
     console.timeEnd('RazorpayVerifyPayment');
 
-    // TODO: Here you can add additional logic like:
-    // - Update order status in database
-    // - Send confirmation email
-    // - Trigger Printify fulfillment (similar to Stripe webhook)
-    // - Update inventory
+    // Fulfillment: Mark order as paid in Sanity
+    try {
+      const orderData = {
+        _type: 'order',
+        _id: razorpay_order_id, // Use razorpay_order_id as the order ID
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+        razorpaySignature: razorpay_signature,
+        customerEmail: customerEmail || 'N/A',
+        customerName: customerName || 'Customer',
+        status: 'paid',
+        paidAt: new Date().toISOString(),
+        paymentMethod: verificationResult.method || 'razorpay',
+        totalAmount: verificationResult.amount / 100, // Convert from paise to rupees
+        currency: verificationResult.currency || 'INR',
+      };
+
+      // Add cart items if provided
+      if (cartItems && cartItems.length > 0) {
+        orderData.orderItems = cartItems.map((item, index) => ({
+          _key: item.id || `item-${index}`,
+          _type: 'object',
+          quantity: item.quantity || 1,
+          pricePerItem: item.price || 0,
+          productName: item.name || 'Product',
+          productSlug: item.slug || '',
+        }));
+      }
+
+      // Create or replace the order in Sanity
+      await writeClient.createOrReplace(orderData);
+      console.log(`Order ${razorpay_order_id} marked as paid in Sanity`);
+    } catch (sanityError) {
+      // Log but don't fail the payment verification if Sanity update fails
+      console.error('Error updating order in Sanity:', sanityError.message);
+    }
 
     return res.status(200).json({
       success: true,

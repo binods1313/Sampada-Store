@@ -27,7 +27,7 @@ export default function IFSCValidator({ onValidate, className = '' }) {
         onValidate(validation);
       }
     } catch (error) {
-      console.error('IFSC validation error:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('IFSC validation error:', error);
       setResult({
         valid: false,
         error: 'Validation failed. Please try again.'

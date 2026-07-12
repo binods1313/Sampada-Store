@@ -1,6 +1,7 @@
 // components/Navbar.jsx - CORRECTED
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { AiOutlineShopping } from 'react-icons/ai';
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useCartContext } from '../context/CartContext';
@@ -104,10 +105,13 @@ const Navbar = () => {
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               >
                 {session.user.image && (
-                  <img
+                  <Image
                     src={session.user.image}
-                    alt={session.user.name}
+                    alt={session.user.name || 'User avatar'}
+                    width={30}
+                    height={30}
                     className={styles.userAvatar}
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
                   />
                 )}
                 <span className={styles.userName}>

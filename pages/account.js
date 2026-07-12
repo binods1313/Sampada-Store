@@ -5,6 +5,7 @@ import { useSession, getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { format } from 'date-fns';
 import { authenticatedClient, writeClient, urlFor } from '../lib/client';
 import navStyles from '../components/NavbarStyles.module.css';
@@ -33,19 +34,17 @@ const ProductImage = ({ src, alt, productName }) => {
   
   return (
     <div className="order-product-image-container">
-      <img
+      <Image
         src={src}
         alt={alt || 'Product Image'}
+        fill
         onError={(e) => {
-          e.target.style.display = 'none';
+          if (e?.currentTarget?.parentElement) e.currentTarget.parentElement.style.display = 'none';
         }}
         style={{
-          objectFit: 'contain',
-          width: 'auto',
-          height: 'auto',
-          maxWidth: '100%',
-          maxHeight: '100%'
+          objectFit: 'contain'
         }}
+        sizes="140px"
       />
       <style jsx>{`
         .order-product-image-container {
@@ -370,7 +369,7 @@ const AccountPage = ({ user, orders: initialOrders, error: serverError }) => {
           <section style={pageStyles.contentBox} aria-labelledby="profile-heading">
             <h2 id="profile-heading" style={pageStyles.sectionHeading}>Profile Information</h2>
             <div style={pageStyles.profileLayout}>
-              {user.image && (<div style={pageStyles.profileImageContainer}><img src={user.image} alt={user.name || 'User'} style={pageStyles.profileImage} /></div>)}
+              {user.image && (<div style={pageStyles.profileImageContainer}><Image src={user.image} alt={user.name || 'User'} width={96} height={96} style={pageStyles.profileImage} /></div>)}
               <div style={pageStyles.profileDetails}>
                 <div style={pageStyles.detailItem}><p style={pageStyles.detailLabel}>Name</p><p style={pageStyles.detailValue}>{user.name || '(Not provided)'}</p></div>
                 <div style={pageStyles.detailItem}><p style={pageStyles.detailLabel}>Email</p><p style={pageStyles.detailValue}>{user.email || 'Not provided'}</p></div>

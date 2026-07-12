@@ -82,7 +82,7 @@ const DevToolsPanel = () => {
       const data = await response.json();
       setIsAdmin(data.isAdmin === true);
     } catch (error) {
-      console.error('Admin verification failed:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Admin verification failed:', error);
       setIsAdmin(false);
     } finally {
       setIsLoading(false);

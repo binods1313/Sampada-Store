@@ -1177,7 +1177,7 @@ export default function SampadaNavbar({
         }, {});
         setMenuItems(formatted);
       } catch (err) {
-        console.error('Nav fetch failed:', err);
+        if (process.env.NODE_ENV !== 'production') console.error('Nav fetch failed:', err);
         // Keep hardcoded data (already set as initial state)
       } finally {
         setNavLoading(false);

@@ -177,8 +177,8 @@ const TEMPLATE_DATA = [
 ];
 
 const MODEL_OPTIONS = [
-  { label: 'Grok Imagine', value: 'grok-imagine-image' },
-  { label: 'Grok Imagine HD', value: 'grok-imagine-image-quality' },
+  { label: 'Grok 2 Image', value: 'grok-2-image' },
+  { label: 'Grok 2 Image HD', value: 'grok-2-image-1212' },
 ];
 
 const ASPECT_OPTIONS = [
@@ -604,7 +604,7 @@ export default function CreativeStudio() {
   const [activeNav, setActiveNav] = useState('Generate');
   const [viewMode, setViewMode] = useState('home'); // 'home' or 'canvas'
   const [prompt, setPrompt] = useState('');
-  const [selectedModel, setSelectedModel] = useState('grok-imagine-image');
+  const [selectedModel, setSelectedModel] = useState('grok-2-image');
   const [aspectRatio, setAspectRatio] = useState('1:1');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState(null);
@@ -626,42 +626,45 @@ export default function CreativeStudio() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  const handleGenerate = async () => {
-    if (!prompt.trim() || isGenerating) return;
-    setIsGenerating(true);
-    setGeneratedImage(null);
-    setSavedImagePath(null);
-    setError(null);
+const handleGenerate = async () => {
+     if (!prompt.trim() || isGenerating) return;
+     setIsGenerating(true);
+     setGeneratedImage(null);
+     setSavedImagePath(null);
+     setError(null);
 
-    try {
-      const res = await fetch('/api/creative/grok-imagine', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt,
-          model: selectedModel,
-          aspectRatio,
-        }),
-      });
+     try {
+       // Incorporate aspect ratio into prompt if not 1:1
+       const promptWithRatio = aspectRatio !== '1:1'
+         ? `${prompt}, ${aspectRatio} aspect ratio composition`
+         : prompt;
+       const res = await fetch('/api/creative/grok-imagine', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({
+           prompt: promptWithRatio,
+           model: selectedModel,
+         }),
+       });
 
-      const data = await res.json();
+       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Generation failed');
-      }
+       if (!res.ok) {
+         throw new Error(data.error || 'Generation failed');
+       }
 
-      if (data.imageUrl) {
-        setGeneratedImage(data.imageUrl);
-      } else {
-        throw new Error('No image returned from API');
-      }
-    } catch (err) {
-      console.error('Generate error:', err);
-      setError(err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+       if (data.imageUrl) {
+         setGeneratedImage(data.imageUrl);
+       } else {
+         throw new Error('No image returned from API');
+       }
+     } catch (err) {
+       console.error('Generate error:', err);
+       setError(err.message);
+     } finally {
+       setIsGenerating(false);
+     }
+   };
 
   const handleSaveToProject = async () => {
     if (!generatedImage || isSaving) return;

@@ -464,17 +464,19 @@ export default function CompanyPage({ companyData }) {
                       borderRight: '1px solid rgba(201, 169, 110, 0.15)'
                     }}>
                       {value.icon ? (
-                        <img 
-                          src={urlFor(value.icon).url()}
-                          alt={`${value.title} icon`} 
-                          style={{ 
-                            width: '80%',
-                            height: 'auto',
-                            objectFit: 'contain',
-                            borderRadius: '12px',
-                            boxShadow: '3px 3px 10px rgba(0,0,0,0.4)'
-                          }} 
-                        />
+                        <div style={{ position: 'relative', width: '80%', height: '80%' }}>
+                          <Image
+                            src={urlFor(value.icon).url()}
+                            alt={`${value.title} icon`}
+                            fill
+                            style={{
+                              objectFit: 'contain',
+                              borderRadius: '12px',
+                              boxShadow: '3px 3px 10px rgba(0,0,0,0.4)'
+                            }}
+                            sizes="120px"
+                          />
+                        </div>
                       ) : (
                         <div style={{ fontSize: '4rem' }}>✧</div>
                       )}
@@ -548,11 +550,15 @@ export default function CompanyPage({ companyData }) {
                       boxShadow: '10px 10px 28px rgba(0,0,0,0.14), -6px -6px 18px rgba(255,255,255,0.75), inset 0 1px 0 rgba(255,255,255,0.4)',
                       opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
                     }}>
-                    <img 
-                      src={storyImageUrl} 
-                      alt={storyImage?.alt || 'Sampada company story and heritage'} 
-                      style={{ width: '100%', height: 'auto', display: 'block' }} 
-                    />
+                    <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
+                      <Image
+                        src={storyImageUrl}
+                        alt={storyImage?.alt || 'Sampada company story and heritage'}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -644,17 +650,19 @@ export default function CompanyPage({ companyData }) {
                       flexShrink: 0
                     }}>
                       {partner.logo ? (
-                        <img 
-                          src={urlFor(partner.logo).url()}
-                          alt={`${partner.name} logo - Sampada partner`} 
-                          style={{ 
-                            width: '80%', 
-                            height: 'auto', 
-                            objectFit: 'contain',
-                            borderRadius: '50%',
-                            boxShadow: '3px 3px 10px rgba(0,0,0,0.12), -2px -2px 8px rgba(255,255,255,0.7)'
-                          }} 
-                        />
+                        <div style={{ position: 'relative', width: '80%', height: '80%' }}>
+                          <Image
+                            src={urlFor(partner.logo).url()}
+                            alt={`${partner.name} logo - Sampada partner`}
+                            fill
+                            style={{
+                              objectFit: 'contain',
+                              borderRadius: '50%',
+                              boxShadow: '3px 3px 10px rgba(0,0,0,0.12), -2px -2px 8px rgba(255,255,255,0.7)'
+                            }}
+                            sizes="80px"
+                          />
+                        </div>
                       ) : (
                         <div style={{ fontSize: '1.9rem', color: 'var(--s-gold)' }}>🤝</div>
                       )}

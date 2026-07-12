@@ -318,7 +318,7 @@ export async function getFooterData() {
 
     return json.result || get_default_footer_data();
   } catch (error) {
-    console.error('Error fetching footer data:', error);
+    if (process.env.NODE_ENV !== 'production') console.error('Error fetching footer data:', error);
     return get_default_footer_data();
   }
 }

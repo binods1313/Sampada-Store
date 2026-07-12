@@ -11,11 +11,8 @@ export { default as ProductFilters } from './ProductFilters';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as ErrorBoundaryWithFallback } from './ErrorBoundaryWithFallback';
 export { default as ErrorMonitor } from './ErrorMonitor';
-export { default as ErrorMonitorDemo } from './ErrorMonitorDemo';
-export { default as TestSuiteNavigator } from './TestSuiteNavigator';
 export { default as EnhancedErrorHandlerNavigator } from './EnhancedErrorHandlerNavigator';
 export { default as ErrorHandlingTestSuite } from './ErrorHandlingTestSuite';
-export { default as ImageOptimizerTestNavigator } from './ImageOptimizerTestNavigator';
 export {
   LoadingFallback,
   NetworkErrorFallback,

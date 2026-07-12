@@ -81,8 +81,8 @@ export default function CanvasEditor({ onBack }) {
         {/* Top toolbar */}
         <div style={{ marginTop: 12, display: 'flex', gap: 12, alignItems: 'center' }}>
           <button onClick={() => window.history.back()} style={{ padding: '6px 12px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>← Back</button>
-          <button onClick={() => console.log('Undo')} style={{ padding: '6px 12px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>Undo</button>
-          <button onClick={() => console.log('Redo')} style={{ padding: '6px 12px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>Redo</button>
+          <button onClick={() => { /* TODO: implement undo */ }} style={{ padding: '6px 12px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>Undo</button>
+          <button onClick={() => { /* TODO: implement redo */ }} style={{ padding: '6px 12px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>Redo</button>
           <select style={{ padding: '6px 8px', borderRadius: DS.r8, background: DS.bgCard, color: DS.cream, border: `1px solid ${DS.border}` }}>
             <option>100 × 100</option>
             <option>500 × 500</option>

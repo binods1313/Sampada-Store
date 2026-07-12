@@ -1,6 +1,6 @@
 /**
  * Shop/Category Page - Virtual Product List
- * 
+ *
  * Features:
  * - Virtual scrolling for 1000+ products
  * - Pretext-powered accurate row heights
@@ -9,80 +9,60 @@
  * - Sampada premium brand styling
  */
 
-'use client';
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { client, fetchOptions } from '../lib/client';
 import VirtualProductList from '@/components/VirtualProductList';
 import ProductFilterSection from '@/components/ProductFilterSection';
 import { ProductCardSkeleton } from '@/components/LoadingSkeletons';
 
-// Sample products for demo (replace with real API call from Sanity)
-const SAMPLE_PRODUCTS = Array.from({ length: 100 }, (_, i) => ({
-  _id: `product-${i}`,
-  name: generateProductName(i),
-  slug: { current: `product-${i}` },
-  price: Math.floor(Math.random() * 5000) + 999,
-  discount: Math.random() > 0.5 ? Math.floor(Math.random() * 30) + 10 : 0,
-  description: generateProductDescription(i),
-  category: { name: i % 2 === 0 ? 'T-Shirts' : 'Hoodies' },
-  image: [{
-    _key: `img-${i}`,
-    _type: 'image',
-    // Use Picsum for reliable, diverse placeholder images
-    url: `https://picsum.photos/seed/product${i}/600/600`
-  }],
-}));
+// GROQ query to fetch all published products from Sanity
+const productsQuery = `*[_type == "product" && status in ["published", "active"]] {
+  _id,
+  _createdAt,
+  name,
+  slug,
+  image,
+  price,
+  discount,
+  details,
+  category->{
+    _id,
+    name,
+    slug
+  },
+  inventory,
+  status
+} | order(_createdAt desc)`;
 
-// Generate diverse product names
-function generateProductName(index) {
-  const adjectives = [
-    'Premium', 'Classic', 'Modern', 'Elegant', 'Vintage', 
-    'Urban', 'Casual', 'Chic', 'Bohemian', 'Minimalist',
-    'Artisan', 'Heritage', 'Contemporary', 'Timeless', 'Signature'
-  ];
-  const nouns = [
-    'T-Shirt', 'Hoodie', 'Polo', 'Tank Top', 'Sweatshirt',
-    'Jacket', 'Cardigan', 'Tunic', 'Blouse', 'Shirt'
-  ];
-  const adj = adjectives[index % adjectives.length];
-  const noun = nouns[Math.floor(index / adjectives.length) % nouns.length];
-  return `${adj} ${noun} ${Math.floor(index / 10) + 1}`;
+// Fetch products at build time with incremental static regeneration
+export async function getStaticProps() {
+  try {
+    const products = await client.fetch(productsQuery, {}, fetchOptions(3600));
+    return {
+      props: {
+        initialProducts: products || [],
+      },
+      revalidate: 3600, // Revalidate every hour
+    };
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return {
+      props: {
+        initialProducts: [],
+      },
+      revalidate: 60,
+    };
+  }
 }
 
-// Generate diverse product descriptions
-function generateProductDescription(index) {
-  const descriptions = [
-    'Crafted from premium organic cotton for all-day comfort and breathability.',
-    'Features a modern fit with reinforced stitching for long-lasting durability.',
-    'Perfect for casual outings or layering during cooler evenings.',
-    'Made with sustainable materials and eco-friendly dyes.',
-    'Classic design meets contemporary style in this versatile piece.',
-    'Soft, lightweight fabric ideal for everyday wear.',
-    'Tailored fit with attention to detail and quality craftsmanship.',
-    'Versatile wardrobe essential that pairs well with any outfit.',
-    'Premium quality fabric with excellent color retention.',
-    'Designed for comfort without compromising on style.'
-  ];
-  return descriptions[index % descriptions.length];
-}
-
-export default function ShopPage() {
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
+export default function ShopPage({ initialProducts }) {
+  const [loading] = useState(false);
+  const [products] = useState(initialProducts);
   const [filters, setFilters] = useState({
     category: 'all',
     priceRange: [0, 10000],
     sortBy: 'popular',
   });
-
-  // Simulate loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setProducts(SAMPLE_PRODUCTS);
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -129,7 +109,7 @@ export default function ShopPage() {
   }, [products]);
 
   return (
-    <div className="section-light" style={{ minHeight: '100vh' }}>
+      <div className="section-light" style={{ minHeight: '100vh' }}>
       <div className="s-container" style={{ 
         maxWidth: '1400px', 
         padding: '80px 20px'

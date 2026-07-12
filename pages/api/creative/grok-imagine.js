@@ -2,8 +2,8 @@
 // Grok (xAI) image generation for Sampada Creative Studio
 
 const GROK_IMAGE_URL = 'https://api.x.ai/v1/images/generations';
-const ALLOWED_MODELS = new Set(['grok-imagine-image', 'grok-imagine-image-quality']);
-const ALLOWED_ASPECT_RATIOS = new Set(['1:1', '16:9', '9:16', '4:3', '3:4', '3:2', '2:3', '2:1', '1:2', 'auto']);
+const ALLOWED_MODELS = new Set(['grok-2-image', 'grok-2-image-1212']);
+const ALLOWED_ASPECT_RATIOS = new Set(['1:1', '16:9', '9:16', '4:3']); // kept for validation but not used
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,13 +15,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt, model = 'grok-imagine-image', aspectRatio } = req.body;
+    const { prompt, model = 'grok-2-image', aspectRatio } = req.body;
 
     if (!prompt || !prompt.trim()) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const selectedModel = ALLOWED_MODELS.has(model) ? model : 'grok-imagine-image';
+    const selectedModel = ALLOWED_MODELS.has(model) ? model : 'grok-2-image';
+    // Note: Grok's image API may not support aspect_ratio as a direct parameter.
+    // The frontend should incorporate aspect ratio into the prompt if needed.
     const selectedAspectRatio = ALLOWED_ASPECT_RATIOS.has(aspectRatio) ? aspectRatio : '1:1';
 
     if (process.env.NODE_ENV === 'development') {
@@ -39,7 +41,7 @@ export default async function handler(req, res) {
         prompt: prompt.trim(),
         n: 1,
         response_format: 'url',
-        aspect_ratio: selectedAspectRatio,
+        // aspect_ratio is not sent; handled in prompt by frontend if needed
       }),
     });
 

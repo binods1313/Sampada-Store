@@ -15,10 +15,7 @@ const PromoBanner = ({ bannerData }) => {
     : null;
 
   // Debug: Log banner data
-  console.log('PromoBanner - bannerData:', bannerData);
-  console.log('PromoBanner - logoImage:', logoImage);
-  console.log('PromoBanner - logoUrl:', logoUrl);
-  console.log('PromoBanner - Will render:', logoUrl ? 'UPLOADED LOGO' : 'DEFAULT SVG EMBLEM');
+  // (Removed debug logs for production)
 
   return (
     <section className={styles.banner} aria-label="Promotional banner">
