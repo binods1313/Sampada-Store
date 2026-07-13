@@ -8,6 +8,7 @@ import banner from './banner'
 import aboutUs from './aboutUs'
 import contactMessage from './contactMessage'
 import post from './post'
+import career from './career'
 
 export const schemaTypes = [
   product,
@@ -18,5 +19,6 @@ export const schemaTypes = [
   aboutUs,
   banner,
   contactMessage,
-  post
+  post,
+  career
 ]
