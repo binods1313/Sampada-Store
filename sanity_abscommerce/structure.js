@@ -146,4 +146,23 @@ export const structure = (S) =>
         .schemaType('user')
         .icon(UserIcon)
         .child(S.documentTypeList('user').title('Users')),
+
+      S.divider(),
+
+      // --- BLOG POSTS ---
+      S.listItem()
+        .title('Blog Posts')
+        .schemaType('post')
+        .icon(DocumentsIcon)
+        .child(S.documentTypeList('post').title('Blog Posts')),
+
+      S.listItem()
+        .title('Careers')
+        .schemaType('career')
+        .icon(UsersIcon)
+        .child(
+          S.documentTypeList('career')
+            .title('Careers')
+            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+        ),
     ]);
