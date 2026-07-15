@@ -395,6 +395,13 @@ export default defineType({
       initialValue: 'draft',
       description: 'Set the current status of this product'
     }),
+    defineField({
+      name: 'displayOrder',
+      title: 'Featured Display Order',
+      type: 'number',
+      description: 'Lower numbers appear first in the Featured Products section. Leave blank to sort by most recently created.',
+      initialValue: null,
+    }),
   ],
   // --- FIX APPLIED HERE for main product preview ---
   preview: {

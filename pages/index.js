@@ -135,7 +135,7 @@ export const getServerSideProps = async () => {
     },
     inventory,
     status
-  } | order(_createdAt desc)[0...24]`;
+  } | order(coalesce(displayOrder, 999999) asc, _createdAt desc)[0...24]`;
 
   const bannerQuery = `*[_type == "banner" && defined(desc)][0]{
     _id,
