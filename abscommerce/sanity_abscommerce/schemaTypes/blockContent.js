@@ -43,7 +43,18 @@ export default defineType({
     },
     {
       type: 'image',
-      options: {hotspot: true}
+      title: 'Inline image',
+      description: 'Add an inline image block inside the rich text body.',
+      options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description: 'Used for accessibility and SEO.',
+          validation: Rule => Rule.required().error('Alt text is required for inline images.')
+        }
+      ]
     },
     // This is where we define the code block type
     // This will be provided by the @sanity/code-input plugin
