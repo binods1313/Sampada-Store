@@ -1,10 +1,11 @@
 /**
- * Field wrapper for product image `alt`.
- * Order: Alt field → Generate button → Caption field (schema order).
- * Writes both alt + caption into the parent image object so the form updates.
+ * Product image input — generates alt + caption into the image value.
+ *
+ * Critical: uses image-level props.onChange(set({...value, alt, caption}))
+ * which is the same pattern as AIDescriptionInput and reliably updates the form.
  */
 import {useCallback, useState} from 'react'
-import {PatchEvent, set, useClient, useFormCallbacks, useFormValue} from 'sanity'
+import {set, useClient, useFormValue} from 'sanity'
 import {Button, Card, Flex, Stack, Text, Spinner} from '@sanity/ui'
 import {SparklesIcon} from '@sanity/icons'
 
@@ -31,12 +32,8 @@ function localFallback({productName, category, details}) {
   return {alt, caption, source: 'local'}
 }
 
-/**
- * components.field on image.alt
- */
-export function ProductImageAltField(props) {
-  const {renderDefault, path, inputProps} = props
-  const {onChange: onFormChange} = useFormCallbacks()
+export function ProductImageMetaInput(props) {
+  const {value, onChange, renderDefault} = props
   const client = useClient({apiVersion: '2024-05-18'})
 
   const productName = useFormValue(['name'])
@@ -45,10 +42,7 @@ export function ProductImageAltField(props) {
   const price = useFormValue(['price'])
   const specialty = useFormValue(['specialty'])
 
-  // Parent image object path: ['image', {_key}, 'alt'] → ['image', {_key}]
-  const imagePath = Array.isArray(path) && path.length > 0 ? path.slice(0, -1) : []
-  const imageValue = useFormValue(imagePath.length ? imagePath : ['_'])
-  const hasAsset = Boolean(imageValue?.asset?._ref)
+  const hasAsset = Boolean(value?.asset?._ref)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -56,34 +50,17 @@ export function ProductImageAltField(props) {
 
   const applyAltCaption = useCallback(
     (alt, caption) => {
-      const nextAlt = String(alt || '').trim()
-      const nextCaption = String(caption || '').trim()
-
-      // Preferred: set entire parent image object (keeps asset/hotspot/_key)
-      if (imagePath.length > 0 && imageValue && typeof imageValue === 'object') {
-        const nextImage = {
-          ...imageValue,
-          _type: imageValue._type || 'image',
-          alt: nextAlt,
-          caption: nextCaption,
-        }
-        onFormChange(PatchEvent.from(set(nextImage, imagePath)))
-        return true
+      // Merge into current image value — preserves asset, hotspot, crop, _key
+      const next = {
+        ...(value && typeof value === 'object' ? value : {}),
+        _type: (value && value._type) || 'image',
+        alt: String(alt || '').trim(),
+        caption: String(caption || '').trim(),
       }
-
-      // Fallback: set this field (alt) via inputProps + caption path if possible
-      if (inputProps?.onChange && nextAlt) {
-        inputProps.onChange(set(nextAlt))
-      }
-      if (imagePath.length > 0 && nextCaption) {
-        onFormChange(PatchEvent.from(set(nextCaption, [...imagePath, 'caption'])))
-      }
-      if (path && nextAlt) {
-        onFormChange(PatchEvent.from(set(nextAlt, path)))
-      }
-      return Boolean(nextAlt || nextCaption)
+      // Same pattern as AIDescriptionInput: onChange(set(newValue))
+      onChange(set(next))
     },
-    [imagePath, imageValue, inputProps, onFormChange, path]
+    [value, onChange]
   )
 
   const generateMeta = useCallback(async () => {
@@ -103,9 +80,9 @@ export function ProductImageAltField(props) {
           /* ignore */
         }
       }
-      if (imageValue?.asset?._ref) {
+      if (value?.asset?._ref) {
         try {
-          const asset = await client.getDocument(imageValue.asset._ref)
+          const asset = await client.getDocument(value.asset._ref)
           imageUrl = asset?.url || ''
         } catch {
           /* ignore */
@@ -130,7 +107,6 @@ export function ProductImageAltField(props) {
     try {
       const controller = new AbortController()
       const timer = setTimeout(() => controller.abort(), 45000)
-
       const res = await fetch(META_ENDPOINT, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -138,19 +114,14 @@ export function ProductImageAltField(props) {
         signal: controller.signal,
       })
       clearTimeout(timer)
-
       const data = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        throw new Error(data.error || `API error ${res.status}`)
-      }
-      if (!data.alt && !data.caption) {
-        throw new Error('No alt/caption returned')
-      }
+      if (!res.ok) throw new Error(data.error || `API error ${res.status}`)
+      if (!data.alt && !data.caption) throw new Error('No alt/caption returned')
       alt = String(data.alt || '').trim()
       caption = String(data.caption || '').trim()
       source = data.source || 'xai'
     } catch (err) {
-      console.warn('[ProductImageAltField] API failed, using local fallback', err)
+      console.warn('[ProductImageMetaInput] API failed, local fallback', err)
       const fb = localFallback(context)
       alt = fb.alt
       caption = fb.caption
@@ -163,22 +134,18 @@ export function ProductImageAltField(props) {
     }
 
     try {
-      const applied = applyAltCaption(alt, caption)
-      if (!applied) {
-        setError('Generated text but could not write fields — try typing manually.')
-      } else {
-        setOkMsg(
-          source === 'local'
-            ? 'Filled from product data — edit anytime.'
-            : 'Alt text & caption generated — edit anytime.'
-        )
-      }
+      applyAltCaption(alt, caption)
+      setOkMsg(
+        source === 'local'
+          ? 'Filled from product data — edit anytime.'
+          : 'Alt text & caption generated — edit anytime.'
+      )
     } catch (writeErr) {
-      console.error('[ProductImageAltField] patch failed', writeErr)
+      console.error('[ProductImageMetaInput] onChange failed', writeErr)
       setError(
         writeErr instanceof Error
           ? writeErr.message
-          : 'Could not write alt/caption into the form'
+          : 'Could not write values into the form'
       )
     } finally {
       setLoading(false)
@@ -186,7 +153,7 @@ export function ProductImageAltField(props) {
   }, [
     client,
     categoryRef,
-    imageValue,
+    value,
     productName,
     details,
     specialty,
@@ -196,14 +163,23 @@ export function ProductImageAltField(props) {
   ])
 
   return (
-    <Stack space={3}>
+    <Stack space={4}>
+      {/* Full default image UI (preview, upload, alt, caption) */}
       {renderDefault(props)}
 
-      <Card padding={3} radius={2} shadow={1} tone="transparent" border>
+      <Card
+        padding={3}
+        radius={2}
+        shadow={1}
+        tone="transparent"
+        border
+        // Sit visually near the text fields
+        style={{marginTop: -8}}
+      >
         <Stack space={3}>
           <Text size={1} muted>
-            Auto-fill alt text and caption from product name, details, and this
-            image. You can edit either field after.
+            Click to fill <strong>Alt Text</strong> and <strong>Caption</strong>{' '}
+            above from product data and this image. You can still edit them after.
           </Text>
           <Flex gap={2} align="center" wrap="wrap">
             <Button
@@ -229,7 +205,16 @@ export function ProductImageAltField(props) {
           )}
           {okMsg && !error && (
             <Card padding={2} radius={2} tone="positive" border>
-              <Text size={1}>{okMsg}</Text>
+              <Text size={1}>
+                {okMsg}
+                {(value?.alt || value?.caption) && (
+                  <>
+                    {' '}
+                    Current: alt “{value?.alt || '—'}” / caption “
+                    {value?.caption || '—'}”
+                  </>
+                )}
+              </Text>
             </Card>
           )}
         </Stack>
@@ -238,4 +223,5 @@ export function ProductImageAltField(props) {
   )
 }
 
-export {ProductImageAltField as ProductImageMetaInput}
+// Alias if anything still imports the old name
+export {ProductImageMetaInput as ProductImageAltField}
