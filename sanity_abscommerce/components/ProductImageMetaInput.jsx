@@ -1,7 +1,7 @@
 /**
- * Field wrapper for product image `alt` — places "Generate alt & caption"
- * BETWEEN the Alt Text field and the Caption field.
- * Also fills Caption via form callbacks. User can edit either field after.
+ * Field wrapper for product image `alt`.
+ * Order: Alt field → Generate button → Caption field (schema order).
+ * Writes both alt + caption into the parent image object so the form updates.
  */
 import {useCallback, useState} from 'react'
 import {PatchEvent, set, useClient, useFormCallbacks, useFormValue} from 'sanity'
@@ -32,11 +32,10 @@ function localFallback({productName, category, details}) {
 }
 
 /**
- * Use as components.field on the image.alt field.
- * Renders: [Alt field UI] → [Generate button] → (Caption field follows in schema order)
+ * components.field on image.alt
  */
 export function ProductImageAltField(props) {
-  const {renderDefault, path} = props
+  const {renderDefault, path, inputProps} = props
   const {onChange: onFormChange} = useFormCallbacks()
   const client = useClient({apiVersion: '2024-05-18'})
 
@@ -46,14 +45,46 @@ export function ProductImageAltField(props) {
   const price = useFormValue(['price'])
   const specialty = useFormValue(['specialty'])
 
-  // Parent image object path (…, 'alt') → drop last segment
-  const imagePath = Array.isArray(path) ? path.slice(0, -1) : []
-  const imageValue = useFormValue(imagePath)
+  // Parent image object path: ['image', {_key}, 'alt'] → ['image', {_key}]
+  const imagePath = Array.isArray(path) && path.length > 0 ? path.slice(0, -1) : []
+  const imageValue = useFormValue(imagePath.length ? imagePath : ['_'])
   const hasAsset = Boolean(imageValue?.asset?._ref)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [okMsg, setOkMsg] = useState(null)
+
+  const applyAltCaption = useCallback(
+    (alt, caption) => {
+      const nextAlt = String(alt || '').trim()
+      const nextCaption = String(caption || '').trim()
+
+      // Preferred: set entire parent image object (keeps asset/hotspot/_key)
+      if (imagePath.length > 0 && imageValue && typeof imageValue === 'object') {
+        const nextImage = {
+          ...imageValue,
+          _type: imageValue._type || 'image',
+          alt: nextAlt,
+          caption: nextCaption,
+        }
+        onFormChange(PatchEvent.from(set(nextImage, imagePath)))
+        return true
+      }
+
+      // Fallback: set this field (alt) via inputProps + caption path if possible
+      if (inputProps?.onChange && nextAlt) {
+        inputProps.onChange(set(nextAlt))
+      }
+      if (imagePath.length > 0 && nextCaption) {
+        onFormChange(PatchEvent.from(set(nextCaption, [...imagePath, 'caption'])))
+      }
+      if (path && nextAlt) {
+        onFormChange(PatchEvent.from(set(nextAlt, path)))
+      }
+      return Boolean(nextAlt || nextCaption)
+    },
+    [imagePath, imageValue, inputProps, onFormChange, path]
+  )
 
   const generateMeta = useCallback(async () => {
     setLoading(true)
@@ -124,7 +155,6 @@ export function ProductImageAltField(props) {
       alt = fb.alt
       caption = fb.caption
       source = 'local'
-      // Don't show hard error if we can still fill fields
       if (!productName && !hasAsset) {
         setError(err instanceof Error ? err.message : 'Generation failed')
         setLoading(false)
@@ -132,48 +162,43 @@ export function ProductImageAltField(props) {
       }
     }
 
-    const captionPath = [...imagePath, 'caption']
-    const altPath = path
-
-    // Patch both fields on the document form (absolute paths)
-    const ops = []
-    if (alt) ops.push(set(alt, altPath))
-    if (caption) ops.push(set(caption, captionPath))
-    if (ops.length) {
-      try {
-        onFormChange(PatchEvent.from(ops))
-      } catch {
-        // Fallback: some Studio versions accept raw patch arrays
-        onFormChange(ops)
+    try {
+      const applied = applyAltCaption(alt, caption)
+      if (!applied) {
+        setError('Generated text but could not write fields — try typing manually.')
+      } else {
+        setOkMsg(
+          source === 'local'
+            ? 'Filled from product data — edit anytime.'
+            : 'Alt text & caption generated — edit anytime.'
+        )
       }
+    } catch (writeErr) {
+      console.error('[ProductImageAltField] patch failed', writeErr)
+      setError(
+        writeErr instanceof Error
+          ? writeErr.message
+          : 'Could not write alt/caption into the form'
+      )
+    } finally {
+      setLoading(false)
     }
-
-    setOkMsg(
-      source === 'local'
-        ? 'Filled from product data (you can edit). API was unreachable or timed out.'
-        : 'Alt text & caption generated — edit anytime.'
-    )
-    setLoading(false)
   }, [
     client,
     categoryRef,
-    imageValue?.asset?._ref,
+    imageValue,
     productName,
     details,
     specialty,
     price,
-    path,
-    imagePath,
-    onFormChange,
     hasAsset,
+    applyAltCaption,
   ])
 
   return (
     <Stack space={3}>
-      {/* Default Alt Text field (title, description, input) */}
       {renderDefault(props)}
 
-      {/* Button sits between Alt and Caption in the schema field order */}
       <Card padding={3} radius={2} shadow={1} tone="transparent" border>
         <Stack space={3}>
           <Text size={1} muted>
@@ -213,5 +238,4 @@ export function ProductImageAltField(props) {
   )
 }
 
-// Keep name used by schema import (backward compatible)
 export {ProductImageAltField as ProductImageMetaInput}
