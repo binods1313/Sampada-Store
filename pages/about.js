@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { client } from '../lib/sanity';
 import { groq } from 'next-sanity';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../components/PortableTextComponents';
 import SanityImage from '../components/SanityImage';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -259,7 +260,7 @@ const AboutPage = ({ aboutData }) => {
                 padding: '40px',
                 opacity: 0, transform: 'translateY(16px)', transition: 'opacity 0.42s ease, transform 0.42s ease'
               }}>
-              <PortableText value={aboutData.storyContent} />
+              <PortableText value={aboutData.storyContent} components={portableTextComponents} />
             </div>
           ) : (
             <div 

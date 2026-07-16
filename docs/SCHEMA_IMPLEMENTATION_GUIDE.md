@@ -218,6 +218,19 @@ const teamData = await client.fetch(teamQuery)
 
 **Q: Schema not showing in Studio?**
 - Restart the Sanity dev server: Stop and run `npm run dev` again
+
+**Q: Inline blog images fail validation?**
+- Check the `blockContent` schema in `sanity_abscommerce/schemaTypes/blockContent.js`
+- Ensure it includes an image block entry:
+  ```js
+  {
+    type: 'image',
+    title: 'Inline image',
+    options: {hotspot: true},
+    fields: [{ name: 'alt', type: 'string', title: 'Alternative text' }]
+  }
+  ```
+- If you change schema files, reload the Studio and/or restart `npm run dev` to apply the changes
 - Clear browser cache and refresh
 
 **Q: Can't save document?**

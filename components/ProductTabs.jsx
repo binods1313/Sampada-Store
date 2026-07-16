@@ -1,6 +1,7 @@
 // components/ProductTabs.jsx
 import React, { useState } from 'react';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from './PortableTextComponents';
 import styles from './ProductTabs.module.css';
 
 const ProductTabs = ({ tabs }) => {
@@ -32,7 +33,7 @@ const ProductTabs = ({ tabs }) => {
       <div className={styles.tabContent} role="tabpanel">
         {tabs[activeTab]?.tabContent && (
           <div className={styles.contentWrapper}>
-            <PortableText value={tabs[activeTab].tabContent} />
+            <PortableText value={tabs[activeTab].tabContent} components={portableTextComponents} />
           </div>
         )}
       </div>

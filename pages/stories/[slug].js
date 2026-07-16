@@ -4,6 +4,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 import { client, urlFor } from '@/lib/client'
+import { portableTextComponents } from '@/components/PortableTextComponents'
 import styles from './StoryDetail.module.css'
 
 // ─── Rich text components ─────────────────────────────────────────────────────
@@ -74,7 +75,7 @@ export default function StoryDetail({ story }) {
 
           {story.description && (
             <div className={styles.description}>
-              <PortableText value={story.description} components={ptComponents} />
+              <PortableText value={story.description} components={{ ...ptComponents, ...portableTextComponents }} />
             </div>
           )}
 

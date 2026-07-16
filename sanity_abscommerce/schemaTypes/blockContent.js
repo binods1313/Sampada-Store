@@ -43,7 +43,11 @@ export default defineType({
     },
     {
       type: 'image',
-      options: {hotspot: true}
+      options: {hotspot: true},
+      fields: [
+        { name: 'alt', title: 'Alt Text', type: 'string', description: 'Alt text is required for accessibility' },
+        { name: 'caption', title: 'Caption', type: 'string' }
+      ]
     },
     // This is where we define the code block type
     // This will be provided by the @sanity/code-input plugin

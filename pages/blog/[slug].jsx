@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { client } from '../../lib/client';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 
 const postQuery = `*[_type == "post" && slug.current == $slug][0]{
   _id,
@@ -161,7 +162,7 @@ export default function BlogPost({ post }) {
               color: 'var(--s-text-body, #3D2B1F)',
             }}>
               {hasPortableText ? (
-                <PortableText value={post.body} />
+                <PortableText value={post.body} components={portableTextComponents} />
               ) : post.body && typeof post.body === 'string' ? (
                 <p>{post.body}</p>
               ) : (
