@@ -3,7 +3,7 @@ import { defineField, defineType } from 'sanity'
 import { MdLocalOffer as icon } from 'react-icons/md'
 import { seoFields } from './seoFields'
 import { AIDescriptionInput } from '../components/AIDescriptionInput'
-import { ProductImageMetaInput } from '../components/ProductImageMetaInput'
+import { ProductImageAltField } from '../components/ProductImageMetaInput'
 
 export default defineType({
   name: 'product',
@@ -36,23 +36,23 @@ export default defineType({
             storeDimensions: true,
             metadata: ['blurhash', 'palette']
           },
-          components: {
-            // Adds "Generate alt & caption" under the image fields
-            input: ProductImageMetaInput,
-          },
           fields: [
             {
               name: 'alt',
               title: 'Alt Text',
               type: 'string',
-              description: 'Important for accessibility and SEO — or use Generate alt & caption below',
+              description: 'Important for accessibility and SEO',
               validation: Rule => Rule.error('Alt text is recommended for product images'),
+              // Button renders after this field, before Caption
+              components: {
+                field: ProductImageAltField,
+              },
             },
             {
               name: 'caption',
               title: 'Caption',
               type: 'string',
-              description: 'Optional caption — or use Generate alt & caption below',
+              description: 'Optional caption — generate with the button above, or type your own',
             },
           ],
         },
