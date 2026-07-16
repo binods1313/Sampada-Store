@@ -6,6 +6,7 @@ import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { codeInput } from '@sanity/code-input';
+import { media } from 'sanity-plugin-media';
 
 // Retrieve configuration values from environment variables.
 // Vite automatically loads these from .env.local if it's in the project root.
@@ -37,6 +38,8 @@ export default defineConfig({
     // Vision plugin for querying GROQ from inside the Studio
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
+    // Media library tool (asset browser)
+    media(),
   ],
   document: {
     productionUrl: async (prev, context) => {
