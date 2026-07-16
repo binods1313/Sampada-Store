@@ -22,7 +22,7 @@ import { documentInternationalization } from '@sanity/document-internationalizat
 // Import Next 5 Enterprise Plugins for Competitive Edge
 import { recursiveHierarchyPlugin as recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
 import { customColorPicker as colorInput } from 'sanity-plugin-color-input';
-import { imageGen } from 'sanity-plugin-image-gen';
+import { grokImageGen } from './plugins/grok-image-gen'
 
 // Note: Slack Publisher not yet available on npm
 // import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon
@@ -166,8 +166,8 @@ export default defineConfig({
 
     // 8. Media Library - Enhanced asset management (replaces basic media tab)
     media(),
-    // AI Image Generation – button for Grok images
-    imageGen({
+    // AI Image Generation – Grok via custom asset source (Sanity v5)
+    grokImageGen({
       apiEndpoint: 'https://sampadaoriginals.in/api/generate-image',
     }),
 
