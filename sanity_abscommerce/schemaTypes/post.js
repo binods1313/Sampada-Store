@@ -1,4 +1,6 @@
 // sanity_abscommerce/schemaTypes/post.js
+import { seoFields } from './seoFields'
+
 export default {
   name: 'post',
   title: 'Blog Post',
@@ -32,7 +34,16 @@ export default {
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
-      options: { hotspot: true }
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Important for accessibility and SEO',
+          validation: Rule => Rule.error('Alt text is recommended for main images'),
+        },
+      ],
     },
     {
       name: 'author',
@@ -60,7 +71,9 @@ export default {
           ]
         }
       ]
-    }
+    },
+    // Same SEO object as product schema (metaTitle, metaDescription, keywords/Focus Keywords, ogImage, …)
+    ...seoFields,
   ],
   preview: {
     select: {
