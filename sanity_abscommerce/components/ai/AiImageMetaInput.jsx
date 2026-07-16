@@ -1,20 +1,20 @@
 /**
- * Image input with AI alt + caption.
- * Layout: [asset / preview] → Alt → Generate button → Caption
- * Writes via image-level onChange(set({...value, alt, caption})).
+ * Injects "Generate alt & caption" BETWEEN the Alt and Caption fields
+ * (as a field wrapper on `alt` only — no second set of inputs).
+ *
+ * Writes via:
+ * 1) alt field onChange (scoped) for alt
+ * 2) parent image object set for both alt + caption (reliable form update)
  */
-import {useCallback, useMemo, useState} from 'react'
-import {set, useClient, useFormValue} from 'sanity'
+import {useCallback, useState} from 'react'
 import {
-  Button,
-  Card,
-  Flex,
-  Stack,
-  Text,
-  TextInput,
-  Spinner,
-  Box,
-} from '@sanity/ui'
+  PatchEvent,
+  set,
+  useClient,
+  useFormCallbacks,
+  useFormValue,
+} from 'sanity'
+import {Button, Card, Flex, Stack, Text, Spinner} from '@sanity/ui'
 import {SparklesIcon} from '@sanity/icons'
 
 const META_ENDPOINT =
@@ -40,7 +40,6 @@ function localFallback({productName, category, details, title}) {
   return {alt, caption, source: 'local'}
 }
 
-/** Context from common document shapes */
 function useDocContext() {
   const name = useFormValue(['name'])
   const title = useFormValue(['title'])
@@ -53,36 +52,60 @@ function useDocContext() {
   return {name, title, categoryRef, details, specialty, excerpt, description, price}
 }
 
-export function AiImageMetaInput(props) {
-  const {value, onChange, renderDefault, schemaType} = props
+function lastPathSeg(path) {
+  if (!Array.isArray(path) || !path.length) return null
+  return path[path.length - 1]
+}
+
+/**
+ * components.field wrapper for the `alt` string field only.
+ * Renders: default Alt field → Generate button  (Caption stays the next schema field once)
+ */
+export function AiAltFieldWithGenerate(props) {
+  const {renderDefault, path, inputProps} = props
+  const {onChange: onFormChange} = useFormCallbacks()
   const client = useClient({apiVersion: '2024-05-18'})
   const ctx = useDocContext()
 
-  const hasAsset = Boolean(value?.asset?._ref)
-  const hasAltField = useMemo(
-    () => (schemaType?.fields || []).some((f) => f.name === 'alt'),
-    [schemaType]
-  )
-  const hasCaptionField = useMemo(
-    () => (schemaType?.fields || []).some((f) => f.name === 'caption'),
-    [schemaType]
-  )
+  const imagePath = Array.isArray(path) && path.length > 1 ? path.slice(0, -1) : []
+  const imageValue = useFormValue(imagePath.length ? imagePath : ['__none__'])
+  const hasAsset = Boolean(imageValue?.asset?._ref)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [okMsg, setOkMsg] = useState(null)
 
-  const patchImage = useCallback(
-    (partial) => {
-      onChange(
-        set({
-          ...(value && typeof value === 'object' ? value : {}),
-          _type: value?._type || 'image',
-          ...partial,
-        })
-      )
+  const applyAltCaption = useCallback(
+    (alt, caption) => {
+      const nextAlt = String(alt || '').trim()
+      const nextCaption = String(caption || '').trim()
+
+      // 1) Update alt through the field's own input onChange (always updates this input)
+      if (inputProps?.onChange && nextAlt) {
+        inputProps.onChange(set(nextAlt))
+      }
+
+      // 2) Update whole parent image object so caption + alt stick in form state
+      if (imagePath.length > 0) {
+        const base =
+          imageValue && typeof imageValue === 'object' ? imageValue : {_type: 'image'}
+        const nextImage = {
+          ...base,
+          _type: base._type || 'image',
+          alt: nextAlt,
+          caption: nextCaption,
+        }
+        onFormChange(PatchEvent.from(set(nextImage, imagePath)))
+      } else if (path && nextAlt) {
+        onFormChange(PatchEvent.from(set(nextAlt, path)))
+        if (nextCaption) {
+          // best-effort caption if we can only resolve path
+          const capPath = [...(Array.isArray(path) ? path.slice(0, -1) : []), 'caption']
+          onFormChange(PatchEvent.from(set(nextCaption, capPath)))
+        }
+      }
     },
-    [value, onChange]
+    [inputProps, imagePath, imageValue, onFormChange, path]
   )
 
   const generateMeta = useCallback(async () => {
@@ -101,9 +124,9 @@ export function AiImageMetaInput(props) {
           /* ignore */
         }
       }
-      if (value?.asset?._ref) {
+      if (imageValue?.asset?._ref) {
         try {
-          const asset = await client.getDocument(value.asset._ref)
+          const asset = await client.getDocument(imageValue.asset._ref)
           imageUrl = asset?.url || ''
         } catch {
           /* ignore */
@@ -151,7 +174,7 @@ export function AiImageMetaInput(props) {
       caption = String(data.caption || '').trim()
       source = data.source || 'xai'
     } catch (err) {
-      console.warn('[AiImageMetaInput] API failed, local fallback', err)
+      console.warn('[AiAltFieldWithGenerate] API failed, local fallback', err)
       const fb = localFallback(context)
       alt = fb.alt
       caption = fb.caption
@@ -164,126 +187,68 @@ export function AiImageMetaInput(props) {
     }
 
     try {
-      const partial = {}
-      if (hasAltField) partial.alt = alt
-      if (hasCaptionField) partial.caption = caption
-      // If schema only has alt, still set alt
-      if (!hasAltField && !hasCaptionField) {
-        partial.alt = alt
-        partial.caption = caption
-      }
-      patchImage(partial)
+      applyAltCaption(alt, caption)
       setOkMsg(
         source === 'local'
           ? 'Filled from document data — edit anytime.'
-          : 'Generated — edit anytime.'
+          : 'Alt text & caption generated — edit anytime.'
       )
     } catch (e) {
+      console.error('[AiAltFieldWithGenerate] write failed', e)
       setError(e instanceof Error ? e.message : 'Could not write fields')
     } finally {
       setLoading(false)
     }
-  }, [client, ctx, value, hasAsset, hasAltField, hasCaptionField, patchImage])
+  }, [client, ctx, imageValue, hasAsset, applyAltCaption])
 
-  // Schema without alt/caption fields so default UI = asset only; we draw fields ourselves
-  const assetOnlyProps = useMemo(() => {
-    if (!schemaType) return props
-    return {
-      ...props,
-      schemaType: {
-        ...schemaType,
-        fields: [],
-      },
-    }
-  }, [props, schemaType])
-
-  const showMeta = hasAltField || hasCaptionField
+  // Only inject for the `alt` field path
+  const seg = lastPathSeg(path)
+  if (seg !== 'alt') {
+    return renderDefault(props)
+  }
 
   return (
-    <Stack space={4}>
-      {/* Asset / hotspot / upload only */}
-      {renderDefault(assetOnlyProps)}
+    <Stack space={3}>
+      {renderDefault(props)}
 
-      {showMeta && (
-        <Stack space={4}>
-          {hasAltField && (
-            <Stack space={2}>
-              <Text size={1} weight="semibold">
-                Alt Text
-              </Text>
-              <Text size={1} muted>
-                Important for accessibility and SEO
-              </Text>
-              <TextInput
-                fontSize={2}
-                padding={3}
-                value={value?.alt || ''}
-                onChange={(e) => patchImage({alt: e.currentTarget.value})}
-                placeholder="Describe the image for screen readers"
-              />
-            </Stack>
+      <Card padding={3} radius={2} border tone="transparent">
+        <Stack space={3}>
+          <Text size={1} muted>
+            Generate alt text and caption (caption is the field below). Edit after
+            if you want.
+          </Text>
+          <Flex gap={2} align="center" wrap="wrap">
+            <Button
+              icon={loading ? undefined : SparklesIcon}
+              text={loading ? 'Generating…' : 'Generate alt & caption'}
+              tone="primary"
+              fontSize={1}
+              padding={3}
+              disabled={loading || (!ctx.name && !ctx.title && !hasAsset)}
+              onClick={generateMeta}
+            />
+            {loading && <Spinner muted />}
+          </Flex>
+          {error && (
+            <Card padding={2} radius={2} tone="critical" border>
+              <Text size={1}>{error}</Text>
+            </Card>
           )}
-
-          <Card padding={3} radius={2} border tone="transparent">
-            <Stack space={3}>
-              <Text size={1} muted>
-                Generate alt{hasCaptionField ? ' & caption' : ''} from document
-                data and this image. Edit after if you want.
-              </Text>
-              <Flex gap={2} align="center">
-                <Button
-                  icon={loading ? undefined : SparklesIcon}
-                  text={
-                    loading
-                      ? 'Generating…'
-                      : hasCaptionField
-                        ? 'Generate alt & caption'
-                        : 'Generate alt text'
-                  }
-                  tone="primary"
-                  fontSize={1}
-                  padding={3}
-                  disabled={loading || (!ctx.name && !ctx.title && !hasAsset)}
-                  onClick={generateMeta}
-                />
-                {loading && <Spinner muted />}
-              </Flex>
-              {error && (
-                <Card padding={2} radius={2} tone="critical" border>
-                  <Text size={1}>{error}</Text>
-                </Card>
-              )}
-              {okMsg && !error && (
-                <Card padding={2} radius={2} tone="positive" border>
-                  <Text size={1}>{okMsg}</Text>
-                </Card>
-              )}
-            </Stack>
-          </Card>
-
-          {hasCaptionField && (
-            <Stack space={2}>
-              <Text size={1} weight="semibold">
-                Caption
-              </Text>
-              <Text size={1} muted>
-                Optional caption shown with the image
-              </Text>
-              <TextInput
-                fontSize={2}
-                padding={3}
-                value={value?.caption || ''}
-                onChange={(e) => patchImage({caption: e.currentTarget.value})}
-                placeholder="Short caption"
-              />
-            </Stack>
+          {okMsg && !error && (
+            <Card padding={2} radius={2} tone="positive" border>
+              <Text size={1}>{okMsg}</Text>
+            </Card>
           )}
         </Stack>
-      )}
+      </Card>
     </Stack>
   )
 }
 
-/** @deprecated use AiImageMetaInput */
+/** @deprecated — image-level wrapper removed (caused duplicate fields) */
+export function AiImageMetaInput(props) {
+  return props.renderDefault(props)
+}
+
 export const ProductImageMetaInput = AiImageMetaInput
-export const ProductImageAltField = AiImageMetaInput
+export const ProductImageAltField = AiAltFieldWithGenerate

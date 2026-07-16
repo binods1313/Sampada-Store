@@ -1,1 +1,6 @@
-﻿export { AiImageMetaInput, ProductImageMetaInput, ProductImageAltField } from './ai/AiImageMetaInput.jsx'
+﻿export {
+  AiImageMetaInput,
+  AiAltFieldWithGenerate,
+  ProductImageMetaInput,
+  ProductImageAltField,
+} from './ai/AiImageMetaInput.jsx'
