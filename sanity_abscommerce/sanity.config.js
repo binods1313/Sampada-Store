@@ -43,6 +43,9 @@ export default defineConfig({
 
   // Configure the plugins
   plugins: [
+    // AI fill for images (alt/caption) and key text fields — must be early
+    sampadaAiFill(),
+
     // structureTool() provides the main content editing interface with custom structure
     structureTool({ structure }),
 

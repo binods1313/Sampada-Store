@@ -3,7 +3,7 @@ import { defineField, defineType } from 'sanity'
 import { MdLocalOffer as icon } from 'react-icons/md'
 import { seoFields } from './seoFields'
 import { AIDescriptionInput } from '../components/AIDescriptionInput'
-import { ProductImageMetaInput } from '../components/ProductImageMetaInput'
+// Image alt/caption AI is applied globally via plugins/sampada-ai-fill
 
 export default defineType({
   name: 'product',
@@ -36,10 +36,7 @@ export default defineType({
             storeDimensions: true,
             metadata: ['blurhash', 'palette']
           },
-          // Image-level input: onChange(set({...value, alt, caption})) actually fills the fields
-          components: {
-            input: ProductImageMetaInput,
-          },
+          // AI generate for alt/caption: global sampada-ai-fill plugin (button between fields)
           fields: [
             {
               name: 'alt',
@@ -52,7 +49,7 @@ export default defineType({
               name: 'caption',
               title: 'Caption',
               type: 'string',
-              description: 'Optional caption — use Generate alt & caption, or type your own',
+              description: 'Optional caption — use Generate alt & caption between the fields',
             },
           ],
         },
