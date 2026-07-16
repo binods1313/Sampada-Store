@@ -23,6 +23,7 @@ import { documentInternationalization } from '@sanity/document-internationalizat
 import { recursiveHierarchyPlugin as recursiveHierarchy } from 'sanity-plugin-recursive-hierarchy'
 import { customColorPicker as colorInput } from 'sanity-plugin-color-input';
 import { grokImageGen } from './plugins/grok-image-gen'
+import { sampadaAiFill } from './plugins/sampada-ai-fill'
 
 // Note: Slack Publisher not yet available on npm
 // import { slackPublisher } from 'sanity-plugin-slack-publisher' // Coming soon
