@@ -39,12 +39,34 @@ const ptComponents = {
   },
 }
 
+const PLACEHOLDER = '/asset/placeholder-image.jpg'
+
 /** True when image has a usable Sanity asset id/ref (not an empty _ref from bad GROQ). */
 function hasImageAsset(image) {
   const asset = image?.asset
   if (!asset || typeof asset !== 'object') return false
   const id = asset._ref || asset._id || ''
-  return typeof id === 'string' && id.length > 0
+  return typeof id === 'string' && /^image-[A-Za-z0-9_-]+/.test(id.trim())
+}
+
+function safeImageUrl(image, width, height) {
+  // Prefer absolute CDN url from GROQ expansion
+  if (typeof image?.asset?.url === 'string' && image.asset.url.startsWith('http')) {
+    return image.asset.url
+  }
+  if (!hasImageAsset(image)) return null
+  try {
+    const src = {
+      ...image,
+      asset: {
+        _type: 'reference',
+        _ref: image.asset._ref || image.asset._id,
+      },
+    }
+    return urlFor(src).width(width).height(height).fit('crop').url() || null
+  } catch {
+    return null
+  }
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -58,9 +80,8 @@ export default function StoryDetail({ story }) {
     )
   }
 
-  const coverUrl = hasImageAsset(story.coverImage)
-    ? urlFor(story.coverImage).width(1600).height(900).fit('crop').url()
-    : null
+  // Prefer precomputed string from getStaticProps
+  const coverUrl = story.coverUrl || safeImageUrl(story.coverImage, 1600, 900)
 
   return (
     <>
@@ -104,16 +125,18 @@ export default function StoryDetail({ story }) {
             </div>
           )}
 
-          {/* Gallery — skip images with missing/broken asset refs (build-safe) */}
-          {story.gallery?.some(hasImageAsset) && (
+          {/* Gallery — only items with precomputed src strings */}
+          {Array.isArray(story.gallery) && story.gallery.some((g) => g?.src) && (
             <section className={styles.gallerySection}>
               <h2 className={styles.galleryHeading}>Gallery</h2>
               <div className={styles.galleryGrid}>
-                {story.gallery.filter(hasImageAsset).map((img, i) => (
+                {story.gallery
+                  .filter((g) => g?.src)
+                  .map((img, i) => (
                   <figure key={img._key || i} className={styles.galleryItem}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={urlFor(img).width(800).height(1000).fit('crop').url()}
+                      src={img.src}
                       alt={img.alt || `${story.model || story.title} look ${i + 1}`}
                       className={styles.galleryImg}
                       loading="lazy"
@@ -144,22 +167,66 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  // Keep asset as a reference ({ _type, _ref }) — do NOT use asset->{ _ref }.
-  // Dereferencing then projecting `_ref` yields empty refs (asset docs use _id).
+  // Expand asset to _id + url — never project asset->{ _ref } (empty string).
   const story = await client.fetch(
     `*[_type == "story" && slug.current == $slug && published == true][0]{
       _id, title, slug, model, tag, publishedAt,
-      coverImage { alt, asset },
+      coverImage {
+        alt,
+        asset->{ _id, url }
+      },
       description[],
-      gallery[]{ _key, alt, caption, asset }
+      gallery[]{
+        _key, alt, caption,
+        asset->{ _id, url }
+      }
     }`,
     { slug: params.slug }
   )
 
   if (!story) return { notFound: true }
 
+  // Precompute plain string URLs so the page component never calls urlFor at render
+  const coverUrl =
+    (typeof story.coverImage?.asset?.url === 'string' && story.coverImage.asset.url) ||
+    safeImageUrl(
+      story.coverImage?.asset?._id
+        ? { asset: { _ref: story.coverImage.asset._id, _type: 'reference' } }
+        : story.coverImage,
+      1600,
+      900
+    ) ||
+    null
+
+  const gallery = (Array.isArray(story.gallery) ? story.gallery : [])
+    .map((img) => {
+      const src =
+        (typeof img?.asset?.url === 'string' && img.asset.url) ||
+        safeImageUrl(
+          img?.asset?._id
+            ? { asset: { _ref: img.asset._id, _type: 'reference' } }
+            : img,
+          800,
+          1000
+        )
+      if (!src) return null
+      return {
+        _key: img._key,
+        alt: img.alt || '',
+        caption: img.caption || '',
+        src,
+      }
+    })
+    .filter(Boolean)
+
   return {
-    props: { story },
-    revalidate: 60
+    props: {
+      story: {
+        ...story,
+        coverUrl,
+        gallery,
+      },
+    },
+    revalidate: 60,
   }
 }

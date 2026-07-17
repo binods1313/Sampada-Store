@@ -23,17 +23,51 @@ const COLLECTIONS = [
 const FILTERS = ['All', 'Casual', 'Festive', 'Premium', 'Summer', 'Winter']
 const PLACEHOLDER_IMG = '/asset/placeholder-image.jpg'
 
-/** Safe story cover URL — never throws during SSG (bad/missing Sanity assets). */
-function storyCoverUrl(story, width = 600, height = 900) {
-  if (!story) return PLACEHOLDER_IMG
-  if (story.source === 'local' && typeof story.coverImage === 'string' && story.coverImage) {
-    return story.coverImage
+/**
+ * Resolve a cover image to a plain string URL at data-fetch time only.
+ * Render path must NEVER call urlFor — empty Sanity _ref crashes SSG on Vercel.
+ */
+function resolveCoverUrl(coverImage, width = 600, height = 900) {
+  if (typeof coverImage === 'string' && coverImage.trim()) {
+    // Local filesystem paths or absolute URLs already usable as src
+    return coverImage
+  }
+  if (!coverImage || typeof coverImage !== 'object') {
+    return PLACEHOLDER_IMG
+  }
+  const ref =
+    coverImage?.asset?._ref ||
+    coverImage?.asset?._id ||
+    coverImage?._ref ||
+    coverImage?._id ||
+    ''
+  if (typeof ref !== 'string' || !/^image-[A-Za-z0-9_-]+/.test(ref.trim())) {
+    return PLACEHOLDER_IMG
   }
   try {
-    const src = urlFor(story.coverImage).width(width).height(height).fit('crop').url()
-    return src || PLACEHOLDER_IMG
+    const src = urlFor(coverImage).width(width).height(height).fit('crop').url()
+    return typeof src === 'string' && src.length > 0 ? src : PLACEHOLDER_IMG
   } catch {
     return PLACEHOLDER_IMG
+  }
+}
+
+/** Attach precomputed string URLs so React render never touches image-url. */
+function withResolvedCoverUrls(story) {
+  if (!story) return story
+  if (story.source === 'local' && typeof story.coverImage === 'string') {
+    return {
+      ...story,
+      coverUrl: story.coverImage,
+      thumbUrl: story.coverImage,
+    }
+  }
+  return {
+    ...story,
+    // Drop raw coverImage from props if broken — keep alt only for a11y
+    coverUrl: resolveCoverUrl(story.coverImage, 600, 900),
+    thumbUrl: resolveCoverUrl(story.coverImage, 120, 120),
+    coverAlt: story.coverImage?.alt || story.title || 'Story',
   }
 }
 
@@ -85,8 +119,8 @@ function StoryTimeline({ stories }) {
           <button key={story._id} className={styles.timelineNode} onClick={() => scrollTo(i)}>
             <div className={styles.timelineThumb} style={{ position: 'relative' }}>
               <Image
-                src={storyCoverUrl(story, 120, 120)}
-                alt={story.title}
+                src={story.thumbUrl || story.coverUrl || PLACEHOLDER_IMG}
+                alt={story.title || 'Story'}
                 fill
                 style={{ objectFit: 'cover', objectPosition: 'top' }}
                 sizes="60px"
@@ -121,7 +155,8 @@ function FilterBar({ total, active, onChange }) {
 // ─── StoryCard ───────────────────────────────────────────────────────────────
 function StoryCard({ story, index, featured, onOpen, openTip, onToggleTip, voted, onVote, isTopVoted }) {
   const isLocal = story.source === 'local'
-  const imgSrc = storyCoverUrl(story, 600, 900)
+  // Precomputed in getStaticProps — never call urlFor here (SSG crash risk)
+  const imgSrc = story.coverUrl || PLACEHOLDER_IMG
 
   const [cardRef, cardInView] = useInView({ threshold: 0.15, triggerOnce: true })
 
@@ -239,7 +274,13 @@ function Lightbox({ stories, currentIndex, onClose, onPrev, onNext }) {
 
         {/* Image panel */}
         <div className={styles.lbImageWrap}>
-          <img key={story._id} src={story.coverImage} alt={story.title} className={styles.lbImage} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            key={story._id}
+            src={story.coverUrl || (typeof story.coverImage === 'string' ? story.coverImage : PLACEHOLDER_IMG)}
+            alt={story.title}
+            className={styles.lbImage}
+          />
           <button className={`${styles.lbArrow} ${styles.lbPrev}`} onClick={e => { e.stopPropagation(); onPrev() }}>‹</button>
           <button className={`${styles.lbArrow} ${styles.lbNext}`} onClick={e => { e.stopPropagation(); onNext() }}>›</button>
         </div>
@@ -515,10 +556,17 @@ export default function StoriesIndex({ stories, banner }) {
 }
 
 export async function getStaticProps() {
-  // Keep asset as a reference ({ _type, _ref }) — asset->{ _ref } yields empty _ref
+  // Keep asset as a reference ({ _type, _ref }) — never asset->{ _ref } (empty _ref).
+  // Prefer asset url when present so we can skip image-url entirely.
   const query = `*[_type == "story" && published == true] | order(publishedAt desc) {
     _id, title, slug, model, tag, publishedAt,
-    coverImage { alt, asset }
+    coverImage {
+      alt,
+      asset->{
+        _id,
+        url
+      }
+    }
   }`
   
   const bannerQuery = `*[_type == "banner"][0]{
@@ -536,11 +584,35 @@ export async function getStaticProps() {
   } catch (e) { 
     console.error(e) 
   }
+
+  // Prefer CDN url from GROQ when available (no image-url package at render)
+  const normalizedSanity = (Array.isArray(sanityStories) ? sanityStories : []).map((s) => {
+    const directUrl = s?.coverImage?.asset?.url
+    if (typeof directUrl === 'string' && directUrl.startsWith('http')) {
+      return {
+        ...s,
+        coverUrl: directUrl,
+        thumbUrl: directUrl,
+        coverAlt: s.coverImage?.alt || s.title || 'Story',
+      }
+    }
+    // Rebuild a reference-shaped object for urlFor if only _id is present
+    if (s?.coverImage?.asset?._id) {
+      return withResolvedCoverUrls({
+        ...s,
+        coverImage: {
+          alt: s.coverImage?.alt,
+          asset: { _ref: s.coverImage.asset._id, _type: 'reference' },
+        },
+      })
+    }
+    return withResolvedCoverUrls(s)
+  })
   
-  const localStories = getLocalKavyaImages()
+  const localStories = (getLocalKavyaImages() || []).map(withResolvedCoverUrls)
   return { 
     props: { 
-      stories: [...sanityStories, ...localStories],
+      stories: [...normalizedSanity, ...localStories],
       banner: banner || null
     }, 
     revalidate: 60 
