@@ -21,6 +21,21 @@ const COLLECTIONS = [
 ]
 
 const FILTERS = ['All', 'Casual', 'Festive', 'Premium', 'Summer', 'Winter']
+const PLACEHOLDER_IMG = '/asset/placeholder-image.jpg'
+
+/** Safe story cover URL — never throws during SSG (bad/missing Sanity assets). */
+function storyCoverUrl(story, width = 600, height = 900) {
+  if (!story) return PLACEHOLDER_IMG
+  if (story.source === 'local' && typeof story.coverImage === 'string' && story.coverImage) {
+    return story.coverImage
+  }
+  try {
+    const src = urlFor(story.coverImage).width(width).height(height).fit('crop').url()
+    return src || PLACEHOLDER_IMG
+  } catch {
+    return PLACEHOLDER_IMG
+  }
+}
 
 // ─── Section Divider ─────────────────────────────────────────────────────────
 function SectionDivider() {
@@ -70,7 +85,7 @@ function StoryTimeline({ stories }) {
           <button key={story._id} className={styles.timelineNode} onClick={() => scrollTo(i)}>
             <div className={styles.timelineThumb} style={{ position: 'relative' }}>
               <Image
-                src={story.source === 'local' ? story.coverImage : urlFor(story.coverImage).width(120).height(120).fit('crop').url()}
+                src={storyCoverUrl(story, 120, 120)}
                 alt={story.title}
                 fill
                 style={{ objectFit: 'cover', objectPosition: 'top' }}
@@ -106,9 +121,7 @@ function FilterBar({ total, active, onChange }) {
 // ─── StoryCard ───────────────────────────────────────────────────────────────
 function StoryCard({ story, index, featured, onOpen, openTip, onToggleTip, voted, onVote, isTopVoted }) {
   const isLocal = story.source === 'local'
-  const imgSrc = isLocal
-    ? story.coverImage
-    : urlFor(story.coverImage).width(600).height(900).fit('crop').url()
+  const imgSrc = storyCoverUrl(story, 600, 900)
 
   const [cardRef, cardInView] = useInView({ threshold: 0.15, triggerOnce: true })
 
@@ -502,9 +515,10 @@ export default function StoriesIndex({ stories, banner }) {
 }
 
 export async function getStaticProps() {
+  // Keep asset as a reference ({ _type, _ref }) — asset->{ _ref } yields empty _ref
   const query = `*[_type == "story" && published == true] | order(publishedAt desc) {
     _id, title, slug, model, tag, publishedAt,
-    coverImage { alt, asset->{ _ref } }
+    coverImage { alt, asset }
   }`
   
   const bannerQuery = `*[_type == "banner"][0]{

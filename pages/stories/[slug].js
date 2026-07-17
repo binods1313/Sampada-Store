@@ -39,6 +39,14 @@ const ptComponents = {
   },
 }
 
+/** True when image has a usable Sanity asset id/ref (not an empty _ref from bad GROQ). */
+function hasImageAsset(image) {
+  const asset = image?.asset
+  if (!asset || typeof asset !== 'object') return false
+  const id = asset._ref || asset._id || ''
+  return typeof id === 'string' && id.length > 0
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function StoryDetail({ story }) {
   if (!story) {
@@ -50,7 +58,7 @@ export default function StoryDetail({ story }) {
     )
   }
 
-  const coverUrl = story.coverImage?.asset
+  const coverUrl = hasImageAsset(story.coverImage)
     ? urlFor(story.coverImage).width(1600).height(900).fit('crop').url()
     : null
 
@@ -96,16 +104,17 @@ export default function StoryDetail({ story }) {
             </div>
           )}
 
-          {/* Gallery */}
-          {story.gallery?.length > 0 && (
+          {/* Gallery — skip images with missing/broken asset refs (build-safe) */}
+          {story.gallery?.some(hasImageAsset) && (
             <section className={styles.gallerySection}>
               <h2 className={styles.galleryHeading}>Gallery</h2>
               <div className={styles.galleryGrid}>
-                {story.gallery.map((img, i) => (
+                {story.gallery.filter(hasImageAsset).map((img, i) => (
                   <figure key={img._key || i} className={styles.galleryItem}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={urlFor(img).width(800).height(1000).fit('crop').url()}
-                      alt={img.alt || `${story.model} look ${i + 1}`}
+                      alt={img.alt || `${story.model || story.title} look ${i + 1}`}
                       className={styles.galleryImg}
                       loading="lazy"
                     />
@@ -135,12 +144,14 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  // Keep asset as a reference ({ _type, _ref }) — do NOT use asset->{ _ref }.
+  // Dereferencing then projecting `_ref` yields empty refs (asset docs use _id).
   const story = await client.fetch(
     `*[_type == "story" && slug.current == $slug && published == true][0]{
       _id, title, slug, model, tag, publishedAt,
-      coverImage { alt, asset->{ _ref } },
+      coverImage { alt, asset },
       description[],
-      gallery[]{ _key, alt, caption, asset->{ _ref } }
+      gallery[]{ _key, alt, caption, asset }
     }`,
     { slug: params.slug }
   )
