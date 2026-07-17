@@ -34,7 +34,14 @@ export default {
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
-      options: { hotspot: true },
+      options: {
+        hotspot: true,
+        // AI Assist: only write image description into mainImage.alt.
+        // Do NOT target seo.ogImage (fails when seo.ogImage is undefined).
+        aiAssist: {
+          imageDescriptionField: 'alt',
+        },
+      },
       fields: [
         {
           name: 'alt',
