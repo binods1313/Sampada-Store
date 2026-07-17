@@ -152,21 +152,29 @@ export default function BlogPost({ post }) {
           </div>
         )}
 
-        {/* Body */}
+        {/* Body — Portable Text renders block + image types via portableTextComponents */}
         <article style={{ padding: '48px 24px 96px' }}>
           <div className="s-container" style={{ maxWidth: '760px', margin: '0 auto' }}>
-            <div style={{
-              fontFamily: 'var(--s-serif, Georgia, serif)',
-              fontSize: '1.1rem',
-              lineHeight: 1.8,
-              color: 'var(--s-text-body, #3D2B1F)',
-            }}>
+            <div
+              className="blog-post-body"
+              style={{
+                fontFamily: 'var(--s-serif, Georgia, serif)',
+                fontSize: '1.1rem',
+                lineHeight: 1.8,
+                // Hard fallback so text never inherits an invisible token
+                color: '#2a2a2a',
+              }}
+            >
               {hasPortableText ? (
-                <PortableText value={post.body} components={portableTextComponents} />
+                <PortableText
+                  value={post.body}
+                  components={portableTextComponents}
+                  onMissingComponent={false}
+                />
               ) : post.body && typeof post.body === 'string' ? (
-                <p>{post.body}</p>
+                <p style={{ color: '#2a2a2a', lineHeight: 1.8 }}>{post.body}</p>
               ) : (
-                <p>{post.excerpt || ''}</p>
+                <p style={{ color: '#2a2a2a', lineHeight: 1.8 }}>{post.excerpt || ''}</p>
               )}
             </div>
 

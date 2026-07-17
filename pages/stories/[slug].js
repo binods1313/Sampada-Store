@@ -7,19 +7,32 @@ import { client, urlFor } from '@/lib/client'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import styles from './StoryDetail.module.css'
 
-// ─── Rich text components ─────────────────────────────────────────────────────
+// ─── Rich text: story-specific styles layered onto shared PT components ───────
+// Deep-merge so `types.image` from portableTextComponents is kept and
+// `block` handlers are never wiped by a shallow spread.
 const ptComponents = {
+  ...portableTextComponents,
+  types: {
+    ...portableTextComponents.types,
+  },
   block: {
+    ...portableTextComponents.block,
     normal: ({ children }) => <p className={styles.bodyP}>{children}</p>,
     h2: ({ children }) => <h2 className={styles.bodyH2}>{children}</h2>,
     h3: ({ children }) => <h3 className={styles.bodyH3}>{children}</h3>,
-    blockquote: ({ children }) => <blockquote className={styles.bodyQuote}>{children}</blockquote>,
+    blockquote: ({ children }) => (
+      <blockquote className={styles.bodyQuote}>{children}</blockquote>
+    ),
   },
   marks: {
-    strong: ({ children }) => <strong>{children}</strong>,
-    em: ({ children }) => <em>{children}</em>,
+    ...portableTextComponents.marks,
     link: ({ value, children }) => (
-      <a href={value.href} target="_blank" rel="noopener noreferrer" className={styles.bodyLink}>
+      <a
+        href={value?.href || '#'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.bodyLink}
+      >
         {children}
       </a>
     ),
@@ -75,7 +88,11 @@ export default function StoryDetail({ story }) {
 
           {story.description && (
             <div className={styles.description}>
-              <PortableText value={story.description} components={{ ...ptComponents, ...portableTextComponents }} />
+              <PortableText
+                value={story.description}
+                components={ptComponents}
+                onMissingComponent={false}
+              />
             </div>
           )}
 
