@@ -1,22 +1,19 @@
 # Sampada Store — Project Structure Reference
 
-**Last updated:** June 2026  
-**Framework:** Next.js 16 (Pages Router)  
-**Live URL:** https://sampadaoriginals.in  
-**GitHub:** https://github.com/binods1313/Sampada-Store  
+**Last updated:** July 18, 2026
+**Framework:** Next.js 16 (Pages Router)
+**Live URL:** https://sampadaoriginals.in
+**GitHub:** https://github.com/binods1313/Sampada-Store
 **Sanity Project ID:** 7lh35oho
 
 ---
 
-## Recent Changes (June 2026)
+## Recent Changes (July 2026)
 
-- **Legal Pages added** — Added `/privacy-policy` and `/terms-and-conditions` using markdown content from `content/` directory, parsed via `lib/markdown.js`, and rendered with `components/LegalPageLayout.jsx`.
-- **Hero Feature Cards redesigned** — `components/HeroBanner.jsx` now uses `.sampada-cards` / `.s-card` structure with `Tiro Devanagari Sanskrit` font for subtext, `Libre Baskerville` for titles, beige background, gold borders, hover lift animation, corner accent marks
-- **Fonts added** — `pages/_document.js` now loads `Libre Baskerville` + `Tiro Devanagari Sanskrit` from Google Fonts
-- **Mobile overflow fixed** — `components/spotlight/SpotlightReveal.jsx` no longer uses `width: 100vw` + `marginLeft: calc(-50vw + 50%)` which caused horizontal scroll on mobile
-- **GitHub OAuth fixed** — new OAuth App created, callback URL updated to `https://sampada.online/api/auth/callback/github`
-- **Google OAuth fixed** — redirect URI updated to `https://sampada.online/api/auth/callback/google`
-- **Sanity CORS fixed** — `https://sampada.online` and `https://www.sampada.online` added to Sanity CORS origins
+- **Portable Text: inline image blocks supported** — `sanity_abscommerce/schemaTypes/blockContent.js` and several document schemas were updated to allow inline `{ type: 'image' }` blocks with `alt` and `caption` fields. This enables authors to insert images directly into rich text.
+- **Frontend renderer: PortableText image handler added** — A shared renderer component was added at `components/PortableTextComponents.jsx` and wired into existing renderers (`pages/blog/[slug].jsx`, `pages/about.js`, `pages/stories/[slug].js`, `components/ProductTabs.jsx`). It uses `lib/client.js`'s `urlFor()` helper to build image URLs and renders `<figure>/<img>/<figcaption>` for `_type: 'image'` blocks.
+- **Sanity schema root clarified** — The active Studio imports `sanity_abscommerce/schemaTypes`. A duplicate path exists under `abscommerce/sanity_abscommerce/schemaTypes`; make edits in the active `sanity_abscommerce/` folder.
+- **Other fixes and improvements** — minor styling and accessibility updates across hero cards, legal pages, and mobile overflow.
 
 ---
 
@@ -34,24 +31,49 @@
 
 ```
 E:\Sampada-Store\
-├── pages/              ← Next.js Pages Router (all routes)
-├── components/         ← React components
-├── styles/             ← CSS modules + global styles
-├── lib/                ← Utility libraries (Sanity client, analytics, etc.)
-├── hooks/              ← Custom React hooks
-├── context/            ← React context providers
-├── services/           ← Server-side service modules (AI, vision, etc.)
-├── controllers/        ← API controller logic
-├── utils/              ← Helper utilities
-├── data/               ← Static data files
-├── content/            ← Markdown content files (e.g., legal pages)
-├── scripts/            ← One-off scripts (image list gen, seed, etc.)
-├── public/             ← Static assets (images, icons)
-├── docs/               ← Documentation
-├── sanity_abscommerce/ ← Sanity Studio (CMS)
+├── .agents/            ← local Copilot/agent files
+├── .claude/            ← Claude-related tooling
+├── .dockerignore
+├── .env*               ← local environment files
+├── .eslintrc.json
 ├── .kiro/              ← Kiro specs
-├── .env                ← Environment variables (local only, gitignored)
-└── next.config.js      ← Next.js config (webpack mode)
+├── .kilo/
+├── .markdownlint.json
+├── .npmrc
+├── .planning/
+├── .qwen/
+├── .stylelintrc.json
+├── abscommerce/        ← legacy subproject / performance improvements
+├── agency-agents/
+├── analyze/
+├── app/                ← experimental/app directory (Next.js structure)
+├── babel.config.js
+├── components/         ← React components
+├── components.json
+├── content/            ← Markdown content files (e.g., legal pages)
+├── context/            ← React context providers
+├── controllers/        ← API controller logic
+├── data/               ← Static data files
+├── design-system/      ← design tokens and style system
+├── docs/               ← Documentation
+├── hooks/              ← Custom React hooks
+├── images/             ← source image assets
+├── lib/                ← Utility libraries (Sanity client, analytics, etc.)
+├── middleware.ts
+├── next.config.js
+├── pages/              ← Next.js Pages Router (all routes)
+├── postcss.config.js
+├── public/             ← Static assets served publicly
+├── sanity_abscommerce/ ← Sanity Studio (CMS)
+├── scripts/            ← One-off scripts (image list gen, seed, etc.)
+├── services/           ← Server-side service modules (AI, vision, etc.)
+├── skills-lock.json
+├── styles/             ← CSS modules + global styles
+├── tailwind.config.js
+├── tsconfig.json
+├── ui/
+├── utils/              ← Helper utilities
+└── vercel.json
 ```
 
 ---
@@ -75,6 +97,9 @@ E:\Sampada-Store\
 | `/support` | `pages/support.js` | Support page |
 | `/contact` | `pages/contact.js` | Contact page |
 | `/creative-studio` | `pages/creative-studio.jsx` | Sampada Creative Studio |
+| `/ai-demo` | `pages/ai-demo.tsx` | AI demo page |
+| `/careers` | `pages/careers.jsx` | Careers page |
+| `/refund-policy` | `pages/refund-policy.jsx` | Refund policy page |
 | `/fallback-demo` | `pages/fallback-demo.js` | Fallback UI demo |
 | `/privacy-policy` | `pages/privacy-policy.jsx` | Privacy Policy page |
 | `/terms-and-conditions` | `pages/terms-and-conditions.jsx` | Terms and Conditions page |
@@ -216,18 +241,24 @@ E:\Sampada-Store\
 
 **Studio URL:** Run `npm run dev` inside `sanity_abscommerce/`
 
-### Schema Types
+### Schema Types (active `sanity_abscommerce/schemaTypes`)
 - `product` — Products with variants, SEO, Printify integration
 - `category` — Product categories
 - `order` — Orders
 - `user` — Users
 - `banner` — Hero banners
-- `post` — Blog posts
-- `aboutUs` — About page content
-- `company` — Company page
-- `support` — Support page
+- `post` — Blog posts (now supports inline image blocks in `body`)
+- `aboutUs` — About page content (storyContent now supports inline images)
+- `company` — Company page (storyContent now supports inline images)
+- `career` — Career listings (description supports inline images)
+- `story` — Story documents (description supports inline images)
+- `productTabs` — Product tab rich text (`tabContent` supports inline images)
 - `navigation` — Navbar navigation data
 - `footerSettings` — Footer content
+
+Notes:
+- If editing schemas, modify files under `sanity_abscommerce/schemaTypes` — that is the Studio import used by `sanity.config.js`.
+- When adding inline images to Portable Text, include `alt` and (optional) `caption` fields in the image block for accessibility and caption rendering.
 
 ---
 
@@ -292,11 +323,15 @@ NEXT_PUBLIC_FEATURE_VISUAL_SEARCH — true
 | File | Purpose |
 |---|---|
 | `next.config.js` | Next.js config — webpack mode, image domains, security headers |
-| `tsconfig.json` | TypeScript config — module: ESNext, moduleResolution: bundler |
+| `tsconfig.json` | TypeScript config — `module`/`moduleResolution` set to `nodenext` where applicable; `ignoreDeprecations` added to suppress legacy TS warnings |
 | `tailwind.config.js` | Tailwind CSS config |
 | `package.json` | Dependencies — build script: `next build --webpack` |
 | `middleware.ts` | Next.js middleware (deprecated, use proxy) |
-| `sanity.config.js` | Root Sanity config |
+| `sanity.config.js` | Root Sanity config (imports `sanity_abscommerce/schemaTypes`) |
+
+Developer notes:
+- `lib/client.js` exposes `urlFor()` (Sanity image builder). Prefer using it to build image URLs across components and Portable Text renderers.
+- If you see TypeScript deprecation warnings from module options, check root `tsconfig.json` and `abscommerce/tsconfig.json` (they were updated to `nodenext` and `ignoreDeprecations`).
 
 ---
 

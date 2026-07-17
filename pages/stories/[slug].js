@@ -3,7 +3,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
-import { client, urlFor } from '@/lib/client'
+import { client, urlFor, getReliableImageUrl } from '@/lib/client'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import styles from './StoryDetail.module.css'
 
@@ -42,31 +42,36 @@ const ptComponents = {
 const PLACEHOLDER = '/asset/placeholder-image.jpg'
 
 /** True when image has a usable Sanity asset id/ref (not an empty _ref from bad GROQ). */
-function hasImageAsset(image) {
-  const asset = image?.asset
-  if (!asset || typeof asset !== 'object') return false
-  const id = asset._ref || asset._id || ''
-  return typeof id === 'string' && /^image-[A-Za-z0-9_-]+/.test(id.trim())
+function getSafeSanityImageSource(image) {
+  if (!image || typeof image !== 'object') return null
+
+  if (typeof image?.asset?.url === 'string' && image.asset.url.startsWith('http')) {
+    return image
+  }
+
+  const id = image?.asset?._ref || image?.asset?._id || image?._ref || image?._id || ''
+  if (typeof id !== 'string' || !/^image-[A-Za-z0-9_-]+$/.test(id.trim())) {
+    return null
+  }
+
+  return {
+    ...image,
+    asset: {
+      _type: 'reference',
+      _ref: id.trim(),
+    },
+  }
 }
 
 function safeImageUrl(image, width, height) {
-  // Prefer absolute CDN url from GROQ expansion
   if (typeof image?.asset?.url === 'string' && image.asset.url.startsWith('http')) {
     return image.asset.url
   }
-  if (!hasImageAsset(image)) return null
-  try {
-    const src = {
-      ...image,
-      asset: {
-        _type: 'reference',
-        _ref: image.asset._ref || image.asset._id,
-      },
-    }
-    return urlFor(src).width(width).height(height).fit('crop').url() || null
-  } catch {
-    return null
-  }
+
+  const source = getSafeSanityImageSource(image)
+  if (!source) return null
+
+  return getReliableImageUrl(source, { width, height, fit: 'crop' }) || null
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────

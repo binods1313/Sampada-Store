@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import { client, urlFor } from '@/lib/client'
+import { client, urlFor, getReliableImageUrl } from '@/lib/client'
 import { getLocalKavyaImages } from '@/lib/getLocalStories'
 import StoriesHeroBanner, { STORIES_HERO_SLIDES } from '@/components/StoriesHeroBanner';
 import JourneyStats from '@/components/JourneyStats';
@@ -27,29 +27,50 @@ const PLACEHOLDER_IMG = '/asset/placeholder-image.jpg'
  * Resolve a cover image to a plain string URL at data-fetch time only.
  * Render path must NEVER call urlFor — empty Sanity _ref crashes SSG on Vercel.
  */
+function getSafeSanityImageSource(image) {
+  if (!image || typeof image !== 'object') return null
+
+  if (typeof image?.asset?.url === 'string' && image.asset.url.startsWith('http')) {
+    return image
+  }
+
+  const id =
+    image?.asset?._ref ||
+    image?.asset?._id ||
+    image?._ref ||
+    image?._id ||
+    ''
+
+  if (typeof id !== 'string' || !/^image-[A-Za-z0-9_-]+$/.test(id.trim())) {
+    return null
+  }
+
+  return {
+    ...image,
+    asset: { _type: 'reference', _ref: id.trim() },
+  }
+}
+
 function resolveCoverUrl(coverImage, width = 600, height = 900) {
   if (typeof coverImage === 'string' && coverImage.trim()) {
-    // Local filesystem paths or absolute URLs already usable as src
     return coverImage
   }
+
   if (!coverImage || typeof coverImage !== 'object') {
     return PLACEHOLDER_IMG
   }
-  const ref =
-    coverImage?.asset?._ref ||
-    coverImage?.asset?._id ||
-    coverImage?._ref ||
-    coverImage?._id ||
-    ''
-  if (typeof ref !== 'string' || !/^image-[A-Za-z0-9_-]+/.test(ref.trim())) {
+
+  if (typeof coverImage?.asset?.url === 'string' && coverImage.asset.url.startsWith('http')) {
+    return coverImage.asset.url
+  }
+
+  const source = getSafeSanityImageSource(coverImage)
+  if (!source) {
     return PLACEHOLDER_IMG
   }
-  try {
-    const src = urlFor(coverImage).width(width).height(height).fit('crop').url()
-    return typeof src === 'string' && src.length > 0 ? src : PLACEHOLDER_IMG
-  } catch {
-    return PLACEHOLDER_IMG
-  }
+
+  const src = getReliableImageUrl(source, { width, height, fit: 'crop' })
+  return typeof src === 'string' && src.length > 0 ? src : PLACEHOLDER_IMG
 }
 
 /** Attach precomputed string URLs so React render never touches image-url. */
