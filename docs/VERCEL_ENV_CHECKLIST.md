@@ -4,13 +4,21 @@
 
 ---
 
-## URLs (Update to your new domain)
+## Canonical domain
+
+**Primary production host:** `https://sampadaoriginals.in`  
+(`vercel.json` 301s `www.sampadaoriginals.in`, `sampadaoriginals.com`, `www.sampadaoriginals.com` → apex `.in`)
+
+`sampada.online` / `www.sampada.online` may still resolve on Vercel as alternate hostnames — treat them as **legacy aliases**, not primary. Do **not** set `NEXTAUTH_URL` to `.online`.
+
+## URLs (Production)
 
 | Key | Value |
 |-----|-------|
-| `NEXT_PUBLIC_BASE_URL` | `https://sampada.online` |
-| `NEXT_PUBLIC_API_URL` | `https://sampada.online` |
-| `NEXTAUTH_URL` | `https://sampada.online` |
+| `NEXT_PUBLIC_BASE_URL` | `https://sampadaoriginals.in` |
+| `NEXT_PUBLIC_API_URL` | `https://sampadaoriginals.in` |
+| `NEXT_PUBLIC_SITE_URL` | `https://sampadaoriginals.in` (optional; SEO canonicals) |
+| `NEXTAUTH_URL` | `https://sampadaoriginals.in` |
 
 ---
 
@@ -38,7 +46,7 @@
 | `NEXT_PUBLIC_STRIPE_DESIGNER_KEY` | Same page (publishable key) |
 | `STRIPE_DESIGNER_PRO_PRICE_ID` | [dashboard.stripe.com/products](https://dashboard.stripe.com/products) |
 | `STRIPE_DESIGNER_ULTRA_PRICE_ID` | Same page |
-| `STRIPE_WEBHOOK_SECRET` | [dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks) → create endpoint: `https://sampada.online/api/subscriptions/designer/webhook` |
+| `STRIPE_WEBHOOK_SECRET` | [dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks) → create endpoint: `https://sampadaoriginals.in/api/subscriptions/designer/webhook` |
 
 ---
 
@@ -74,7 +82,7 @@
 | Key | Where to get it |
 |-----|----------------|
 | `SENDGRID_API_KEY` | [app.sendgrid.com/settings/api_keys](https://app.sendgrid.com/settings/api_keys) |
-| `SENDGRID_FROM_EMAIL` | e.g. `noreply@sampada.online` |
+| `SENDGRID_FROM_EMAIL` | e.g. `noreply@sampadaoriginals.in` |
 | `SENDGRID_FROM_NAME` | `Sampada` |
 
 ---
@@ -120,8 +128,9 @@
 ## Checklist
 
 - [ ] All keys added in Vercel
-- [ ] `NEXT_PUBLIC_BASE_URL` set to `https://sampada.online`
-- [ ] `NEXTAUTH_URL` set to `https://sampada.online`
-- [ ] Stripe webhook endpoint updated to `https://sampada.online/...`
-- [ ] SendGrid sender domain verified for `sampada.online`
-- [ ] **Delete this file!**
+- [ ] `NEXT_PUBLIC_BASE_URL` set to `https://sampadaoriginals.in`
+- [ ] `NEXTAUTH_URL` set to `https://sampadaoriginals.in` (Production env only — not localhost)
+- [ ] Stripe / PayPal / Razorpay webhook endpoints use `https://sampadaoriginals.in/...`
+- [ ] SendGrid sender domain verified for `sampadaoriginals.in` (or your verified from-domain)
+- [ ] Sanity blog ISR webhook: `https://sampadaoriginals.in/api/revalidate` (already configured)
+- [ ] If re-adding Gemini auto-tag webhook: `https://sampadaoriginals.in/api/webhooks/sanity-auto-tag`

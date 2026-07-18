@@ -16,7 +16,11 @@ import React from 'react';
 /**
  * Base URL for the application (defaults to production URL)
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sampada-store.com';
+// Prefer explicit site URL, then base URL; production canonical is sampadaoriginals.in
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  'https://sampadaoriginals.in';
 
 /**
  * Product Schema - For product detail pages

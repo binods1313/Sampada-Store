@@ -119,7 +119,10 @@ export default function LegalPageLayout({
         <title>{`${pageTitle} | Sampada Originals`}</title>
         <meta name="description" content={pageSubtitle} />
         {canonicalSlug && (
-          <link rel="canonical" href={`https://sampada.online/${canonicalSlug}`} />
+          <link
+            rel="canonical"
+            href={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}/${canonicalSlug}`}
+          />
         )}
         <meta name="robots" content="index,follow" />
         {/* Fonts loaded globally via pages/_document.js */}

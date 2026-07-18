@@ -380,7 +380,7 @@ const ProductDetails = ({ product, products, slug }) => {
         <meta property="og:type" content="product" />
         <meta property="product:price:amount" content={displayPrice.toFixed(2)} />
         <meta property="product:price:currency" content="USD" />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://sampada-store.com'}/product/${slug}`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}/product/${slug}`} />
       </Head>
 
       {/* JSON-LD Structured Data for SEO */}

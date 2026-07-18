@@ -35,31 +35,31 @@ function HomeContent({ products, categories, bannerData }) {
         <meta name="keywords" content="custom t-shirts, print on demand, premium apparel, Sampada, custom hoodies, prosperity designs, Indian fashion, sustainable clothing" />
         <meta name="robots" content="index, follow, max-image-preview:large" />
         <meta name="author" content="Sampada" />
-        <link rel="canonical" href="https://sampada.store" />
+        <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://sampada.store" />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'} />
         <meta property="og:title" content="Sampada — Wear Your Legacy, Prosper in Style" />
         <meta property="og:description" content="Premium custom apparel with prosperity-inspired designs. Shop t-shirts, hoodies & more." />
-        <meta property="og:image" content="https://sampada.store/og-image.jpg" />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}/og-image.jpg`} />
         <meta property="og:site_name" content="Sampada" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://sampada.store" />
+        <meta name="twitter:url" content={process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'} />
         <meta name="twitter:title" content="Sampada — Wear Your Legacy, Prosper in Style" />
         <meta name="twitter:description" content="Premium custom apparel with prosperity-inspired designs." />
-        <meta name="twitter:image" content="https://sampada.store/og-image.jpg" />
+        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}/og-image.jpg`} />
 
         {/* JSON-LD Structured Data */}
         <JsonLd
           type="organization"
           data={{
             name: 'Sampada',
-            url: 'https://sampada.store',
-            logo: 'https://sampada.store/logo.png',
+            url: process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in',
+            logo: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}/logo.png`,
             description: 'Premium custom apparel and print-on-demand products with prosperity-inspired designs.',
             sameAs: [
               'https://www.instagram.com/sampada',
@@ -72,7 +72,7 @@ function HomeContent({ products, categories, bannerData }) {
           data={{
             name: 'Sampada Store',
             alternateName: 'Sampada Custom Print',
-            url: 'https://sampada.store',
+            url: process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in',
           }}
         />
       </Head>

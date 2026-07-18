@@ -268,7 +268,7 @@ Key variables (values in `.env` file, never commit):
 
 ```
 NEXTAUTH_SECRET          — NextAuth session secret
-NEXTAUTH_URL             — https://sampada.online (production)
+NEXTAUTH_URL             — https://sampadaoriginals.in (production canonical)
 GOOGLE_CLIENT_ID         — Google OAuth (binods111@gmail.com console)
 GOOGLE_CLIENT_SECRET     — Google OAuth secret
 GITHUB_ID                — GitHub OAuth App client ID
@@ -338,7 +338,10 @@ Developer notes:
 ## Deployment
 
 - **Platform:** Vercel
-- **Domain:** sampada.online (+ www redirect)
+- **Canonical domain:** `https://sampadaoriginals.in` (www / `.com` variants redirect via `vercel.json`)
+- **Legacy alias:** `sampada.online` / `www.sampada.online` may still serve the app — do not use for `NEXTAUTH_URL`
 - **Build command:** `npm run build` (`next build --webpack`)
 - **Auto-deploy:** On push to `main` branch
-- **Sanity Webhook:** `https://sampada.online/api/webhooks/sanity-auto-tag` (triggers on product create/update)
+- **Sanity webhooks:**
+  - Blog ISR: `https://sampadaoriginals.in/api/revalidate` (`_type == "post"`)
+  - Product auto-tag (optional, plan-limited): `https://sampadaoriginals.in/api/webhooks/sanity-auto-tag`

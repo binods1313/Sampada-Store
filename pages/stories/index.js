@@ -487,7 +487,7 @@ export default function StoriesIndex({ stories, banner }) {
          <meta name="description" content="Explore Sampada's lookbooks, model stories, and curated collections. Featuring Kavya in Winter Drop 2026." />
          <meta name="viewport" content="width=device-width, initial-scale=1" />
          <link rel="preload" href={STORIES_HERO_SLIDES[0].image} as="image" />
-         <meta property="og:image" content={`https://sampada.store${STORIES_HERO_SLIDES[0].image}`} />
+         <meta property="og:image" content={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://sampadaoriginals.in'}${STORIES_HERO_SLIDES[0].image}`} />
          {heroImage && <link rel="preload" href={heroImage} as="image" fetchPriority="low" />}
          <meta property="og:title" content="Sampada Stories — Lookbooks &amp; Collections" />
        </Head>
