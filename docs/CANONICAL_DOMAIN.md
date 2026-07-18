@@ -12,10 +12,16 @@
 
 Repo `vercel.json` only defines redirects **to** `sampadaoriginals.in` for www/.com variants.
 
-## Sanity webhooks (already)
+## Sanity webhooks (plan limit: 2)
 
-- Revalidate blog: https://sampadaoriginals.in/api/revalidate
-- Gemini auto-tag was removed (plan limit); re-add only with .in URL if needed
+1. **Product Sync to Prisma** (external Cloud Run) — keep
+2. **Merged CMS webhook** (post ISR + product Gemini auto-tag):
+   - URL: `https://sampadaoriginals.in/api/webhooks/sanity`
+   - Filter: `_type in ["post", "product"]`
+   - Route: `pages/api/webhooks/sanity.js`
+
+Manual blog revalidate (not a Sanity webhook):  
+`GET/POST https://sampadaoriginals.in/api/revalidate?secret=…&path=/blog/…`
 
 ## You must set in Vercel UI (we cannot without CLI login)
 

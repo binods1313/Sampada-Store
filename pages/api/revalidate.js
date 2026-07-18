@@ -9,23 +9,13 @@
  *   /blog              (listing)
  *   /blog/[slug]       (individual post)
  *
- * ── Sanity webhook setup ────────────────────────────────────────────────
- *   sanity.io/manage → project → API → Webhooks → Create webhook
+ * ── Sanity webhook (preferred — shared with product auto-tag) ───────────
+ *   Use the merged handler (one plan slot):
+ *     POST https://sampadaoriginals.in/api/webhooks/sanity
+ *     Filter: _type in ["post", "product"]
+ *   See pages/api/webhooks/sanity.js for full setup.
  *
- *   Name:     Revalidate blog posts
- *   URL:      https://YOUR_PRODUCTION_DOMAIN/api/revalidate
- *   Dataset:  production
- *   Trigger:  Create, Update, Delete  (and/or “Include drafts” off)
- *   Filter:   _type == "post"
- *   Projection (optional but recommended):
- *     {
- *       _id,
- *       _type,
- *       "slug": slug.current
- *     }
- *   Secret:   same value as SANITY_WEBHOOK_SECRET (or REVALIDATE_SECRET)
- *             in Vercel / .env.local
- *   HTTP method: POST
+ *   This /api/revalidate route remains for manual busts and post-only tests.
  *
  * ── Manual test (local or prod) ─────────────────────────────────────────
  *   GET  /api/revalidate?secret=YOUR_SECRET&path=/blog/my-slug

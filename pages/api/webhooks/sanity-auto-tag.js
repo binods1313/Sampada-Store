@@ -1,18 +1,16 @@
 /**
- * Sanity Webhook — Auto-Tag on Product Create/Update
+ * Sanity Webhook — Auto-Tag on Product Create/Update (legacy product-only)
  * POST /api/webhooks/sanity-auto-tag
  *
- * Triggered by Sanity when a product document is created or updated.
- * Calls the Gemini auto-tagger to analyse the product image and write
- * tags, SEO, occasion, and colour back to the document.
+ * Preferred production setup (one plan webhook slot):
+ *   POST /api/webhooks/sanity  — routes post → ISR, product → auto-tag
  *
- * Setup in Sanity:
- *   sanity.io → project → API → Webhooks → Add webhook
- *   URL: https://yourdomain.com/api/webhooks/sanity-auto-tag
- *   Dataset: production
- *   Trigger on: Create, Update
+ * This route remains for backward compatibility / manual product-only hooks.
+ *
+ * Setup (legacy):
+ *   URL: https://sampadaoriginals.in/api/webhooks/sanity-auto-tag
  *   Filter: _type == "product"
- *   Secret: value of SANITY_WEBHOOK_SECRET in .env
+ *   Secret: SANITY_WEBHOOK_SECRET
  */
 
 import crypto from 'crypto'
@@ -60,7 +58,12 @@ export default async function handler(req, res) {
   try {
     // Call the Gemini auto-tagger — fire and forget, respond immediately
     // to avoid Sanity webhook timeout (30s limit)
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const baseUrl = (
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.NEXTAUTH_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+      'http://localhost:3000'
+    ).replace(/\/$/, '')
 
     // Respond to Sanity immediately
     res.status(200).json({ received: true, productId: _id })

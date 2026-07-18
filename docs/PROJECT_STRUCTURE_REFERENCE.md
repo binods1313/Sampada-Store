@@ -342,6 +342,8 @@ Developer notes:
 - **Legacy alias:** `sampada.online` / `www.sampada.online` may still serve the app — do not use for `NEXTAUTH_URL`
 - **Build command:** `npm run build` (`next build --webpack`)
 - **Auto-deploy:** On push to `main` branch
-- **Sanity webhooks:**
-  - Blog ISR: `https://sampadaoriginals.in/api/revalidate` (`_type == "post"`)
-  - Product auto-tag (optional, plan-limited): `https://sampadaoriginals.in/api/webhooks/sanity-auto-tag`
+- **Sanity webhooks (plan limit 2):**
+  1. Product Sync → Cloud Run (external)
+  2. Merged CMS: `https://sampadaoriginals.in/api/webhooks/sanity`  
+     Filter `_type in ["post","product"]` → post ISR + product Gemini auto-tag  
+     (`pages/api/webhooks/sanity.js`)
